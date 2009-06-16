@@ -1,0 +1,2 @@
+db_module=hubspace.model
+history_dir=$base/hubspace/sqlobject-history

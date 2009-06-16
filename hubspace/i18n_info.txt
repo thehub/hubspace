@@ -1,0 +1,569 @@
+Scanning source directory hubspace
+Working on hubspace/validators.py
+Working on hubspace/json.py
+Working on hubspace/__init__.py
+Working on hubspace/model.py
+Working on hubspace/release.py
+Working on hubspace/controllers.py
+Working on hubspace/inplace_i18n.py
+Working on hubspace/tests/populate.py
+Working on hubspace/tests/test_Hubspace.py
+Working on hubspace/tests/__init__.py
+Working on hubspace/tests/test_controllers.py
+Working on hubspace/tests/save/test_model.py
+Working on hubspace/config/__init__.py
+Working on hubspace/utilities/permissions.py
+Working on hubspace/utilities/uiutils.py
+Working on hubspace/utilities/__init__.py
+Working on hubspace/utilities/autoreload.py
+Working on hubspace/utilities/image_preview.py
+Working on hubspace/utilities/image_helpers.py
+Working on hubspace/utilities/dicts.py
+Working on hubspace/utilities/jsmin.py
+Working on hubspace/utilities/booking.py
+Working on hubspace/utilities/date.py
+Working on hubspace/utilities/auth.py
+Working on hubspace/utilities/static_files.py
+Working on hubspace/utilities/i18n.py
+Working on hubspace/templates/__init__.py
+Working on hubspace/templates/resources.kid
+Warning: Mixed content in tag <div>: 
+          ${resources(object.homeplace)}
+        
+Working on hubspace/templates/memberServices.kid
+Warning: Mixed content in tag <td>: 
+${load_memberServices(object)}	
+
+Working on hubspace/templates/noteEdit.kid
+Warning: Mixed content in tag <div>: 
+  ${edit(object, tg_errors=tg_errors)}
+
+Working on hubspace/templates/todoEdit.kid
+Warning: Mixed content in tag <span>: ${due(todo)}  
+Warning: Mixed content in tag <input>: 
+  ${edit(object, tg_errors=tg_errors)}
+
+Working on hubspace/templates/costEdit.kid
+Warning: Mixed content in tag <div>: 
+  ${edit(object, tg_errors=tg_errors)}
+
+Working on hubspace/templates/addTodo.kid
+Warning: Mixed content in tag <span>: ${due(todo.due)} 
+Warning: Mixed content in tag <input>: 
+  ${edit(object, todo=todo, tg_errors=tg_errors)}
+  
+Working on hubspace/templates/bristolDataEdit.kid
+Working on hubspace/templates/sendReminder.kid
+Warning: Mixed content in tag <textarea>: 
+Dear ${object.first_name},
+
+Please can we remind you to pay your outstanding balance of ${object.homeplace.currency}${c2s(object.outstanding)} at The Hub ${object.homeplace.name}. 
+
+If you have any queries regarding this amount please contact The Hub's hosting team at ${object.homeplace.name.lower()}.hosts@the-hub.net or call us on 0207 8418900.
+
+Thank you very much. 
+
+The Hosting Team
+
+Working on hubspace/templates/billing.kid
+Warning: Mixed content in tag <div>: 
+			 ${load_billingDetails(object)} 
+		
+Warning: Mixed content in tag <div>: 		
+ 	${display_invoice(object)}
+        
+Warning: Mixed content in tag <td>: H${invoice.id}
+Warning: Mixed content in tag <td>: ${dateconverter.from_python(invoice.sent)}  
+Working on hubspace/templates/locationAdmin.kid
+Warning: Mixed content in tag <h2>: Location Details - ${location.name}
+Warning: Mixed content in tag <div>: 
+                               ${load_locationProfile(location)} 
+			
+Warning: Mixed content in tag <h2>: Location Images - ${location.name}
+Warning: Mixed content in tag <a>: ${location.name} user list
+Warning: Mixed content in tag <a>: Download ${location.name} Invoices
+Warning: Mixed content in tag <a>: ${location.name} usage report
+Warning: Mixed content in tag <a>: 
+${loc_admin(object)}
+
+Working on hubspace/templates/memberServicesEdit.kid
+Warning: Mixed content in tag <div>: 
+    ${load_memberServicesEdit(object, tg_errors=tg_errors)}
+
+Working on hubspace/templates/addTariff.kid
+Working on hubspace/templates/memberCommunities.kid
+Warning: Mixed content in tag <script>: 
+ ${load_memberCommunities(object)}
+
+Working on hubspace/templates/uploadImage.kid
+Working on hubspace/templates/locationProfile.kid
+Warning: Mixed content in tag <script>: 	        
+${load_locationProfile(object)}
+
+Working on hubspace/templates/network.kid
+Warning: Mixed content in tag <div>: 
+${network_skeleton(object)}
+
+Working on hubspace/templates/memberCommunitiesEdit.kid
+Warning: Mixed content in tag <td>: 
+ ${load_memberCommunitiesEdit(object)}
+
+Working on hubspace/templates/resourceDescription.kid
+Working on hubspace/templates/tariffHistory.kid
+Warning: Mixed content in tag <td>: ${year} Tariffs
+Warning: Mixed content in tag <td>:      
+    ${load_tariffHistory(user, location)}
+
+Working on hubspace/templates/locationProfileEdit.kid
+Warning: Mixed content in tag <div>: 
+  ${load_locationProfileEdit(object, tg_errors=tg_errors)}
+
+Working on hubspace/templates/addRusage.kid
+Warning: Mixed content in tag <a>: ${date(object)} 
+Working on hubspace/templates/addResource.kid
+Working on hubspace/templates/addBooking.kid
+Warning: Mixed content in tag <div>: 
+                ${load_meetingBookingEdit(rusage, resource, create, tg_errors)}	
+                
+Warning: Mixed content in tag <td>: 
+
+    ${meeting_booking(rusage=object, resource=resource, create=True, tg_errors=tg_errors, message=message)}
+
+
+
+Working on hubspace/templates/addTodoBar.kid
+Warning: Mixed content in tag <input>: 
+  ${add_bar(object, todo=todo, tg_errors=tg_errors)}
+
+Working on hubspace/templates/tariffHistoryEdit.kid
+Warning: Mixed content in tag <td>: ${year} Tariffs
+Warning: Mixed content in tag <option>: 
+                                  ${t_name}
+                             
+Warning: Mixed content in tag <option>: 
+     	${edit_tariffHistory(object, get_location(location))}   
+
+Working on hubspace/templates/mainProfile.kid
+Warning: Mixed content in tag <option>: 
+                                      ${loc.name}  
+                                   
+Warning: Mixed content in tag <div>: 
+                                      ${load_tariffHistory(object, location)}
+				
+Warning: Mixed content in tag <div>: 
+		${load_memberProfile(object)}         
+       	   
+Warning: Mixed content in tag <div>: 
+                       ${load_memberDescription(object)}
+                    
+Warning: Mixed content in tag <div>: 
+                                  ${load_relationship_status(object)}
+			
+Warning: Mixed content in tag <div>: 
+                                  ${show_notes(object)}				
+			
+Warning: Mixed content in tag <div>: 
+		          ${load_memberServices(object)}
+			
+Warning: Mixed content in tag <div>: 
+                               ${load_bristolData(AttrDict(object.bristol_metadata), object)}
+                            
+Warning: Mixed content in tag <div>: 
+               ${tariff_bookings(object.homeplace, object)}
+	     
+Warning: Mixed content in tag <c>:    
+   ${load_profile(object)}
+  
+Warning: Mixed content in tag <c>: 
+   ${tariff_bookings(Location.get(location), object)}
+  
+Working on hubspace/templates/login.kid
+Working on hubspace/templates/location.kid
+Working on hubspace/templates/pricingSchedule.kid
+Warning: Mixed content in tag <td>: ${price.resource.place.currency} ${c2s(price.cost)}
+Warning: Mixed content in tag <h2>:  Pricing Schedule - ${resource.name}
+Warning: Mixed content in tag <td>: ${resource.name} - price
+Working on hubspace/templates/subresourcetable.kid
+Warning: Mixed content in tag <div>: ${inv_currency(invoice, billed_user)} ${c2s([rusage.customcost,rusage.cost][rusage.customcost == None])}
+Working on hubspace/templates/memberDescription.kid
+Warning: Mixed content in tag <div>: 
+                    ${XML(publish_parts(object.description, writer_name="html")["html_body"])}
+           
+Warning: Mixed content in tag <div>: 
+       ${load_memberDescription(object)}
+
+Working on hubspace/templates/host.kid
+Warning: Mixed content in tag <c>: 
+    ${render_todo(todo)}
+
+Warning: Mixed content in tag <div>: 
+           ${load_todos(object)}
+       
+Warning: Mixed content in tag <div>: 
+           ${invoicing_search()}
+       
+Working on hubspace/templates/addMember.kid
+Warning: Mixed content in tag <form>: 		
+        ${load_memberProfileEdit(new_user, tg_errors)}	
+        ${load_memberDescriptionEdit(new_user, tg_errors)}
+       
+Warning: Mixed content in tag <form>: 
+        ${load_memberServicesEdit(new_user, tg_errors)}
+  
+Warning: Mixed content in tag <input>: 
+   ${add_member(new_user, tg_errors)}
+
+Working on hubspace/templates/bookingSheet.kid
+Warning: Mixed content in tag <td>: ${hour}${ampm}
+Warning: Mixed content in tag <div>: 
+                    ${render_quarts(sch.start, sch.end, sch.className, sch.meeting_name)}
+                
+Warning: Mixed content in tag <div>: 	
+        ${load_bookingSheet(location, date)}
+
+Working on hubspace/templates/memberDescriptionEdit.kid
+Warning: Mixed content in tag <textarea>: 
+    ${load_memberDescriptionEdit(object, tg_errors=tg_errors)}
+
+Working on hubspace/templates/manageResources.kid
+Working on hubspace/templates/addResources.kid
+Working on hubspace/templates/billingDetails.kid
+Warning: Mixed content in tag <script>: 
+        ${load_billingDetails(object)}
+
+Working on hubspace/templates/memberslist.kid
+Warning: Mixed content in tag <a>: 
+      ${member_list(members)}
+   
+Working on hubspace/templates/upload_outstanding_form.kid
+Working on hubspace/templates/admin.kid
+Warning: Mixed content in tag <div>: 
+          ${loc_admin(object.homeplace)}
+        
+Working on hubspace/templates/memberProfile.kid
+Warning: Mixed content in tag <p>:  ${object.display_name}
+Warning: Mixed content in tag <span>: ${alias.alias_name}, 
+Warning: Mixed content in tag <span>: ${object.homeplace.currency} ${c2s(object.outstanding)}
+Warning: Mixed content in tag <span>: 	        
+${load_memberProfile(object)}
+
+Working on hubspace/templates/notes.kid
+Warning: Mixed content in tag <div>: ${note.title} - 
+Warning: Mixed content in tag <span>: added by ${note.byuser.display_name} on ${d.from_python(note.date)[:-3]}
+Warning: Mixed content in tag <span>: ${date.from_python(datetime.now())} 
+Warning: Mixed content in tag <div>: 
+           ${show_note(note)}
+       
+Warning: Mixed content in tag <c>: 
+            ${show_notes(user)} 
+    
+Warning: Mixed content in tag <c>: 
+            ${show_note(note)} 
+    
+Warning: Mixed content in tag <c>: 
+         ${add_note(object, new_note, tg_errors)}
+    
+Working on hubspace/templates/todos.kid
+Warning: Mixed content in tag <span>: created by ${todo.createdby} on ${datetimecon(todo.opened)}
+Warning: Mixed content in tag <div>: Completion Due: ${date(todo.due)}
+Warning: Mixed content in tag <li>: 
+                     ${render_todo(todo)}
+                     
+Warning: Mixed content in tag <span>: 
+                 ${todo_content(todos, show_closed=False)}
+	    
+Warning: Mixed content in tag <h1>: ${object.display_name}'s List
+Warning: Mixed content in tag <span>:            
+             ${todobox(object, urgent(object), 'Urgent', cssclass="dataBox urgent", bar_type="system", bar_id="urgent", bar_action="urgent")}
+             ${todobox(object, events(object, today()), "Today's bookings", cssclass="dataBox today", bar_type="system", bar_id="today", bar_action="booking")}
+             ${todobox(object, events(object, (today()+timedelta(days=1))), "Tomorrow's bookings", cssclass="dataBox tomorrow", bar_type="system", bar_id="tomorrow", bar_action="booking")}
+             ${todobox(object, invoices_to_create(object), 'Invoices to create', cssclass="dataBox invoices", bar_type="system", bar_id="invoices_create",  bar_action="create_invoices")}
+             ${todobox(object, invoices_unsent(object), 'Invoices to be sent', cssclass="dataBox invoices", bar_type="system", bar_id="invoices_unsent",  bar_action="send_invoices")}
+             ${todobox(object, reminders(object),'Payment reminders',cssclass="dataBox invoices", bar_type="system", bar_id="payment_reminders", bar_action="remind_debtors")}
+            
+Warning: Mixed content in tag <c>: 
+                 ${todobox(object, todos(bar, object), bar.subject, bar.body, bar_id=barId(bar), bar_type="user", bar_action=bar.action)}
+            
+Warning: Mixed content in tag <c>: 
+     ${load_todos(object)}
+   
+Warning: Mixed content in tag <c>: 
+        ${todo_content(todos(bar, object), show_closed=show_closed)}
+   
+Working on hubspace/templates/master.kid
+Warning: Mixed content in tag <span>: 
+                Hello ${tg.identity.user.first_name}.
+                
+Warning: Mixed content in tag <span>: 
+                    Hello ${tg.identity.user.first_name}.
+                    
+Warning: Mixed content in tag <ul>: 
+			  ${member_list(filter_members(location=None, text_filter="", type="member_search", active_only=False, start=0, end=80))}
+		    
+Working on hubspace/templates/space.kid
+Warning: Mixed content in tag <div>: 
+               ${load_booking(date=datetime.now(), view=0, location=user.homeplace)}
+	  
+Warning: Mixed content in tag <div>: 
+    ${load_space(user=object)}
+
+Working on hubspace/templates/invoice.kid
+Working on hubspace/templates/billingDetailsEdit.kid
+Warning: Mixed content in tag <div>: 
+	${load_billingDetailsEdit(object, tg_errors=tg_errors)}
+
+Working on hubspace/templates/memberProfileEdit.kid
+Warning: Mixed content in tag <td>: 
+                                   ${location.name}
+                                   
+Warning: Mixed content in tag <c>: 
+  ${load_memberProfileEdit(object, tg_errors=tg_errors)}
+
+Working on hubspace/templates/invoicesnippet.kid
+Warning: Mixed content in tag <a>: ${dateconverter.from_python(get_earliest(user))} 
+Warning: Mixed content in tag <a>: ${dateconverter.from_python(get_latest(user))} 
+Warning: Mixed content in tag <div>: 
+           ${XML(display_resource_table(user=user, invoice=invoice, earliest=get_earliest(user), latest=get_latest(user)))}
+       
+Warning: Mixed content in tag <h2>: Invoice H${invoice.id}
+Warning: Mixed content in tag <h2>: 
+    ${XML(display_resource_table(user=user, invoice=invoice, earliest=get_earliest(user), latest=get_latest(user)))}
+   
+Warning: Mixed content in tag <h2>: 
+${display_invoice(user=user, invoice=invoice)}
+
+Working on hubspace/templates/resourcetable.kid
+Warning: Mixed content in tag <div>: ${inv_currency(invoice, user)} ${c2s([rusage.customcost,rusage.cost][rusage.customcost == None])}
+Warning: Mixed content in tag <td>: ${inv_currency(invoice, user)} ${c2s([rusage.customcost,rusage.cost][rusage.customcost == None])}
+Warning: Mixed content in tag <td>: ${inv_currency(invoice, user)} ${c2s(sum_resource_costs(rusages))}
+Warning: Mixed content in tag <td>: 
+${resource_table(invoice_data, mainuser, invoice)}
+
+Working on hubspace/templates/profile.kid
+Warning: Mixed content in tag <div>: 
+              ${load_profile(object)} 
+          
+Warning: Mixed content in tag <div>:  
+${new_profile(object)} 
+    
+Warning: Mixed content in tag <div>: 
+         ${network_skeleton(object)}
+    
+Working on hubspace/templates/meetingBooking.kid
+Warning: Mixed content in tag <td>: ${rusage.resource.name}  
+                                      
+Warning: Mixed content in tag <td>: ${rusage.meeting_name} ${public_or_private(rusage)}
+Warning: Mixed content in tag <td>: ${display_time(rusage.start)} - ${display_time(rusage.end)}
+Warning: Mixed content in tag <td>: 
+                                     ${", ".join([usage.resource_name for usage in rusage.suggested_usages])}
+                                
+Warning: Mixed content in tag <td>: ${rusage.resource.place.currency} ${rusage.customcost != None and c2s(rusage.customcost) or c2s(rusage.cost)} (including VAT)
+Warning: Mixed content in tag <td>: ${rusage.notes}
+                                  
+Warning: Mixed content in tag <a>: 
+${meeting(rusage=rusage, message=message)}
+            
+Warning: Mixed content in tag <c>: 
+          ${meetingBooking(rusage=rusage, message=None)}
+       
+Warning: Mixed content in tag <c>: 
+          ${meeting(rusage=booking, message=None)}
+       
+Warning: Mixed content in tag <c>: 
+          ${meetingBooking(message=message)}
+       
+Working on hubspace/templates/mini_details.kid
+Working on hubspace/templates/password.kid
+Working on hubspace/templates/jhb.kid
+Warning: Mixed content in tag <body>: 
+$location
+$permissions
+$groups
+
+Working on hubspace/templates/managePricing.kid
+Warning: Mixed content in tag <h2>: Tariff - ${object.name}
+Warning: Mixed content in tag <td>: ${resource.place.currency} ${price(resource, object)}
+Working on hubspace/templates/send_invoice.kid
+Warning: Mixed content in tag <td>: Invoice${object.id}.pdf
+Warning: Mixed content in tag <textarea>: 
+Dear ${object.user.first_name},
+
+Please find your Hub invoice attached.
+
+If you have any questions, please don't hesitate to contact The Hub's hosting team on ${object.location.name}.hosts@the-hub.net or ${object.location.telephone}.
+
+We would always welcome your feedback and ideas on how we can improve your experience here. 
+
+Thank you for being part of The Hub.
+
+The Hosting Team
+
+Working on hubspace/templates/meetingBookingEdit.kid
+Warning: Mixed content in tag <input>: ${option.name}  (${resource.place.currency} ${get_pricing(get_tariff(resource.place.id, identity.current.user.id, rusage.start), option, rusage.start)} each)
+                    
+Warning: Mixed content in tag <span>: ${resource.place.currency} ${get_pricing(get_tariff(resource.place.id, identity.current.user.id, rusage.start), resource, rusage.start)}/hour
+Warning: Mixed content in tag <div>: 
+
+${load_meetingBookingEdit(rusage=object, resource=get_resource(object, resource), create=create, tg_errors=tg_errors)}
+
+
+Working on hubspace/templates/bristolData.kid
+Warning: Mixed content in tag <td>: 
+						   ${object.org_type}
+						
+Warning: Mixed content in tag <li>: 
+                                                           ${val}
+                                                        
+Warning: Mixed content in tag <td>: ${object.additional} 
+                                                
+                                                
+Warning: Mixed content in tag <td>: 
+
+${load_bristolData(object, user)}
+
+Working on hubspace/templates/fulltextsearch.kid
+Working on hubspace/templates/relationshipStatus.kid
+Warning: Mixed content in tag <td>: 
+${load_relationship_status(object)}	
+
+Working on hubspace/templates/relationshipStatusEdit.kid
+Warning: Mixed content in tag <div>: 
+    ${load_relationshipStatusEdit(object, tg_errors=tg_errors)}
+
+Working on hubspace/templates/publicEvent.kid
+Warning: Mixed content in tag <td>: ${rusage.resource.place.name} - ${rusage.resource.name}
+Warning: Mixed content in tag <td>: ${datetimeconverter2.from_python(rusage.start)} - ${timeconverter.from_python(rusage.end)}
+Working on hubspace/templates/invoicing.kid
+Warning: Mixed content in tag <a>: ${dateconverter.from_python(datetime.now())} 
+Warning: Mixed content in tag <div>: 
+    ${invoicing_search()}
+
+Working on hubspace/templates/publicProfile.kid
+Warning: Mixed content in tag <td>:  ${user.organisation}
+Warning: Mixed content in tag <td>:  ${get_freetext_metadata(user, 'biz_type')}
+Working on hubspace/templates/addResourceGroup.kid
+Working on hubspace/templates/loginMaster.kid
+Warning: Mixed content in tag <title>: Welcome to ${cherrypy.request.base in title and title[cherrypy.request.base] or "The Hub"}
+Warning: Mixed content in tag <h1>: Upcoming Events in ${location.name}
+Warning: Mixed content in tag <p>: ${datetimeconverter2.from_python(update_item.start)} - ${timeconverter.from_python(update_item.end)}
+Warning: Mixed content in tag <h2>: ${update_item.resource.place.name} - ${update_item.resource.name}
+Warning: Mixed content in tag <p>: ${datetimeconverter2.from_python(update_item.start)} - ${timeconverter.from_python(update_item.end)}
+Warning: Mixed content in tag <h2>: ${update_item.resource.place.name} - ${update_item.resource.name}
+Warning: Mixed content in tag <h1>: Recently Updated Profiles in ${location.name}
+Working on hubspace/templates/locationBooking.kid
+Warning: Mixed content in tag <input>: 
+
+       ${load_dayBooking()}
+   
+Working on hubspace/templates/viewBooking.kid
+Warning: Mixed content in tag <div>: 
+                ${meetingBooking(rusage, message)}	
+            
+Warning: Mixed content in tag <div>: 
+    ${meeting_booking(rusage=rusage, tg_errors=tg_errors, message=message)}
+
+Working on hubspace/templates/manageTariffs.kid
+Warning: Mixed content in tag <div>: 
+${resources(object)}
+
+Working on hubspace/templates/space2.kid
+Warning: Mixed content in tag <a>: ${user.homeplace.name.lower()}.hosts@the-hub.net
+Warning: Mixed content in tag <img>:  ${today()}
+Warning: Mixed content in tag <div>:         									${load_bookingSheet(user.homeplace, now())}
+                 
+Warning: Mixed content in tag <div>: 
+${load_space(object)}
+
+Working on hubspace/templates/moreResDetails.kid
+Warning: Mixed content in tag <span>: ${res.name} 
+Warning: Mixed content in tag <span>: ${res.name} 
+Warning: Mixed content in tag <div>: 
+            ${requirements(object)}
+        
+Warning: Mixed content in tag <div>: 
+            ${suggestions(object)}
+        
+Warning: Mixed content in tag <span>: ${suggestion.name} 
+Warning: Mixed content in tag <span>: ${requirement.name} 
+Working on hubspace/templates/dayBooking.kid
+Warning: Mixed content in tag <span>: 
+   ${load_dayBooking(location, resgroup, date, only_my_bookings)}
+
+Working on hubspace/templates/booking.kid
+Warning: Mixed content in tag <h2>: ${date_to_text(date-timedelta(days=date.weekday()))} - ${date_to_text(date+timedelta(days=6-date.weekday()))}
+Warning: Mixed content in tag <div>:  
+          ${load_dayBooking(location, resgroup, date, only_my_bookings)}
+      
+Warning: Mixed content in tag <div>:  
+          ${load_weekBooking(location, resgroup, date, room_selected, rooms_displayed, only_my_bookings)}
+      
+Warning: Mixed content in tag <div>: 
+    ${load_booking(date='date' in locals() and date or datetime.now(), 
+                   view='view' in locals() and view or 0, 
+                   location='location' in locals() and location or object.homeplace, 
+                   room_selected='room_selected' in locals() and room_selected or None, 
+                   rooms_displayed='rooms_displayed' in locals() and rooms_displayed or [],
+                   resgroup='res_group' in locals() and res_group or None,
+		   only_my_bookings='only_my_bookings' in locals() and only_my_bookings or 0
+		   )}
+
+Working on hubspace/templates/openTimes.kid
+Warning: Mixed content in tag <input>: 
+${open_times(location)}
+
+Working on hubspace/templates/weekBooking.kid
+Warning: Mixed content in tag <span>: 
+    ${load_weekBooking(location, resgroup, date, room_selected, rooms_displayed, only_my_bookings=0)}
+
+Working on hubspace/templates/old/sortable2.kid
+Working on hubspace/templates/old/sortable3.kid
+Working on hubspace/static/javascript/admin.js
+Working on hubspace/static/javascript/browserdetect.js
+Working on hubspace/static/javascript/hub.js
+Working on hubspace/static/javascript/scroll.js
+Working on hubspace/static/javascript/fader.js
+Working on hubspace/static/javascript/databox.js
+Working on hubspace/static/javascript/hubspace.js
+Working on hubspace/static/javascript/prototype-1.6.0.2.js
+Working on hubspace/static/javascript/jquery.ajaxQueue.js
+Working on hubspace/static/javascript/jquery.confirm.js
+Working on hubspace/static/javascript/jquery.bgiframe.min.js
+Working on hubspace/static/javascript/effects.js
+Working on hubspace/static/javascript/jquery.timers.js
+Working on hubspace/static/javascript/jquery.dimensions.js
+Working on hubspace/static/javascript/ui.base.js
+Working on hubspace/static/javascript/ui.datepicker.js
+Working on hubspace/static/javascript/ui.sortable.js
+Working on hubspace/static/javascript/jquery.tablednd.js
+Working on hubspace/static/javascript/delayed-observer-0.4b.js
+Working on hubspace/static/javascript/my.sortable.js
+Working on hubspace/static/javascript/jquery-1.2.3.min.js
+Working on hubspace/static/javascript/scriptaculous.js
+Working on hubspace/static/javascript/jquery.min.js
+Working on hubspace/static/javascript/jquery.autocomplete.min.js
+Working on hubspace/static/javascript/controls.js
+Working on hubspace/static/javascript/jq.noconflict.js
+Working on hubspace/static/javascript/overlib/overlib_setonoff.js
+Working on hubspace/static/javascript/overlib/overlib_centerpopup.js
+Working on hubspace/static/javascript/overlib/overlib_crossframe.js
+Working on hubspace/static/javascript/overlib/overlib_shadow.js
+Working on hubspace/static/javascript/overlib/overlib_debug.js
+Working on hubspace/static/javascript/overlib/overlib_exclusive.js
+Working on hubspace/static/javascript/overlib/overlib_cssstyle.js
+Working on hubspace/static/javascript/overlib/overlib_anchor.js
+Working on hubspace/static/javascript/overlib/overlib_hideform.js
+Working on hubspace/static/javascript/overlib/overlib.js
+Working on hubspace/static/javascript/overlib/overlib_followscroll.js
+Working on hubspace/static/javascript/overlib/Mini/overlib_csstyle_mini.js
+Working on hubspace/static/javascript/overlib/Mini/overlib_debug_mini.js
+Working on hubspace/static/javascript/overlib/Mini/overlib_exclusive_mini.js
+Working on hubspace/static/javascript/overlib/Mini/overlib_anchor_mini.js
+Working on hubspace/static/javascript/overlib/Mini/overlib_hideform_mini.js
+Working on hubspace/static/javascript/overlib/Mini/overlib_mini.js
+Working on hubspace/static/javascript/overlib/Mini/overlib_followscroll_mini.js
+Working on hubspace/static/javascript/overlib/Mini/overlib_setonoff_mini.js
+Working on hubspace/static/javascript/overlib/Mini/overlib_centerpopup_mini.js
+Working on hubspace/static/javascript/overlib/Mini/overlib_crossframe_mini.js
+Working on hubspace/static/javascript/overlib/Mini/overlib_shadow_mini.js
+Backup existing file to locales/messages.bak
+Message templates written to locales/messages.pot

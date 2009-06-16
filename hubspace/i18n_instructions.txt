@@ -1,0 +1,21 @@
+When receive a new pot file:
+
+1. DONT USE  "tg-admin i18n compile" its evil and takes translations from other po files in an unpredictable way. 
+
+When change a template (ensure that the indentation is extremely regular):
+1. collect strings from tg-admin toolbox adm11n interface
+Current file to select are:
+  controllers.py
+  templates/addBooking.kid
+  templates/invoice.kid
+  templates/send_invoice.kid
+  validators.py 
+
+2. tg-admin i18n merge - I think this works okay
+3. remove the existing .mo files (to ensure that they will be recompiled)
+
+
+4. DONT USE "tg-admin i18n compile" as this will screw things up
+
+
+When adding a translation just do 2. and 3.

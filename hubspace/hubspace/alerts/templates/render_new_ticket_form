@@ -1,0 +1,29 @@
+sender = "noreply@the-hub.net"
+subject = "HubSpace Application Alert: Rendering Trac Ticket Submission Form Failed"
+body = """\
+Dear Developer,
+
+The hubspace application encountered following error.
+
+Trac Error
+==========
+Trac URL  :  $url
+Exception : $render_err
+
+
+Hubspace Error (failed to report to trac)
+=========================================
+Error ID:  $e_id
+
+Ticket reporter    : $reporter
+Ticket summary     : $summary
+Ticket description : $description
+Exception          : $e_str
+    
+
+This is an automated alert. Do not reply.
+
+All the best,
+
+The Hub+ Team
+"""

@@ -1,0 +1,152 @@
+Ok, this is the full content of the csv description.
+
+============================================================
+
+Account Ref Char 8 Yes Standard / Extended
+Name Char 60 Standard / Extended
+Address Line 1 Char 60 Standard / Extended
+Address Line 2 Char 60 Standard / Extended
+Address Line 3 Char 60 Standard / Extended
+Address Line 4 Char 60 Standard / Extended
+Address Line 5 Char 60 Standard / Extended
+Contact Name Char 30 Standard / Extended
+Telephone Char 30 Standard / Extended
+Fax Char 30 Standard / Extended
+Analysis 1 Char 30 Standard / Extended
+Analysis 2 Char 30 Standard / Extended
+Analysis 3 Char 30 Standard / Extended
+Department No Int 3 1 - 999 3 digits + 0 d.p. Standard / Extended
+VAT Registration No Char 30 Standard / Extended
+Turnover MTD Double 11 8 digits + 2 d.p. Standard / Extended
+Turnover YTD Double 11 8 digits + 2 d.p. Standard / Extended
+Prior YTD Double 11 8 digits + 2 d.p. Standard / Extended
+Credit Limit Double 11 8 digits + 2 d.p. Standard / Extended
+Terms Char 30 Standard / Extended
+Settlement Due Days Int 3 0 - 365 3 digits + 0 d.p. Standard / Extended
+Settlement Discount Rate % Double 11 0 - 99.99 2 digits + 2 d.p. Standard / Extended
+Default Nominal Code Char 8 Lookup Standard / Extended
+Default Tax Code Int 2 T0 - T99 Standard / Extended
+
+Trade Contact Char 30 Extended
+Balance --- --- Not Included
+Telephone 2 Char 30 Extended
+EMail Char 255 Extended
+WWW Char 255 Extended
+Account Status No --- --- Not Included
+Delivery Address Line 1 --- --- Not Included
+Delivery Address Line 2 --- --- Not Included
+Delivery Address Line 3 --- --- Not Included
+Delivery Address Line 4 --- --- Not Included
+Delivery Address Line 5 --- --- Not Included
+Delivery Contact Name --- --- Not Included
+Delivery Telephone --- --- Not Included
+Delivery Fax --- --- Not Included
+Discount Rate % Double 11 0 ¿ 99.99 2 digits + 2 d.p. Extended
+Discount Type (Customers
+Only)
+--- --- Not Included
+Override Product Tax Code in
+invoicing?
+--- --- Not Included
+Currency No --- --- Not Included
+Payment Due Days Int 3 0 - 365 3 digits + 0 d.p. Extended
+Credit Reference --- --- Not Included
+Bureau Code --- --- Not Included
+Can Charge Credit? --- --- Not Included
+Terms Agreed? Int 1 0 or 1 1 digit + 0 d.p. Extended
+Restrict Mailing? --- --- Not Included
+Account On Hold? --- --- Not Included
+Account Opened --- --- Not Included
+Last Credit Review --- --- Not Included
+Next Credit Review --- --- Not Included
+Application Date --- --- Not Included
+Date Received --- --- Not Included
+Invoices - Bfwd, Months 1-12,
+Future
+--- --- Not Included
+Credits - Bfwd, Months 1-12,
+Future
+--- --- Not Included
+Sales - Balance Bfwd, Months
+1-12, Future
+--- --- Not Included
+Receipts - Bfwd, Months 1-12,
+Future
+--- --- Not Included
+Bank Name
+(Suppliers Only)
+Char 60 Extended
+Bank Address Line 1
+(Suppliers Only)
+Char 60 Extended
+Bank Address Line 2
+(Suppliers Only)
+Char 60 Extended
+Bank Address Line 3
+(Suppliers Only)
+Char 60 Extended
+Bank Address Line 4
+
+(Suppliers Only) Char 60 Extended
+Bank Address Line 5
+(Suppliers Only)
+Char 60 Extended
+Bank Account Name
+(Suppliers Only)
+Char 60 Extended
+Bank Sort Code
+(Suppliers Only)
+Char 10 Extended
+Bank Account Number
+(Suppliers Only)
+Char 20 Extended
+BACS Reference
+(Suppliers Only)
+Char 60 Extended
+Online Payments?
+(Suppliers Only)
+Int 1 0 or 1 1 digit + 0 d.p. Extended
+Contacts --- --- Not Included
+Memo --- --- Not Included
+=================================================================
+
+Assuming that we need to do an extended import,
+we leave out everything that is marked as not included, or 
+is suppliers only
+
+
+===================================================================
+
+Account Ref Char 8 Yes Standard / Extended
+Name Char 60 Standard / Extended
+Address Line 1 Char 60 Standard / Extended
+Address Line 2 Char 60 Standard / Extended
+Address Line 3 Char 60 Standard / Extended
+Address Line 4 Char 60 Standard / Extended
+Address Line 5 Char 60 Standard / Extended
+Contact Name Char 30 Standard / Extended
+Telephone Char 30 Standard / Extended
+Fax Char 30 Standard / Extended
+Analysis 1 Char 30 Standard / Extended
+Analysis 2 Char 30 Standard / Extended
+Analysis 3 Char 30 Standard / Extended
+Department No Int 3 1 - 999 3 digits + 0 d.p. Standard / Extended
+VAT Registration No Char 30 Standard / Extended
+Turnover MTD Double 11 8 digits + 2 d.p. Standard / Extended
+Turnover YTD Double 11 8 digits + 2 d.p. Standard / Extended
+Prior YTD Double 11 8 digits + 2 d.p. Standard / Extended
+Credit Limit Double 11 8 digits + 2 d.p. Standard / Extended
+Terms Char 30 Standard / Extended
+Settlement Due Days Int 3 0 - 365 3 digits + 0 d.p. Standard / Extended
+Settlement Discount Rate % Double 11 0 - 99.99 2 digits + 2 d.p. Standard / Extended
+Default Nominal Code Char 8 Lookup Standard / Extended
+Default Tax Code Int 2 T0 - T99 Standard / Extended
+Trade Contact Char 30 Extended
+Telephone 2 Char 30 Extended
+EMail Char 255 Extended
+WWW Char 255 Extended
+Discount Rate % Double 11 0 ¿ 99.99 2 digits + 2 d.p. Extended
+Payment Due Days Int 3 0 - 365 3 digits + 0 d.p. Extended
+Terms Agreed? Int 1 0 or 1 1 digit + 0 d.p. Extended
+================================================================
+Bad enough

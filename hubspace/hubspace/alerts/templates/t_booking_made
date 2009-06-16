@@ -1,0 +1,20 @@
+sender = "noreply@the-hub.net"
+subject = "The Hub | Tentative booking confirmation"
+body = """\
+Dear $name,
+
+Thank you for your booking at The Hub $location_name.
+
+You have booked $resource_name from $start to $end on $date. The expected cost of this usage is $currency $cost
+
+$options
+Please note, this is currently a tentative booking. Unless you confirm with a host within $time_left hours, the booking will expire and the space will become available for other bookings. To confirm the booking, just speak to a host or logon to $location_url.
+
+In the event of a cancellation or expiry you may be charged based on booking cancellation policies.
+
+If you have any questions or further requirements please contact The Hub's hosting team at $hosts_email or call us on $telephone
+
+We look forward to seeing you.
+
+The $location_name Hosting Team
+"""

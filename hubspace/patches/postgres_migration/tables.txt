@@ -1,0 +1,268 @@
+BEGIN;
+
+CREATE TABLE resource (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(200),
+    place_id integer NULL,
+    type VARCHAR(20) CHECK (type in ('hotdesk', 'room', 'phone', 'printer', 'tariff', 'custom', 'other', 'calendar')),
+    vat FLOAT,
+    description text,
+    active SMALLINT,
+    time_based SMALLINT,
+    resgroup_id integer NULL, 
+    resimage_mimetype VARCHAR(15)
+);
+CREATE TABLE location (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(200) NOT NULL UNIQUE,
+    currency VARCHAR(3),
+    defaulttariff_id integer CONSTRAINT defaulttariff_id_exists REFERENCES resource(id) DEFERRABLE INITIALLY DEFERRED,
+    vat_default FLOAT,
+    billing_address TEXT,
+    messages BYTEA,
+    cancellation_charges BYTEA,
+    opens TIMESTAMP,
+    closes TIMESTAMP, 
+    timezone VARCHAR(40), 
+    company_no VARCHAR(40), 
+    url VARCHAR(40), 
+    vat_no VARCHAR(40), 
+    telephone VARCHAR(40), 
+    account_no VARCHAR(40), 
+    bank VARCHAR(40), 
+    sort_code VARCHAR(40), 
+    iban_no VARCHAR(40), 
+    swift_no VARCHAR(40), 
+    payment_terms TEXT, 
+    invlogo_mimetype VARCHAR(15), 
+    logo_mimetype VARCHAR(15), 
+    resourcegroup_order BYTEA, 
+    homelogo_mimetype VARCHAR(15), 
+    homepage_title VARCHAR(60), 
+    homepage_description TEXT
+);
+CREATE TABLE resourcegroup(
+      id SERIAL PRIMARY KEY,
+      name TEXT,
+      description TEXT,
+      location_id integer CONSTRAINT location_id_exists REFERENCES location(id),
+      resources_order BYTEA
+    );
+
+ALTER TABLE "resource" ADD CONSTRAINT "place_id_constraint" FOREIGN KEY ("place_id") REFERENCES "location" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "resource" ADD CONSTRAINT "resgroup_id_constraint" FOREIGN KEY ("resgroup_id") REFERENCES "resourcegroup" ("id") DEFERRABLE INITIALLY DEFERRED;
+
+
+CREATE TABLE tg_visit (
+    id SERIAL PRIMARY KEY,
+    visit_key VARCHAR(40) NOT NULL UNIQUE,
+    created TIMESTAMP,
+    expiry TIMESTAMP
+);
+CREATE TABLE visit (
+    id SERIAL PRIMARY KEY,
+    visit_key VARCHAR(40) NOT NULL UNIQUE,
+    created TIMESTAMP,
+    expiry TIMESTAMP
+);
+CREATE TABLE visit_identity (
+    id SERIAL PRIMARY KEY,
+    visit_key VARCHAR(40) NOT NULL UNIQUE,
+    user_id integer
+);
+CREATE TABLE tg_visit_identity (
+    id SERIAL PRIMARY KEY,
+    visit_key VARCHAR(40) NOT NULL UNIQUE,
+    user_id integer
+);
+
+CREATE TABLE user_group (
+    group_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL
+);
+CREATE TABLE group_permission ( 
+    group_id INTEGER NOT NULL,
+    permission_id INTEGER NOT NULL
+);
+CREATE TABLE resource_dependencies (
+    dependend_id INTEGER NOT NULL,
+    required_id INTEGER NOT NULL
+);
+CREATE TABLE resource_suggestions (
+    suggesting_id INTEGER NOT NULL,
+    suggested_id INTEGER NOT NULL
+);
+CREATE TABLE tg_group (
+    id SERIAL PRIMARY KEY,
+    group_name VARCHAR(40) NOT NULL UNIQUE,
+    display_name VARCHAR(255),
+    created TIMESTAMP,
+    place_id INTEGER CONSTRAINT place_id_exists REFERENCES location(id) DEFERRABLE INITIALLY DEFERRED,
+    level VARCHAR(9) CHECK (level in ('superuser', 'director', 'member', 'host'))
+);
+
+CREATE TABLE pricing (
+    id SERIAL PRIMARY KEY,
+    tariff_id INTEGER CONSTRAINT tariff_id_exists REFERENCES resource(id) DEFERRABLE INITIALLY DEFERRED,
+    cost DECIMAL(10, 2), 
+    resource_id INTEGER CONSTRAINT resource_id_exists REFERENCES resource(id) DEFERRABLE INITIALLY DEFERRED, 
+    nextperiod_id INTEGER CONSTRAINT nextperiod_id_exists REFERENCES pricing(id) DEFERRABLE INITIALLY DEFERRED, 
+    periodstarts TIMESTAMP, 
+    periodends TIMESTAMP
+);
+CREATE TABLE permission (
+    id SERIAL PRIMARY KEY,
+    permission_name VARCHAR(40) NOT NULL UNIQUE,
+    description VARCHAR(255)
+);
+CREATE TABLE tg_permission (
+    id SERIAL PRIMARY KEY,
+    child_name VARCHAR(255),
+    permission_name VARCHAR(16) NOT NULL UNIQUE,
+    description VARCHAR(255)
+);
+
+CREATE TABLE tg_user (
+    id SERIAL PRIMARY KEY,
+    user_name VARCHAR(255) NOT NULL UNIQUE,
+    email_address VARCHAR(255) NOT NULL UNIQUE,
+    active SMALLINT,
+    display_name VARCHAR(255),
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    title VARCHAR(255),
+    organisation VARCHAR(255),
+    mobile VARCHAR(30),
+    work VARCHAR(30),
+    home VARCHAR(30),
+    fax VARCHAR(30),
+    password VARCHAR(40),
+    created TIMESTAMP,
+    email2 VARCHAR(255),
+    email3 VARCHAR(255),
+    address text,
+    skype_id text,
+    sip_id text,
+    website text,
+    homeplace_id INTEGER CONSTRAINT homeplace_id_exists REFERENCES location(id) DEFERRABLE INITIALLY DEFERRED,
+    cops BYTEA,
+    bristol_metadata BYTEA,
+    handset text,
+    ext text,
+    frank_pin text,
+    gb_storage text,
+    os text,
+    storage_loc text,
+    description text,
+    billto_id INTEGER CONSTRAINT billto_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED,
+    bill_to_profile SMALLINT,
+    bill_to_company text,
+    billingaddress text,
+    bill_phone text,
+    bill_fax text,
+    bill_email text,
+    bill_company_no text,
+    bill_vat_no text,
+    child_name text,
+    mimetype text,
+    unix_hash VARCHAR(50),
+    lanman_hash VARCHAR(50),
+    nt_hash VARCHAR(50),
+    outstanding DECIMAL(10, 2),
+    reminder_counter INTEGER,
+    last_reminder TIMESTAMP,
+    reminderkey VARCHAR(50), 
+    image_mimetype VARCHAR(15), 
+    welcome_sent SMALLINT, 
+    signedby_id INTEGER CONSTRAINT signedby_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED, 
+    hostcontact_id INTEGER CONSTRAINT hostcontact_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED, 
+    public_field SMALLINT, 
+    modified TIMESTAMP
+);
+CREATE TABLE invoice (
+    id SERIAL PRIMARY KEY,
+    billingaddress text,
+    user_id INTEGER CONSTRAINT user_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED,
+    start TIMESTAMP,
+    end_time TIMESTAMP,
+    created TIMESTAMP,
+    sent TIMESTAMP,
+    amount DECIMAL(10, 2),
+    currency VARCHAR(4), 
+    location_id INTEGER CONSTRAINT location_id_exists REFERENCES location(id) DEFERRABLE INITIALLY DEFERRED
+);
+
+CREATE TABLE rusage (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER CONSTRAINT user_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED,
+    resource_id INTEGER CONSTRAINT resource_id_exists REFERENCES resource(id) DEFERRABLE INITIALLY DEFERRED,
+    date_booked TIMESTAMP,
+    start TIMESTAMP,
+    end_time TIMESTAMP,
+    quantity INTEGER,
+    cost DECIMAL(10, 2),
+    customcost DECIMAL(10, 2),
+    resource_name VARCHAR(200),
+    resource_description text,
+    bookedby_id INTEGER CONSTRAINT bookedby_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED,
+    invoice_id INTEGER CONSTRAINT invoice_id_exists REFERENCES invoice(id) DEFERRABLE INITIALLY DEFERRED,
+    usagesuggestedby_id INTEGER CONSTRAINT usagesuggestedby_id_exists REFERENCES rusage(id) DEFERRABLE INITIALLY DEFERRED,
+    meeting_name text,
+    number_of_people INTEGER,
+    notes text, 
+    tariff_id INTEGER CONSTRAINT tariff_id_exists REFERENCES resource(id) DEFERRABLE INITIALLY DEFERRED, 
+    new_resource_description text, 
+    public_field SMALLINT, 
+    meeting_description text
+);
+CREATE TABLE todo (
+    id SERIAL PRIMARY KEY,
+    body text,
+    subject VARCHAR(200),
+    foruser_id INTEGER CONSTRAINT foruser_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED,
+    createdby_id INTEGER CONSTRAINT createdby_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED,
+    opened TIMESTAMP,
+    due TIMESTAMP,
+    closed TIMESTAMP,
+    parent_id INTEGER CONSTRAINT parent_id_exists REFERENCES todo(id) DEFERRABLE INITIALLY DEFERRED, 
+    action text, 
+    action_id INTEGER
+);
+CREATE TABLE alias (
+    id SERIAL PRIMARY KEY,
+    user_id integer REFERENCES "tg_user"("id") DEFERRABLE INITIALLY DEFERRED,
+    alias_name text
+);
+CREATE TABLE note (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(200),
+    body text,
+    date TIMESTAMP,
+    onuser_id INTEGER CONSTRAINT onuser_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED,
+    byuser_id INTEGER CONSTRAINT byuser_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED, 
+    action_id INTEGER CONSTRAINT action_id_exists REFERENCES todo(id) DEFERRABLE INITIALLY DEFERRED
+);
+CREATE TABLE user_meta_data(
+      id SERIAL PRIMARY KEY,
+      user_id integer CONSTRAINT user_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED,
+      attr_name VARCHAR(40),
+      attr_value TEXT
+    );
+
+CREATE TABLE selection(
+      id SERIAL PRIMARY KEY,
+      user_id integer CONSTRAINT user_id_exists REFERENCES tg_user(id) DEFERRABLE INITIALLY DEFERRED,
+      attr_name VARCHAR(40),
+      attr_value INTEGER
+    );
+CREATE TABLE open(
+      id SERIAL PRIMARY KEY,
+      location_id integer CONSTRAINT location_id_exists REFERENCES location(id) DEFERRABLE INITIALLY DEFERRED,
+      day INTEGER,
+      date DATE,
+      t_open TIME, 
+      t_close TIME
+    );
+END;
+
+

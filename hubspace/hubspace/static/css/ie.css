@@ -1,0 +1,44 @@
+#members {
+	background-image: url(/static/images/radius_top_left_ie.gif);
+	position:absolute;
+	left:0;
+}
+#members input {
+	margin-left:13px;
+	width: 145px;
+}
+#contentPane .subBar {
+	background-image: url(/static/images/radius_right_ie.gif);
+}
+.dataBox{
+	clear:both;
+}
+.dataBoxHeader{
+	background-image: url(/static/images/radius_sm_right_exp_ie.gif);
+}
+.dataBoxHeaderCollapse{
+	background-image: url(/static/images/radius_sm_right_ie.gif);
+}
+.dataBoxHeaderCollapse a.title{
+	background-image:url(/static/images/radius_sm_left_ie.gif);
+}
+.dataBoxHeader a.title{
+	background-image:url(/static/images/radius_sm_left_exp_ie.gif);
+}
+.sub_usages_open{
+    background:url(/static/images/arrow_down_resourcetable_ie.gif) no-repeat; 
+}
+.view_sub_usages{
+    background:url(/static/images/arrow_right_resourcetable_ie.gif) no-repeat;
+}
+.arrowButton{
+	width:14px;
+	height:14px;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/static/images/arrow_button_in.png',sizingMethod='scale');
+}
+.arrowButton img{
+	display:none;
+}
+#spaceContent table.bookings td.resName {
+	width:130px;
+}

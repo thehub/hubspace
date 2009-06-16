@@ -1,0 +1,69 @@
+We need to use at least TG 1.04b1 for js internationalisation.
+
+
+Requirments for i18N:
+--------------------
+---------------------Stage 1---------------------
+                     -------
+
+1. Edit every template file
+    a) ${_('message_in_attribute_value')}
+    b) format and parse - date, and money according to locales (turbogears.i18n.format)
+    c) deal with mixed content warnings
+2. Edit .py files for messages:
+    a) place an _('string') before every ui message
+    b) format and parse - date, and money according to locales (turbogears.i18n.format)
+
+3. Edit .js files for messages:
+    a) _('see how this works with substitution');
+    b) include a tg_widget to do the locale switching.
+
+4. a) Each location in the system must set a default locale. 
+   b) Use - turbogears.i18n.set_session_locale(lang) based on location's default locale.
+
+---------------------Stage 2---------------------
+                     -------
+
+5. Add a locale switcher dependent on where the user's hub is. Each hub can add a list of sub locales created by:
+a) straight google translate of there site strings.
+b) Copying (defaulting too) the messages of another locale e.g. en_berlin.pot they could then override that which is not translation but a local version of content.
+
+
+6. Image localisation "i18n Image"
+a) use image_name-locale.js or 
+b) in 7. allow uploads to these images.
+
+7. Inplace translation:
+a) translation mode for our app in which every message can be put into an inplace editor by a javascript based on a json version of the .pot file. insert message_ids.
+b) the .pot file can be edited in place and compiled to .mo via by the user to create a new translation.
+c) make this work in js as in 8.
+d) add a 'translating' session variable to turn on translation mode.
+
+8. JS internationalisation!!! 
+a) get transalations from server_side in by localising a js file from a locale using pygettext.py before downloading. e.g. hub-en_gb.js -> see Turbogears i18n 
+b) in a) could overload the _ function in js in order to run hub.js with translation interupts. Would require using a specialised dom manipulation wrapper e.g. instead of "element.innerHTML" using "element.update". Need to wrap: ['innerHTML', 'appendChild', 'insertBefore', etc]   
+
+
+---------------------TG pot, po, mo---------------------
+                     --------------
+1. tg js i18n.
+a) execute "tg-admin i18n create_js_messages" to create "messages-<language>.js" files in "static/javascript".
+b) "tg-admin i18n collect" gets everything including JS.
+c) "tg-admin i18n compile"
+
+TG-js ll0n
+--------------------------
+tg.include_widgets = ['turbogears.jsi18nwidget']. This will define the needed _() via including i18n.js. Which parses the other files and replaces _("message_id") with "local message".
+
+
+
+??? What happens if one Hub wants to present itself in many languages. 
+AAA. We should have i18n domains prefixed by Hub. e.g. berlin-en, berlin-de. For a location it should be possible to add a new sub locale to alias berlin-en london_angel-en.
+
+??? what about strings with substitution of content
+AAA _('member %(name)s is cool')%({'name':object.name})
+
+Separate domains for true translation and customisation
+
+AAA Solution: Each location (hub) should manage locales for its users. So when viewed from the Rotterdam hub, it will by default be in Dutch. If that hub wanted to also have a version in English, they could copy (or default to) the Hub London's version, and then customise the relevant sections. It would be useful if they could distinguish which are modified content and which are attempted translations.
+

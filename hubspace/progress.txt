@@ -1,0 +1,48 @@
+Hi *
+
+the progress,
+according to Tom and Joerg:
+
+Network / Members
+-----------------
+Data Structure   : 98%
+Backend Code     : 92%
+UI Design / HTML : 92%
+Javascript       : 95%
+Forms            : 95%
+Security         : 90%
+Tests            : 90%
+
+Billing
+-------
+Data Structure   : 95%
+Backend Code     : 95%
+UI Design / HTML : 90%
+Javascript       : 95%
+Forms            : 90%
+Security         : 90%
+Tests            : 90%
+
+Todos
+-----
+Data Structure   : 95%
+Backend Code     : 90%
+UI Design / HTML : 90%
+Javascript       : 90%
+Forms            : 50%
+Security         : 90%
+Tests            : 90%
+
+Import/Export
+-------------
+Data Structure   : 95%
+Backend Code     : 95%
+Security         : 95%
+Tests            : 90%
+
+Overall
+-------
+
+95 %
+
+

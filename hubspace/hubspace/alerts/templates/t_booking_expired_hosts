@@ -1,0 +1,19 @@
+sender = "noreply@the-hub.net"
+subject = "HubSpace Alert: Tentative booking cancellation"
+body = """\
+Dear Host,
+
+The booking for "$resource_name" by user "$bookedby" was just cancelled/expired. Therefore the resource would is available for booking from $start_time to $end_time on $date.
+
+Tentative Booking details:
+    Booked by:  $bookedby
+    Resource:   $resource_name
+    Start Time: $start
+    End Time:   $end
+
+This is an automated alert. Do not reply.
+
+All the best,
+
+The Hub+ Team
+"""

@@ -1,0 +1,9 @@
+bristol data:
+view - if both the logged in user and the member being viewed has homeplace bristol
+edit - if have permission manage_users or owner (host/director/my_profile)
+
+
+Joerg
+Dont use pip please permission_or_owner with None gives superuser permission
+
+deployment - apache + email 

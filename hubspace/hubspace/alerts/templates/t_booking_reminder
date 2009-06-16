@@ -1,0 +1,19 @@
+sender = "noreply@the-hub.net"
+subject = "Reminder: Booking confirmation"
+body = """\
+Dear Member,
+
+This is to remind that confirmation for the tentative booking is pending. 
+The booking is set to expire on $date_expire. 
+Booking details:
+    Meeting Room: $resource_name
+    Date Booked: $date_booked
+    Start Time: $start
+    End Time: $end
+
+This is an automated alert. Do not reply.
+
+All the best,
+
+The Hub+ Team
+"""

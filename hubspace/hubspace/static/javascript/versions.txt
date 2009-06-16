@@ -1,0 +1,2 @@
+jquery 1.2.6
+jq ui (ui.XXX.js and effects.XXX.js) from 1.5.3 (stable)

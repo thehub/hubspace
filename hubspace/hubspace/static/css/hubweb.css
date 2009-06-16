@@ -1,0 +1,629 @@
+/*
+THE HUB: WEB SITE 2009
+----------------------------------------
+Created by Jesson Yip and Tom Salfield.
+----------------------------------------
+*/
+
+
+/* Generic */
+
+* {
+	margin		: 0;
+	padding		: 0;
+}
+
+a {
+	color		: #ffffff;
+	text-decoration	: none;
+}
+
+a:hover {
+	color		: #660007;
+}
+
+p {
+	padding-bottom	: 1.5em;
+}
+
+img {
+	border		: 0;
+}
+
+.flush {
+	padding-bottom	: 0;
+}
+
+/* Main Layout */
+
+body {
+	font		: 62.5%/1.8em arial, verdana, sans-serif;
+	text-align	: center;
+}
+
+#wrapper {
+	font-size	: 1.2em;
+	height		: 408px;
+	margin		: 134px auto 0;
+	position	: relative;
+	text-align	: left;
+	width		: 900px;
+}
+
+
+/* Background Images */
+
+body {
+	background	: url("/static/images/hubweb/bg.gif") 50% 0 no-repeat;
+}
+
+#wrapper         { background : url("/static/images/hubweb/bg_generic.jpg") no-repeat; color: #ffffff; }
+.home   #wrapper { background : url("/static/images/hubweb/bg_home.jpg")    no-repeat; color: #ffffff; }
+.people #wrapper { background : url("/static/images/hubweb/bg_people.jpg")  no-repeat; color: #000000; }
+.places #wrapper { background : url("/static/images/hubweb/bg_places.jpg")  no-repeat; color: #000000; }
+.ideas  #wrapper { background : url("/static/images/hubweb/bg_ideas.jpg")   no-repeat; color: #ffffff; }
+
+
+/* Logo */
+
+#logo {
+	position	: absolute;
+	top			: 162px;
+}
+
+
+/* Navigation */
+
+#navigation {
+	position	: absolute;
+	top			: 395px;
+	width		: 70%;
+	line-height	: 1em;
+	list-style	: none;
+}
+
+#navigation li {
+	float		: left;
+	padding		: 0 1em;
+	border-left	: 1px solid #444444;
+}
+
+#navigation li.first {
+	border-left	: none;
+	padding-left: 0;
+}
+
+#navigation li a {
+	color		: #000000;
+}
+
+#navigation li a:hover	{
+	color		: #a31720;
+}
+
+#sub_navigation {
+	left		: 70%;
+	line-height	: 1em;
+	position	: absolute;
+	top			: 395px;
+	width		: 30%;
+	float		: right;
+	list-style	: none;
+}
+
+#sub_navigation li {
+	float		: right	;
+	padding		: 0 1em;
+	border-right: 1px solid #444444;
+}
+
+#sub_navigation li.last {
+	border-right: none;
+	padding-right	: 0;
+}
+
+#sub_navigation li a {
+	color		: #000000;
+}
+
+#sub_navigation li a:hover	{
+	color		: #a31720;
+}
+
+.home        #navigation li#ho a,
+.people      #navigation li#pe a,
+.places      #navigation li#pl a,
+.ideas       #navigation li#id a,
+.about       #navigation li#ab a,
+.invitation  #navigation li#in a,
+.login   #sub_navigation li#lo a,
+.contact #sub_navigation li#co a {
+	color		: #a31720;
+}
+.contact .left_column {
+	width: 600px;
+}
+
+/* Home */
+
+.home #home_navigation {
+	left		: 120px;
+	line-height	: 1.8em;
+	list-style	: none;
+	position	: absolute;
+	top		: 60px;
+	width		: 300px;
+}
+
+.home #home_navigation li {
+	border		: none;
+	padding-bottom	: 1.5em;
+        height		: 88px;
+	width		: 100%;
+}
+
+.home #home_navigation li a em {
+	display		: block;
+	font-size	: 3em;
+	line-height	: .75em;
+	font-style	: normal;
+	font-weight	: normal;
+	padding-bottom	: .3em;
+}
+
+.home #featured_label {
+	left		: 530px;
+	list-style	: none;
+	position	: absolute;
+	top		: 50px;
+}
+
+.home #featured {
+	left		: 530px;
+	list-style	: none;
+	position	: absolute;
+	top		: 50px;
+}
+
+.home #featured li {
+	display		: block;
+	float		: left;
+	width		: 255px;
+        margin-bottom	: 30px;
+}
+
+.home #featured li a {
+	color		: #ffffff;
+}
+
+.home #featured li a:hover {
+	color		: #660007;
+}
+
+.home #featured li img {
+	border		: 2px solid #ffffff;
+	float		: left;
+        height		: 77px;
+        width		: 77px;
+}
+
+
+.home #featured li a span {
+	display		: block;
+	float		: left;
+	padding		: 7px 10px 0;
+	width		: 110px;
+}
+
+/*.home #home_navigation li.last {
+	font-size	: 1.3em;
+}*/
+
+/* Standard 2 Column Pages */
+
+.left_column {
+	left		: 110px;
+	position	: absolute;
+	top			: 60px;
+	width		: 335px;
+}
+
+.right_column {
+	left		: 500px;
+	position	: absolute;
+	top			: 60px;
+	width		: 335px;
+}
+
+
+/* People */
+.people #people_links li {
+	list-style	: none;
+	float		: left;
+	margin-right: 5px;
+}
+
+.people #people_links {
+	left		: 100px;
+	position	: absolute;
+	top		: 30px;
+	width		: 300px;
+}
+
+.people #people_links li {
+	list-style	: none;
+	float		: left;
+	margin-right: 10px;
+}
+
+.people li a {
+	color		: #000000;
+}
+
+.people li a:hover {
+	color		: #660007;
+}
+
+.people li a img {
+	border		: 2px solid #ffffff;
+	clear		: both;
+	float		: left;
+	margin-bottom	: 1em;
+	height		: 70px;
+	width		: 70px;
+}
+
+.people #people_links li a span {
+	background	: #ffffff;
+	border		: 2px solid #ffffff;
+	height		: 38px;
+	display		: none;
+	float		: left;
+	margin-bottom	: 1em;
+	padding		: 4px 2px 2px 5px;
+	width		: 128px;
+}
+
+#people-detail {
+	position:absolute;
+	width:687px;
+	height:260px;
+	z-index:2000;
+	left: 110px;
+	top: 40px;
+	padding: 24px;
+	background-color: #ffffff;
+}
+
+#people-detail-content img {
+	width:100px;
+	height: 100px;
+	float: left;
+	margin-right: 24px;
+}
+
+#people-detail-content div {
+	float: left;
+	height:255px;
+	overflow-y: auto;
+	padding-right: 70px;
+	width: 420px;
+}
+
+#people-detail-content div h4 {
+	padding-bottom: 1.5em;
+}
+
+#people-detail-content div .intro {
+	font-size: 1.2em;
+}
+
+a#people-detail-close {
+	position:absolute;
+	width:13px;
+	height:13px;
+	z-index:1000;
+	right: 5px;
+	top: 5px;
+	background-image: url(/static/images/hubweb/close-button.png);
+	background-repeat: no-repeat;
+	margin: 0px;
+	padding: 0px;
+}
+
+
+/* Places */
+
+#place_info {
+	background : #ffffff;
+	padding	: 18px;
+	position: absolute;
+	left	: 650px;
+	top	: 40px;
+	width	: 185px;
+        z-index : 100;
+}
+#place_info .description {
+        margin-top: 10px;
+}
+#place_info .close {
+       position: absolute;
+       right: 3px;
+       top: 0px;
+       text-decoration: underline;
+       color: #660007;
+}
+#place_info img.thumbnail {
+	width	: 185px;
+        height  : 108px;
+}
+
+img.arrow {
+	margin-right	: 5px;
+}
+
+#place_info a {
+        color		: #660007;
+}
+
+#place_info a:hover {
+	color		: #660007;
+}
+
+#place-detail {
+	position:absolute;
+	width:687px;
+	height:260px;
+	z-index:2000;
+	left: 110px;
+	top: 40px;
+	padding: 24px;
+	background-color: #ffffff;
+}
+#place-detail a {
+        color: #660007;
+}
+#place-detail-content img {
+	width:165px;
+	/*height: 255px;*/
+	float: left;
+	margin-right: 24px;
+}
+#place-detail-content #left-place-col {
+	width:165px;
+	float: left;
+	margin-right: 24px;
+        clear: left;
+        padding-right: 0px;
+	overflow : hidden;
+}
+#place-detail-content #events {
+	margin-top: 5px;
+        width: 165px;
+        padding-right: 0px;
+	overflow: hidden;
+}
+#place-detail-content div {
+	float: left;
+	height:255px;
+	overflow-y: auto;
+	padding-right: 70px;
+	width: 420px;
+}
+
+#place-detail-content div h4 {
+	padding-bottom: 1.5em;
+}
+
+#place-detail-content div .intro {
+	font-size: 1.2em;
+}
+
+a#place-detail-close {
+	position:absolute;
+	width:13px;
+	height:13px;
+	z-index:1000;
+	right: 5px;
+	top: 5px;
+	background-image: url(/static/images/hubweb/close-button.png);
+	background-repeat: no-repeat;
+	margin: 0px;
+	padding: 0px;
+}
+
+.london #place_info h4 {
+	padding-bottom	: 1em;
+}
+
+.london #place_info h4.flush {
+	padding-bottom	: 0;
+}
+#locations {
+	position:absolute;
+	z-index:2;
+/*	left: 2542px;*/
+	top: 0px;
+}
+#kingscross {
+	position:absolute;
+	z-index:4;
+	left: 846px;
+	top: 0px;
+}
+#worldmap {
+	position:absolute;
+        top: 0px;
+        left:0px;
+	width:auto;
+	height:auto;
+	z-index:1;
+}
+#places_list div {
+	position:absolute;        
+}
+.worlddot {
+	position:absolute;
+	width:7px;
+	height:7px;
+	z-index:500;
+	background-image: url(/static/images/hubweb/worlddot-small.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	display: block;
+}
+a.worlddot:hover {
+	width:9px;
+	height:9px;
+	z-index:501;
+	background-image: url(/static/images/hubweb/worlddot-big.png);
+	margin-top: -1px;
+	margin-left: -1px;
+}
+
+#amsterdam    { left: 459px; top: 117px; }
+#berlin       { left: 472px; top: 116px; }
+#bombay       { left: 623px; top: 202px; }
+#bristol      { left: 436px; top: 117px; }
+#brussels     { left: 453px; top: 128px; }
+#cairo        { left: 515px; top: 173px; }
+#halifax      { left: 292px; top: 134px; }
+#johannesburg { left: 510px; top: 300px; }
+#london       { left: 444px; top: 117px; }
+#madrid       { left: 434px; top: 147px; }
+#milan        { left: 467px; top: 136px; }
+#rotterdam    { left: 453px; top: 121px; }
+#saopaulo     { left: 330px; top: 290px; }
+#telaviv      { left: 535px; top: 166px; }
+#toronto      { left: 253px; top: 137px; }
+#stockholm    { left: 487px; top: 95px; }
+
+
+/* Places: KX */
+
+.kingscross            #wrapper { background : url("/static/images/hubweb/bg_kingscross_ho.jpg")   no-repeat; color: #000000; }
+.kingscross.experience #wrapper { background : url("/static/images/hubweb/bg_kingscross_ex.jpg")   no-repeat; color: #000000; }
+.kingscross.spaces     #wrapper { background : url("/static/images/hubweb/bg_kingscross_sp.jpg")   no-repeat; color: #000000; }
+.kingscross.membership #wrapper { background : url("/static/images/hubweb/bg_kingscross_me.jpg")   no-repeat; color: #000000; }
+.kingscross.events     #wrapper { background : url("/static/images/hubweb/bg_kingscross_ev.jpg")   no-repeat; color: #000000; }
+
+
+.kingscross #kingscross_navigation {
+	left		: 120px;
+	line-height	: 1.8em;
+	list-style	: none;
+	position	: absolute;
+	top			: 80px;
+	width		: 300px;
+}
+
+.kingscross #kingscross_navigation li {
+	border		: none;
+	padding-bottom	: 1.5em;
+	width		: 100%;
+}
+
+
+.kingscross #kingscross_navigation li.last a {
+}
+
+.kingscross #kingscross_navigation li a em {
+	display		: block;
+	font-size	: 3em;
+	line-height	: .75em;
+	font-style	: normal;
+	font-weight	: normal;
+	padding-bottom	: .3em;
+}
+
+.kingscross #copy {
+	color		: #ffffff;
+	background	: #111111;
+	height		:260px;
+	padding		: 24px;
+	position	: absolute;
+	left		: 460px;
+	top			: 40px;
+	width		: 335px;
+	overflow	: auto;
+}
+
+#kingscross_label {
+	color		: #ffffff;
+	left		: 120px;
+	list-style	: none;
+	position	: absolute;
+	top			: 50px;
+	font-weight	: normal;
+}
+
+/* Ideas */
+
+.ideas .left_column {
+	position	: absolute;
+	top			: 120px;
+	width		: 275px;
+}
+
+.ideas .right_column {
+	color		: #ffffff;
+	background	: #111111;
+	height		: 260px;
+	padding		: 24px;
+	position	: absolute;
+	left		: 460px;
+	top			: 40px;
+	width		: 335px;
+	overflow	: auto;
+}
+
+.ideas .left_column blockquote {
+	font-weight	: bold;	
+	font-size	: 1.2em;
+	line-height	: 1.5em;
+}
+
+.ideas .left_column cite {
+	display		: block;	
+	padding-bottom	: 1.5em;
+}
+
+#full_copy {
+	font-size	: 3em;
+	line-height	: 1.2em;
+	padding		: 60px 60px 60px 120px;
+}
+
+#image_label {
+	position	: absolute;
+	color		: #000000;
+	left		: 20px;
+	top			: 333px;
+}
+
+.kingscross #copy p span {
+	color		: #999999;
+}
+
+#copy ul {
+	padding-left: 1.5em;
+	padding-bottom	: 1.5em;
+}
+
+
+
+/**
+ * Navigation
+ */
+div#menu-top { font-size:0.9em;position:absolute; top: -34px; width: 900px;}
+div#menu-top ul { margin:0px; padding:0px; list-style: none; }
+div#menu-top ul li { float:left; height:30px; margin-right:1px; }
+div#menu-top ul li.right { float:right;}
+div#menu-top ul li a { display:block; padding:7px 13px 3px 13px; }
+
+div#menu-top { border-bottom:5px solid #560005; }
+div#menu-top ul li { background: #fff url('/static/images/hubweb/menu-background.gif') repeat-x bottom left; border:1px solid #eee }
+div#menu-top ul li a { color:#560005; }
+div#menu-top ul li a:hover { color:#000 }
+div#menu-top ul li.selected { background: #560005;  }
+div#menu-top ul li.selected a { color:#fff; }

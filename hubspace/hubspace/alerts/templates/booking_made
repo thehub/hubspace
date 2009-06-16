@@ -1,0 +1,19 @@
+sender = "noreply@the-hub.net"
+subject = "The Hub | booking confirmation"
+body = """\
+Dear $name,
+
+Thank you for your booking at The Hub $location_name.
+
+You have booked $resource_name from $start to $end on $date. The expected cost of this usage is $currency $cost.
+
+$options
+In the event of a cancellation, the individual or organization booking the space will be charged 50% of the total cost, unless it is cancelled more than two weeks prior to the event.
+
+If you have any questions or further requirements please contact The Hub's hosting team at $hosts_email or call us on $telephone.
+
+We look forward to seeing you.
+
+The $location_name Hosting Team
+"""
+

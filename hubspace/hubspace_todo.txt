@@ -1,0 +1,53 @@
+**January/Feb*
+
+calendar icon
+tab loader
+
+- timed job to execute on the turn of the month - ensure that every user has a tariff for the next 12 months
+- make default - confirm/cancel popup
+
+Site Integration
+
+Location specify opening hours
+
+RFID/smart card integration
+cancel booking fee - per Hub % of booking/ fixed fee. London == 50% of booking cost
+
+
+**Internationalisation**
+Location - customised messages
+exchange rates/billing for different locations exchange rates 
+  1. 1 bill from home hub + interhub billing account?
+  2. exchange rates - take from web-service
+                                  
+
+safari:
+image upload
+inplace switch location - live search
+add new member
+search members
+
+
+
+**More Associates**
+print parsing
+password synching - bristol and london
+
+
+IE bugs
+1. member search - group filter not shown - IE6-7
+2. space display lines not shown
+3. Demented databoxes  - IE6
+4. IE7 minimize/maximise databox
+
+**Design Issues**
+picture upload
+
+
+**For Linux deployment**
+secure root ssh + sudoers
+apache + mod_python
+email - sendmail
+back up via rsnapshot
+
+

@@ -1,0 +1,3 @@
+#!/bin/sh
+cd /home/hubspace/hubspace/log
+exec multilog t ./main

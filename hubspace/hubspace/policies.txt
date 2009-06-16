@@ -1,0 +1,35 @@
+Calculate User Access Polcies
+
+
+On creation a location gets 2 policy_brokered resources ['member_book', 'host_book']
+rest should be added ttw from remainder of policy_brokered list
+
+policy_brokered = ['door_1', 'door_2', 'door_3', 'member_book', 'host_book']
+
+
+
+=> "add policy" SU web_call for policy_names not existing
+=> modify existing locations to have "member_book" and "host_book"
+
+
+- gui for editing policies / add policies from policies list
+* what inherits/overrides what - explain/warn
+
+- gui for hosts and members in calendar
+* if members are allowed ... as normal.
+* if members are not allowed, give opportunity to email hosts.
+* if neither allowed in week view - grey out days where not bookable
+
+Policies are then combined to determine what the user can do.
+
+We then resolve according to the most specific type of opening time for that date:
+
+* Any specific date overiddes, any holiday, overiddes and weekday. 
+* if conflicting opening times remain opening times associated with: policies overrides -> tariffs-> overrides roles -> overiddes hub
+* if opening times still conflict (have the same level of date and acquisition specificity) they are addititve, meaning if either policy would allow them, they are allowed  
+
+thereby we return a set of opening times
+
+
+****todo****
+- polcies for specific resources
