@@ -2830,7 +2830,10 @@ Excption: %(e_str)s
         rusage.number_of_people = kwargs.get('number_of_people', 1)
         rusage.start = start
         rusage.end_time = end
-        rusage.user = User.get(kwargs['user'])
+        if kwargs['user'] == None:
+            rusage.user = model.RUsage.get(int(kwargs['id'])).user.id
+        else:
+            rusage.user = User.get(kwargs['user'])
         if resource.place.tentative_booking_enabled:
             kwargs['confirmed'] = int(not kwargs.get('tentative', 0))
         else:
