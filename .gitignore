@@ -1,0 +1,4 @@
+*.pyc
+*.mo
+*.js.hash
+*.js.version
