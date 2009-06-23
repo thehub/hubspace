@@ -38,12 +38,20 @@ if ldap_sync_enabled:
             applogger = logging.getLogger("hubspace")
             if iden and not syncerclient.isSyncerRequest(cherrypy.request.headers.get("user-agent", None)):
                 cookies = syncer.utils.convertCookie(cherrypy.request.simple_cookie)
-                ret = syncerclient.onUserLogin(user_name, password, cookies)
-                t_id, res = ret
+                try:
+                    ret = syncerclient.onUserLogin(user_name, password, cookies)
+                    t_id, res = ret
+                except ValueError:
+                    print ret
+                    # a warning here
+                    return iden
+                except Exception, err:
+                    print err
+                    # a warning here
+                    return iden
     
                 if not syncerclient.isSuccessful(res):
                     print syncer.client.errors.res2errstr(res)
-                    return None
 
                 else:
                     for v in res.values():
