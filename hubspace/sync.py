@@ -16,6 +16,8 @@ applogger = logging.getLogger("hubspace")
 SSOIdentityProvider = SqlObjectIdentityProvider
 _cp_filters = []
 
+def setupLDAPSync(): pass
+
 if ldap_sync_enabled:
     import syncer
     import syncer.client
@@ -70,12 +72,14 @@ if ldap_sync_enabled:
                 user = iden.user
                 uinfo = "%s|%s|%s" % (user.first_name, user.last_name, user.homeplace.name)
                 cherrypy.response.simple_cookie['uinfo'] = uinfo
+                cherrypy.response.simple_cookie['uinfo']['domain'] = turbogears.config.config.configs['global']['session_filter.cookie_domain']
             except Exception, err:
                 # dont stop on any error
                 print err
 
             return iden
 
+    # http://www.cherrypy.org/wiki/UpgradeTo22
     class TransactionCompleter(BaseFilter):
         def on_start_resource(self, *args, **kw):
             tls.syncer_trs = []
