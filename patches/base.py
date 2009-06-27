@@ -39,6 +39,8 @@ class Patch(object):
 
 class Updater(object):
     plpath = "patchlevel"
+    if sys.argv[1:2] == ["test.cfg"]:
+        plpath = plpath + ".test"
     patchesdir = "patches"
     current_pl = PatchLevel(plpath)
     def __init__(self):

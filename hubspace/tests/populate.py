@@ -1,3 +1,4 @@
+import turbogears
 import hubspace.model
 from hubspace.model import *
 
@@ -23,13 +24,13 @@ def populate ():
 
   #Locations
   objs.london = Location(name='Londoninium',
-                         currency='GBP')
+                         currency='GBP', city="London")
   objs.bielefeld = Location(name='Bielefeld',
-                       currency='GBP')
+                       currency='GBP', city="Bielefeld")
 
   hubspace.model.hub.commit()
   User._connection.cache.clear()
-  objs.hubspaceadmin = User.selectBy(user_name="hubspaceadmin")[0]
+  objs.hubspaceadmin = User.selectBy(user_name=turbogears.config.config.configs['syncer']['hubspaceadminuid'])[0]
   #Groups
   from hubspace.utilities.permissions import new_group
   

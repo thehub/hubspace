@@ -1,6 +1,6 @@
-import re, psycopg2
+import re, psycopg2, sys
 
-configfile = "dev.cfg"
+configfile = sys.argv[1] or "dev.cfg"
 
 def parseDBURI(cfgfile):
     for line in file(cfgfile):
