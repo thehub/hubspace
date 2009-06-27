@@ -72,7 +72,7 @@ if ldap_sync_enabled:
             try:
                 user = iden.user
                 uinfo = "|".join((user.first_name, user.last_name, user.homeplace.name, user.email_address))
-                cherrypy.response.simple_cookie['uinfo'] = base64.b64encode(str(uinfo))
+                cherrypy.response.simple_cookie['uinfo'] = base64.b64encode(uinfo)
                 cherrypy.response.simple_cookie['uinfo']['domain'] = turbogears.config.config.configs['global']['session_filter.cookie_domain']
             except Exception, err:
                 # dont stop on any error
