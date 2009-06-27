@@ -77,7 +77,7 @@ class Hubspace(FunkLoadTestCase):
 
         self.clearBasicAuth()
         #self.setBasicAuth('jhb','test')
-        self.setBasicAuth('hubspaceadmin','secret')
+        self.setBasicAuth('hubspace','secret')
         self.logd("setUp")
 
         # XXX here you can setup the credential access like this
@@ -142,7 +142,7 @@ class Hubspace(FunkLoadTestCase):
         # begin of test ---------------------------------------------
         #self.clearBasicAuth()
         #self.setBasicAuth('jhb','test')
-        self.setBasicAuth('hubspaceadmin','secret')
+        self.setBasicAuth('hubspace','secret')
 
 
         result = self.get(self.server_url + "/setUp", description="")
