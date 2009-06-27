@@ -5,6 +5,7 @@ import hubspace.config
 from turbogears.identity.soprovider import SqlObjectIdentityProvider
 import thread
 import threading
+import base64
 
 try:
     ldap_sync_enabled = turbogears.config.config.configs['syncer']['sync']
@@ -71,7 +72,7 @@ if ldap_sync_enabled:
             try:
                 user = iden.user
                 uinfo = "%s|%s|%s" % (user.first_name, user.last_name, user.homeplace.name)
-                cherrypy.response.simple_cookie['uinfo'] = uinfo
+                cherrypy.response.simple_cookie['uinfo'] = base64.b64encode(str(uinfo))
                 cherrypy.response.simple_cookie['uinfo']['domain'] = turbogears.config.config.configs['global']['session_filter.cookie_domain']
             except Exception, err:
                 # dont stop on any error
