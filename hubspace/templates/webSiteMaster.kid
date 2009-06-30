@@ -57,7 +57,7 @@ render_static = False
 <div style="visibility:hidden;" id="relative_url" class="${relative_path}"></div>
 <div style="visibility:hidden;" id="page_path_name" class="${page.path_name}"></div>
 <div id="wrapper">
-	<a id="logo" href="index.html"><img src="/static/images/hubweb/hub_logo.gif" alt="hub logo" /></a>
+	<a id="logo" href="index.html"><img src="/static/images/hubweb/hub_logo.gif" alt="Hub Logo" /></a>
         <div class="container" id="menu-top">
             <div id="hub-selector">
                 <ul class="sf-menu">
