@@ -481,7 +481,8 @@ def get_users_for_location(place=None):
 
 ##################  RUsage  ####################
     
-   
+booking_confirmation_text =  """Dear %(name)s,\n\nThank you for your booking at The Hub %(location)s.\n\nYou have booked %(resource)s from %(start)s to %(end)s on %(date)s. The expected cost of this usage is %(currency)s %(cost)s.\n\n%(options)sIn the event of a cancellation, the individual or organization booking the space will be charged 50%% of the total cost, unless it is cancelled more than two weeks prior to the event.\n\nIf you have any questions or further requirements please contact The Hub's hosting team at %(hosts_email)s or call us on %(telephone)s.\n\nWe look forward to seeing you.\n\nThe Hosting Team"""  
+
 def create_rusage(**kwargs):
     '''Creates an RUsage, the use of an resource. It will also determine
     the cost of this usage at creation time, because the booked resource
@@ -573,7 +574,7 @@ def create_rusage(**kwargs):
                          'location':rusage.resource.place.name,
                          'hosts_email':rusage.resource.place.hosts_email,
                          'options': options_text + '\n\n' })
-                body = _("""Dear %(name)s,\n\nThank you for your booking at The Hub %(location)s.\n\nYou have booked %(resource)s from %(start)s to %(end)s on %(date)s. The expected cost of this usage is %(currency)s %(cost)s.\n\n%(options)sIn the event of a cancellation, the individual or organization booking the space will be charged 50%% of the total cost, unless it is cancelled more than two weeks prior to the event.\n\nIf you have any questions or further requirements please contact The Hub's hosting team at %(hosts_email)s or call us on %(telephone)s.\n\nWe look forward to seeing you.\n\nThe Hosting Team""")
+                body = _(booking_confirmation_text)
                 sent = send_mail(to=rusage.user.email_address, sender=cc, subject="The Hub | booking confirmation", body=body % d, cc=cc)
                 return rusage
             ## / backport
@@ -848,12 +849,7 @@ def display_resource_table(user=None, invoice=None, earliest=None, latest=None):
     return try_render(ourdata, template='hubspace.templates.resourcetable', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
 
-
-def send_welcome_mail(user, password):
-    if not password:
-        password = md5.new(str(random.random())).hexdigest()[:8]
-    cc = user.homeplace.name.lower().replace(' ', '') + ".hosts@the-hub.net"
-    body = _("""
+welcome_text = """
 Dear %(name)s,
 
 Welcome to The Hub.
@@ -871,13 +867,18 @@ Please don't hesitate to contact The Hub's hosting team at %(email)s or %(teleph
 Thank you for being part of The Hub.
 
 The Hosting Team
-""")%({'name':user.first_name,
+"""
+
+def send_welcome_mail(user, password):
+    if not password:
+        password = md5.new(str(random.random())).hexdigest()[:8]
+    cc = user.homeplace.name.lower().replace(' ', '') + ".hosts@the-hub.net"
+    body = _(welcome_text)%({'name':user.first_name,
       'username':user.user_name,
       'telephone':user.homeplace.telephone,
       'email':cc,
       'password':password})
 
-       
     send_mail(to=user.email_address, sender=cc, subject="The Hub | welcome", body=body, cc=cc)
 
     user.welcome_sent = 1
@@ -1603,7 +1604,9 @@ class Root(controllers.RootController):
     def devlangtest(self, text=""):
         text = _(text) or _("Hubspace Dev Test")
         lang = get_hubspace_locale()
-        out = "lang: %s <br/> %s" % (lang, text)
+        welcome_text = _(welcome_text)
+        booking_confirmation_text = _(booking_confirmation_text)
+        out = "<hr/>".join([text, lang, welcome_text, booking_confirmation_text])
         return out
 
     _cp_filters = sync._cp_filters
