@@ -1605,6 +1605,7 @@ class Root(controllers.RootController):
         text = _(text) or _("Hubspace Dev Test")
         lang = get_hubspace_locale()
         out = "<hr/>".join([text, lang, _(welcome_text), _(booking_confirmation_text)])
+        out.replace('\n', "<br/>")
         return out
 
     _cp_filters = sync._cp_filters
