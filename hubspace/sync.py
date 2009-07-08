@@ -255,7 +255,8 @@ if ldap_sync_enabled:
     Hub id: %(place_id)s
     Change data: %(mod_list)s
     """ % locals()
-            sendmail.sendmail(to="world.tech.space@the-hub.net", cc="shekhar.tiwatne@the-hub.net", subject="LDAP Error report", body=body)
+            sendmail.sendmail(to="world.tech.space@the-hub.net", sender="noreply@the-hub.net", \
+                cc="shekhar.tiwatne@the-hub.net", subject="LDAP Error report", body=body)
         return t_id, res
     
     @checkReqHeaders
