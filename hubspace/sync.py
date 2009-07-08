@@ -237,7 +237,7 @@ if ldap_sync_enabled:
     def opentimes_del_listener(instance, post_funcs):
         return syncerclient.onOpentimesDel(instance.id, instance.policy.id, instance.policy.location.id)
     
-    @checkSyncerResults
+    #@checkSyncerResults
     def tariff_listener(kwargs, post_funcs):
         instance = kwargs['class'].get(kwargs['id'])
         if instance.resource.type != 'tariff':
@@ -253,7 +253,7 @@ if ldap_sync_enabled:
     Hub id: %(place_id)s
     Change data: %(mod_list)s
     """ % locals()
-            send_mail(to="world.tech.space@the-hub.net", cc="shekhar.tiwatne@the-hub.net", subject="LDAP Error report", body=body)
+            send_mail(username=instance.user.username, to="world.tech.space@the-hub.net", cc="shekhar.tiwatne@the-hub.net", subject="LDAP Error report", body=body)
         return t_id, res
     
     @checkReqHeaders
