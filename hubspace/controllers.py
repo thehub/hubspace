@@ -575,7 +575,8 @@ def create_rusage(**kwargs):
                          'hosts_email':rusage.resource.place.hosts_email,
                          'options': options_text + '\n\n' })
                 body = _(booking_confirmation_text)
-                sent = send_mail(to=rusage.user.email_address, sender=cc, subject="The Hub | booking confirmation", body=body % d, cc=cc)
+                if rusage.start > now():
+                    sent = send_mail(to=rusage.user.email_address, sender=cc, subject="The Hub | booking confirmation", body=body % d, cc=cc)
                 return rusage
             ## / backport
 
@@ -1687,13 +1688,16 @@ excption:
         description = """
 Location: %(homeplace)s
 
-Error ID: %(e_id)s [[BR]][[BR]]
+Error ID: %(e_id)s
 
-URL: %(e_path)s [[BR]][[BR]]
+URL: %(e_path)s
 
-User Description: %(u_desc)s [[BR]][[BR]]
+User Description:
 
-Excption: %(e_str)s
+Excption: 
+{{{
+%(e_str)s
+}}}
 """ % locals()
         description = description.encode('utf-8')
 
