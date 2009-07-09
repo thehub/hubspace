@@ -873,12 +873,15 @@ The Hosting Team
 def send_welcome_mail(user, password):
     if not password:
         password = md5.new(str(random.random())).hexdigest()[:8]
-    cc = user.homeplace.name.lower().replace(' ', '') + ".hosts@the-hub.net"
-    body = _(welcome_text)%({'name':user.first_name,
-      'username':user.user_name,
-      'telephone':user.homeplace.telephone,
-      'email':cc,
-      'password':password})
+    location = user.homeplace.name
+    cc = user.homeplace.hosts_email
+    body = _(welcome_text)%(dict(
+        name = user.first_name,
+        location = location,
+        username = user.user_name,
+        telephone = user.homeplace.telephone,
+        email = cc,
+        password = password))
 
     send_mail(to=user.email_address, sender=cc, subject="The Hub | welcome", body=body, cc=cc)
 
