@@ -1,3 +1,4 @@
+import sys
 import hubspace.model as model
 import turbogears
 import ldap
@@ -23,27 +24,30 @@ class SyncObject(object):
     ldap_subtree = ""
     hubspace_id = ""
     ldap_id = ""
-    ldap_exporter = None
-    get_hubspace_obj = lambda x: self.hubspace_model.get(x)
+    exporters = dict (hubspace = None, ldap = None)
+    get_hubspace_obj = lambda self, x: self.hubspace_model.get(x)
     def getHubspaceIds(self):
         select = self.hubspace_model.select()
-        return set([getattr(u, self.hubspace_id) for u in select])
+        ret = set([getattr(u, self.hubspace_id) for u in select])
+        if "webapi" in ret: ret.remove("webapi")
+        return ret
     def getLDAPIds(self):
-        return set([x[0] for x in conn.search_s(self.ldap_subtree, ldap.SCOPE_ONELEVEL,
-            filterstr='(objectClass=hubGlobalUser)', attrlist=['uid'], attrsonly=1)])
+        search = conn.search_s(self.ldap_subtree, ldap.SCOPE_ONELEVEL, filterstr='(objectClass=hubGlobalUser)', attrlist=['uid'], attrsonly=0)
+        return set([x[1]['uid'][0] for x in search])
         # check sizelimit in slapd config if above fails
     def missingIds(self):
         hubspace_ids = self.getHubspaceIds()
         ldap_ids = self.getLDAPIds()
         return dict (
-            hubspace = hubspace_ids.difference(ldap_ids),
-            ldap = ldap_ids.difference(hubspace_ids) )
+            ldap = hubspace_ids.difference(ldap_ids),
+            hubspace = ldap_ids.difference(hubspace_ids) )
     def exportMissingObjs2LDAP(self):
         missing_ids = self.missingIds()["ldap"]
         print "missing in LDAP: ", missing_ids
         for oid in missing_ids:
+            print "\t ", oid
             obj = self.get_hubspace_obj(oid)
-            self.ldap_exporter(obj)
+            self.exporters['ldap'](obj)
             
 
 class User(SyncObject):
@@ -51,10 +55,14 @@ class User(SyncObject):
     ldap_subtree = "ou=users,o=the-hub.net"
     hubspace_id = "user_name"
     ldap_id = "uid"
-    get_hubspace_obj = lambda x: self.hubspace_model.by_user_name(x)
-    ldap_exporter = export2ldap.addUser
+    get_hubspace_obj = lambda self, x: self.hubspace_model.by_user_name(x)
+    exporters = dict (ldap = export2ldap.addUser)
 
 def exportMissingUsers2LDAP():
-    return User().exportMissingObjs2LDAP()
+    sync.core.tls.syncer_trs = [] # <- hacky should go
+    if sync.core.signon():
+        return User().exportMissingObjs2LDAP()
+    else:
+        sys.exit("syncer signon failed")
 
 

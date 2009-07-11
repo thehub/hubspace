@@ -6,12 +6,12 @@ from sqlobject import AND, OR, DESC
 import turbogears
 turbogears.update_config(configfile="dev.cfg", modulename="hubspace.config")
 from hubspace import model
-from hubspace import controllers
 import syncer.helpers.ldap
 import syncer.client
 import syncer.config
+import hubspace.sync.core as core
 
-syncerclient = controllers.syncerclient # = syncerclient
+syncerclient = core.syncerclient # = syncerclient
 
 instance2kw = lambda o: {'class':o.__class__, 'id':o.id}
 
@@ -20,35 +20,35 @@ instance2kw = lambda o: {'class':o.__class__, 'id':o.id}
 def addUser(instance):
     print '\t adding ', instance.user_name,
     then = datetime.datetime.now()
-    ret = controllers.usr_add_listener(instance2kw(instance), [])
+    ret = core.usr_add_listener(instance2kw(instance), [])
     now = datetime.datetime.now()
     print str(now - then), " (%s)" % ret[0]
     return ret
 
 def addHub(instance):
     print '\t adding ', instance.name, instance.holidays
-    return controllers.hub_add_listener(instance2kw(instance),[])
+    return core.hub_add_listener(instance2kw(instance),[])
 
 def addGroup(instance):
     print '\t adding ', instance.group_name
     if instance.place:
-        return controllers.grp_add_listener(instance2kw(instance),[])
+        return core.grp_add_listener(instance2kw(instance),[])
 
 def addUser2Group(instance):
     print '\t adding ', instance.user.user_name, 'to', instance.group.group_name
-    return controllers.add_user2grp_listener(instance2kw(instance),[])
+    return core.add_user2grp_listener(instance2kw(instance),[])
 
 def addAccesspolicy(instance):
     print '\t adding policy ', instance.id, 'to', instance.location.id
-    return controllers.accesspolicy_add_listener(instance2kw(instance), [])
+    return core.accesspolicy_add_listener(instance2kw(instance), [])
 
 def addOpentime(instance):
     print '\t adding openTime', instance.id, 'to policy', instance.policy.id
-    return controllers.opentimes_add_listener(instance2kw(instance), [])
+    return core.opentimes_add_listener(instance2kw(instance), [])
 
 def addTariff(instance):
     print '\t adding tariff', instance.id
-    return controllers.tariff_add_listener(instance2kw(instance), [])
+    return core.tariff_add_listener(instance2kw(instance), [])
 
 def assignTariff(user):
     tr_ids = []
@@ -60,7 +60,7 @@ def assignTariff(user):
         if instances:
             instance = instances[0]
             print '\t assigning tariff', instance.id, 'for user ', user.user_name
-            tr_ids.append(controllers.tariff_listener(instance2kw(instance), [])[0])
+            tr_ids.append(core.tariff_listener(instance2kw(instance), [])[0])
     return tr_ids
 
 
@@ -68,7 +68,7 @@ def checkSyncerErrors(f):
     def wrap(*args, **kw):
         try:
             return f(*args, **kw)
-        except controllers.SyncerError:
+        except core.SyncerError:
             sys.exit("Failed! Check logs/hubspace.log")
     return wrap
 
