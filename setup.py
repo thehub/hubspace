@@ -40,7 +40,8 @@ setup(name='hubspace',
       entry_points="""
 [console_scripts]
 run_hubspace = start_hubspace:main
-export2ldap  = export2ldap:main
+export2ldap  = hubspace.sync.export2ldap:main
+exportmissingusers2ldap = hubspace.sync.tools:exportMissingUsers2LDAP
       """,
       test_suite = 'nose.collector',
       )

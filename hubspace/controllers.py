@@ -39,7 +39,7 @@ from sqlobject.sqlbuilder import IN, Select
 log = logging.getLogger("hubspace.controllers")
 
 import turbogears.scheduler
-from hubspace.utilities.autoreload import autoreload 
+from hubspace.utilities.autoreload import autoreload
 from hubspace.utilities.dicts import AttrDict
 from hubspace.utilities.image_preview import create_image_preview
 from hubspace.utilities.static_files import hubspace_compile
@@ -48,7 +48,7 @@ from hubspace.utilities.permissions import user_locations, addUser2Group
 from hubspace.utilities.users import filter_members
 from hubspace.tariff import get_tariff
 
-import hubspace.sync as sync
+import hubspace.sync.core as sync
 
 from hubspace.validators import *
 from turbogears.validators import Money
