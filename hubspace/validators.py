@@ -276,7 +276,7 @@ class AliasSchema(v.Schema):
     id = real_int
     alias_name = no_ws
 
-username = All(LowerText(), v.MinLength(1), v.MaxLength(32))
+username = All(v.NotEmpty(), LowerText(), v.MinLength(1), v.MaxLength(32))
 email_address = All(v.Email(), v.NotEmpty())
 
 class ProfileSchema(v.Schema):

@@ -39,7 +39,7 @@ from sqlobject.sqlbuilder import IN, Select
 log = logging.getLogger("hubspace.controllers")
 
 import turbogears.scheduler
-from hubspace.utilities.autoreload import autoreload 
+from hubspace.utilities.autoreload import autoreload
 from hubspace.utilities.dicts import AttrDict
 from hubspace.utilities.image_preview import create_image_preview
 from hubspace.utilities.static_files import hubspace_compile
@@ -48,20 +48,7 @@ from hubspace.utilities.permissions import user_locations, addUser2Group
 from hubspace.utilities.users import filter_members
 from hubspace.tariff import get_tariff
 
-
-import syncer
-import syncer.config
-import syncer.helpers
-import syncer.helpers.ldap
-import hubspace.sync
-
-ldap_sync_enabled = hubspace.sync.ldap_sync_enabled
-
-if ldap_sync_enabled:
-    syncerclient = hubspace.sync.syncerclient
-else:
-    syncer.config.client_disabled = True
-
+import hubspace.sync.core as sync
 
 from hubspace.validators import *
 from turbogears.validators import Money
@@ -109,7 +96,7 @@ def update_tariff_bookings():
     for location in Location.select():
         try:
             loc_last_tariff = RUsage.select(AND(RUsage.q.resourceID==Resource.q.id,
-                                                Resource.q.type=='tariff',                          
+                                                Resource.q.type=='tariff',
                                                 Resource.q.placeID==location.id)).orderBy("start")[-1]
         except:
             continue
@@ -187,26 +174,13 @@ class schedSafe(object):
             end_all()
         applogger.debug("schedSafe: done")
 
-class runAsSuperuser(object):
-    def __init__(self, f):
-        self.f = f
-    def __call__(self, *args, **kw):
-        applogger.debug("runAsSuperuser: begin")
-        getSyncerclientForHubspaceadmin()
-        try:
-            ret = self.f(*args, **kw)
-        except Exception, err:
-            applogger.debug("runAsSuperuser: failed")
-            raise
-        applogger.debug("runAsSuperuser: done")
-
 def start_scheduler():
     """start the scheduler and add the timed jobs. These jobs must be sure to do model.hub.commit() in all cases EVEN IF THEY ONLY READ - otherwise they will hold onto database transaction in postgres forever! Its often wise to break them down into smaller transactions, by committing and then beginning new transactions using model.hub.begin().
     """
     #turbogears.scheduler.add_interval_task(action=parse_print_file, taskname='parse the print log', initialdelay=0, interval=600)
     turbogears.scheduler.add_interval_task(schedSafe(bookinglib.requestBookingConfirmations), taskname="Request booking confirmations", initialdelay=60 * 60, interval=60 * 60)
     add_weekday_task(send_unknown_aliases, [1], (0,0))
-    add_monthday_task(runAsSuperuser(update_tariff_bookings), [1], (0,0))
+    add_monthday_task(update_tariff_bookings, [1], (0,0))
     add_monthday_task(schedule_access_policy_updates, [3], (0,0))
     if datetime.now() > datetime(datetime.today().year, datetime.today().month, 3):
         schedule_access_policy_updates()
@@ -234,181 +208,6 @@ def schedule_access_policy_updates():
         #recalc_time = datetime.now() + timedelta(seconds=10) #uncomment this to test 
         add_oneoff_task(recalculate_tariff_accessPolicies, recalc_time.date(), recalc_time.timetuple()[3:5], kw=dict(location=loc))
     model.hub.commit()
-
-## All sync operations ##
-
-import threading
-from sqlobject.events import listen, RowUpdateSignal, RowCreatedSignal, RowDestroySignal
-
-tls = threading.local()
-
-class SyncerError(Exception):
-    """
-    Raise this error when syncer transaction fails
-    """
-
-def checkSyncerResults(f):
-    def wrap(*args, **kw):
-        ret = f(*args)
-        f_name = getattr(f, '__name__', str(f))
-        applogger.debug("syncer: %s-> %s" % (f_name, ret))
-        if ret:
-            t_id, res = ret
-            if res and not syncerclient.isSuccessful(res):
-                raise SyncerError("syncer backend error")
-                return
-            if not hasattr(tls, 'syncer_trs'):
-                tls.syncer_trs = []
-            if t_id > 0:
-                tls.syncer_trs.append(t_id)
-            return ret
-    return wrap
-
-def checkReqHeaders(f):
-    def wrap(*args, **kw):
-        try:
-            if not syncerclient.isSyncerRequest(cherrypy.request.headers.get("user-agent", None)):
-                return f(*args, **kw)
-        except AttributeError:
-            # outside CheeryPy request which is fine
-                return f(*args, **kw)
-    return wrap
-
-def getSyncerclientForHubspaceadmin():
-    u = "hubspaceadmin"
-    p = turbogears.config.config.configs['syncer']['hubspaceadminpass']
-    user = model.User.by_user_name(u)
-    from turbogears import identity, visit
-    visit_key = visit.current().key
-    VisitIdentity(visit_key=visit_key, user_id=user.id)
-    user_identity = identity.current_provider.load_identity(visit_key)
-    identity.set_current_identity(user_identity)
-    sessiongetter = lambda: cherrypy.session
-    syncerclient = syncer.client.SyncerClient("hubspace", sessiongetter)
-    t_id, res = syncerclient.onSignon(u, p)
-    syncerclient.setSyncerToken(res['sessionkeeper']['result'])
-    if syncerclient.isSuccessful(res):
-        return syncerclient
-
-@checkSyncerResults
-@checkReqHeaders
-def usr_updt_listener(instance, kwargs):
-    kw = dict ([(k, v) for (k,v) in kwargs.items() if getattr(instance, k) != v])
-    if kw:
-        mod_list = syncer.helpers.ldap.object_maps['user'].toLDAP(instance, kw)
-        if mod_list:
-            return syncerclient.onUserMod(instance.user_name, mod_list)
-
-@checkSyncerResults
-@checkReqHeaders
-def hub_updt_listener(instance, kwargs):
-    kw = dict ([(k, v) for (k,v) in kwargs.items() if getattr(instance, k) != v])
-    mod_list = syncer.helpers.ldap.object_maps['hub'].toLDAP(instance, kw)
-    if mod_list:
-        return syncerclient.onHubMod(instance.id, mod_list)
-
-@checkReqHeaders
-@checkSyncerResults
-def usr_add_listener(kwargs, post_funcs):
-    instance = kwargs['class'].get(kwargs['id'])
-    mod_list = syncer.helpers.ldap.object_maps['user'].toLDAP(instance)
-    return syncerclient.onUserAdd(instance.user_name, mod_list)
-
-@checkReqHeaders
-@checkSyncerResults
-def hub_add_listener(kwargs, post_funcs):
-    instance = kwargs['class'].get(kwargs['id'])
-    mod_list = syncer.helpers.ldap.object_maps['hub'].toLDAP(instance, {})
-    return syncerclient.onHubAdd(instance.id, mod_list)
-
-@checkReqHeaders
-@checkSyncerResults
-def grp_add_listener(kwargs, post_funcs):
-    instance = kwargs['class'].get(kwargs['id'])
-    mod_list = syncer.helpers.ldap.object_maps['role'].toLDAP(instance, {})
-    return syncerclient.onRoleAdd(instance.place.id, instance.level, mod_list)
-
-@checkReqHeaders
-@checkSyncerResults
-def grp_updt_listener(instance, kwargs):
-    mod_list = syncer.helpers.ldap.object_maps['group'].toLDAP(instance, kwargs)
-    return syncerclient.onGroupMod(kwargs['group_name'], mod_list)
-
-@checkReqHeaders
-@checkSyncerResults
-def accesspolicy_add_listener(kwargs, post_funcs):
-    instance = kwargs['class'].get(kwargs['id'])
-    mod_list = syncer.helpers.ldap.object_maps['policy'].toLDAP(instance, {})
-    return syncerclient.onAccesspolicyAdd(instance.location.id, mod_list)
-
-@checkReqHeaders
-@checkSyncerResults
-def accesspolicy_updt_listener(instance, kwargs):
-    mod_list = syncer.helpers.ldap.object_maps['policy'].toLDAP(instance, kwargs)
-    return syncerclient.onAccesspolicyMod(instance.id, instance.location.id, mod_list)
-
-@checkReqHeaders
-@checkSyncerResults
-def accesspolicy_del_listener(instance, post_funcs):
-    return syncerclient.onAccesspolicyDel(instance.id, instance.location.id)
-
-@checkReqHeaders
-@checkSyncerResults
-def opentimes_add_listener(kwargs, post_funcs):
-    instance = kwargs['class'].get(kwargs['id'])
-    mod_list = syncer.helpers.ldap.object_maps['opentimes'].toLDAP(instance, {})
-    return syncerclient.onOpentimesAdd(instance.policy.id, instance.policy.location.id, mod_list)
-
-@checkReqHeaders
-@checkSyncerResults
-def opentimes_updt_listener(instance, kwargs):
-    mod_list = syncer.helpers.ldap.object_maps['opentimes'].toLDAP(instance, kwargs)
-    return syncerclient.onOpentimesMod(instance.id, instance.policy.id, instance.policy.location.id, mod_list)
-
-@checkReqHeaders
-@checkSyncerResults
-def opentimes_del_listener(instance, post_funcs):
-    return syncerclient.onOpentimesDel(instance.id, instance.policy.id, instance.policy.location.id)
-
-@checkSyncerResults
-def tariff_listener(kwargs, post_funcs):
-    instance = kwargs['class'].get(kwargs['id'])
-    if instance.resource.type != 'tariff':
-        return 
-    tariff_id = instance.resource.id
-    place_id = instance.resource.place.id
-    mod_list = syncer.helpers.ldap.object_maps['user'].toLDAP(None, dict(tariff_id = tariff_id, hubId = place_id))
-    t_id, res = syncerclient.onUserMod(instance.user.user_name, mod_list)
-    if not syncerclient.isSuccessful(res):
-        body = """
-LDAP Error: Setting Tariff for user %(username)s has failed.
-Below is the data send to syncer for the modificarion:
-Hub id: %(place_id)s
-Change data: %(mod_list)s
-""" % locals()
-        send_mail(to="world.tech.space@the-hub.net", cc="shekhar.tiwatne@the-hub.net", subject="LDAP Error report", body=body)
-    return t_id, res
-
-@checkReqHeaders
-@checkSyncerResults
-def add_user2grp_listener(kwargs, post_funcs):
-    instance = kwargs['class'].get(kwargs['id'])
-    if instance.group.place:
-        onAssignRoles = checkSyncerResults(syncerclient.onAssignRoles)
-        onAssignRoles(instance.user.user_name, instance.group.place.id, instance.group.level)
-    if instance.group.group_name == "superuser":
-        mod_list = syncer.helpers.ldap.object_maps['group'].toLDAP(instance)
-        return syncerclient.onGroupMod("superusers", mod_list) # <- it's superusers at ldap
-
-@checkReqHeaders
-@checkSyncerResults
-def tariff_add_listener(kwargs, post_funcs):
-    instance = kwargs['class'].get(kwargs['id'])
-    mod_list = syncer.helpers.ldap.object_maps['tariff'].toLDAP(instance)
-    return syncerclient.onTariffAdd(instance.place.id, mod_list)
-
-## /sync operations 
-
 
 def recreate_tables(force=False):
     # careful ;)
@@ -444,7 +243,7 @@ def create_su():
                              place = None,
                              level = 'director')
 
-    su_usr = model.User(user_name='hubspaceadmin',
+    su_usr = model.User(user_name=turbogears.config.config.configs['syncer']['hubspaceadminuid'],
                       display_name='Hubspace App Admin',
                       password=turbogears.config.config.configs['syncer']['hubspaceadminpass'],
                       email_address="world.tech.space@the-hub.net",
@@ -483,25 +282,6 @@ def create_wa():
     wa = Permission.by_permission_name('webapi')
     webapi_group.addPermission(wa)
 
-def setupLDAPSync():
-    if ldap_sync_enabled:
-        print "setup: Enabling LDAP sync"
-        listen(usr_add_listener, User, RowCreatedSignal)
-        listen(usr_updt_listener, User, RowUpdateSignal)
-        listen(hub_add_listener, Location, RowCreatedSignal)
-        listen(hub_updt_listener, Location, RowUpdateSignal)
-        listen(grp_add_listener, Group, RowCreatedSignal)
-        listen(grp_updt_listener, Group, RowUpdateSignal)
-        listen(add_user2grp_listener, UserGroup, RowCreatedSignal)
-        listen(accesspolicy_updt_listener, AccessPolicy, RowUpdateSignal)
-        listen(accesspolicy_add_listener, AccessPolicy, RowCreatedSignal)
-        listen(accesspolicy_del_listener, AccessPolicy, RowDestroySignal)
-        listen(opentimes_add_listener, Open, RowCreatedSignal)
-        listen(opentimes_updt_listener, Open, RowUpdateSignal)
-        listen(opentimes_del_listener, Open, RowDestroySignal)
-        listen(tariff_listener, RUsage, RowCreatedSignal)
-        listen(tariff_add_listener, Resource, RowCreatedSignal)
-
 def setup():
     # Before we call setup and populate (while testing), we need to login to syncer to make sure that all the object would
     # get created to LDAP as well. In order to login and create objects we need a user with superuser rights.
@@ -516,7 +296,7 @@ def setup():
 if not model.User.select().count():
     setup()
 
-setupLDAPSync()
+sync.setupLDAPSync()
 
 ################## TurboLucene ##################
 
@@ -701,7 +481,8 @@ def get_users_for_location(place=None):
 
 ##################  RUsage  ####################
     
-   
+booking_confirmation_text =  """Dear %(name)s,\n\nThank you for your booking at The Hub %(location)s.\n\nYou have booked %(resource)s from %(start)s to %(end)s on %(date)s. The expected cost of this usage is %(currency)s %(cost)s.\n\n%(options)sIn the event of a cancellation, the individual or organization booking the space will be charged 50%% of the total cost, unless it is cancelled more than two weeks prior to the event.\n\nIf you have any questions or further requirements please contact The Hub's hosting team at %(hosts_email)s or call us on %(telephone)s.\n\nWe look forward to seeing you.\n\nThe Hosting Team"""  
+
 def create_rusage(**kwargs):
     '''Creates an RUsage, the use of an resource. It will also determine
     the cost of this usage at creation time, because the booked resource
@@ -793,8 +574,9 @@ def create_rusage(**kwargs):
                          'location':rusage.resource.place.name,
                          'hosts_email':rusage.resource.place.hosts_email,
                          'options': options_text + '\n\n' })
-                body = _("""Dear %(name)s,\n\nThank you for your booking at The Hub %(location)s.\n\nYou have booked %(resource)s from %(start)s to %(end)s on %(date)s. The expected cost of this usage is %(currency)s %(cost)s.\n\n%(options)sIn the event of a cancellation, the individual or organization booking the space will be charged 50%% of the total cost, unless it is cancelled more than two weeks prior to the event.\n\nIf you have any questions or further requirements please contact The Hub's hosting team at %(hosts_email)s or call us on %(telephone)s.\n\nWe look forward to seeing you.\n\nThe Hosting Team""")
-                sent = send_mail(to=rusage.user.email_address, sender=cc, subject="The Hub | booking confirmation", body=body % d, cc=cc)
+                body = _(booking_confirmation_text)
+                if rusage.start > now():
+                    sent = send_mail(to=rusage.user.email_address, sender=cc, subject="The Hub | booking confirmation", body=body % d, cc=cc)
                 return rusage
             ## / backport
 
@@ -1068,12 +850,7 @@ def display_resource_table(user=None, invoice=None, earliest=None, latest=None):
     return try_render(ourdata, template='hubspace.templates.resourcetable', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
 
-
-def send_welcome_mail(user, password):
-    if not password:
-        password = md5.new(str(random.random())).hexdigest()[:8]
-    cc = user.homeplace.name.lower().replace(' ', '') + ".hosts@the-hub.net"
-    body = _("""
+welcome_text = """
 Dear %(name)s,
 
 Welcome to The Hub.
@@ -1091,13 +868,21 @@ Please don't hesitate to contact The Hub's hosting team at %(email)s or %(teleph
 Thank you for being part of The Hub.
 
 The Hosting Team
-""")%({'name':user.first_name,
-      'username':user.user_name,
-      'telephone':user.homeplace.telephone,
-      'email':cc,
-      'password':password})
+"""
 
-       
+def send_welcome_mail(user, password):
+    if not password:
+        password = md5.new(str(random.random())).hexdigest()[:8]
+    location = user.homeplace.name
+    cc = user.homeplace.hosts_email
+    body = _(welcome_text)%(dict(
+        name = user.first_name,
+        location = location,
+        username = user.user_name,
+        telephone = user.homeplace.telephone,
+        email = cc,
+        password = password))
+
     send_mail(to=user.email_address, sender=cc, subject="The Hub | welcome", body=body, cc=cc)
 
     user.welcome_sent = 1
@@ -1812,14 +1597,6 @@ def expose_as_csv(f):
         return out.getvalue()
     return wrap
 
-from cherrypy.filters.basefilter import BaseFilter
-
-class TransactionCompleter(BaseFilter):
-    def on_end_request(self, *args, **kw):
-        if hasattr(tls, 'syncer_trs') and tls.syncer_trs:
-            print "sending", tls.syncer_trs
-            syncerclient.completeTransactions(tuple(tls.syncer_trs))
-
 class Root(controllers.RootController):
     members = Members()
     rfid = RFID()
@@ -1831,11 +1608,11 @@ class Root(controllers.RootController):
     def devlangtest(self, text=""):
         text = _(text) or _("Hubspace Dev Test")
         lang = get_hubspace_locale()
-        out = "lang: %s <br/> %s" % (lang, text)
+        out = "<hr/>".join([text, lang, _(welcome_text), _(booking_confirmation_text)])
+        out = out.replace('\n', "<br/>")
         return out
 
-
-    _cp_filters = [TransactionCompleter()]
+    _cp_filters = sync._cp_filters
 
     def _cpOnError(self):
         """log the error and give the user a trac page to submit the bug
@@ -1861,14 +1638,10 @@ class Root(controllers.RootController):
         applogger.error("%(e_id)s: Path:%(e_path)s" % locals())
         applogger.error("%(e_id)s: Params:%(e_params)s" % locals())
         applogger.exception("%(e_id)s:" % locals())
-        if isinstance(e_info[1], SyncerError):
+        if isinstance(e_info[1], sync.SyncerError):
             applogger.error("%(e_id)s: LDAP sync error" % locals())
         else:
-            if hasattr(tls, "syncer_trs") and tls.syncer_trs:
-                to_rollback = tls.syncer_trs
-                tls.syncer_trs = []
-                if to_rollback:
-                    syncerclient.rollbackTransactions(tuple(reversed(to_rollback)))
+            sync.sendRollbackSignal()
         try:
             tb = sys.exc_info()[2]
             e_str = traceback.format_exc(tb)
@@ -1918,13 +1691,16 @@ excption:
         description = """
 Location: %(homeplace)s
 
-Error ID: %(e_id)s [[BR]][[BR]]
+Error ID: %(e_id)s
 
-URL: %(e_path)s [[BR]][[BR]]
+URL: %(e_path)s
 
-User Description: %(u_desc)s [[BR]][[BR]]
+User Description:
 
-Excption: %(e_str)s
+Excption: 
+{{{
+%(e_str)s
+}}}
 """ % locals()
         description = description.encode('utf-8')
 
@@ -2275,7 +2051,7 @@ Excption: %(e_str)s
     def create_location(self, name, currency='GBP', with_groups=True):
         """Creates a location and all the necessary groups with standard permissions
         """
-        location = Location(name=name, currency=currency)
+        location = Location(name=name, currency=currency, city="")
         self.create_tariff(active=1, place=location.id, name="Guest Membership "+ name, description="", tariff_cost=0, default=True)
 
         #create a dummy resource called calendar which will be used for access_policies to arbitrate access to the calendar

@@ -75,7 +75,7 @@ from hubspace.active import location_links
 <div style="visibility:hidden;" id="relative_url" class="${relative_path}"></div>
 <div class="container" id="menu-top">
   <div id="main-logo">
-    <a href="http://www.the-hub.net" title="back to Hub World"><img src="/static/images/micro/hub_logo.gif" width="63" height="61" alt="Hub Logo"/></a>
+    <a href="http://www.the-hub.net" title="back to Hub World"><img src="/static/images/micro/hub_logo.gif" width="60" height="60" alt="Hub Logo"/></a>
   </div>
   <div py:if="is_host(identity.current.user, location, render_static)" id="admin_view_indicator">
       Admin Mode
