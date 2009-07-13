@@ -1298,7 +1298,7 @@ var Tabs = function () {
         var img = jq('#' + img_id + location_id);
         if (trigger && img) {
             delete uploaded_image;
-            uploaded_image = new Upload(location_id, 'Location', attr_name, img.get(0), trigger.get(0));
+            uploaded_image = new Upload(location_id, 'Location', attr_name, img.get(0), trigger.get(0), {'edit_event':'click'});
         }
     };
     var dataBoxContract = function (datalink) {
