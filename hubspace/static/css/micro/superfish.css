@@ -123,11 +123,15 @@ div#menu-top ul li #hub-selector  ul li a:hover{color:#560005;}
 div#menu-top .sf-menu {float:right;}
 div#menu-top #hub-selector .sf-menu a  li li{padding:0; margin:0;}
 div#menu-top #hub-selector .sf-menu a {
-	border-left:	1px solid #fff;
-	border-top:		1px solid #fff;
-	text-decoration:none;
-	height:			10px;
+    border-left:	1px solid #fff;
+    border-top:		1px solid #fff;
+    text-decoration:none;
+    height:			10px;
 }
+div#menu-top #hub-selector .sf-menu a span.sub_link {
+    margin-left: 15px;
+}
+
 div#menu-top #hub-selector .sf-menu a, div#menu-top #hub-selector .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
 	color:			#fff;
 	padding-left:	10px;

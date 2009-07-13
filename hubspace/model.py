@@ -610,6 +610,9 @@ class Location(SQLObject):
             return []
         return val
 
+    is_region = IntCol(default=0)
+    in_region = ForeignKey('Location', default=None)
+    has_hubs = MultipleJoin("Location", joinColumn="in_region_id")
     invoice_newscheme = IntCol(default=0)
     tentative_booking_enabled = IntCol(default=1)
     resourcegroups = MultipleJoin("Resourcegroup", joinColumn="location_id")
@@ -736,6 +739,10 @@ class Location(SQLObject):
     hosts_email = property(getHostsEmail)
 
 
+listen(create_object_reference, Location, RowCreatedSignal)
+listen(delete_object_reference, Location, RowDestroySignal)
+
+
 class MetaWrapper(object):
     def __init__(self, obj):
         self.__dict__['obj'] = obj
@@ -776,8 +783,6 @@ class MetaWrapper(object):
 
 
 
-listen(create_object_reference, Location, RowCreatedSignal)
-listen(delete_object_reference, Location, RowDestroySignal)
 
 
 class PolicyGroup(SQLObject):
@@ -1040,9 +1045,3 @@ class ResourceQueue(SQLObject):
     foruser = ForeignKey("User")
     rusage = ForeignKey("RUsage")
 
-#commented because it causes a problem when the othe tables e.g. tg_user is not yet created
-#for o in (Report, AccessPolicy, Open, ResourceQueue, PolicyGroup, UserPolicyGroup):
-#    try:
-#        o.createTable(ifNotExists=True)
-#    except KeyError, e:
-#        print repr(e)

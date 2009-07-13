@@ -1,12 +1,19 @@
-var addthis_pub="benalexander";  //for addthis.com   
+var addthis_pub="benalexander";  //for addthis.com
 var widget_map = {'PublicSpace':{'description':'text_wysiwyg_small',
                                  'image':'image'},
                   'PublicPlace':{'description':'text_wysiwyg_small',
                                  'image':'image'},
                   'Page':{'image':'image',
                           'description': 'text_wysiwyg',
-                          'content': 'text_wysiwyg'}
+                          'content': 'text_wysiwyg'},
+		  'Location':{'micrologo':'image'}
 };
+var event_map = {'Location':{'micrologo': 'contextmenu'},
+		 'Page': {'name': 'contextmenu',
+			  'subtitle': 'contextmenu'},
+		 'PublicSpace':{'name':'contextmenu'}
+		};
+
 var space_overlays = function () {
     jq('.meeting-room-info').hide();
     jq('#meeting-rooms ul li').click(function(event){
@@ -41,30 +48,30 @@ var create_map = function (map_ele, callback) {
 jq(document).ready(function () {
    jq("#places_list div").each(function (i, ele) {
      if (window.YAHOO) {
-       var dot = new YAHOO.util.DD(ele.id); 
+       var dot = new YAHOO.util.DD(ele.id);
        dot.on('endDragEvent', function (evt) {
            var ele = this.getEl();
-           var raw = YAHOO.util.Dom.getXY(ele)
+	   var raw = YAHOO.util.Dom.getXY(ele);
            var region = YAHOO.util.Dom.getRegion("worldmap");
            var left = raw[0] - region.left;
            var top = raw[1] - region.top;
            var page = jq('#page_path_name').attr('class');
-           jq.post(relative_url + 'edit/attribute_edit', [{name: 'object_id', value: ele.id.split('-')[1]}, 
+           jq.post(relative_url + 'edit/attribute_edit', [{name: 'object_id', value: ele.id.split('-')[1]},
                                                          {name: 'value', value: top},
                                                          {name: 'page_name', value: page},
                                                          {name: 'property', value: 'top'},
                                                          {name: 'object_type', value: 'PublicPlace'}]);
-           jq.post(relative_url + 'edit/attribute_edit', [{name: 'object_id', value: ele.id.split('-')[1]}, 
+           jq.post(relative_url + 'edit/attribute_edit', [{name: 'object_id', value: ele.id.split('-')[1]},
                                                          {name: 'value', value: left},
                                                          {name: 'page_name', value: page},
                                                          {name: 'property', value: 'left'},
                                                          {name: 'object_type', value: 'PublicPlace'}]);
        }, dot, true);
    }});
-   
+
    window.source_no = 0;
    if (jq('#meeting-rooms').length) {
-       space_overlays();       
+       space_overlays();
    }
    // members page
    // rollovers for members info
@@ -74,7 +81,7 @@ jq(document).ready(function () {
         jq(this).next('span.member-bio span').fadeIn(350);
         jq(".member-bio").mouseover(function(){
             jq(this).show();
-            return false;	
+            return false;
         });
     });
     jq(this).mouseout(function () {
@@ -89,12 +96,12 @@ jq(document).ready(function () {
 	jq('#experience #content-highlight').cycle();
 	//remove background image so it doesn't show through when images fade
     }
-   
+
 	// initialise hub selector
 	jQuery(function(){
 		jQuery('ul.sf-menu').superfish();
 	});
-	jq('#z').css('z-index','100000'); 
+	jq('#z').css('z-index','100000');
 
    var object_id = null;
    var relative_url = jq('#relative_url').attr('class');
@@ -109,16 +116,16 @@ jq(document).ready(function () {
    jq('.edit_list').one('click', list_manage);
    if (window.Upload) {
        object_id = jq('#location_id').attr('class');
-       image_url = '/static/{location_folder}/uploads/{attr_name}' 
+       var image_url = '/static/{location_folder}/uploads/{attr_name}';
        jq('.file_upload').each(function () {
-          var uploaded_image = new Upload(object_id, 'Location', jq(this).attr('id'), jq(this).get(0), jq(this).get(0), relative_url +'edit/');
+	   var uploaded_image = new Upload(object_id, 'Location', jq(this).attr('id'), jq(this).get(0), jq(this).get(0), {'relative_url': relative_url +'edit/'});
        });
    }
    jq('#contact #geo_address').css({'width': '630px', 'height': '288px', 'float':'left', 'margin': '0', 'background-color':'#F4F4F4'});
    jq('#index #geo_address').css({'width': '220px', 'height': '200px', 'float':'left', 'margin': '0px 10px 10px 10px'});
    if (window.inplace_editor) {
        //new approach
-       jq("[id^='PublicSpace-'], [id^='Page-'], [id^='PublicPlace-']").each(function () { //substitute any type
+       jq("[id^='PublicSpace-'], [id^='Page-'], [id^='PublicPlace-'], [id^='Location-']").each(function () { //substitute any type
           var element_id = jq(this).attr('id');
           var prop_data = element_id.split('-');
           var object_type = prop_data[0];
@@ -129,37 +136,48 @@ jq(document).ready(function () {
           } catch(e) {
               var widget_type = 'text_small';
           }
-          if (widget_type == 'image') {
-              var dimensions = {};
-              if (object_type == 'PublicSpace') {
-                   dimensions = {'height':'300', 'width':'450'};
-              }
-              new Upload(object_id, object_type, object_prop, jq(this).get(0), jq(this).get(0), relative_url +'edit/', dimensions);
-              return;
-          }
-          var edit_event = 'click';
-          var clickToEdit = "Click To Edit";
-          //specialised rule
-          if (object_prop == 'name' || object_prop == 'subtitle') {
-               edit_event = 'contextmenu';
+	  try {
+	      var edit_event = event_map[object_type][object_prop];
+	      if (!edit_event) {
+		  edit_event = 'click';
+	      }
+	  } catch(e) {
+		  edit_event = 'click';
+	  }
+	  var clickToEdit = "Click To Edit";
+          if (edit_event == 'contextmenu') {
                clickToEdit = "Right Click To Edit";
           }
-          var page_name = jq('#page_path_name').attr('class')
+          if (widget_type == 'image') {
+              var options = {};
+              if (object_type == 'PublicSpace') {
+                  options = {'height':'300', 'width':'450'};
+              }
+	      if (object_prop == 'micrologo') {
+		  options['height'] = '60';
+	      }
+	      options['edit_event'] = edit_event;
+	      options['title'] = clickToEdit;
+	      options['relative_url'] = relative_url + 'edit/'
+              new Upload(object_id, object_type, object_prop, jq(this).get(0), jq(this).get(0), options);
+              return;
+          }
+	  var page_name = jq('#page_path_name').attr('class');
           inplace_editor(element_id, relative_url + 'edit/attribute_edit', {callback: function (form, val) {
-               return [{name: 'object_id', value: object_id}, 
+               return [{name: 'object_id', value: object_id},
                        {name: 'value', value: val},
                        {name: 'page_name', value: page_name},
                        {name: 'property', value: object_prop},
                        {name: 'object_type', value: object_type}];
            },
-                                                                            object_type: object_type, 
-                                                                            object_id: object_id, 
+                                                                            object_type: object_type,
+                                                                            object_id: object_id,
                                                                             ui_type: widget_type,
                                                                             edit_event: edit_event,
                                                                             clickToEditText: clickToEdit,
                                                                             widget_id: element_id + '_widget',
                                                                             widget_name: element_id,
-                                                                            property: object_prop, 
+                                                                            property: object_prop,
                                                                             value: jq('#' + element_id).html(),
                                                                             loadTextURL: relative_url + 'edit/attribute_load?object_type=' + object_type +'&object_id=' + object_id + '&property=' + object_prop + '&default=' + encodeURIComponent(jq(this).html())
           });
@@ -184,26 +202,26 @@ jq(document).ready(function () {
            }
            inplace_editor(element_id, relative_url + 'edit/attribute_edit', {
                callback: function (form, val) {
-                   return [{name: 'object_id', value: object_id}, 
+                   return [{name: 'object_id', value: object_id},
                            {name: 'object_type', value: object_type},
                            {name: 'value', value: val},
                            {name: 'page_name', value: jq('body').attr('id') + ".html"},
                            {name: 'property', value: element_id}];
                    },
-                                                                   object_type: object_type, 
-                                                                   object_id: object_id, 
+                                                                   object_type: object_type,
+                                                                   object_id: object_id,
                                                                    ui_type: widget_type,
                                                                    edit_event: edit_event,
                                                                    clickToEditText: clickToEdit,
                                                                    widget_id: element_id + '_widget',
                                                                    widget_name: element_id,
-                                                                   property: element_id, 
+                                                                   property: element_id,
                                                                    value: jq('#' + element_id).html(),
                                                                    loadTextURL: relative_url + 'edit/attribute_load?object_type=' + object_type + '&object_id=' + object_id + '&property=' + element_id + '&default=' + encodeURIComponent(jq(this).html())
 
           });
       });
-   }   
+   }
 
    if (jq('.gmap').length) {
        create_map(jq('#geo_address'), plot_point);
@@ -230,7 +248,9 @@ jq(document).ready(function () {
                 if (jq('td#add_existing').length) {
                     var method = 'remove_existing';
                 }
-                load_area.load(relative_url + 'lists/' + method + '/'  + list_name + '/' + jq(ele).parent().parent().attr('id').split('-')[1], function () {activate(list_name, load_area)})
+		load_area.load(relative_url + 'lists/' + method + '/'  + list_name + '/' + jq(ele).parent().parent().attr('id').split('-')[1], function () {
+		    activate(list_name, load_area);
+		});
                 },
                            'message': "Really delete this page?"
             };
@@ -240,18 +260,18 @@ jq(document).ready(function () {
                    var append_method = 'append';
                 } else if (jq('#add_existing').length) {
                    var append_method = 'append_existing';
-                } 
-                load_area.load(relative_url + 'lists/' + append_method + '/'  + list_name, jq('form#' + list_name + '_form tr:last :input').serializeArray(), function () {activate(list_name, load_area)});
+                }
+									 load_area.load(relative_url + 'lists/' + append_method + '/'  + list_name, jq('form#' + list_name + '_form tr:last :input').serializeArray(), function () {activate(list_name, load_area);});
                 return false;
             });
             jq('table#' + list_name + '_table input.active').click(function () {
-                if (jq(this).parent().find(':checked').length) {  
+                if (jq(this).parent().find(':checked').length) {
                      var active_data = [{'name':'active', 'value': jq(this).val()}];
                 } else {
                      var active_data = [];
                 }
                 load_area.load(relative_url + 'lists/toggle_active/'  + list_name + '/' + jq(this).parent().parent().attr('id').split('-')[1], active_data, function () {
-                     activate(list_name, load_area)
+		    activate(list_name, load_area);
                 });
                 return false;
             });

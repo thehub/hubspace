@@ -1,11 +1,11 @@
 var xmllib = {};
-Object.extend(xmllib, {
+jq.extend(xmllib, {
     escape: function (content) {
         content = content.replace(new RegExp('&', 'g'), '&amp;');
         content = content.replace(new RegExp('<', 'g'), '&lt;');
         content = content.replace(new RegExp('>', 'g'), '&gt;');
         return content;
-    }, 
+    },
     unescape: function (content) {
         content = content.replace(new RegExp('&gt;', 'g'), '>');
         content = content.replace(new RegExp('&lt;', 'g'), '<');
@@ -13,23 +13,6 @@ Object.extend(xmllib, {
         return content;
     }
 });
-var partial =  function () {			
-        var func = arguments[0];
-        var ori_args = [];
-        for (var i = 1; i < arguments.length; i++) {
-            ori_args.push(arguments[i]);
-        }
-        return function () {
-            var new_args = [];
-            for (var i = 0; i < ori_args.length; i++) {
-                new_args.push(ori_args[i]);
-            }
-            for (var j = 0; j < arguments.length; j++) {
-                new_args.push(arguments[j]);
-            }		
-            return func.apply(this, new_args);
-        };
-}; 
 String.prototype.supplant = function (o) {
     return this.replace(/{([^{}]*)}/g,
         function (a, b) {
@@ -40,7 +23,7 @@ String.prototype.supplant = function (o) {
 };
 String.prototype.stripTags = function () {
     if (this === '' || !this) {
-        return ''; 
+        return '';
     }
     var str = this.replace(/<\/?[^>]+>/gi, '');
     return str;
@@ -82,7 +65,7 @@ jq.extend(widget, {
     text_wysiwyg_small: function (widget_id, widget_name, widget_class, value, css, form) {
         var toolbar_config =  {toolbar: {titlebar: false,
                                          buttons: [
-                                             { group: 'insertitem', 
+                                             { group: 'textstyle',
                                                   buttons: [
                                                      { type: 'push', label: 'Bold CTRL + SHIFT + B', value: 'bold' },
                                                      { type: 'push', label: 'Italic CTRL + SHIFT + I', value: 'italic' },
@@ -98,11 +81,11 @@ jq.extend(widget, {
                                                      ]},
                                                      { type: 'push', label: 'Create an Unordered List', value: 'insertunorderedlist' },
                                                      { type: 'push', label: 'Create an Ordered List', value: 'insertorderedlist' }
-        
+
                                              ]}
                                           ]}
                               };
-      
+
         return widget.wysiwyg(widget_id, widget_name, widget_class, value, css, form, toolbar_config);
     },
     text_wysiwyg: function (widget_id, widget_name, widget_class, value, css, form) {
@@ -115,14 +98,15 @@ jq.extend(widget, {
 	element.appendTo(form);
         css.height = Math.max(css.height, 50);
         css.width = Math.max(css.width, 100);
-        var config = { 
-            height: css.height, 
-            width: css.width, 
-            dompath: true, //Turns on the bar at the bottom 
-            animate: true //Animates the opening, closing and moving of Editor windows 
+        var config = {
+            height: css.height,
+            width: css.width,
+            dompath: true, //Turns on the bar at the bottom
+            animate: true //Animates the opening, closing and moving of Editor windows
         };
         jq.extend(config, toolbar_config);
-        var myEditor = toggle_editor(config, widget_id);
+        var myEditor =  toggle_editor(config, widget_id);
+        myEditor.render();
         return [element, myEditor];
     },
     text_large: function (widget_id, widget_name, widget_class, value, css) {
@@ -138,7 +122,7 @@ jq.extend(widget, {
         var ele = jq('<input type="text" />').attr({id: widget_id,
                                                    name: widget_name}).addClass(widget_class).val(value).css('width', css.width);
         return [ele, null];
-    }, 
+    },
     time_range_select: function (widget_id, widget_name, widget_class, value) {
         value = value.split('-');
         var start_time = value[0];
@@ -169,7 +153,7 @@ jq.extend(widget, {
                                                                                            className: widget_class}));
         jq.each(source, function (i, val) {
            widget.add_option(val, element);
-        }); 
+        });
         return [element, null];
     },
     add_option: function (val, element) {
@@ -178,11 +162,11 @@ jq.extend(widget, {
         ele.html(val);
         if (this === val) {
             ele.selected = 'selected';
-        } 
+        }
         ele.appendTo(element);
     }
 });
-var inplace_editor = function (element_id, url, special_options) { 
+var inplace_editor = function (element_id, url, special_options) {
     var element = jq('#' + element_id);
     var height = (element.height() + element.height() / 10);
     var width = element.width() || 60;
@@ -199,7 +183,7 @@ var inplace_editor = function (element_id, url, special_options) {
     var widget_ready = false;
     if (special_options.externalControl) {
         trigger = jq('#' + special_options.externalControl);
-    }  
+    }
     var options = jq.extend({
         okText: "ok",
         cancelText: "cancel",
@@ -237,16 +221,16 @@ var inplace_editor = function (element_id, url, special_options) {
             alert("duplicate form error");
             return;
         }
-    }    
+    }
     trigger.attr('title', options.clickToEditText);
     var enterEditMode = function () {
         elementTop = jq(window).scrollTop();
         element.stop().css('background-color', '#EEE');
         if (saving) {
-            return;
+            return false;
         }
         if (editing) {
-            return;
+            return false;
         }
         editing = true;
         onEnterEditMode();
@@ -254,7 +238,7 @@ var inplace_editor = function (element_id, url, special_options) {
         element.hide();
         if (!form) {
             createForm();
-        }     
+        }
         return false;
     };
     var init = function () {
@@ -266,7 +250,7 @@ var inplace_editor = function (element_id, url, special_options) {
         if (typeof(response) !== 'string') {
             response = '';
         }
-        form = jq("<form id='{formId}' class='{formClassName}'>{response}</form>".supplant({formId: formId, 
+        form = jq("<form id='{formId}' class='{formClassName}'>{response}</form>".supplant({formId: formId,
                                                                                             formClassName: options.formClassName,
                                                                                             response: response}));
         if (!response) {
@@ -291,7 +275,7 @@ var inplace_editor = function (element_id, url, special_options) {
                 value =  xmllib.unescape(options.value);
             }
         }
-        element.before(form);	
+        element.before(form);
         if (options.get_values) {
             value = options.get_values;
         }
@@ -317,7 +301,7 @@ var inplace_editor = function (element_id, url, special_options) {
         }
         var args = {widget_name: options.ui_type, object_type: options.object_type, object_id: options.object_id};
         args = jq.extend(args, options.template_args);
-        if (!editField) {         
+        if (!editField) {
             jq.get('/get_widget', args, setExternalWidget);
         } else {
             add_submit_button();
@@ -344,7 +328,7 @@ var inplace_editor = function (element_id, url, special_options) {
             options.onEdit(element);
         }
         add_submit_button();
-        jq(form.find('input')[0]).focus();        
+        jq(form.find('input')[0]).focus();
     };
     var loadExternalText = function () {
         form.addClass(options.loadingClassName);
@@ -383,12 +367,13 @@ var inplace_editor = function (element_id, url, special_options) {
            var new_point = function (map, point) {
                if (lock === true) {
                    return false;
-               } 
+               }
                lock = true;
                geocoder.getLocations(point, function (address) {
                       set_address(address);
-               }); 
-           };
+               });
+	       return false;
+	   };
            var editable_point = function (map, point) {
                map.setCenter(point, 15);
                map.addControl(new GLargeMapControl());
@@ -396,10 +381,10 @@ var inplace_editor = function (element_id, url, special_options) {
                map.addOverlay(marker);
                GEvent.addListener(marker, 'drag', function (point) {
                    new_point(map, point);
-               }); 
+               });
                GEvent.addListener(marker, 'dragend', function (point) {
                    map.panTo(point);
-               }); 
+               });
            };
            var marker = create_map(js_widget[0], editable_point);
            js_widget[0].after(js_widget[1]);
@@ -413,10 +398,10 @@ var inplace_editor = function (element_id, url, special_options) {
                 jq(ele).timepicker();
             });
         } else {
-            editField.val(data.stripTags());     	
+            editField.val(data.stripTags());
         }
         jq(editField.find('input')[0]).focus();
-        
+
     };
     var onclickCancel = function () {
         if (oldInnerHTML) {
@@ -439,7 +424,8 @@ var inplace_editor = function (element_id, url, special_options) {
         return false;
     };
     var onComplete = function (data, xhr) {
-        if (xhr.getResponseHeader('X-JSON') === 'success') {
+	editField = null;
+        if (xhr.status === 200 && xhr.getResponseHeader('X-Json') !== 'error') {
             if (options.ui_type === 'gmap') {
                 element.html(data);
                 leaveEditMode();
@@ -450,7 +436,6 @@ var inplace_editor = function (element_id, url, special_options) {
                 leaveEditMode();
                 options.onComplete(data, element);
             }
-            editField = null;
         } else {
             leaveEditMode();
             createForm(data);
@@ -459,7 +444,7 @@ var inplace_editor = function (element_id, url, special_options) {
         if (options.dispose === true) {
             dispose();
         }
-        
+
     };
     var onSubmit = function () {
         // onLoading resets these so we need to save them away for the Ajax call
@@ -474,10 +459,10 @@ var inplace_editor = function (element_id, url, special_options) {
         onLoading();
         var xhr = jq.ajax({type: 'post',
                            url: url,
-                           data: parameters, 
+                           data: parameters,
                            success: function (response) {
                                onComplete(response, xhr);
-                           }, 
+                           },
                            error: onFailure});
         options.value = value;
         jq(window).scrollTop(elementTop);
@@ -510,10 +495,11 @@ var inplace_editor = function (element_id, url, special_options) {
     var leaveHover = function () {
         if (saving) {
             return;
-        }                                             
+        }
     };
     var leaveEditMode = function () {
         removeForm();
+	editField = null;
         leaveHover();
         element.removeClass(options.savingClassName).show();
         trigger.show();
@@ -550,10 +536,10 @@ var set_inplace_edit = function (object_id, object_type, element_id, ui_type, sa
         ui_type = jq('#' + element_id).attr('class') + "Edit";
     }
     if (!save_func) {
-        save_func = '/save_' + ui_type; 
+        save_func = '/save_' + ui_type;
     }
     var external_edit = element_id + "Edit";
-    test_external = jq('#' + external_edit);	  
+    var test_external = jq('#' + external_edit);
     if (!test_external) {
         alert("can't find id " + external_edit);
     }
@@ -583,118 +569,78 @@ var set_inplace_edit = function (object_id, object_type, element_id, ui_type, sa
     var editor = inplace_editor(element_id, save_func, params);
 };
 ///////////////////////Image Upload//////////////////////////////
-var Upload = Class.create();
-Upload.prototype = {
-    initialize: function (id, type, attr, img, trigger, relative_url, options) {
-        if (!options) {
-           this.options = {};
-        } else {
-           this.options = options;
-        }
-        if (relative_url) {
-            this.relative_url = relative_url;
-        } else {
-            this.relative_url = '/';
-        }
-        this.id = id;
-        this.type = type;
-        this.attr = attr;
-        this.iframe = document.createElement('iframe');
-        this.iframe.name = 'upload-form' + attr + type + id;
-        this.iframe.id = 'upload-form' + attr + type + id;
-        this.cancel_or_submit = this.cancel_or_submit.bindAsEventListener(this);
-        this.cancel_iframe = this.cancel_iframe.bindAsEventListener(this);
-        this.submit_iframe = this.submit_iframe.bindAsEventListener(this);
-        this.load_upload_iframe = this.load_upload_iframe.bindAsEventListener(this);
-        this.refresh_iframe = this.refresh_iframe.bindAsEventListener(this);
-        this.hover = this.hover.bindAsEventListener(this);
-        this.unhover = this.unhover.bindAsEventListener(this);
-        Event.observe(trigger, 'mouseover', this.hover);
-        Event.observe(trigger, 'mouseout', this.unhover);
-        Event.observe(trigger, 'click', this.load_upload_iframe);
-        this.trigger = trigger;
-        this.image = img;
-        if (!this.options.height) {
-            this.options.height = jq(this.image).parent().height();
-        } 
-        if (!this.options.width) {
-            this.options.width = jq(this.image).parent().width();
-        }
-    },
-    hover: function (evt) {
-        jq(this.image).effect("highlight", {}, 1000);
-        Event.element(evt).title = "Click to change photo";
-    },
-    unhover: function (evt) {
-    },
-    load_upload_iframe: function (evt) {
-        Event.element(evt).style.display = "none";
-        Event.stopObserving(this.trigger, 'click', this.load_upload_iframe);
+var Upload = function (id, type, attr, img, trigger, options) {
+    if (!options) {
+        options = {};
+    } else {
+	options = options;
+    }
+    if (!options.relative_url) {
+        options.relative_url = '/';
+    }
+    var iframe = jq('<iframe></iframe>');
+    var ie_refresh = null;
+    var source_no = 0;
+    var image_src = img.src;
+    var parent_img = jq(img).parent();
+    iframe.attr('name', 'upload-form' + attr + type + id);
+    iframe.attr('id', 'upload-form' + attr + type + id);
+    if (!options.height && !options.width) {
+        options.height = jq(img).parent().height();
+	options.width = jq(img).parent().width();
+    }
+    var hover = function () {
+	jq(img).parent().effect("highlight", {}, 1000);
+        jq(img).attr('title', options.title);
+    };
+    var unhover = function () {
+    };
+    var load_upload_iframe = function () {
+	jq(img).css('display', 'none');
         var page_name = window.location.href.split('/');
-        var page_name = page_name[page_name.length-1].split('&');
-        var page_name = page_name[page_name.length-1];
-        var src = this.relative_url + "uploadImageIframe/" + this.id + "/" + this.type + "/" + this.attr + '?page_name=' + page_name;
-        if (this.options.height && this.options.width) {
-            src += '&height=' + this.options.height +'&width=' + this.options.width; 
+        page_name = page_name[page_name.length-1].split('&');
+        page_name = page_name[page_name.length-1];
+        var src = options.relative_url + "uploadImageIframe/" + id + "/" + type + "/" + attr + '?page_name=' + page_name;
+        if (options.height) {
+            src += '&height=' + options.height;
+	}
+	if (options.width) {
+	    src += '&width=' + options.width;
         }
-
-        this.iframe.src = src;
-        var existing = $(this.iframe.id);
-        if (!existing) {
-            this.image.parentNode.appendChild(this.iframe);
-            //$('photo'+this.id).appendChild(this.iframe);        
+        iframe.attr('src', src);
+        var existing = jq('#' + iframe.attr('id'));
+        if (!existing.length) {
+            jq(img).parent().append(iframe);
         } else {
-            this.iframe.style.display = 'inline';
+            iframe.css('display', 'inline');
         }
-        Event.observe(this.iframe, 'load', this.cancel_or_submit);
-        Event.stopObserving(this.trigger, 'mouseover', this.hover);
-        Event.stopObserving(this.trigger, 'mouseout', this.unhover);
-    },
-    submit_iframe: function (evt) {
-        
-    },
-    cancel_or_submit: function (evt) {
-        this.unhover(evt);
-        Event.stopObserving(this.iframe, 'load', this.cancel_or_submit);
-        Event.observe(this.iframe, 'load', this.refresh_iframe);
-        //hacking around a very strange issue with firefox
-        for (var i = 0; i < frames.length; i++) {
-            if (frames[i].name === this.iframe.name) {
-                this.frame = frames[i];
-            }
-        }
-        //in IE
-        if (!this.frame) {
-            this.frame = frames[this.iframe.name];   
-        }
-        Event.observe(this.frame.document.getElementById('cancel_iframe'), 'click', this.cancel_iframe);
-        Event.observe(this.frame.document.getElementById('submit_iframe'), 'click', this.submit_iframe);
-    },
-    cancel_iframe: function (evt) {
-        this.trigger.style.display = "inline";
-        Event.stopObserving(this.frame.document.getElementById('cancel_iframe'), 'click', this.cancel_iframe);
-        Event.stopObserving(this.iframe, 'load', this.refresh_iframe);
-        Event.observe(this.trigger, 'click', this.load_upload_iframe);
-        Event.observe(this.trigger, 'mouseover', this.hover);
-        Event.observe(this.trigger, 'mouseout', this.unhover);
-        this.iframe.style.display = 'none';
-    },
-    refresh_iframe: function (evt) {
-        this.trigger.style.display = "inline";
-        Event.stopObserving(this.iframe, 'load', this.refresh_iframe);
-        var parent = this.image.parentNode;
-        this.ie_refresh = partial(this.ie_refresh_image.bindAsEventListener(this), parent);
-        Event.observe(this.image, 'load', this.ie_refresh);
+        iframe.load(cancel_or_submit);
+        jq(trigger).unbind('mouseover').unbind('mouseout');
+    };
+    jq(trigger).one(options.edit_event, load_upload_iframe).mouseover(hover).mouseout(unhover);
+    var submit_iframe = function () {
+	iframe.one('load', refresh_image);
+	iframe.css('display',  'none');
+	jq(trigger).one(options.edit_event, load_upload_iframe).mouseover(hover).mouseout(unhover);
+    };
+    var cancel_or_submit = function () {
+        unhover();
+        iframe.contents().find('#cancel_iframe').click(cancel_iframe);
+        iframe.contents().find('#submit_iframe').click(submit_iframe);
+	iframe.contents().find('#auto_browse').one('change', function () {
+	    iframe.contents().find('#submit_iframe').click();
+	});
+    };
+    var cancel_iframe = function () {
+        jq(img).css('display', 'inline');
+	jq(trigger).one(options.edit_event, load_upload_iframe).mouseover(hover).mouseout(unhover);
+        iframe.css('display',  'none');
+    };
+    var refresh_image = function () {
         source_no += 1;
-        this.image.src = "/display_image/" + source_no + "/" + this.type + "/" + this.id + "/" + this.attr;
-        Event.observe(this.trigger, 'click', this.load_upload_iframe); 
-        Event.observe(this.trigger, 'mouseover', this.hover);
-        Event.observe(this.trigger, 'mouseout', this.unhover);
-        this.iframe.style.display = 'none';
-    },
-    ie_refresh_image: function (parent, evt) {
-        Event.stopObserving(this.image, 'load', this.ie_refresh);
-        this.image.src = "/display_image/" + source_no + "/" + this.type + '/' + this.id + '/' + this.attr;
-    }                  
+        img.src = iframe.contents().find('#new_image_src').html() + '?no=' + source_no;
+	jq(img).load(function() {
+	    jq(img).css('display', "inline");
+	});
+    };
 };
-
