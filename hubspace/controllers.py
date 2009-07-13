@@ -2041,10 +2041,29 @@ Excption: %(e_str)s
     @expose()
     @identity.require(identity.has_permission('superuser'))
     @validate(validators={'name':no_ws_ne_cp, 'currency':All(v.UnicodeString(), v.MaxLength(3)), 'with_groups':BoolInt(if_empty=1)})
-    def create_location(self, name, currency='GBP', with_groups=True):
+    def create_region(self, name, currency='GBP', with_groups=True):
+        region = self.create_location(name, currency, with_groups, is_region=1)
+        return "region created"
+
+    @expose()
+    @identity.require(identity.has_permission('superuser'))
+    @validate(validators={'region_id':real_int, 'hub_id':real_int})
+    def add_location_to_region(self, region_id, hub_id):
+        region = Location.get(region_id)
+        if not region.is_region:
+            return region.name + "is not a region"
+        hub = Location.get(hub_id)
+        hub.in_region = region
+        return "Hub " + hub.name + "has been added to " + region.name
+
+
+    @expose()
+    @identity.require(identity.has_permission('superuser'))
+    @validate(validators={'name':no_ws_ne_cp, 'currency':All(v.UnicodeString(), v.MaxLength(3)), 'with_groups':BoolInt(if_empty=1)})
+    def create_location(self, name, currency='GBP', with_groups=True, is_region=0):
         """Creates a location and all the necessary groups with standard permissions
         """
-        location = Location(name=name, currency=currency, city="")
+        location = Location(name=name, currency=currency, city="", is_region=is_region)
         self.create_tariff(active=1, place=location.id, name="Guest Membership "+ name, description="", tariff_cost=0, default=True)
 
         #create a dummy resource called calendar which will be used for access_policies to arbitrate access to the calendar
@@ -3133,7 +3152,7 @@ Excption: %(e_str)s
     @expose()
     @strongly_expire
     @validate(validators={'id':v.Int(if_empty=0), 'type':v.UnicodeString(), 'attr':v.UnicodeString()})
-    def display_image(self, rand, type, id=0, attr=""):
+    def display_image(self, type, id=0, attr="", **kwargs):
         theclass = getattr(hubspace.model, type)
         if theclass == Location and id==0:
             try:
@@ -3595,7 +3614,7 @@ The Hub Team
         else:
             raise "unexpected content type" + `image.type`
 
-        return ""
+        return "<div id='new_image_src'>/display_image/" + object_type + '/' + str(object_id) + '/' + attr + "</div>"
 
     @expose()
     @identity.require(identity.has_any_permission("webapi","superuser"))

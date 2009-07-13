@@ -1,4 +1,4 @@
-from model import LocationFiles
+from model import LocationFiles, MetaWrapper
 from hubspace.utilities.image_preview import create_image_preview
 import os
 import StringIO
@@ -6,19 +6,29 @@ from sqlobject import AND
 import logging
 applogger = logging.getLogger("hubspace")
 
-def save_file(location, fd, height=300, width=300, upload_dir='', file_name=''):
+def save_file(location, fd, height=None, width=None, upload_dir=''):
     """here we will need to get the mime type in the various way here
     - attr is the filename
     """
     if "image/" in fd.type:
         try:
-            mime_type, file_name = save_image(location, file_name, fd, height, width, upload_dir)
+            mime_type, file_name = save_image(location, fd, height, width, upload_dir)
         except:
             raise "There was an error saving the image"
     else:
         raise "unexpected content type" + `image.type`
 
     return LocationFiles(location=location, attr_name=file_name, mime_type=mime_type)
+
+def get_filepath(obj, prop, upload_dir, default=''):
+    """obj should usually be a MetaWrapper
+    """
+    prop_val = getattr(obj, prop)
+    try:
+        val = int(prop_val)
+    except:
+        return default
+    return upload_dir + LocationFiles.get(val).attr_name
 
 def locally_unique_file_name(file_name, location):
     """give a file_name test.png it should iterate through test-1.png, test-2.png etc until we reach a unique one.
@@ -38,17 +48,15 @@ def locally_unique_file_name(file_name, location):
         file_name = '.'.join(file_name)    
     return file_name
 
-def save_image(location, file_name, fd, height, width, upload_dir):
+def save_image(location, fd, height, width, upload_dir):
     image = create_image_preview(fd.file, height=height, width=width)
-    if not file_name:
-        file_name = fd.filename 
-        file_name = file_name.split('.')[0] + '.png'
-        file_name = locally_unique_file_name(file_name, location)
-    else:
-        file_name = file_name.split('.')[0] + '.png'
+
+    file_name = fd.filename 
+    file_name = file_name.split('.')[0] + '.png'
+    file_name = locally_unique_file_name(file_name, location)
+
     applogger.debug("microsite: saving image at: %s%s" % (upload_dir, file_name))
     file = open(upload_dir + file_name, 'w')
-    print file_name
     file.write(image.read())
     file.close()
     return ('image/png', file_name)

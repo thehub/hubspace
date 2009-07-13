@@ -1,6 +1,24 @@
+var partial =  function () {
+        var func = arguments[0];
+        var ori_args = [];
+        for (var i = 1; i < arguments.length; i++) {
+            ori_args.push(arguments[i]);
+        }
+        return function () {
+            var new_args = [];
+            for (var i = 0; i < ori_args.length; i++) {
+                new_args.push(ori_args[i]);
+            }
+            for (var j = 0; j < arguments.length; j++) {
+                new_args.push(arguments[j]);
+            }
+            return func.apply(this, new_args);
+        };
+};
+
 var compiled = false;
 var set_ajax_globals = function () {
-    jq('#throbber').ajaxStart(function () { 
+    jq('#throbber').ajaxStart(function () {
         overlib(jq(this).html());
         jq('#throbber').oneTime("20s", "kill_loader", nd);
     }).ajaxStop(function () {
@@ -36,23 +54,23 @@ var tariff_location = function () {
     var loc = jq(this).val();
     var user = navigation.current_profile_id();
     var params = {object_id: user, object_type: 'User', location: loc, action: 'tariff_loc'};
-    
-    jq('#tariff_booking_area-' + user).load('/get_widget/mainProfile', params, select_tariff_location); 
+
+    jq('#tariff_booking_area-' + user).load('/get_widget/mainProfile', params, select_tariff_location);
 };
 var select_tariff_location = function () {
     var user = navigation.current_profile_id();
     jq('#tariff_location_select-' + user).change(tariff_location);
     set_inplace_edit(user, 'User', 'tariffHistory-' + user, 'tariffHistoryEdit', null, null, {'location': jq("#tariff_location_select-" + user).val()}, show_tariff_switch, null, set_tariff_booking_edit, show_tariff_switch);
-    
+
 };
-    
+
 var download_invoices = function (evt) {
     var list_invoices = Event.element(evt).id.split('-');
     var loc_id = list_invoices[1];
     var loc_name = list_invoices[2];
     var start = jq("#start_invoice_list-" + loc_id).val();
     var end = jq("#end_invoice_list-" + loc_id).val();
-    window.location = '/invoice_list/' + loc_id + '/' + start + '/' + end + '/invoice_list_' + loc_name + '.csv';     
+    window.location = '/invoice_list/' + loc_id + '/' + start + '/' + end + '/invoice_list_' + loc_name + '.csv';
 };
 var gen_reports = function (evt) {
     var list_invoices = Event.element(evt).id.split('-');
@@ -122,7 +140,7 @@ var plot_lreports = function (evt) {
     var user_id = jq("#user_id").children("[@selected]").val();
     var grpby = jq("input[@name='grpby']:checked").val();
     var g_type = jq("input[@name='g_type']:checked").val();
-    var url = '/get_usage_graph/' + loc_id + '/' + r_type + '/' + r_name + '/' + user_id + '/' + start + '/' + end + '/' + grpby + '/' + g_type + '/large'; 
+    var url = '/get_usage_graph/' + loc_id + '/' + r_type + '/' + r_name + '/' + user_id + '/' + start + '/' + end + '/' + grpby + '/' + g_type + '/large';
     window.open(url);
 };
 
@@ -147,7 +165,7 @@ Resources.prototype = {
     },
     load_add_resource: function (type) {
         var that = this;
-        
+
         jq('#tariff_resources').load('/load_tab', {'object_type': 'Location', 'object_id': this.location, 'section': 'add' + type}, function () {
             that.listen_add();
         });
@@ -166,26 +184,26 @@ Resources.prototype = {
         if (jq('#addResourceForm')) {
             jq('#submit_create_resource').click(function () {
                 that.add_resource();
-            }); 
+            });
             jq('#cancel_create_resource').click(function () {
                 that.cancel_add();
-            }); 
+            });
         }
         if (jq('#addResourceForm')) {
             jq('#submit_create_resource_group').click(function () {
                 that.add_resource_group();
-            }); 
+            });
             jq('#cancel_create_resource_group').click(function () {
                 that.cancel_add();
-            }); 
+            });
         }
-        
+
     },
     add_tariff: function () {
         var that = this;
         var params = jq('#addTariffForm').serializeArray();
         params[params.length] = {'name': 'place', 'value': this.location};
-        
+
         var xhr = jq.post('/create_tariff', params, function (response) {
             that.complete_add('tariff', response, xhr);
         });
@@ -195,7 +213,7 @@ Resources.prototype = {
         var that = this;
         var params = jq('#addResourceForm').serializeArray();
         params[params.length] = {'name': 'place', 'value': this.location};
-        
+
         var xhr = jq.post('/create_resource', params, function (response) {
             that.complete_add('resource', response, xhr);
         });
@@ -205,7 +223,7 @@ Resources.prototype = {
         var that = this;
         var params = jq('#addResourceGroupForm').serializeArray();
         params[params.length] = {'name': 'location', 'value': this.location};
-        
+
         var xhr = jq.post('/create_resource_group', params, function (response) {
             that.complete_add('resource', response, xhr);
         });
@@ -227,7 +245,7 @@ Resources.prototype = {
             jq('#tariff_resources').html(response);
             this.listen_add(response);
         }
-        
+
     },
     update_location: function () {
         var that = this;
@@ -238,14 +256,14 @@ Resources.prototype = {
         } else if (this.res_or_tariff === 'Resources') {
             this.callback = this.manage_resources_listeners;
         }
-        
+
         jq('#resource_location').load('/load_management_page', {'object_type': 'Location', 'object_id': this.location, 'res_or_tariff': this.res_or_tariff}, function () {
             that.callback();
         });
     },
     manage_tariff_listeners: function () {
-        
-        navigation.addBoxExpanders(); 
+
+        navigation.addBoxExpanders();
         var that = this;
         jq('table#tariff_management .managePrices').click(function () {
             that.manage_pricing(jq(this));
@@ -280,7 +298,7 @@ Resources.prototype = {
         jq('#addResourceGroup').click(function () {
             that.load_add_resource('ResourceGroup');
         });
-        navigation.addBoxExpanders(); 
+        navigation.addBoxExpanders();
         jq.each(jq('table#resource_groups .resourceGroupName h1'), function (i, ele) {
             that.edit_detail('name', 'text_small', ele, '/save_resource_group_property', 'Resourcegroup');
         });
@@ -315,7 +333,7 @@ Resources.prototype = {
     default_tariff: function (tariff_cell) {
         var that = this;
         this.tariff_id = tariff_cell[0].id.split('_')[1];
-        
+
         jq("#resource_location").load("/set_default_tariff", {'tariff_id': this.tariff_id}, function () {
             that.manage_tariff_listeners();
         });
@@ -323,7 +341,7 @@ Resources.prototype = {
     manage_pricing: function (ele) {
         var that = this;
         this.tariff_id = ele[0].id.split('_')[1];
-        
+
         jq('#tariff_resources').load("/load_tab", {'object_type': 'Resource', 'object_id': this.tariff_id, 'section': 'managePricing'}, function () {
             that.pricing_list_listeners();
         });
@@ -333,15 +351,15 @@ Resources.prototype = {
         navigation.addBoxExpanders();
         jq('.schedule').click(function () {
             that.manage_schedule(jq(this));
-        });  
-        
+        });
+
     },
     manage_schedule: function (ele) {
         var that = this;
         var ids = ele.attr('id').split('_');
         this.tariff = ids[2];
         this.resource = ids[1];
-        
+
         jq('#schedule_area').load("/get_widget/pricingSchedule", {'object_type': 'Resource', 'object_id': this.resource, 'tariff': this.tariff}, function (response) {
             that.pricing_schedule_listeners(response);
         });
@@ -364,7 +382,7 @@ Resources.prototype = {
     delete_pricing: function (ele) {
         var that = this;
         var pricing = ele.attr('id').split('_')[1];
-        
+
         jq('#schedule_area').load('/delete_pricing/' + pricing, function () {
             that.pricing_schedule_listeners();
         });
@@ -374,19 +392,19 @@ Resources.prototype = {
         var params = jq('#add_pricing_form').serializeArray();
         params[params.length] = {'name': 'tariff', 'value': this.tariff};
         params[params.length] = {'name': 'resource', 'value': this.resource};
-        
+
         var xhr = jq.post('/add_pricing', params, function (response) {
             that.append_pricing(response, xhr);
         });
     },
     append_pricing: function (response, xhr) {
-        if (xhr.getResponseHeader('X-JSON') === 'success') {       
+        if (xhr.getResponseHeader('X-JSON') === 'success') {
             jq('#schedule_area').html(response);
         } else {
             jq("#add_pricing_divider").html(response);
         }
         this.pricing_schedule_listeners();
-        
+
     },
     show_add_pricing: function () {
         jq('#add_pricing').css('display', 'none');
@@ -398,13 +416,13 @@ Resources.prototype = {
         if (!load_locally) {
             load_func = ["/load_prop?prop_name=", prop_name, "&object_type=", object_type, "&id=", element.id.split('_')[1]].join("");
         }
-        set_inplace_edit(element.id.split('_')[1], object_type, element.id, widget_type, url, load_func, null, null, prop_name);     
+        set_inplace_edit(element.id.split('_')[1], object_type, element.id, widget_type, url, load_func, null, null, prop_name);
     },
     load_extra: function (trigger) {
         var that = this;
         trigger.next().load('/load_tab', {object_id: trigger.attr('id').split('-')[1], object_type: 'Resource', section: 'moreResDetails'}, function () {
             that.view_res_details(trigger.next());
-        }); 
+        });
     },
     view_res_details: function (popup) {
         var that = this;
@@ -424,7 +442,7 @@ Resources.prototype = {
         this.suggestions_listeners();
         var img = jq('#extra_details div.imgwrap img');
         var img_trigger = img.prev();
-        this.image = new Upload(img.attr('id').split('-')[1], 'Resource', 'resimage', img.get(0), img_trigger.get(0));
+        this.image = new Upload(img.attr('id').split('-')[1], 'Resource', 'resimage', img.get(0), img_trigger.get(0), {'edit_event':'click'});
     },
     set_delete_dialog: function () {
         var that = this;
@@ -471,7 +489,7 @@ Resources.prototype = {
                              that.create_sortable();
                          });
                      });
-                }); 
+                });
             });
         } else {
             jq.getScript('/static/javascript/admin' + jq('input#admin_js_no').val() + '.js', function () {
@@ -483,14 +501,14 @@ Resources.prototype = {
         create_sortables(this);
     },
     requirements_listeners: function () {
-        var that = this; 
+        var that = this;
         jq('table#resource_groups a.removeRequirement').click(function () {
             that.remove_suggestion(jq(this), 'requirement');
         });
         jq('table#resource_groups a.addRequirement').click(function () {
             that.add_suggestion(jq(this), 'requirement');
         });
-        
+
     },
     suggestions_listeners: function () {
         var that = this;
@@ -500,7 +518,7 @@ Resources.prototype = {
         jq('table#resource_groups a.addSuggestion').click(function () {
             that.add_suggestion(jq(this), 'suggestion');
         });
-        
+
     },
     toggle_activation: function (activator) {
         var that = this;
@@ -513,21 +531,21 @@ Resources.prototype = {
         jq('#' + activator_id).click(function () {
             that.toggle_activation(jq(this));
         });
-        
-    }, 
+
+    },
     add_suggestion: function (ele, type) {
         var that = this;
         var resourceid = ele.attr('id').split('-')[1];
         var form_field = jq('#choose' + type + '-' + resourceid);
         var suggestedid = form_field.val();
         form_field.find('option[value=' + suggestedid + ']').remove();
-        
+
         jq.post('/add_' + type + '/' + resourceid + '/' + suggestedid, function (response) {
             jq(response).appendTo(ele.parent().prev());
             ele.parent().prev().find('a').click(function () {
                 that.remove_suggestion(jq(this), type);
             });
-            
+
         });
     },
     remove_suggestion: function (ele, type) {
@@ -536,7 +554,7 @@ Resources.prototype = {
         var resourceid = ids[1];
         var suggestedid = ids[2];
         jq('#choose' + type + '-' + resourceid).append(jq('<option value=' + suggestedid + '>' + ele.prev().text() + '</option>'));
-        
+
         jq.post('/remove_' + type + '/' + resourceid + '/' + suggestedid, function () {
             ele.parent().remove();
             ele.unbind();
@@ -548,7 +566,7 @@ Resources.prototype = {
 
 var Todos = Class.create();
 Todos.prototype = {
-    refresh: function () {        
+    refresh: function () {
         var req = new Ajax.Updater($("hostContent"), '/load_tab', {method: 'get', parameters: 'object_type=User&object_id=' +  this.user_id  +  '&section=host', onComplete: new_todos});
     },
     set_inplace: function (evt) {
@@ -556,7 +574,7 @@ Todos.prototype = {
         $$('div#todo_content_urgent a.edit_urgent').each(this.listen_set_inplace.bind(this));
         $$('div#host-todosContent a.followup').each(this.listen_set_inplace.bind(this));
         $$('div#todo_content_urgent a.followup_urgent').each(this.listen_set_inplace.bind(this));
-        
+
     },
     listen_set_inplace: function (element) {
         set_inplace_edit(element.parentNode.className, "Todo", element.parentNode.id, 'todoEdit', null, null, {"action": "edit"}, this.refresh.bind(this), null, this.set_date.bind(this));
@@ -585,7 +603,7 @@ Todos.prototype = {
     },
     listen_ignore:  function (element) {
         Event.stopObserving(element, 'click', this.ignorer);
-        Event.observe(element, 'click', this.ignorer); 
+        Event.observe(element, 'click', this.ignorer);
     },
     listen_show_closed:  function (element) {
         Event.stopObserving(element, 'click', this.show_closed);
@@ -595,7 +613,7 @@ Todos.prototype = {
         this.nav = navigation;
         this.nav.addBoxExpanders();
         //this.nav.set_tab_switch();
-        this.user_id = Number(navigation.current_user_id()); 
+        this.user_id = Number(navigation.current_user_id());
         this.create_invoice = this.create_invoice.bindAsEventListener(this);
         this.set_inplace();
         this.todo_add = this.todo_add.bindAsEventListener(this);
@@ -625,7 +643,7 @@ Todos.prototype = {
     submit_delete_bar: function (ele) {
         var todo_parent = jq(ele).parent().parent();
         var bar_id = todo_parent.attr('id').split('-')[1];
-        
+
         var req = new Ajax.Request('/delete_todo_bar', {parameters: "bar_id=" + bar_id, method: 'post', onComplete: this.refresh.bind(this)});
     },
     ignorer: function (evt) {
@@ -633,7 +651,7 @@ Todos.prototype = {
         Event.stopObserving(element, 'click', this.ignorer);
         var link_id = element.id.split('-');
         var user_id = link_id[1];
-        
+
         var req = new Ajax.Request('/ignore_remind', {method: 'post', parameters: "user_id=" + user_id, onComplete: this.refresh.bind(this)});
     },
     create_invoice: function (evt) {
@@ -648,7 +666,7 @@ Todos.prototype = {
         var link_id = element.id.split('-');
         var user_id = link_id[1];
         var action = link_id[0];
-        
+
         var req = new Ajax.Request('/get_widget/sendReminder', {method: 'get', parameters: 'object_id=' + user_id  + '&object_type=User', onComplete: partial(this.set_submit_remind.bind(this), user_id, action)});
     },
     set_submit_remind: function (user_id, action, response) {
@@ -658,12 +676,12 @@ Todos.prototype = {
         $('description_' + action  + '_' + user_id).appendChild(mail);
         Event.observe('submit_reminder_mail', 'click', partial(this.send_reminder.bindAsEventListener(this), mail.id));
         Event.observe('cancel_reminder_mail', 'click', partial(this.cancel_reminder.bindAsEventListener(this), mail.id));
-        
+
     },
     send_reminder: function (mail_id, evt) {
         var id = mail_id.split('_')[2];
         var mail_form = "id=" + id  + '&' + Form.serialize('send_reminder_' + id);
-        
+
         var req = new Ajax.Request('/send_reminder', {parameters: mail_form, onComplete: partial(this.finish_send_reminder.bind(this), mail_id)});
     },
     finish_send_reminder: function (mail_id, response) {
@@ -673,7 +691,7 @@ Todos.prototype = {
             Element.update($(mail_id), response.responseText);
             Event.observe('submit_reminder_mail', 'click', partial(this.send_reminder.bindAsEventListener(this), mail_id));
             Event.observe('cancel_reminder_mail', 'click', partial(this.cancel_reminder.bindAsEventListener(this), mail_id));
-            
+
         }
     },
     cancel_reminder: function (mail_id, evt) {
@@ -690,7 +708,7 @@ Todos.prototype = {
         Event.stopObserving(add_link, 'click', this.todo_add);
         var parent = add_link.parentNode.parentNode;
         var form = new Todo_form(parent, add_link, this);
-        
+
         var req = new Ajax.Request('/load_tab', {method: 'get', parameters: 'object_type=Todo&object_id=' + parent.id.split('-')[1] + '&section=addTodo', onComplete: partial(this.todo_add_form.bind(this), form)});
     },
     todo_add_form: function (form, response) {
@@ -702,7 +720,7 @@ Todos.prototype = {
         Event.stopObserving(add_link, 'click', this.todo_add_bar);
         var parent = "";
         var form = new Todo_bar(this.user, add_link, this);
-        
+
         var req = new Ajax.Request('/load_tab', {method: 'get', parameters: 'object_type=User&object_id=' +  this.user_id +  '&section=addTodoBar', onComplete: form.create_form.bind(form)});
     },
     show_closed: function (evt) {
@@ -716,7 +734,7 @@ Todos.prototype = {
         show_closed_link.parentNode.insertBefore(hideClosed, show_closed_link);
         Element.remove(show_closed_link);
         Event.observe(hideClosed, 'click', partial(this.hide_closed.bind(this), show_closed_link));
-        
+
         var req = new Ajax.Updater($('todo_content_' + todo_parent.id), '/toggle_closed_todos', {evalScripts: true, method: 'get', parameters: "show=1&bar_id=" +  todo_parent_id, onComplete: this.set_inplace.bind(this)});
     },
     hide_closed: function (show_closed_link, evt) {
@@ -725,7 +743,7 @@ Todos.prototype = {
         var todo_parent_id = todo_parent.id.split('-')[1];
         hide_closed_link.parentNode.insertBefore(show_closed_link, hide_closed_link);
         Element.remove(hide_closed_link);
-        
+
         var req = new Ajax.Updater($('todo_content_' + todo_parent.id), '/toggle_closed_todos', {evalScripts: true, method: 'get', parameters: "show=0&bar_id=" +  todo_parent_id, onComplete: this.set_inplace.bind(this)});
     }
 };
@@ -733,7 +751,7 @@ Todos.prototype = {
 var Todo_bar = Class.create();
 Todo_bar.prototype = {
     initialize: function (user, add_link, todos) {
-        this.create_todo =  this.create_todo.bindAsEventListener(this); 
+        this.create_todo =  this.create_todo.bindAsEventListener(this);
         this.cancel_todo = this.cancel_todo.bindAsEventListener(this);
         this.user = user;
         this.add_link = add_link;
@@ -748,11 +766,11 @@ Todo_bar.prototype = {
         Event.observe($('cancel_todo_bar'), 'click', this.cancel_todo);
         navigation.addBoxExpanders();
         Element.hide(this.add_link);
-        
+
     },
     create_todo: function (evt) {
         var form_values =  Form.serialize($('create_todo_bar'));
-        
+
         var req = new Ajax.Request('/create_todo', {method: 'post', parameters: form_values, onComplete: this.prependTodo.bind(this)});
     },
     cancel_todo: function (evt) {
@@ -763,25 +781,25 @@ Todo_bar.prototype = {
     prependTodo: function (response) {
         if (response.getResponseHeader('X-JSON') === 'success') {
             Element.update($("hostContent"), response.responseText);
-            var todos = new Todos();            
+            var todos = new Todos();
         } else {
             Element.update(this.add_list_form, response.responseText);
             Event.observe($('submit_todo_bar'), 'click', this.create_todo);
             Event.observe($('cancel_todo_bar'), 'click', this.cancel_todo);
         }
-        
+
     }
 };
 
 var new_todos = function () {
     var todos = new Todos();
-    
+
 };
 
 var Todo_form = Class.create();
 Todo_form.prototype = {
     initialize: function (parent, add_link, todos) {
-        this.create_todo =  this.create_todo.bindAsEventListener(this); 
+        this.create_todo =  this.create_todo.bindAsEventListener(this);
         this.cancel_todo = this.cancel_todo.bindAsEventListener(this);
         this.parent = parent;
         this.todobar_id = this.parent.id.split('-')[1];
@@ -795,11 +813,11 @@ Todo_form.prototype = {
         this.todo_content.insertBefore(this.todo_form, this.todo_content.firstChild);
         Event.observe($('submit_todo_' + this.todobar_id), 'click', this.create_todo);
         Event.observe($('cancel_todo_' + this.todobar_id), 'click', this.cancel_todo);
-        
+
     },
     create_todo: function (evt) {
         var form_values =  Form.serialize($('create_todo_' + this.todobar_id));
-        
+
         var req = new Ajax.Request('/create_todo', {method: 'post', parameters: form_values, onComplete: this.prependTodo.bind(this)});
     },
     cancel_todo: function (evt) {
@@ -809,13 +827,13 @@ Todo_form.prototype = {
     prependTodo: function (response) {
         if (response.getResponseHeader('X-JSON') === 'success') {
             Element.update($("hostContent"), response.responseText);
-            var todos = new Todos();             
+            var todos = new Todos();
         } else {
             Element.update(this.todo_form, response.responseText);
             Event.observe($('submit_todo_' + this.todobar_id), 'click', this.create_todo);
             Event.observe($('cancel_todo_' + this.todobar_id), 'click', this.cancel_todo);
         }
-        
+
     }
 };
 
@@ -838,17 +856,17 @@ Notes.prototype = {
         jq.each(jq("div#user_" + this.type + "s-" + this.user_id + " div." + this.type), function (i, ele) {
             that.existing(ele);
         });
-        
+
     },
     existing: function (element) {
         var i = this.notes.length;
         var note_id = element.id.split(this.type.charAt(0).toUpperCase())[0];
         this.upper_type = this.type.charAt(0).toUpperCase().concat(this.type.substring(1));
-        this.notes[i] = new Note(this, note_id); 
+        this.notes[i] = new Note(this, note_id);
     },
     add_note: function () {
         var that = this;
-        
+
         jq.get('/load_tab', {object_type: 'User', object_id: this.user_id, section: this.type + 's'}, function (response) {
             that.new_note_form(response);
         });
@@ -863,12 +881,12 @@ Notes.prototype = {
         jq('#' + 'cancel_create_' + this.type).one('click', function () {
             that.cancel_note();
         });
-        
+
     },
     create_note: function () {
         var that = this;
         var form_values =  jq('#create_' + this.type).serializeArray();
-        
+
         jq.post('/create_' + this.type, form_values, function (response) {
             that.updateNote(response);
         });
@@ -944,7 +962,7 @@ Note.prototype = {
             action_disp.style.display = "none";
         }
         Event.stop(evt);
-        Event.observe($(this.note_id + this.notes.type + "SubmitAction"), 'click', this.add_action, false);     
+        Event.observe($(this.note_id + this.notes.type + "SubmitAction"), 'click', this.add_action, false);
     },
     add_action: function (evt) {
         Event.stop(evt);
@@ -952,9 +970,9 @@ Note.prototype = {
         var params = Form.serialize(form);
         params += "&note=" + this.note_id;
         var req = new Ajax.Updater($(this.note_id + this.notes.upper_type), "/add_action", {method: 'get', parameters: params, onComplete: this.view_note_action.bind(this)});
-    },   
+    },
     delete_note: function (evt) {
-        
+
         var req = new Ajax.Request('/delete_' + this.notes.type + '/', {parameters: "id=" + this.note_id, method: 'post', onComplete: nd()});
         Element.remove($(this.note_id + this.notes.upper_type).parentNode);
     }
@@ -980,7 +998,7 @@ var append_members = function (response) {
     jq(response).appendTo('#membersContent');
     set_members_listeners();
     var scroll = new ScrollObj(10, 12, 322, "track", "up", "down", "drag", "memberList", "membersContent");
-    
+
 };
 
 //////////////////////////SEARCH//////////////
@@ -1020,7 +1038,7 @@ Search.prototype = {
         jq('#search_type label').each(function () {
            if(that.value === jq(this).html()) {
                that.value = '' ;
-           } 
+           }
         });
         this.start = 0;
         this.end = 80;
@@ -1048,7 +1066,7 @@ Search.prototype = {
         });
     },
     start_timed_check: function () {
-        /*every x seconds while the mouse button is held down, do a timed_event which checks the amount of names loaded in and compares to the top offset of the unordered list. 
+        /*every x seconds while the mouse button is held down, do a timed_event which checks the amount of names loaded in and compares to the top offset of the unordered list.
            if we are more than 50 items from the top call get_members and append */
         var that = this;
         jq('body').everyTime("1s", "load_users", function () {
@@ -1065,7 +1083,7 @@ Search.prototype = {
         }
     },
     stop_timed_check: function () {
-        jq('body').stopTime("load_users");       
+        jq('body').stopTime("load_users");
     },
     switch_search_type: function () {
         if (!this.reset_default_text()) {
@@ -1080,7 +1098,7 @@ Search.prototype = {
         this.search_label = jq('#search_type .radio_button:checked').next().html();
         this.value = jq('#member_search').val();
         var that = this;
-        jq('#search_type label').each(function () {               
+        jq('#search_type label').each(function () {
            if (that.value === jq(this).html()) {
                jq('#member_search').val(that.search_label);
                return true;
@@ -1093,13 +1111,13 @@ Search.prototype = {
         return false;
     },
     remove_default_text: function () {
-        jq('#search_type label').each(function () { 
+        jq('#search_type label').each(function () {
             if (jq(this).html() == jq('#member_search').val()) {
                 jq('#member_search').val('');
             }
         });
     },
-    update_members: function (response, value) {   
+    update_members: function (response, value) {
         if (value && value !== jq('#member_search').val() || this.search_type !== 'member_search') {
             return;
         }
@@ -1136,7 +1154,7 @@ Search.prototype = {
 //////////////////////////SEARCH INVOICES//////////////
 var search_invoices = function (evt) {
     var form = jq('#invoices_search_form').serializeArray();
-    
+
     jq('#search_results').load('/uninvoiced_users', form, search_results_listeners);
     return false;
 };
@@ -1164,7 +1182,7 @@ var Tabs = function () {
     var edited_subsection = 0;
     if (jq("#profileContent").attr("class") === 'pane_selected') {
         var section_name = "profile";
-        var section_no = 1; 
+        var section_no = 1;
     } else if (jq("#networkContent").attr("class") === 'pane_selected') {
         var section_name = "network";
         var section_no = 0;
@@ -1172,7 +1190,7 @@ var Tabs = function () {
     var current_subsections = subsections[section_name];
     var subsection_no = subsection_defaults[section_name];
     var subsection_name = current_subsections[subsection_no];
- 
+
     var clear_html = function () {
         jq(this).html('');
         cleared = 1;
@@ -1229,7 +1247,7 @@ var Tabs = function () {
         jq(current_subsections).each(function (i, ele) {
             if (i  ==  subsection_no) {
                 jq('#' + section_name + "-" + subsection_name + 'Content').css('display', 'block');
-                jq('#' + section_name + "-" + subsection_no).parent().attr('class', 'selected');   
+                jq('#' + section_name + "-" + subsection_no).parent().attr('class', 'selected');
             } else {
                 jq('#' + section_name + "-" + current_subsections[i] + 'Content').css('display', 'none');
                 jq('#' + section_name + "-" + i).parent().attr('class', '');
@@ -1253,14 +1271,14 @@ var Tabs = function () {
     var goto_new_member = function (response, xhr) {
         if (xhr.getResponseHeader('X-JSON') === 'success') {
             current_profile_id = response;
-            load_subsection(1);  
+            load_subsection(1);
         } else {
             jq('#network-addMemberContent').html(response);
             jq("#submit_add_member").click(function () {
                 add_member();
-            }); 
+            });
         }
-        
+
     };
     var load_admin = function () {
         jq.get('/load_tab', {'object_type':'Location', 'object_id':jq(this).val(), 'section':'locationAdmin'}, complete_load_admin);
@@ -1286,7 +1304,7 @@ var Tabs = function () {
 	image_upload('upload_logo', 'logo_image', 'logo');
     };
     var image_upload = function(trigger_id, img_id, attr_name) {
-        var trigger = jq('#' + trigger_id); 
+        var trigger = jq('#' + trigger_id);
         var location_id = jq('#admin_location').attr('class');
         var img = jq('#' + img_id + location_id);
         if (trigger && img) {
@@ -1307,7 +1325,7 @@ var Tabs = function () {
             datalink.parent().attr('class', "dataBoxHeaderCollapse");
             data_expandors[section_name][subsection_no][datalink.attr('id')][1] = 0;
         }
-        datalink.one('click', function () { 
+        datalink.one('click', function () {
             dataBoxExpand(jq(this));
         });
     };
@@ -1324,7 +1342,7 @@ var Tabs = function () {
             datalink.parent().attr('class', "dataBoxHeader");
             data_expandors[section_name][subsection_no][datalink.attr('id')][1] = 1;
         }
-        datalink.one('click', function () { 
+        datalink.one('click', function () {
             dataBoxContract(jq(this));
         });
     };
@@ -1342,12 +1360,12 @@ var Tabs = function () {
                 data[id] = [link, 1];
             }
         }
-        if (id) {    
+        if (id) {
             if (data[id][1] == 1) {
                 dataBoxExpand(link);
             } else {
                 dataBoxContract(link);
-            } 
+            }
         }
     };
     var o = {
@@ -1362,7 +1380,7 @@ var Tabs = function () {
         },
         addBoxExpanders: function () {
             if (subsection_no !== undefined) {
-                var data = data_expandors[section_name][subsection_no]; 
+                var data = data_expandors[section_name][subsection_no];
                 jq('div#' + section_name + '-' + subsection_name + 'Content a.title').each(function (i, ele) {
                     setLinkState(data, ele);
                 });
@@ -1372,14 +1390,14 @@ var Tabs = function () {
         load_user_from_id: function (id, subsection) {
             current_profile_id = id;
             make_section_switch = false;
-            if (section_name !== 'network') {       
+            if (section_name !== 'network') {
                 section_no = 0;
                 make_section_switch = true;
             } else if (current_user_id == current_profile_id && section_name === 'network') {
                 //switch back to the profile tab when we select the currently logged in user
             	section_no = 1;
             	make_section_switch = true;
-            } 
+            }
             section_name = sections[section_no];
             current_subsections = subsections[section_name];
             if (subsection) {
@@ -1397,11 +1415,11 @@ var Tabs = function () {
             var id = ele.attr('id').split('-')[1];
 	    o.load_user_from_id(id, subsection);
         },
-        image_listeners: function () {    
-            var prof_trigger = jq('#upload_image' + current_profile_id); 
+        image_listeners: function () {
+            var prof_trigger = jq('#upload_image' + current_profile_id);
             var prof_img = jq('#profile_image' + current_profile_id);
             if (prof_trigger.length && prof_img.length) {
-                var up = new Upload(current_profile_id, 'User', 'image', prof_img.get(0), prof_trigger.get(0));
+                var up = new Upload(current_profile_id, 'User', 'image', prof_img.get(0), prof_trigger.get(0), {'edit_event':'click'});
             }
         },
 	switch_tab: function (new_section_no, new_subsection_no) {
@@ -1417,7 +1435,7 @@ var Tabs = function () {
             if (subsection_name === "addMember") {
                jq("#submit_add_member").click(function () {
                     add_member();
-               });     
+               });
             }
             if (section_name === 'space') {
                 set_space_listeners();
@@ -1439,7 +1457,7 @@ var Tabs = function () {
             if (subsection_name === 'billing') {
                 o.addBoxExpanders();
                 set_billing_listeners();
-            }   
+            }
             if (section_name === 'host' && subsection_name === 'todos') {
                 var todo = new Todos();
             }
@@ -1508,7 +1526,7 @@ var navigation = {};
 loc.init = function (event) {
     jq.datepicker.setDefaults({firstDay: 1, dateFormat: 'D, dd MM yy'});
     this.img = new Image();
-    this.img.src = "/display_image/0/Location/0/logo";
+    this.img.src = "/display_image/Location/0/logo";
     jq('#header').css('backgroundImage', "url(" + this.img.src + ")").css('backgroundPosition', 'top left');
     window.source_no = 0;
     var tab = new Tabs();
@@ -1525,7 +1543,7 @@ var update_space_display = function (datetext, callback, switch_type) {
     if (datetext && typeof(datetext) === 'string') {
         jq("#space_date").html(datetext + '<img src="/static/images/booking_down.png" />');
     }
-    
+
     var params = jq("#space_loc_time").serializeArray();
     if (switch_type) {
         params[params.length] = {'name': 'switch', 'value': switch_type};
@@ -1534,7 +1552,7 @@ var update_space_display = function (datetext, callback, switch_type) {
         callback = set_space_listeners;
     }
     jq('#space-bookingContent').load('/load_make_booking', params, callback);
-}; 
+};
 var date_left_right = function (evt) {
     Event.stopObserving(Event.element(evt), 'click', date_left_right);
     var date = Event.element(evt).parentNode.className;
@@ -1553,7 +1571,7 @@ var select_week = function (date, inst) {
     jq('#space_date_field').val(range);
     jq("#space_date").html(range + '<img src="/static/images/booking_down.png" />');
     var params = jq("#space_loc_time").serializeArray();
-    
+
     jq('#space-bookingContent').load('/load_make_booking', params, set_space_listeners);
 };
 jq.fn.check = function () {
@@ -1570,21 +1588,21 @@ var select_room = function (room_id, room_no) {
 };
 var set_space_listeners = function (response) {
     jq('.view_switch').click(function () {
-        update_space_display(null, null, jq(this).attr('name'));  
+        update_space_display(null, null, jq(this).attr('name'));
     });
     jq('.space_switch').change(function () {
         //pass 'location' or 'res_group' depending on what we are switching
-        update_space_display(null, null, jq(this).attr('name'));  
+        update_space_display(null, null, jq(this).attr('name'));
     });
     jq('#bookingDateRange #space_date_field').datepicker({rangeSelect: true, onSelect: select_week, changeFirstDay: false});
-    jq('#bookingDate #space_date').click(function () {  
-        jq('#space_date_range_field').datepicker('show'); 
+    jq('#bookingDate #space_date').click(function () {
+        jq('#space_date_range_field').datepicker('show');
     });
     jq('#space_date_field').datepicker({onSelect: function () {
         update_space_display(null);
     }
     });
-    jq('#space_date').click(function () {  
+    jq('#space_date').click(function () {
         jq('#space_date_field').datepicker('show');
     });
     jq('#rightArrow').click(date_left_right);
@@ -1599,7 +1617,7 @@ var set_space_listeners = function (response) {
         var room_no = jq(this).parent().attr('class').split(" ")[1];
         select_room(jq(this).parent().attr('id').split("-")[1], room_no);
     });
-    jq('#room_selector_group input').click(function () { 
+    jq('#room_selector_group input').click(function () {
         var room = jq(this).parent().parent().attr('class').split(" ")[1];
         if (this.checked) {
             jq('#bookspacedate .day_group .' + room).removeClass('resource_off').addClass('resource_on');
@@ -1611,7 +1629,7 @@ var set_space_listeners = function (response) {
         if (this.checked) {
             jq('.event:not(.mybooking), .unavailable').removeClass('other_booking').addClass('other_booking_off');
         } else {
-            jq('.event:not(.mybooking), .unavailable').removeClass('other_booking_off').addClass('other_booking');  
+            jq('.event:not(.mybooking), .unavailable').removeClass('other_booking_off').addClass('other_booking');
         }
     });
     jq('.bigcal_day').click(function (e) {
@@ -1621,7 +1639,7 @@ var set_space_listeners = function (response) {
         try_week_book(e, jq(this));
     });
     set_space_expanders(response);
-    
+
 };
 var try_day_book = function (event, listener) {
     var hit = jq(event.target);
@@ -1774,10 +1792,10 @@ var create_booking = function (date_str) {
         jq("#booking_for").result(function (event, data, formatted) {
             jq('#booking_for_id').val(data[1]);
         });
-        
+
     };
     var add_booking = function () {
-        
+
         var params = jq('#add_booking').serializeArray();
         var xhr = jq.post('/add_booking', params, function (response) {
             finish_booking(response, xhr);
@@ -1790,13 +1808,13 @@ var create_booking = function (date_str) {
             booking_popup.hide();
             update_space_display(null);
         }
-        
+
     };
     var re_edit_booking = function (pos, start_time) {
         re_edit = true;
         booking_popup.css('top', pos + 100); //pos+height
         booking_popup.hide();
-        
+
         var params = jq('#meetingBooking-inplaceeditor').serializeArray();
         params[params.length] = {'name': 'id', 'value': rusage_id};
         jq.post('/edit_booking', params, function (response) {
@@ -1831,7 +1849,7 @@ var create_booking = function (date_str) {
         },
                        message: 'Are you sure you want to cancel this booking? '};
         jq("#del_booking").confirm_action(options);
-        
+
         jq('.notify_on_available').click(function (evt) {
             var r_id = Event.element(evt).id.split('-')[1];
             var req = new Ajax.Request('/addToResourceQueue', {parameters: "rusage_id=" + r_id, method: 'post', onComplete: jq(this).remove()});
@@ -1848,13 +1866,13 @@ var create_booking = function (date_str) {
     var do_start_booking = function (pos, start_time, end_time, resource_id) {
         booking_popup.css('top', round_popup_offset(pos));
         booking_popup.hide();
-        
+
         var form_params = jq('#add_booking').serializeArray();
         var params = {};
         jq.each(form_params, function() {
                params[this.name] = this.value;
         });
-        params['resource_id'] = resource_id; 
+        params['resource_id'] = resource_id;
         params['start_datetime'] = start_time;
         params['end_datetime'] = end_time;
 
@@ -1869,7 +1887,7 @@ var create_booking = function (date_str) {
             booking_popup.hide();
             window.location.hash = '#';
         });
-        
+
     };
     var o = {
         start_booking: function (event, listener, resource_id) {
@@ -1879,7 +1897,7 @@ var create_booking = function (date_str) {
             do_start_booking(pos, start_time, end_time, resource_id);
         },
         edit_booking: function (event, listener, rusage_id) {
-            
+
             jq.ajax({
                 type: "GET",
                 url: '/get_rusage?rusage=' + rusage_id + '&date=' + date_str,
@@ -1890,10 +1908,10 @@ var create_booking = function (date_str) {
             });
         },
         explain_unavailable: function (event, listener, rusage_id, resource_id) {
-            
+
             jq.getJSON('/explain_unavailable', {resource_id: resource_id, rusage_id: rusage_id, date: date_str}, function (data) {
                 do_explain_unavailable(data, event, listener);
-            });      
+            });
         }
     };
     return o;
@@ -1909,11 +1927,11 @@ var format_start_datetime = function (date, start_hour, start_minute) {
 };
 var goto_day = function (evt) {
     jq('#space_date_field').val(evt.target.id);
-    jq('#day_view_switch').trigger('click').trigger('change');    
+    jq('#day_view_switch').trigger('click').trigger('change');
 };
 var set_space_expanders = function () {
     navigation.addBoxExpanders();
-    
+
 };
 /////////////////////////////////Open Times //////////////////////
 var openTimes = function () {
@@ -1972,9 +1990,9 @@ var edit_billing = function () {
         } else if (to_profile.attr('checked') == 'true') {
             to_profile.parent().parent().show();
             to_profile.attr('disabled', 'false');
-        } else {   
+        } else {
              enable_form_fields(form);
-        } 
+        }
     };
     jq('#billto').change(disable);
     var disable_address = function () {
@@ -2003,8 +2021,8 @@ var switch_resource = function () {
         jq('#' + user + '_resource_form').html("");
         return;
     }
-    var params = {'object_type': 'Resource', 'object_id': resource, 'user': user}; 
-    
+    var params = {'object_type': 'Resource', 'object_id': resource, 'user': user};
+
     jq('#' + user + '_resource_form').load('/get_widget/addRusage', params, function (response) {
         set_add_rusage_listeners();
     });
@@ -2013,7 +2031,7 @@ var set_inplace_cal = function (trigger, input) {
     input.datepicker({onSelect: function (datetext) {
         trigger.html(datetext + '<img src="/static/images/booking_down.png" />');
     }});
-    trigger.click(function () {  
+    trigger.click(function () {
         input.datepicker('show');
         input.blur();
     });
@@ -2023,7 +2041,7 @@ var set_add_rusage_listeners = function () {
     set_inplace_cal(jq('#display_rusage_date'), jq('#date'));
     jq('#' + user + '_submit_add_rusage').one('click', submit_add_rusage_form);
     jq('#' + user + '_cancel_add_rusage').one('click', remove_add_rusage_form);
-    
+
 };
 var remove_add_rusage_form = function () {
     var user = navigation.current_profile_id();
@@ -2034,7 +2052,7 @@ var submit_add_rusage_form = function () {
     var parameters = jq('#' + page_user + '_add_rusage_form').serializeArray();
     parameters[parameters.length] = {'name': 'pagetype', 'value': 'billing'};
     parameters[parameters.length] = {'name': 'pageuser', 'value': page_user};
-    
+
     var xhr = jq.post('/add_booking', parameters, function (response) {
         finish_add_rusage(response, xhr);
     });
@@ -2049,7 +2067,7 @@ var finish_add_rusage = function (response, xhr) {
         jq('#' + user + '_submit_add_rusage').one('click', submit_add_rusage_form);
         jq('#' + user + '_cancel_add_rusage').one('click', remove_add_rusage_form);
     }
-    
+
 };
 var create_new_invoice = function () {
     var user_id = navigation.current_profile_id();
@@ -2058,16 +2076,16 @@ var create_new_invoice = function () {
     if (cannot.length > 0) {
         return;
     }
-    
+
     jq('#' + navigation.section_name() + "-billingContent").load('/create_invoice', params, function (response) {
         refresh_billing(response);
     });
 };
-var remove_invoice = function () {    
-    
+var remove_invoice = function () {
+
     jq.post("/remove_invoice", 'invoiceid=' + jq(this).attr('id').split('_')[1], function () {
         reload_billing();
-    }); 
+    });
 };
 var refresh_billing = function (response, message) {
     if (typeof(message) === 'string') {//when the invoice has been sent
@@ -2075,7 +2093,7 @@ var refresh_billing = function (response, message) {
     }
     navigation.addBoxExpanders();
     set_billing_listeners();
-    
+
 };
 var reload_billing = function (message) {
     jq('#' + navigation.section_name() + "-billingContent").load('/load_tab', {'object_type': 'User', 'object_id': navigation.current_profile_id(), 'section': 'billing'}, function (resp) {
@@ -2086,7 +2104,7 @@ var reload_billing = function (message) {
 var send_invoice_template = function () {
     var user = navigation.current_profile_id();
     var invoice_id = jq(this).attr('class');
-    
+
     jq('#invoice_area_' + user).html("");
     jq('#send_invoice_' + user).load('/load_tab', {'object_type': 'Invoice', 'object_id': invoice_id, 'section': 'send_invoice'}, send_invoice_listen);
     window.location = "#send_it";
@@ -2094,17 +2112,17 @@ var send_invoice_template = function () {
 var send_invoice_listen = function () {
     jq('#submit_invoice_mail').one('click', send_invoice);
     jq('#cancel_invoice_mail').one('click', cancel_send_invoice);
-    
+
 };
 var send_invoice = function () {
     var email_params = jq("#send_invoice_form").serializeArray();
-    
+
     jq.post("/send_invoice", email_params, function (response) {
         reload_billing(response);
     }); //ensure correct
     window.location = "#";
 };
-var cancel_send_invoice = function (evt) { 
+var cancel_send_invoice = function (evt) {
     var user = navigation.current_profile_id();
     jq("#send_invoice_" + user).html("");
     window.location = "#";
@@ -2112,7 +2130,7 @@ var cancel_send_invoice = function (evt) {
 var view_invoice = function () {
     var invoice_id = jq(this).attr('id').split('_')[1];
     var user = navigation.current_profile_id();
-    
+
     cancel_send_invoice();
     jq('#send_invoice_' + user).html("");
     jq('#invoice_area_' + user).load("/display_invoice", {'invoiceid': invoice_id}, on_view_invoice);
@@ -2122,7 +2140,7 @@ var view_invoice = function () {
 var pdf_invoice = function () {
     var invoice_id = jq(this).attr('id').split('_')[1];
     var invoice_name = escape(jq(this).attr('id').split('_')[2]);
-    
+
     window.open('/pdf_invoice/' + invoice_id + '/' + invoice_name + '.pdf');
 };
 
@@ -2130,16 +2148,16 @@ var on_view_invoice = function (response) {
     var section_name = navigation.section_name();
     jq('#' + section_name + '-billingContent table a.remove_from_invoice').one('click', remove_rusage_from_invoice);
     jq('#' + section_name + '-billingContent table a.view_sub_usages').one('click', view_sub_usages);
-    
+
 };
 var add_rusage_to_invoice = function () {
-    
+
     jq.post('/add_rusage_to_invoice', {'invoiceid': jq('#open_invoice').attr('class'), 'rusageid': jq(this).attr('id').split('-')[1]}, reload_billing);
 };
 var remove_rusage_from_invoice = function () {
     var invoice_id = jq('#open_invoice').attr('class');
     var rusage = jq(this).attr('id').split('-')[1];
-    
+
     jq.post('/remove_rusage_from_invoice', {'invoiceid': invoice_id, 'rusageid': rusage}, reload_billing);
 };
 var confirm_delete_rusage = function (ele) {
@@ -2155,7 +2173,7 @@ var confirm_delete_rusage = function (ele) {
             remove_row(ele, response);
         };
     }
-    
+
     var req = new Ajax.Request('/delete_rusage', {method: 'post', parameters: 'rusage=' + rusage, onComplete: complete});
 };
 
@@ -2178,14 +2196,14 @@ var confirm_cancel_rusage = function (ele) {
 
 
 var complete_delete_rusage = function (response) {
-    jq('#booking_popup').hide(); 
+    jq('#booking_popup').hide();
     update_space_display(null);
-    
+
 };
 var remove_row = function (ele, response) {
     ele.parent().parent().parent().remove();
     reload_billing(ele[0]);
-    
+
 };
 var change_rusages_date = function (start_or_end, datetext) {
     var user = navigation.current_profile_id();
@@ -2196,7 +2214,7 @@ var change_rusages_date = function (start_or_end, datetext) {
 var update_rusages = function () {
     var user_id = navigation.current_profile_id();
     var params = jq('#' + user_id + '_change_create_invoice_dates').serializeArray();
-    
+
     jq('#rusage_area_' + user_id).load("/update_resource_table", params, refresh_billing);
 };
 var hide_sub_usages = function () {
@@ -2210,7 +2228,7 @@ var view_sub_usages = function () {
     var link = jq(this);
     var ids = link.parent().attr('id').split('_');
     var table = link.parent().parent().parent().parent();
-    link.attr('class', 'sub_usages_open');   
+    link.attr('class', 'sub_usages_open');
     link.one('click', hide_sub_usages);
     var current = navigation.current_profile_id();
     var earliest = jq("#create_invoice_start_" + current).val();
@@ -2218,7 +2236,7 @@ var view_sub_usages = function () {
     var params = {'billed_user_id': current, 'ruse_user_id': ids[0], 'invoice_id': ids[1], 'resource_id': ids[2], 'earliest': earliest, 'latest': latest};
     var sub_resources = jq("table#" + table.attr('id') + " tr.sub_" + link.attr('id').replace(' ', ''));
     if (sub_resources.length === 0) {
-        
+
         jq.getJSON('/insert_sub_usages', params, function (data) {
             insert_sub_usages(link, data);
         });
@@ -2249,7 +2267,7 @@ var insert_sub_usages = function (link, json) {
         if (navigator.appName === "Microsoft Internet Explorer") {
             row.style.display = 'block';
         }
-    }  
+    }
     var ids = link.parent().attr('id').split('_');
     var invoice_id = ids[1];
     if (invoice_id == '0') {
@@ -2268,7 +2286,7 @@ var insert_sub_usages = function (link, json) {
     if (invoice_id != '0' && jq('#send_invoice_' + ids[3])) {
         jq('table#' + table.attr('id') + ' a.remove_from_invoice').one('click', remove_rusage_from_invoice);
     }
-    
+
 };
 var next_row = function (cell) {
     var cell2 = cell.next();
@@ -2297,8 +2315,8 @@ var draw = function () {
        details_height = 0;
     }
     memberList.height(members_height - 128 - details_height);
-    var scroll = new ScrollObj(10, 12, 322, "track", "up", "down", "drag", "memberList", "membersContent");	
-    
+    var scroll = new ScrollObj(10, 12, 322, "track", "up", "down", "drag", "memberList", "membersContent");
+
 };
 var display_meeting_name = function (data) {
     if (data) {

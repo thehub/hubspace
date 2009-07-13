@@ -87,10 +87,21 @@ def image_source(image_name, microsite, default=""):
     except:
         return default
 
+def top_image_src(page, microsite):
+    if page.image_name:
+        return microsite.upload_url + page.image_name 
+    else:
+        try:
+            os.stat(os.getcwd() + '/hubspace/static/images/micro/main-images/' + page.path_name.split('.')[0]+'.jpg')
+            return '/static/images/micro/main-images/' + page.path_name.split('.')[0]+'.jpg'
+        except OSError:
+            return '/static/images/micro/main-images/index.jpg'
+
 def page_image_source(page, **kwargs):
     return image_source(page + '.png', kwargs['microsite'], "/static/images/micro/main-images/" + page + '.jpg')
 
-
+def standard_page(*args, **kwargs):
+    return {}
 
 valid_username_chars = r"[^0-9a-z._-]"
 valid_phone_chars = r"[^0-9/.\(\)\+-]"
@@ -270,7 +281,8 @@ microsite_page_types =  {
     'contact': PageType('contact', 'hubspace.templates.microSiteContact', default_vals={'name':"contact", 'subtitle':"get in touch"}),
     'login': login_page_type,
     'requestPassword':request_password_type,
-    'resetPassword':reset_password_type    
+    'resetPassword':reset_password_type,
+    'standard': PageType('standard', 'hubspace.templates.microSiteStandard', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"})
 }
 
 
@@ -533,26 +545,24 @@ class MicroSiteEdit(controllers.Controller):
 
     @expose()
     @validate(validators={'object_id':real_int, 'object_type':v.UnicodeString(), 'property':v.UnicodeString(), 'height':v.Int(), 'width': v.Int(), 'page_name':v.UnicodeString()})
-    def uploadImage(self, object_id, object_type, property, image, height=300, width=300, page_name='index.html'):
+    def uploadImage(self, object_id, object_type, property, image, height=None, width=None, page_name='index.html'):
         # for some very strange reason height and width come through as unicode
-        height = int(height)
-        width = int(width)
-        obj = obj_of_type(object_type, object_id)
+        if height:
+            height = int(height)
+        if width:
+            width = int(width)
+        obj = MetaWrapper(obj_of_type(object_type, object_id))
         location = Location.get(self.site.location)
         if not is_host(identity.current.user, location):
             raise IdentityFailure('what about not hacking the system')
 
-        if object_type == 'Location':
-            #shouldn't need to special case this, but for the fact that LocationMetaData isn't typed
-            location_file_object = save_file(object_id, image, height=height, width=width, upload_dir=self.site.upload_dir, file_name=property)            
-        elif object_type in ['PublicSpace', 'Page', 'PublicPlace']:
-            modify_attribute(obj, property, None)
-            file_object = save_file(location.id, image, height=height, width=width, upload_dir=self.site.upload_dir)            
-            modify_attribute(obj, property, file_object)
+        elif object_type in ['PublicSpace', 'Page', 'PublicPlace', 'Location']:
+            file_object = save_file(location.id, image, height=height, width=width, upload_dir=self.site.upload_dir)
+            setattr(obj, property, str(int(file_object.id)))
 
         if page_name.endswith('.html'):
             self.site.render_page(page_name)
-        return ""
+        return "<div id='new_image_src'>" + self.site.upload_url + file_object.attr_name + "</div>"
 
     @expose()
     @validate(validators={'user_name':username, 'first_name':no_ws_ne_cp, 'last_name':no_ws_ne_cp, 'email_address':email_address, 'organisation':no_ws, 'home':phone})
@@ -701,7 +711,8 @@ class MicroSite(controllers.Controller):
             template_args.update({'relative_path': relative_folder(self.site_url)})
         template_args.update({'static_files_path': self.upload_url})
         template_args.update({'lists': self.lists.iterator, 'upload_url': self.upload_url})
-        template_args.update({'page_image_source': page_image_source(page_name.split('.')[0], microsite=self)})
+        template_args.update({'top_image_src': top_image_src(page, microsite=self)})
+        template_args.update({'upload_url': self.upload_url})
         template_args.update(args_dict)
         location = MetaWrapper(Location.get(self.location))
         template_args.update({'page':page, 'location':location, 'site_url': self.site_url})
