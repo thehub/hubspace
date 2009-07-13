@@ -1,3 +1,13 @@
+var set_ajax_globals = function () {
+    jq('#throbber').ajaxStart(function () {
+        overlib(jq(this).html());
+        jq('#throbber').oneTime("20s", "kill_loader", nd);
+    }).ajaxStop(function () {
+        nd();
+    }).ajaxError(function () {
+        nd();
+    });
+};
 var xmllib = {};
 jq.extend(xmllib, {
     escape: function (content) {
@@ -628,6 +638,7 @@ var Upload = function (id, type, attr, img, trigger, options) {
         iframe.contents().find('#cancel_iframe').click(cancel_iframe);
         iframe.contents().find('#submit_iframe').click(submit_iframe);
 	iframe.contents().find('#auto_browse').one('change', function () {
+	    overlib(jq('#throbber').html())	
 	    iframe.contents().find('#submit_iframe').click();
 	});
     };
@@ -639,6 +650,7 @@ var Upload = function (id, type, attr, img, trigger, options) {
     var refresh_image = function () {
         source_no += 1;
         img.src = iframe.contents().find('#new_image_src').html() + '?no=' + source_no;
+	nd();
 	jq(img).load(function() {
 	    jq(img).css('display', "inline");
 	});

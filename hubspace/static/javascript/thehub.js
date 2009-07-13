@@ -46,6 +46,7 @@ var create_map = function (map_ele, callback) {
 
 
 jq(document).ready(function () {
+   set_ajax_globals();
    jq("#places_list div").each(function (i, ele) {
      if (window.YAHOO) {
        var dot = new YAHOO.util.DD(ele.id);
