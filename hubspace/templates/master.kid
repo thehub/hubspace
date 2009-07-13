@@ -6,7 +6,7 @@ from hubspace.templates.memberslist import member_list
 from hubspace.model import User, Location
 
 from hubspace.controllers import filter_members, permission_or_owner, title, new_or_old
-production = False
+production = True
 from sqlobject import AND
 from hubspace.utilities.static_files import get_version_no, css_files, js_files
 js_version_no = get_version_no("hubspace.js")
