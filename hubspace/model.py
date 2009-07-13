@@ -15,7 +15,7 @@ import md5crypt, smbpasswd, md5, random, time, sys
 import StringIO
 hub = PackageHub("hubspace")
 __connection__ = hub
-    
+
 __all__=['Visit','VisitIdentity','Group','User','Permission','Location', 'Resource','RUsage','Pricing','Todo','Invoice', 'Note', 'Alias', 'Selection', 'UserMetaData', 'Open', 'Resourcegroup', 'AccessPolicy', 'PolicyGroup', 'UserGroup', 'UserPolicyGroup']
 #looks to me like foreign keys cant have names containing '_'
 
@@ -938,17 +938,70 @@ class Invoice(SQLObject):
     def __str__(self):
         return "Invoice id: %s, number %s, user: %s %s" % (self.id, self.number, self.user.user_name, str([r.id for r in self.rusages]))
 
+def findNumberMissing(l):
+    """
+    I expect sorted input
+    >>> test_data = (
+    >>>                 (100, [55, 70, 75], 75),
+    >>>                 (20, [3], 3),
+    >>>                 (1000, [175, 678], 678),
+    >>>                 (99, [], None),
+    >>>                 (9, [7], 7),
+    >>>                 (9, [9], 9), # invalid case as even after removing 9 list is still in order and not missing any number 
+    >>>             )
+    >>> for data in test_data:
+    >>>     max_no, missings, exp_ret = data
+    >>>     l = range(1, (max_no + 1))
+    >>>     for m in missings:
+    >>>         l.remove(m)
+    >>>     print exp_ret, print findNumberMissing(l)
+    75, 75
+    3, 3
+    678, 678
+    None, None
+    7, 7
+    9, None
+    >>> print findNumberMissing([140000001, 140000002, 140000003, 140000005])
+    140000004
+    """
+    step = 20
+    l_len = len(l)
+    if l_len == (l[-1] - l[0]) + 1:
+       return
+    else:
+        right = l_len
+        while True:
+            left = (right / step) * step
+            block = l[left:right]
+            block_len = len(block)
+            if block_len == (block[-1] - block[0]) + 1:
+                right -= step
+                continue
+            else:
+                for i in range(block_len)[::-1]:
+                    if block[i] - block[i-1] == 1: continue
+                    return block[i] - 1
+
 def setInvoiceNumber(kwargs, post_funcs):
     instance = kwargs['class'].get(kwargs['id'])
     location_id = instance.location.id
     if instance.location.invoice_newscheme:
-        current = Invoice.select(Invoice.q.locationID == location_id, orderBy='number').max(Invoice.q.number)
-        if not current:
-            current = int("%s0000000" % instance.location.id)
-        next_num = current + 1
+        # do we need to acquire a lock here? why?
+        inv_all = list(Invoice.select(Invoice.q.locationID == location_id, orderBy='created').reversed())
+        # Above query may slow down things a bit, however with difficulties of producing right query as we have
+        # two different invoicing numbering with ORM on top, I prefer slower but cleaner approach. Ideally I wanted to
+        # step through smaller blocks
+        inv_numbers = sorted([i.number for i in inv_all if isinstance(i.number, int)])
+        if inv_numbers:
+            next_num = findNumberMissing(inv_numbers)
+            if not next_num:
+                next_num = max(inv_numbers) + 1
+        else:
+            next_num = int("%s0000001" % instance.location.id)
         def f(inv):
             inv.number = next_num
         post_funcs.append(f)
+
 
 listen(setInvoiceNumber, Invoice, RowCreatedSignal)
 

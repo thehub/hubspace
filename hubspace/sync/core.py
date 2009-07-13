@@ -6,6 +6,7 @@ from turbogears.identity.soprovider import SqlObjectIdentityProvider
 import thread
 import threading
 import base64
+import sendmail
 
 try:
     ldap_sync_enabled = turbogears.config.config.configs['syncer']['sync']
@@ -237,15 +238,16 @@ if ldap_sync_enabled:
     def opentimes_del_listener(instance, post_funcs):
         return syncerclient.onOpentimesDel(instance.id, instance.policy.id, instance.policy.location.id)
     
-    @checkSyncerResults
+    #@checkSyncerResults
     def tariff_listener(kwargs, post_funcs):
         instance = kwargs['class'].get(kwargs['id'])
         if instance.resource.type != 'tariff':
             return 
         tariff_id = instance.resource.id
         place_id = instance.resource.place.id
+        username = instance.user.user_name
         mod_list = syncer.helpers.ldap.object_maps['user'].toLDAP(None, dict(tariff_id = tariff_id, hubId = place_id))
-        t_id, res = syncerclient.onUserMod(instance.user.user_name, mod_list)
+        t_id, res = syncerclient.onUserMod(username, mod_list)
         if not syncerclient.isSuccessful(res):
             body = """
     LDAP Error: Setting Tariff for user %(username)s has failed.
@@ -253,7 +255,8 @@ if ldap_sync_enabled:
     Hub id: %(place_id)s
     Change data: %(mod_list)s
     """ % locals()
-            send_mail(to="world.tech.space@the-hub.net", cc="shekhar.tiwatne@the-hub.net", subject="LDAP Error report", body=body)
+            sendmail.sendmail(to="world.tech.space@the-hub.net", sender="noreply@the-hub.net", \
+                cc="shekhar.tiwatne@the-hub.net", subject="LDAP Error report", body=body)
         return t_id, res
     
     @checkReqHeaders

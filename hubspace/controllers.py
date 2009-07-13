@@ -39,7 +39,7 @@ from sqlobject.sqlbuilder import IN, Select
 log = logging.getLogger("hubspace.controllers")
 
 import turbogears.scheduler
-from hubspace.utilities.autoreload import autoreload 
+from hubspace.utilities.autoreload import autoreload
 from hubspace.utilities.dicts import AttrDict
 from hubspace.utilities.image_preview import create_image_preview
 from hubspace.utilities.static_files import hubspace_compile
@@ -48,7 +48,7 @@ from hubspace.utilities.permissions import user_locations, addUser2Group
 from hubspace.utilities.users import filter_members
 from hubspace.tariff import get_tariff
 
-import hubspace.sync as sync
+import hubspace.sync.core as sync
 
 from hubspace.validators import *
 from turbogears.validators import Money
@@ -575,7 +575,8 @@ def create_rusage(**kwargs):
                          'hosts_email':rusage.resource.place.hosts_email,
                          'options': options_text + '\n\n' })
                 body = _(booking_confirmation_text)
-                sent = send_mail(to=rusage.user.email_address, sender=cc, subject="The Hub | booking confirmation", body=body % d, cc=cc)
+                if rusage.start > now():
+                    sent = send_mail(to=rusage.user.email_address, sender=cc, subject="The Hub | booking confirmation", body=body % d, cc=cc)
                 return rusage
             ## / backport
 
@@ -872,12 +873,15 @@ The Hosting Team
 def send_welcome_mail(user, password):
     if not password:
         password = md5.new(str(random.random())).hexdigest()[:8]
-    cc = user.homeplace.name.lower().replace(' ', '') + ".hosts@the-hub.net"
-    body = _(welcome_text)%({'name':user.first_name,
-      'username':user.user_name,
-      'telephone':user.homeplace.telephone,
-      'email':cc,
-      'password':password})
+    location = user.homeplace.name
+    cc = user.homeplace.hosts_email
+    body = _(welcome_text)%(dict(
+        name = user.first_name,
+        location = location,
+        username = user.user_name,
+        telephone = user.homeplace.telephone,
+        email = cc,
+        password = password))
 
     send_mail(to=user.email_address, sender=cc, subject="The Hub | welcome", body=body, cc=cc)
 
@@ -1687,13 +1691,16 @@ excption:
         description = """
 Location: %(homeplace)s
 
-Error ID: %(e_id)s [[BR]][[BR]]
+Error ID: %(e_id)s
 
-URL: %(e_path)s [[BR]][[BR]]
+URL: %(e_path)s
 
-User Description: %(u_desc)s [[BR]][[BR]]
+User Description:
 
-Excption: %(e_str)s
+Excption: 
+{{{
+%(e_str)s
+}}}
 """ % locals()
         description = description.encode('utf-8')
 
