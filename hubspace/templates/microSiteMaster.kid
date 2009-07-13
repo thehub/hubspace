@@ -2,7 +2,6 @@
 <?python
 import cherrypy
 from turbogears import identity
-#production = False
 #from hubspace.utilities.static_files import get_version_no, css_files, js_files
 #js_version_no = get_version_no("hubsite.js")
 from hubspace.utilities.permissions import is_host
@@ -64,6 +63,8 @@ from hubspace.file_store import get_filepath
         <script src="/static/javascript/list-editor.js" type="text/javascript" charset="utf-8"></script>
         <link rel="stylesheet" href="/static/css/editor-toggle.css" type="text/css" media="screen"/>
         <script src="/static/javascript/editorToggle.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/static/javascript/overlib/overlib.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/static/javascript/jquery.timers.js" type="text/javascript" charset="utf-8"></script>
         <script src="/static/javascript/hubcms.js" type="text/javascript" charset="utf-8"></script>
     </c>
     <script src="/static/javascript/thehub.js" type="text/javascript" charset="utf-8"></script>
@@ -74,6 +75,7 @@ from hubspace.file_store import get_filepath
 <div style="visibility:hidden;" id="page_id" class="${page.id}"></div>
 <div style="visibility:hidden;" id="page_path_name" class="${page.path_name}"></div>
 <div style="visibility:hidden;" id="relative_url" class="${relative_path}"></div>
+<span id="throbber"><img src="/static/images/timer_2.gif" /> <span id="throbtext">loading... </span></span>
 <div class="container" id="menu-top">
   <div id="main-logo">
   <img id="Location-${location.id}-micrologo" src="${get_filepath(location,'micrologo', upload_url, '/static/images/micro/hub_logo.gif')}" height="60" alt="logo" usemap="#micrologo" />

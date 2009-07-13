@@ -17,17 +17,6 @@ var partial =  function () {
 };
 
 var compiled = false;
-var set_ajax_globals = function () {
-    jq('#throbber').ajaxStart(function () {
-        overlib(jq(this).html());
-        jq('#throbber').oneTime("20s", "kill_loader", nd);
-    }).ajaxStop(function () {
-        nd();
-    }).ajaxError(function () {
-        nd();
-    });
-};
-
 
 //////////location tariff details//////////////
 var edit_tariffs = function () {
