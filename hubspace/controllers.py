@@ -1605,6 +1605,17 @@ class Root(controllers.RootController):
 
 
     @expose()
+    @identity.require(identity.has_permission('superuser'))
+    def regenerate_all(self):
+        for site_name in self.sites.__class__.__dict__:
+            site = getattr(self.sites, site_name)
+            try:
+                site.regenerate_all()
+            except:
+                pass
+        return "done"
+
+    @expose()
     @identity.require(not_anonymous())
     def devlangtest(self, text=""):
         text = _(text) or _("Hubspace Dev Test")
