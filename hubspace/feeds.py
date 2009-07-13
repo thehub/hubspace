@@ -1,5 +1,5 @@
 from model import User, RUsage, Resource, Location
-from sqlobject import AND
+from sqlobject import AND, IN
 from datetime import datetime, date, time, timedelta
 
 cached_updates = {'profiles':{}, 'events':{}, 'past_events':{}}
@@ -9,23 +9,44 @@ page_needs_regenerating = {}
 def get_updates_data(location):#updates=cached_updates):
     updates = {}
     if location.id not in cached_updates['profiles']:
-        cached_updates['profiles'][location.id] = User.select(AND(User.q.homeplaceID==location.id,
-                                                                  User.q.public_field==1,
-                                                                  User.q.description != u"",
-                                                                  User.q.modified > datetime.now() - timedelta(days=365))).orderBy('modified').reversed()[:30]
+        if location.is_region:
+            hubs = location.has_hubs
+            cached_updates['profiles'][location.id] = User.select(AND(IN(User.q.homeplaceID, hubs),
+                                                                      User.q.public_field==1,
+                                                                      User.q.description != u"",
+                                                                      User.q.modified > datetime.now() - timedelta(days=365))).orderBy('modified').reversed()[:30]
+        else:
+            cached_updates['profiles'][location.id] = User.select(AND(User.q.homeplaceID==location.id,
+                                                                      User.q.public_field==1,
+                                                                      User.q.description != u"",
+                                                                      User.q.modified > datetime.now() - timedelta(days=365))).orderBy('modified').reversed()[:30]
         
     if 'global' not in cached_updates['profiles']:
         cached_updates['profiles']['global'] = User.select(AND(User.q.public_field==1,
                                                                User.q.description != u"",
                                                                User.q.modified > datetime.now() - timedelta(days=365))).orderBy('modified').reversed()[:30]
     if location.id not in cached_updates['events']:
-        cached_updates['events'][location.id] = RUsage.select(AND(RUsage.q.resourceID==Resource.q.id,
-                                                                  Resource.q.placeID==location.id,
-                                                                  RUsage.q.start >= datetime.combine(date.today(), time(0, 0)),
-                                                                  RUsage.q.public_field==1)).orderBy('start')[:10]
+        if location.is_region:
+            hubs = location.has_hubs
+            cached_updates['events'][location.id] = RUsage.select(AND(RUsage.q.resourceID==Resource.q.id,
+                                                                      IN(Resource.q.placeID, hubs),
+                                                                      RUsage.q.start >= datetime.combine(date.today(), time(0, 0)),
+                                                                      RUsage.q.public_field==1)).orderBy('start')[:10]
+        else:
+            cached_updates['events'][location.id] = RUsage.select(AND(RUsage.q.resourceID==Resource.q.id,
+                                                                      Resource.q.placeID==location.id,
+                                                                      RUsage.q.start >= datetime.combine(date.today(), time(0, 0)),
+                                                                      RUsage.q.public_field==1)).orderBy('start')[:10]
 
     if location.id not in cached_updates['past_events']:
-        cached_updates['past_events'][location.id] = RUsage.select(AND(RUsage.q.resourceID==Resource.q.id,
+        if location.is_region:
+            hubs = location.has_hubs
+            cached_updates['past_events'][location.id] = RUsage.select(AND(RUsage.q.resourceID==Resource.q.id,
+                                                                           IN(Resource.q.placeID, hubs),
+                                                                           RUsage.q.start < datetime.combine(date.today(), time(0, 0)),
+                                                                           RUsage.q.public_field==1)).orderBy('start').reversed()[:10]
+        else:
+            cached_updates['past_events'][location.id] = RUsage.select(AND(RUsage.q.resourceID==Resource.q.id,
                                                                        Resource.q.placeID==location.id,
                                                                        RUsage.q.start < datetime.combine(date.today(), time(0, 0)),
                                                                        RUsage.q.public_field==1)).orderBy('start').reversed()[:10]

@@ -6,8 +6,9 @@ def create_image_preview(file_object, **kwargs):
 
     height = None
     width = None
-    if "height" in kwargs and "width" in kwargs:
+    if "height" in kwargs:
         height = kwargs['height']
+    if "width" in kwargs:
         width = kwargs['width']
     
     preview = resize_image(file_object, height, width)
@@ -16,13 +17,15 @@ def create_image_preview(file_object, **kwargs):
 def resize_image(file_object, height, width):
     """resizes images to fit in the height and width
     """
-    
-    im = Image.open(file_object).convert('RGB')
-    if float(height) > im.size[1] and float(width)> im.size[0]:
-        pass
-    else:
-        im = crop_image(im, height, width) 
-        im.thumbnail((int(width), int(height)), Image.ANTIALIAS)
+    im = Image.open(file_object).convert('RGBA')
+    if not height:
+        height = im.size[1] * float(width)/im.size[0]
+    if not width:
+        width = im.size[0] * float(height)/im.size[1]
+        
+    if float(height) < im.size[1] or float(width) < im.size[0]:
+        im = crop_image(im, height, width)
+        im.thumbnail((int(width), int(height)), Image.ANTIALIAS) #NEAREST, ANTIALIAS, BILINEAR, BICUBIC
     
     thumb = StringIO.StringIO()
     im.save(thumb, 'png') 
@@ -48,11 +51,9 @@ def crop_image(im, height, width, valign="center", halign="center"):
     if valign=="center" and new_height:
         cut = ((im.size[1]-new_height)/2.0)
         im = im.crop(box=(0, int(cut), im.size[0], int(im.size[1]-cut-1)))
-        #raise `cut` + "height"
 
     if halign=="center" and new_width:
         cut = ((im.size[0]-new_width)/2.0) 
-        #raise `im.size[0]` + `new_width` +`cut`
         im = im.crop(box=(int(cut), 0, int(im.size[0]-cut-1), im.size[1]))
     return im
 

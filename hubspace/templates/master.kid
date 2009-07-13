@@ -6,8 +6,8 @@ from hubspace.templates.memberslist import member_list
 from hubspace.model import User, Location
 
 from hubspace.controllers import filter_members, permission_or_owner, title, new_or_old
-production = True
-
+production = False
+from sqlobject import AND
 from hubspace.utilities.static_files import get_version_no, css_files, js_files
 js_version_no = get_version_no("hubspace.js")
 admin_js_version_no = get_version_no("admin.js")
@@ -86,7 +86,7 @@ def host_in_rfid_location():
 		<div id="searchExtra">
 		    <select id="search_locality" name="hub">
 			<option value="0" selected="selected">All Hubs</option>
-		        <option py:for="location in Location.select(orderBy='name')" value="${location.id}">${location.name}</option>
+		        <option py:for="location in Location.select(AND(Location.q.is_region==0), orderBy='name')" value="${location.id}">${location.name}</option>
 		    </select>
 		</div>
 		<div class="scrollArrow up"><div class="scrollArrow" id="up"></div></div>

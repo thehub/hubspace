@@ -39,7 +39,7 @@ from sqlobject.sqlbuilder import IN, Select
 log = logging.getLogger("hubspace.controllers")
 
 import turbogears.scheduler
-from hubspace.utilities.autoreload import autoreload 
+from hubspace.utilities.autoreload import autoreload
 from hubspace.utilities.dicts import AttrDict
 from hubspace.utilities.image_preview import create_image_preview
 from hubspace.utilities.static_files import hubspace_compile
@@ -48,7 +48,7 @@ from hubspace.utilities.permissions import user_locations, addUser2Group
 from hubspace.utilities.users import filter_members
 from hubspace.tariff import get_tariff
 
-import hubspace.sync as sync
+import hubspace.sync.core as sync
 
 from hubspace.validators import *
 from turbogears.validators import Money
@@ -481,7 +481,8 @@ def get_users_for_location(place=None):
 
 ##################  RUsage  ####################
     
-   
+booking_confirmation_text =  """Dear %(name)s,\n\nThank you for your booking at The Hub %(location)s.\n\nYou have booked %(resource)s from %(start)s to %(end)s on %(date)s. The expected cost of this usage is %(currency)s %(cost)s.\n\n%(options)sIn the event of a cancellation, the individual or organization booking the space will be charged 50%% of the total cost, unless it is cancelled more than two weeks prior to the event.\n\nIf you have any questions or further requirements please contact The Hub's hosting team at %(hosts_email)s or call us on %(telephone)s.\n\nWe look forward to seeing you.\n\nThe Hosting Team"""  
+
 def create_rusage(**kwargs):
     '''Creates an RUsage, the use of an resource. It will also determine
     the cost of this usage at creation time, because the booked resource
@@ -573,8 +574,9 @@ def create_rusage(**kwargs):
                          'location':rusage.resource.place.name,
                          'hosts_email':rusage.resource.place.hosts_email,
                          'options': options_text + '\n\n' })
-                body = _("""Dear %(name)s,\n\nThank you for your booking at The Hub %(location)s.\n\nYou have booked %(resource)s from %(start)s to %(end)s on %(date)s. The expected cost of this usage is %(currency)s %(cost)s.\n\n%(options)sIn the event of a cancellation, the individual or organization booking the space will be charged 50%% of the total cost, unless it is cancelled more than two weeks prior to the event.\n\nIf you have any questions or further requirements please contact The Hub's hosting team at %(hosts_email)s or call us on %(telephone)s.\n\nWe look forward to seeing you.\n\nThe Hosting Team""")
-                sent = send_mail(to=rusage.user.email_address, sender=cc, subject="The Hub | booking confirmation", body=body % d, cc=cc)
+                body = _(booking_confirmation_text)
+                if rusage.start > now():
+                    sent = send_mail(to=rusage.user.email_address, sender=cc, subject="The Hub | booking confirmation", body=body % d, cc=cc)
                 return rusage
             ## / backport
 
@@ -848,12 +850,7 @@ def display_resource_table(user=None, invoice=None, earliest=None, latest=None):
     return try_render(ourdata, template='hubspace.templates.resourcetable', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
 
-
-def send_welcome_mail(user, password):
-    if not password:
-        password = md5.new(str(random.random())).hexdigest()[:8]
-    cc = user.homeplace.name.lower().replace(' ', '') + ".hosts@the-hub.net"
-    body = _("""
+welcome_text = """
 Dear %(name)s,
 
 Welcome to The Hub.
@@ -871,13 +868,21 @@ Please don't hesitate to contact The Hub's hosting team at %(email)s or %(teleph
 Thank you for being part of The Hub.
 
 The Hosting Team
-""")%({'name':user.first_name,
-      'username':user.user_name,
-      'telephone':user.homeplace.telephone,
-      'email':cc,
-      'password':password})
+"""
 
-       
+def send_welcome_mail(user, password):
+    if not password:
+        password = md5.new(str(random.random())).hexdigest()[:8]
+    location = user.homeplace.name
+    cc = user.homeplace.hosts_email
+    body = _(welcome_text)%(dict(
+        name = user.first_name,
+        location = location,
+        username = user.user_name,
+        telephone = user.homeplace.telephone,
+        email = cc,
+        password = password))
+
     send_mail(to=user.email_address, sender=cc, subject="The Hub | welcome", body=body, cc=cc)
 
     user.welcome_sent = 1
@@ -1603,7 +1608,8 @@ class Root(controllers.RootController):
     def devlangtest(self, text=""):
         text = _(text) or _("Hubspace Dev Test")
         lang = get_hubspace_locale()
-        out = "lang: %s <br/> %s" % (lang, text)
+        out = "<hr/>".join([text, lang, _(welcome_text), _(booking_confirmation_text)])
+        out = out.replace('\n', "<br/>")
         return out
 
     _cp_filters = sync._cp_filters
@@ -1685,13 +1691,16 @@ excption:
         description = """
 Location: %(homeplace)s
 
-Error ID: %(e_id)s [[BR]][[BR]]
+Error ID: %(e_id)s
 
-URL: %(e_path)s [[BR]][[BR]]
+URL: %(e_path)s
 
-User Description: %(u_desc)s [[BR]][[BR]]
+User Description:
 
-Excption: %(e_str)s
+Excption: 
+{{{
+%(e_str)s
+}}}
 """ % locals()
         description = description.encode('utf-8')
 
@@ -2039,10 +2048,29 @@ Excption: %(e_str)s
     @expose()
     @identity.require(identity.has_permission('superuser'))
     @validate(validators={'name':no_ws_ne_cp, 'currency':All(v.UnicodeString(), v.MaxLength(3)), 'with_groups':BoolInt(if_empty=1)})
-    def create_location(self, name, currency='GBP', with_groups=True):
+    def create_region(self, name, currency='GBP', with_groups=True):
+        region = self.create_location(name, currency, with_groups, is_region=1)
+        return "region created"
+
+    @expose()
+    @identity.require(identity.has_permission('superuser'))
+    @validate(validators={'region_id':real_int, 'hub_id':real_int})
+    def add_location_to_region(self, region_id, hub_id):
+        region = Location.get(region_id)
+        if not region.is_region:
+            return region.name + "is not a region"
+        hub = Location.get(hub_id)
+        hub.in_region = region
+        return "Hub " + hub.name + "has been added to " + region.name
+
+
+    @expose()
+    @identity.require(identity.has_permission('superuser'))
+    @validate(validators={'name':no_ws_ne_cp, 'currency':All(v.UnicodeString(), v.MaxLength(3)), 'with_groups':BoolInt(if_empty=1)})
+    def create_location(self, name, currency='GBP', with_groups=True, is_region=0):
         """Creates a location and all the necessary groups with standard permissions
         """
-        location = Location(name=name, currency=currency, city="")
+        location = Location(name=name, currency=currency, city="", is_region=is_region)
         self.create_tariff(active=1, place=location.id, name="Guest Membership "+ name, description="", tariff_cost=0, default=True)
 
         #create a dummy resource called calendar which will be used for access_policies to arbitrate access to the calendar
@@ -3131,7 +3159,7 @@ Excption: %(e_str)s
     @expose()
     @strongly_expire
     @validate(validators={'id':v.Int(if_empty=0), 'type':v.UnicodeString(), 'attr':v.UnicodeString()})
-    def display_image(self, rand, type, id=0, attr=""):
+    def display_image(self, type, id=0, attr="", **kwargs):
         theclass = getattr(hubspace.model, type)
         if theclass == Location and id==0:
             try:
@@ -3593,7 +3621,7 @@ The Hub Team
         else:
             raise "unexpected content type" + `image.type`
 
-        return ""
+        return "<div id='new_image_src'>/display_image/" + object_type + '/' + str(object_id) + '/' + attr + "</div>"
 
     @expose()
     @identity.require(identity.has_any_permission("webapi","superuser"))
