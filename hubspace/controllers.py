@@ -1603,6 +1603,7 @@ class Root(controllers.RootController):
     feed = Feed()
     sites = Sites()
 
+
     @expose()
     @identity.require(not_anonymous())
     def devlangtest(self, text=""):

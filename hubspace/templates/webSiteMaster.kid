@@ -66,8 +66,7 @@ render_static = False
                             <?python
                                locs = location_links()
                             ?>
-                               <li py:for="loc in locs[:-1]"><a href="${loc[0]}">${loc[1]}</a></li>
-                               <li class="last"><a py:if="len(locs)>0" href="${locs[-1][0]}">${locs[-1][1]}</a></li>
+                             <li py:for="loc in locs"><a href="${loc[0]}">${XML(loc[1])}</a></li>
                           </ul>
 		     </li>
 	        </ul>
