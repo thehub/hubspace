@@ -143,6 +143,16 @@ body {
 .contact .left_column {
 	width: 600px;
 }
+#throbtext {
+	position:relative;
+        bottom:5px;
+        color: #808080;
+}
+#throbber {
+        position:relative;
+        height:26px;
+        display:none;
+}
 
 /* Home */
 

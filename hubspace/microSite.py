@@ -545,8 +545,12 @@ class MicroSiteEdit(controllers.Controller):
 
     @expose()
     @validate(validators={'object_id':real_int, 'object_type':v.UnicodeString(), 'property':v.UnicodeString(), 'height':v.Int(), 'width': v.Int(), 'page_name':v.UnicodeString()})
-    def uploadImage(self, object_id, object_type, property, image, height=None, width=None, page_name='index.html'):
+    def uploadImage(self, object_id, object_type, property, image, height=None, width=None, page_name='index.html', tg_errors=None):
         # for some very strange reason height and width come through as unicode
+        if tg_errors:
+            for tg_error in tg_errors:
+                print `tg_error`, str(tg_errors[tg_error])
+            return "error uploading"
         if height:
             height = int(height)
         if width:
@@ -558,6 +562,7 @@ class MicroSiteEdit(controllers.Controller):
 
         elif object_type in ['PublicSpace', 'Page', 'PublicPlace', 'Location']:
             file_object = save_file(location.id, image, height=height, width=width, upload_dir=self.site.upload_dir)
+            print `obj` + `property` + str(int(file_object.id))
             setattr(obj, property, str(int(file_object.id)))
 
         if page_name.endswith('.html'):

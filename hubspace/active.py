@@ -25,6 +25,10 @@ def write_link_tuple(loc, sub=False):
         if map_entry.count():
             return ('http://the-hub.net/places/' + loc.name.lower(), link_content)
         
+def name_sort(a, b):
+    if a.name < b.name:
+        return 1
+    return -1
 
 def location_links():
     locations = Location.select(AND(Location.q.in_region == None), orderBy='name')
@@ -34,7 +38,9 @@ def location_links():
         if link:
             loc_tuples.append(link)
         if location.is_region:
-            for hub in location.has_hubs:
+            hubs = location.has_hubs
+            hubs.sort(name_sort)
+            for hub in hubs:
                 link = write_link_tuple(hub, sub=True)
                 if link:
                     loc_tuples.append(link)

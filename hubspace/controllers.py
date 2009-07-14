@@ -2078,6 +2078,14 @@ Excption:
 
     @expose()
     @identity.require(identity.has_permission('superuser'))
+    def correct_group_names(self):
+        for group in Group.select():
+            if group.place:
+                group.group_name = group.place.name + '_' + group.level
+        return "done"
+
+    @expose()
+    @identity.require(identity.has_permission('superuser'))
     @validate(validators={'name':no_ws_ne_cp, 'currency':All(v.UnicodeString(), v.MaxLength(3)), 'with_groups':BoolInt(if_empty=1)})
     def create_location(self, name, currency='GBP', with_groups=True, is_region=0):
         """Creates a location and all the necessary groups with standard permissions

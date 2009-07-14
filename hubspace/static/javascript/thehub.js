@@ -157,7 +157,7 @@ jq(document).ready(function () {
                   options = {'height':'300', 'width':'450'};
               }
 	      if (object_prop == 'micrologo') {
-		  options['height'] = '60';
+		  options['height'] = '70';
 	      }
 	      options['edit_event'] = edit_event;
 	      options['title'] = clickToEdit;

@@ -78,10 +78,10 @@ from hubspace.file_store import get_filepath
 <span id="throbber"><img src="/static/images/timer_2.gif" /> <span id="throbtext">loading... </span></span>
 <div class="container" id="menu-top">
   <div id="main-logo">
-  <img id="Location-${location.id}-micrologo" src="${get_filepath(location,'micrologo', upload_url, '/static/images/micro/hub_logo.gif')}" height="60" alt="logo" usemap="#micrologo" />
+  <img id="Location-${location.id}-micrologo" src="${get_filepath(location,'micrologo', upload_url, '/static/images/micro/hub_logo.gif')}" height="70" alt="logo" usemap="#micrologo" />
   <map py:if="not is_host(identity.current.user, location, render_static)" name="micrologo">
-      <area shape="rect" coords="0,0,60,60" href="http://www.the-hub.net" alt="back to Hub World" title="back to Hub World" />
-      <area shape="rect" coords="60,0,500,500" href="/public/" alt="Home" title="${'Hub ' + location.name + ' home'}" />
+      <area shape="rect" coords="0,0,70,70" href="http://www.the-hub.net" alt="back to Hub World" title="back to Hub World" />
+      <area shape="rect" coords="70,0,500,500" href="/public/" alt="Home" title="${'Hub ' + location.name + ' home'}" />
   </map> 
 <!--    <a href="http://www.the-hub.net" title="back to Hub World"><img id="Location-${location.id}-micrologo" height="60" src="${get_filepath(location,'micrologo', upload_url, '/static/images/micro/hub_logo.gif')}" alt="Hub Logo"/></a> -->
   </div> 

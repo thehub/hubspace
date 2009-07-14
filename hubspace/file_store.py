@@ -11,10 +11,10 @@ def save_file(location, fd, height=None, width=None, upload_dir=''):
     - attr is the filename
     """
     if "image/" in fd.type:
-        try:
+        #try:
             mime_type, file_name = save_image(location, fd, height, width, upload_dir)
-        except:
-            raise "There was an error saving the image"
+        #except:
+        #    raise "There was an error saving the image"
     else:
         raise "unexpected content type" + `image.type`
 

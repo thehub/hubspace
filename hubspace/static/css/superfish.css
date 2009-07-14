@@ -10,7 +10,7 @@
 .sf-menu ul {
 	position:		absolute;
 	top:			-999em;
-	width:			145px; /* left offset of submenus need to match (see below) */
+	width:			140px; /* left offset of submenus need to match (see below) */
 }
 .sf-menu ul li {
 	width:			100%;
@@ -65,7 +65,7 @@ ul.sf-menu li li li.sfHover ul {
 	height:			10px;
 	text-indent: 	-999em;
 	overflow:		hidden;
-	background:		url('/static/images/hubweb/arrows-ffffff.png') no-repeat -10px -100px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+	background:		url('/static/images/micro/arrows-ffffff.png') no-repeat -10px -100px; /* 8-bit indexed alpha png. IE6 gets solid image only */
 }
 a > .sf-sub-indicator {  /* give all except IE6 the correct values */
 	top:			10px;
@@ -97,7 +97,7 @@ li.sfHover > a > .sf-sub-indicator {
 
 /*** shadows for all but IE6 ***/
 div#menu-top #hub-selector .sf-shadow ul {
-	background:	url('/static/images/hubweb/shadow.png') no-repeat bottom right;
+	background:	url('/static/images/micro/shadow.png') no-repeat bottom right;
 	padding: 0 8px 9px 0;
 	-moz-border-radius-bottomleft: 17px;
 	-moz-border-radius-topright: 17px;
@@ -113,7 +113,7 @@ div#menu-top #hub-selector .sf-shadow ul.sf-shadow-off {
  */
  
 div#menu-top #hub-selector li#navButton {background-image:url(/static/images/micro/menu-background.gif); background-repeat:repeat-x;}
-div#menu-top #hub-selector {float:right; left:1px; position:relative; width:108px; z-index:10000; display:blockl;}
+div#menu-top #hub-selector {float:right; left:1px; position:relative; width:103px; z-index:10000; display:blockl;}
 div#menu-top a#hub-anchor { break-word:no-break;}
 div#menu-top #hub-selector ul li ul li  {height:auto; margin:0; padding:0;}
 div#menu-top #hub-selector  ul li a {padding:2px 0 4px 0;}
@@ -123,11 +123,15 @@ div#menu-top ul li #hub-selector  ul li a:hover{color:#560005;}
 div#menu-top .sf-menu {float:right;}
 div#menu-top #hub-selector .sf-menu a  li li{padding:0; margin:0;}
 div#menu-top #hub-selector .sf-menu a {
-	border-left:	1px solid #fff;
-	border-top:		1px solid #fff;
-	text-decoration:none;
-	height:			10px;
+    border-left:	1px solid #fff;
+    border-top:		1px solid #fff;
+    text-decoration:none;
+    height:			10px;
 }
+div#menu-top #hub-selector .sf-menu a span.sub_link {
+    margin-left: 15px;
+}
+
 div#menu-top #hub-selector .sf-menu a, div#menu-top #hub-selector .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
 	color:			#fff;
 	padding-left:	10px;
@@ -138,7 +142,7 @@ div#menu-top #hub-selector a#hub-anchor {
 	height:			15px;
 	margin-right:	0;
 	padding-top:	9px;
-	width:			96px;
+	width:			91px;
 	border:			none;
 	}
 
