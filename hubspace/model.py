@@ -933,9 +933,8 @@ class Invoice(SQLObject):
     def __str__(self):
         return "Invoice id: %s, number %s, user: %s %s" % (self.id, self.number, self.user.user_name, str([r.id for r in self.rusages]))
 
-def findNumberMissing(l):
+def findNumberMissing(start, l):
     """
-    I expect sorted input
     >>> test_data = (
     >>>                 (100, [55, 70, 75], 75),
     >>>                 (20, [3], 3),
@@ -956,26 +955,18 @@ def findNumberMissing(l):
     None, None
     7, 7
     9, None
+    >>> l = [120000001, 120000002, 120000003, 120000004, 120000005, 120000006, 120000007, 120000008, 120000009, 120000011, 120000012, 120000013, 120000014, 120000015, 120000016, 120000017, 120000018, 120000019, 120000020, 120000021, 120000022]
+    >>> print findNumberMissing(l)
+    120000010
     >>> print findNumberMissing([140000001, 140000002, 140000003, 140000005])
     140000004
     """
-    step = 20
-    l_len = len(l)
-    if l_len == (l[-1] - l[0]) + 1:
-       return
-    else:
-        right = l_len
-        while True:
-            left = (right / step) * step
-            block = l[left:right]
-            block_len = len(block)
-            if block_len == (block[-1] - block[0]) + 1:
-                right -= step
-                continue
-            else:
-                for i in range(block_len)[::-1]:
-                    if block[i] - block[i-1] == 1: continue
-                    return block[i] - 1
+    start = start
+    end = max(l) + 1
+    linear = set(range(start, end))
+    missings = list(linear.difference(l))
+    if missings:
+        return missings[0]
 
 def setInvoiceNumber(kwargs, post_funcs):
     instance = kwargs['class'].get(kwargs['id'])
@@ -987,12 +978,13 @@ def setInvoiceNumber(kwargs, post_funcs):
         # two different invoicing numbering with ORM on top, I prefer slower but cleaner approach. Ideally I wanted to
         # step through smaller blocks
         inv_numbers = sorted([i.number for i in inv_all if isinstance(i.number, int)])
+        start = int("%s0000001" % instance.location.id)
         if inv_numbers:
-            next_num = findNumberMissing(inv_numbers)
+            next_num = findNumberMissing(start, inv_numbers)
             if not next_num:
                 next_num = max(inv_numbers) + 1
         else:
-            next_num = int("%s0000001" % instance.location.id)
+            next_num = start
         def f(inv):
             inv.number = next_num
         post_funcs.append(f)
