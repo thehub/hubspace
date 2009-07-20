@@ -60,7 +60,7 @@ render_static = False
 <div style="visibility:hidden;" id="page_path_name" class="${page.path_name}"></div>
 <span id="throbber"><img src="/static/images/timer_2.gif" /> <span id="throbtext">loading... </span></span>
 <div id="wrapper">
-	<a id="logo" href="index.html"><img src="/static/images/hubweb/hub_logo.gif" alt="Hub Logo" /></a>
+	<a id="logo" href="index.html"><img src="/static/images/hubweb/hub_logo.png" alt="Hub Logo" /></a>
         <div class="container" id="menu-top">
             <div id="hub-selector">
                 <ul class="sf-menu">
