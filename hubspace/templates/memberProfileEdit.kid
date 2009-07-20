@@ -98,7 +98,7 @@ def role_selected(user, location, level):
                     </tr>
 		    <tr>
                         <td class="line">Username</td>
-                        <td><input name="user_name" id="user_name" type="text" class="text" readonly="1" value="${object.user_name}" /><div class="errorMessage" py:if="tg_errors">${print_error('user_name', tg_errors)}</div></td>
+                        <td><input name="user_name" id="user_name" type="text" class="text" value="${object.user_name}" /><div class="errorMessage" py:if="tg_errors">${print_error('user_name', tg_errors)}</div></td>
                     </tr>
                     <tr>
                         <td class="line"></td>
