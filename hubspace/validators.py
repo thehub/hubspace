@@ -257,14 +257,16 @@ class UniqueAttribute(v.FormValidator):
 
         this_object = None
         this_value = None
+        attr_value = field_dict[self.attr]
+        errors = {}
+
         if id:
             this_object = theclass.get(id)
             this_value = getattr(this_object, self.attr)
+            if this_value != attr_value:
+                errors[self.attr] = _("Username can not be changed")
+                raise Invalid(errors[self.attr], field_dict, state, error_dict=errors)
             
-        attr_value = field_dict[self.attr]
-        
-        errors = {}
-        
         if attr_value in [getattr(obj, self.attr) for obj in theclass.select()]: #this is extemely inefficient - rewrite with a specific sql request
             if attr_value != this_value:
                 errors[self.attr] = "The " + self.attr + " "+ str(attr_value) + " already exists"
