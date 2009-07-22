@@ -3502,11 +3502,8 @@ The Hub Team
             location = kwargs['homeplace']
             ##add user to member group for this location
             home_group = Group.selectBy(level='member', place=location)[0]
-
-        if not location:
-            location = 1
-
-        location = Location.get(location)
+        else:
+            location = Location.get(1)
 
         if not permission_or_owner(None,None,'manage_users'):
             raise IdentityFailure('what about not hacking the system')

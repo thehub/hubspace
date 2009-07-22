@@ -645,10 +645,12 @@ class MicroSiteEdit(controllers.Controller):
     def attribute_edit(self, object_type=None, object_id=None, property=None, value="", page_name="index.html", tg_errors=None):
         """edit the attribute of any object type
         """
-        page_name = page_name.split('#')[0]
-        value = html2xhtml(value)
         if tg_errors:
             cherrypy.response.headers['X-JSON'] = 'error'
+            return str(tg_errors[0])
+
+        page_name = page_name.split('#')[0]
+        value = html2xhtml(value)
 
         obj = obj_of_type(object_type, object_id)
         obj = MetaWrapper(obj)
