@@ -33,15 +33,22 @@ def place(obj):
         raise AttributeError("object has not location")
     
 
+def bs_preprocess(html):
+     """remove distracting whitespaces and newline characters"""
+     html = re.sub('\n', ' ', html)     # convert newlines to spaces
+     return html 
+
 def html2xhtml(value):
     value = value.strip()
     value = BeautifulSoup(value).prettify()
-    try: 
+    value = bs_preprocess(value)
+    try:
         XML(value).expand()
     except:
         cherrypy.response.headers['X-JSON'] = 'error'
         print "not good XML"
     return value
+
 def get_profiles(*args, **kwargs):
     kwargs['no_of_images'] = 9
     kwargs['only_with_images'] = True
@@ -77,7 +84,8 @@ def get_event(*args):
     return {'event': RUsage.get(args[0])}
 
 def experience_slideshow(*args, **kwargs):
-    return {'image_source_list': [page_image_source(page, **kwargs) for page in ['index', 'events', 'spaces', 'members', 'joinus', 'contact']]}
+    return {'image_source_list': [top_image_src(page, kwargs['microsite']) for page in Page.select(AND(Page.q.locationID == kwargs['location'],
+                                                                                                       Page.q.image != None))]}
 
 
 def image_source(image_name, microsite, default=""):
