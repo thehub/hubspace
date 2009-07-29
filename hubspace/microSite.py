@@ -33,10 +33,16 @@ def place(obj):
         raise AttributeError("object has not location")
     
 
+def bs_preprocess(html):
+     """remove distracting whitespaces and newline characters"""
+     html = re.sub('\n', ' ', html)     # convert newlines to spaces
+     return html 
+
 def html2xhtml(value):
     value = value.strip()
     value = BeautifulSoup(value).prettify()
-    try: 
+    value = bs_preprocess(value)
+    try:
         XML(value).expand()
     except:
         cherrypy.response.headers['X-JSON'] = 'error'
@@ -96,7 +102,8 @@ def get_event(*args):
     return {'event': RUsage.get(args[0])}
 
 def experience_slideshow(*args, **kwargs):
-    return {'image_source_list': [page_image_source(page_name, **kwargs) for page_name in ['index', 'events', 'spaces', 'members', 'joinus', 'contact']]}
+    return {'image_source_list': [top_image_src(page, kwargs['microsite']) for page in Page.select(AND(Page.q.locationID == kwargs['location'],
+                                                                                                       Page.q.image != None))]}
 
 
 def image_source(image_name, microsite, default=""):
@@ -666,10 +673,12 @@ class MicroSiteEdit(controllers.Controller):
     def attribute_edit(self, object_type=None, object_id=None, property=None, value="", page_name="index.html", tg_errors=None):
         """edit the attribute of any object type
         """
-        page_name = page_name.split('#')[0]
-        value = html2xhtml(value)
         if tg_errors:
             cherrypy.response.headers['X-JSON'] = 'error'
+            return str(tg_errors[0])
+
+        page_name = page_name.split('#')[0]
+        value = html2xhtml(value)
 
         obj = obj_of_type(object_type, object_id)
         obj = MetaWrapper(obj)

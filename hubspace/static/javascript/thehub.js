@@ -203,12 +203,13 @@ jq(document).ready(function () {
                var object_type = 'Page';
                var object_id = jq('#page_id').attr('class');
            }
+	  var page_name = jq('#page_path_name').attr('class');
            inplace_editor(element_id, relative_url + 'edit/attribute_edit', {
                callback: function (form, val) {
                    return [{name: 'object_id', value: object_id},
                            {name: 'object_type', value: object_type},
                            {name: 'value', value: val},
-                           {name: 'page_name', value: jq('body').attr('id') + ".html"},
+                           {name: 'page_name', value: page_name},
                            {name: 'property', value: element_id}];
                    },
                                                                    object_type: object_type,
