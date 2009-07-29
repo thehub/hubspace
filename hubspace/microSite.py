@@ -11,7 +11,7 @@ from hubspace.model import Location, LocationMetaData, User, RUsage, Group, Micr
 from sqlobject import AND, SQLObjectNotFound, IN, LIKE, func
 import os, re, unicodedata, md5, random, hmac as create_hmac
 from hashlib import sha1
-from urllib import quote
+from urllib import quote, urlopen
 import cherrypy
 from kid import XML
 from hubspace.feeds import get_local_profiles
@@ -42,6 +42,7 @@ def html2xhtml(value):
         cherrypy.response.headers['X-JSON'] = 'error'
         print "not good XML"
     return value
+
 def get_profiles(*args, **kwargs):
     kwargs['no_of_images'] = 9
     kwargs['only_with_images'] = True
@@ -73,11 +74,29 @@ def get_events(*args, **kwargs):
         events.update(get_event(*args))
     return events
 
+
+standard_kw = ['microsite', 'page', 'location']
+
+def get_blog(*args, **kwargs):
+    blog_url = kwargs['page'].blog_url.strip()
+    args = list(args)
+    args.insert(0, blog_url)
+    url = '/'.join(args)
+    kw_args = ['%(key)s=%(val)s' %({'key':key, 'val': val}) for key, val in kwargs.iteritems() if key not in standard_kw]
+    if kw_args:
+        url += '/?' + '&'.join(kw_args)
+    try:
+        blog = urlopen(url).read()
+        blog = blog.replace(blog_url, cherrypy.request.base + '/public/' + kwargs['page'].path_name)
+    except IOError:
+        blog = "Could not get blog from: " +  url
+    return {'blog': blog}
+
 def get_event(*args):
     return {'event': RUsage.get(args[0])}
 
 def experience_slideshow(*args, **kwargs):
-    return {'image_source_list': [page_image_source(page, **kwargs) for page in ['index', 'events', 'spaces', 'members', 'joinus', 'contact']]}
+    return {'image_source_list': [page_image_source(page_name, **kwargs) for page_name in ['index', 'events', 'spaces', 'members', 'joinus', 'contact']]}
 
 
 def image_source(image_name, microsite, default=""):
@@ -97,8 +116,8 @@ def top_image_src(page, microsite):
         except OSError:
             return '/static/images/micro/main-images/index.jpg'
 
-def page_image_source(page, **kwargs):
-    return image_source(page + '.png', kwargs['microsite'], "/static/images/micro/main-images/" + page + '.jpg')
+def page_image_source(page_name, **kwargs):
+    return image_source(page_name + '.png', kwargs['microsite'], "/static/images/micro/main-images/" + page_name + '.jpg')
 
 def standard_page(*args, **kwargs):
     return {}
@@ -200,7 +219,8 @@ def append_existing_item(list_name, obj, **kwargs):
 
 def append_to_list(list_name, **kwargs):
     if kwargs['object_type'] == Page.__name__:
-        new_obj = kwargs['site_types']['standard'].create_page(kwargs['name'], kwargs['location'])
+        page_type = kwargs.get('page_type', 'standard')
+        new_obj = kwargs['site_types'][page_type].create_page(kwargs['name'], kwargs['location'])
     else:
         object_type = getattr(model, kwargs['object_type'])
         new_obj = object_type(**{'name': kwargs['name']})
@@ -274,7 +294,7 @@ microsite_page_types =  {
     'experience': PageType('experience', 'hubspace.templates.microSiteExperience', experience_slideshow, default_vals={'name':"experience", 'subtitle':"the hub at king's cross"}),
     'events': PageType('events', 'hubspace.templates.microSiteEvents', get_events, static=True, default_vals={'name':"events", 'subtitle':"upcoming events and activities"}),
     'spaces': PageType('spaces', 'hubspace.templates.microSiteSpaces', None, static=True, default_vals={'name':"spaces", 'subtitle':"for working and much more"}),
-    'blog': PageType('blog', 'hubspace.templates.microSiteBlog'),
+    'blog': PageType('blog', 'hubspace.templates.microSiteBlog', get_blog, static=False),
     'members': PageType('members', 'hubspace.templates.microSiteMembers', get_profiles, default_vals={'name':"our members", 'subtitle':"meet people at the hub"}),
     'join': PageType('join', 'hubspace.templates.microSiteJoinus', default_vals={'name':"join us", 'subtitle':"how to become a member"}),
     'joinConfirm': PageType('joinConfirm', 'hubspace.templates.microSiteJoinus', create_enquiry, static=False, can_be_tab=False),
@@ -282,7 +302,7 @@ microsite_page_types =  {
     'login': login_page_type,
     'requestPassword':request_password_type,
     'resetPassword':reset_password_type,
-    'standard': PageType('standard', 'hubspace.templates.microSiteStandard', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"})
+    'standard': PageType('standard', 'hubspace.templates.microSiteStandard', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
 }
 
 
@@ -414,6 +434,7 @@ class SiteList(controllers.Controller):
     @expose(template='hubspace.templates.listEditor', fragment=True)
     def render_as_table(self, list_name):
         template_args = self.get_list(list_name)
+        template_args.update({'page_types':[type[0] for type in self.site.site_types.iteritems() if type[1].can_be_tab]})
         template_args.update({'relative_path': relative_folder(self.site.site_url)})
         return template_args
 
@@ -485,7 +506,7 @@ class SiteList(controllers.Controller):
         return self.render_as_table(list_name)
 
     @expose()
-    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'name':v.UnicodeString(), 'active':v.Int(if_empty=0)})
+    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'page_type':v.UnicodeString(), 'name':v.UnicodeString(), 'active':v.Int(if_empty=0)})
     def append(self, list_name, **kwargs):
 	if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
@@ -696,17 +717,15 @@ class MicroSite(controllers.Controller):
         try:
             page = MetaWrapper(Page.select(AND(Page.q.location==self.location, 
                                                Page.q.path_name==page_name))[0])
-            func = self.site_types[page.page_type].view_func
         except (KeyError, IndexError):
             #try:
                 page = MetaWrapper(Page.select(AND(Page.q.location==self.location, 
                                                    Page.q.path_name==page_name + '.html'))[0])
-                func = self.site_types[page.page_type].view_func
-            
- 
+        func = self.site_types[page.page_type].view_func
         if func:
              kwargs['location'] = self.location
              kwargs['microsite'] = self
+             kwargs['page'] = page
              args_dict = func(*args, **kwargs)
         else:
              args_dict = {}
