@@ -110,7 +110,7 @@ def update_tariff_bookings():
                 next_tariff_date = loc_last_tariff_date + timedelta(days=calendar.monthrange(loc_last_tariff_date.year, loc_last_tariff_date.month)[1])
                 tariff_booking = book_tariff(user, last_tariff, next_tariff_date.year, next_tariff_date.month, recalculate=False)
                 model.hub.commit()
-                model.hub.begin() 
+                model.hub.begin()
     model.hub.commit()
     print "finish"
 
@@ -649,8 +649,6 @@ def get_pricing(tariff, resource, month_datetime=None):
         return None
 
 
-
-
 def calculate_cost(rusage):
     """Calculate the cost for an rusage, taking user, tariffs and pricings into consideration
     ...and the location of the user :p
@@ -697,9 +695,7 @@ def pricing_changed_recalculate(new_pricing):
     for rusage in rusages:
         rusage.cost = calculate_cost(rusage)
    
-    
-    
-def tariff_booking_changed_recalculate(user=None, tariff=None, start=None, end=None):
+def tariff_booking_changed_recalculate(user=None, tariff=None, start=None, end=None, catch_invoiced=False):
     """recalculate costs for usage: because a user changes tariff.
     Find all the rusages affected by that tariffbooking and not the tariffbooking itself
     """     
@@ -715,11 +711,17 @@ def tariff_booking_changed_recalculate(user=None, tariff=None, start=None, end=N
                                           tariff.id)
     
     rusages = RUsage.select(sql, clauseTables=['pricing', 'rusage'])
-        
+
+    rusages_invoiced = []
     for rusage in rusages:
+        if catch_invoiced and rusage.invoiced:
+            applogger.warn("tariff_booking_changed_recalculate: skipping rusage %s as it's already invoiced" % rusage.id)
+            if rusage.tariff != tariff:
+                rusages_invoiced.append(rusage)
+            continue
         rusage.tariff = tariff.id
         rusage.cost = calculate_cost(rusage)
-   
+    return rusages_invoiced
 
 
 class NotBillable(Exception):
@@ -2659,10 +2661,9 @@ Excption:
             for tg_error in tg_errors:
                 raise str(tg_errors[tg_error])
 
-        book_tariff(user, tariff, year, month, recalculate)
-            
-                 
-    
+        return book_tariff(user, tariff, year, month, recalculate)
+
+
     @expose(template="hubspace.templates.tariffHistory")
     @identity.require(not_anonymous())
     @validate(validators={'id':real_int, 'location':real_int})
@@ -2685,6 +2686,7 @@ Excption:
             raise IdentityFailure('what about not hacking the system')
 
         tariffs = kwargs['tariff']
+        already_invoiced = []
         for year in tariffs:
             for month in tariffs[year]:
                 tariffid=int(tariffs[year][month])
@@ -2710,13 +2712,17 @@ Excption:
                 #did we move back to the guest tariff - if so destroy old booking and recalculate costs
                 if current_tariff_booking and not tariffid:
                     current_tariff_booking.destroySelf()
-                    tariff_booking_changed_recalculate(user, location.defaulttariff, current_tariff_booking.start, current_tariff_booking.end_time)
+                    invoiced_usages = tariff_booking_changed_recalculate(user, location.defaulttariff, \
+                        current_tariff_booking.start, current_tariff_booking.end_time, True)
+                    already_invoiced += invoiced_usages
                                       
                 #Do we have a change in tariffs or move onto a tariff? if so book the new tariff (recalculate any related bookings)
                 if tariffid and (current_tariff_booking==None or current_tariff_booking.tariff.id != tariffid):
                     if current_tariff_booking:
                         current_tariff_booking.destroySelf()
-                    self.book_tariff(userid=user.id, tariffid=tariffid, year=int(year), month=int(month))
+                    tariff_booking = self.book_tariff(userid=user.id, tariffid=tariffid, year=int(year), month=int(month), recalculate=False)
+                    invoiced_usages = tariff_booking_changed_recalculate(user, tariff_booking.resource, tariff_booking.start, tariff_booking.end_time, True)
+                    already_invoiced += invoiced_usages
 
         final_current_tariff = get_tariff(location.id, user.id, now(location.id))
         if original_current_tariff != final_current_tariff:
@@ -2726,7 +2732,7 @@ Excption:
                 user_loses_policyProxy(user, original_current_tariff)
 
         cherrypy.response.headers['X-JSON'] = 'success'
-        return {'user':user, 'location':Location.get(kwargs['location'])}
+        return {'user':user, 'location':Location.get(kwargs['location']), 'already_invoiced':already_invoiced}
         
 
     ###########tabs an forms#################
