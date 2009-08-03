@@ -11,7 +11,6 @@ from hubspace.model import Location, LocationMetaData, User, RUsage, Group, Micr
 from sqlobject import AND, SQLObjectNotFound, IN, LIKE, func
 import os, re, unicodedata, md5, random, hmac as create_hmac
 from hashlib import sha1
-from urllib import quote, urlopen
 import cherrypy
 from kid import XML
 from hubspace.feeds import get_local_profiles
@@ -21,6 +20,11 @@ import sendmail
 import hubspace.model
 model = hubspace.model 
 from hubspace.utilities.cache import strongly_expire
+
+
+from urllib import quote, urlencode
+from urllib2 import urlopen, Request, build_opener, install_opener, HTTPCookieProcessor, HTTPRedirectHandler
+import cookielib
 
 def place(obj):
     if isinstance(obj, Location):
@@ -83,20 +87,107 @@ def get_events(*args, **kwargs):
 
 standard_kw = ['microsite', 'page', 'location']
 
+class RedirectToClient(Exception):
+    def __init__(self, url):
+        self.url = url
+
+class HTTPRedirectClient(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        m = req.get_method()
+        if (code in (301, 302, 303, 307) and m in ("GET", "HEAD")
+            or code in (301, 302, 303) and m == "POST"):
+            # Strictly (according to RFC 2616), 301 or 302 in response
+            # to a POST MUST NOT cause a redirection without confirmation
+            # from the user (of urllib2, in this case).  In practice,
+            # essentially all clients do redirect in this case, so we
+            # do the same.
+            # be conciliant with URIs containing a space
+            newurl = newurl.replace(' ', '%20')
+            raise RedirectToClient(newurl)
+            #return Request(newurl,
+            #               headers=req.headers,
+            #               origin_req_host=req.get_origin_req_host(),
+            #               unverifiable=True)
+        else:
+            raise HTTPError(req.get_full_url(), code, msg, headers, fp)
+
+forwarded_request_headers = ['If-None-Match']
+forwarded_response_headers = ['Etag', 'Last-Modified', 'X-Pingback', 'Cache-Control', 'Pragma', 'Expires']
+
 def get_blog(*args, **kwargs):
     blog_url = kwargs['page'].blog_url.strip()
     args = list(args)
     args.insert(0, blog_url)
     url = '/'.join(args)
-    kw_args = ['%(key)s=%(val)s' %({'key':key, 'val': val}) for key, val in kwargs.iteritems() if key not in standard_kw]
+    url += '/'
+    kw_args = dict((key.replace('+', '-'), val) for key, val in kwargs.iteritems() if key not in standard_kw)
+    post_data = None
     if kw_args:
-        url += '/?' + '&'.join(kw_args)
+        if cherrypy.request.method == 'GET':
+            url += '?' + urlencode(kw_args)
+        if cherrypy.request.method == 'POST':
+            post_data = urlencode(kw_args)
+   
+    if cherrypy.session.has_key('cj'):
+        cj = cherrypy.session['cj']
+    else:
+        cj = cherrypy.session['cj'] = cookielib.CookieJar() 
+
+    opener = build_opener(HTTPCookieProcessor(cj), HTTPRedirectClient)
+    install_opener(opener)   
+    headers = {}
+    for header in forwarded_request_headers:
+        if cherrypy.request.headers.get(header, 0):
+            headers[header] = cherrypy.request.headers[header]
     try:
-        blog = urlopen(url).read()
-        blog = blog.replace(blog_url, cherrypy.request.base + '/public/' + kwargs['page'].path_name)
-    except IOError:
-        blog = "Could not get blog from: " +  url
-    return {'blog': blog}
+        if post_data:
+            blog = Request(url, post_data, headers)
+        else:
+            blog = Request(url, headers=headers)
+        blog_handle = urlopen(blog)
+    except RedirectToClient, e:
+        redirect(e.url.replace(blog_url, cherrypy.request.base + '/public/' + kwargs['page'].path_name))
+    except IOError, e:
+        if hasattr(e, 'reason'):
+            blog_body = "Could not get blog from: " +  url + " because " + e.reason
+            blog_head = ""
+        elif hasattr(e, 'code'):
+            cherrypy.response.headers['status'] = e.code
+            blog_body = "Could not get blog from: " +  url + " because " + str(e.code)
+            blog_head = ""
+
+    else:
+        content_type = blog_handle.headers.type
+        if content_type not in ['text/html', 'text/xhtml']:
+            raise redirect(url)
+        blog = blog_handle.read()
+
+        #replace any links to the blog_url current address
+        our_url = cherrypy.request.base + '/public/' + kwargs['page'].path_name
+        blog = blog.replace(blog_url, our_url)
+        
+        blog = BeautifulSoup(blog)
+        #blog = bs_preprocess(blog)
+        for input in blog.body.findAll('input', attrs={'name':re.compile('.*\-.*')}):
+            input['name'] = input['name'].replace('-', '+') #hack around the awkwardness of submitting names with '-' from FormEncode
+
+        #change back anything ending in .js .css .png .gif, .jpg .swf
+        for link in blog.findAll('link', attrs={'href':re.compile('.*' + re.escape(our_url) + '.*')}):
+            link['href'] = link['href'].replace(our_url, blog_url)
+        for link in blog.findAll('img', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
+            link['src'] = link['src'].replace(our_url, blog_url)
+        for link in blog.findAll('script', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
+            link['src'] = link['src'].replace(our_url, blog_url)
+
+        blog_head = blog.head.renderContents()
+        blog_body = blog.body.renderContents()
+
+    for header in forwarded_response_headers:
+        if blog_handle.headers.get(header, 0):
+            cherrypy.response.headers[header] = blog_handle.headers[header]
+    
+
+    return {'blog': blog_body, 'blog_head': blog_head}
 
 def get_event(*args):
     return {'event': RUsage.get(args[0])}

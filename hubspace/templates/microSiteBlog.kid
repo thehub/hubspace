@@ -5,6 +5,7 @@ render_static = False
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" py:extends="'microSiteMaster.kid'">
 <head>
+      ${XML(blog_head)}
 </head>
 <body id="${page.path_name}">
       <c py:strip="True" py:if="is_host(identity.current.user, location, render_static)">
