@@ -22,6 +22,29 @@ if 'location' not in locals():
 ?>
 
 <div xmlns:py="http://purl.org/kid/ns#" py:strip="True">
+
+<div py:if="already_invoiced" class="errorMessage">
+<strong>Warning: While changing Tariffs below usages are detected for which invoices are already sent. You may want to note
+these and refund as per your policies.</strong>
+<table cellspacing="0" cellpadding="0" class="detailTable">
+<tr class="header">
+    <td>Member</td>
+    <td>Invoice Number</td>
+    <td>Resource</td>
+    <td>Booking time</td>
+    <td>Tariff</td>
+</tr>
+<tr></tr>
+<tr py:for="usage in already_invoiced">
+    <td>${usage.user.display_name}</td>
+    <td>${usage.invoice.number}</td>
+    <td>${usage.resource.name}</td>
+    <td>${usage.start.ctime()}</td>
+    <td>${usage.tariff.name}</td>
+</tr>
+</table>
+<!-- TODO <a href="#" id="send_already_invoiced_list" >"Send me this information"</a> -->
+</div>
  
  <div py:def="load_tariffHistory(user, location)" py:strip="True">
 	<table class="detailTable tariffs data" cellpadding="0" cellspacing="0" >
