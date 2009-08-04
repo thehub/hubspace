@@ -6,8 +6,9 @@ from hubspace.templates.memberslist import member_list
 from hubspace.model import User, Location
 
 from hubspace.controllers import filter_members, permission_or_owner, title, new_or_old
-production = True
-
+from turbogears import config
+mode = config.get('js_mode', 'prod')
+from sqlobject import AND
 from hubspace.utilities.static_files import get_version_no, css_files, js_files
 js_version_no = get_version_no("hubspace.js")
 admin_js_version_no = get_version_no("admin.js")
@@ -23,10 +24,10 @@ def host_in_rfid_location():
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
     <title py:content="title[cherrypy.request.base]">Bradford GRID</title>
-    <c py:if="not production" py:strip="True">
+    <c py:if="mode=='dev'" py:strip="True">
         <style py:for="filename in css_files" type="text/css">@import url(/static/css/${filename});</style>
     </c>
-    <style py:if="production" type="text/css">@import url(/static/css/hubspace.css);</style>
+    <style py:if="mode=='prod'" type="text/css">@import url(/static/css/hubspace.css);</style>
         <!--[if gte IE 5]>
 	    <style type="text/css">@import url(/static/css/ie.css);</style>
         <![endif]-->
@@ -40,10 +41,10 @@ def host_in_rfid_location():
     </style>
     <link rel="Shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/static/javascript/flexigrid/css/flexigrid/flexigrid.css" type="text/css" />
-    <c py:if="not production" py:strip="True">
+    <c py:if="mode=='dev'" py:strip="True">
     <script py:for="filename in js_files" src='/static/javascript/${filename}' ></script>
     </c>
-    <script py:if="production" src="/static/javascript/hubspace${js_version_no}.js" />
+    <script py:if="mode=='prod'" src="/static/javascript/hubspace${js_version_no}.js" />
 </head>
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >
         <input id="admin_js_no" value="${admin_js_version_no}" type="hidden" />
@@ -87,7 +88,7 @@ def host_in_rfid_location():
 		<div id="searchExtra">
 		    <select id="search_locality" name="hub">
 			<option value="0" selected="selected">All Hubs</option>
-		        <option py:for="location in Location.select(orderBy='name')" value="${location.id}">${location.name}</option>
+		        <option py:for="location in Location.select(AND(Location.q.is_region==0), orderBy='name')" value="${location.id}">${location.name}</option>
 		    </select>
 		</div>
 		<div class="scrollArrow up"><div class="scrollArrow" id="up"></div></div>

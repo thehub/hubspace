@@ -14,7 +14,7 @@ render_static = False
         <meta name="keywords" content="hub, hub world, hub labs, hub working, hub culture, hub tech, innovation, social innovation, social entrepreneurship, enterprise, london, amsterdam, berkeley, berlin, bristol, bombay, brussels, cairo, halifax, johannesburg, rotterdam, berlin, oaxaca, telaviv, islington, king's cross, southbank, madrid, milan, porto, sao paulo, stockholm, toronto, social networking, eurostar, space, office, meeting rooms, sustainable" />
 	<title>The Hub | ${page.name.title()}</title>
 	<link rel="stylesheet" href="/static/css/hubweb.css" type="text/css" media="all" />
-	<link rel="stylesheet" href="/static/css/superfish.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/static/css/micro/superfish.css" type="text/css" media="screen"/>
         <script src="/static/javascript/jquery.min.js" charset="utf-8" type="text/javascript"></script>
         <script src="/static/javascript/jq.noconflict.js" charset="utf-8" type="text/javascript"></script>
         <script src="/static/javascript/hoverIntent.js" charset="utf-8" type="text/javascript"></script>
@@ -45,6 +45,8 @@ render_static = False
         <script src="/static/javascript/list-editor.js" type="text/javascript" charset="utf-8"></script>
         <link rel="stylesheet" href="/static/css/editor-toggle.css" type="text/css" media="screen"/>
         <script src="/static/javascript/editorToggle.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/static/javascript/jquery.timers.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/static/javascript/overlib/overlib.js" type="text/javascript" charset="utf-8"></script>
         <script src="/static/javascript/hubcms.js" type="text/javascript" charset="utf-8"></script>
     </c>
         <script src="/static/javascript/thehub.js" charset="utf-8" type="text/javascript"></script>
@@ -56,8 +58,9 @@ render_static = False
 <div style="visibility:hidden;" id="page_id" class="${page.id}"></div>
 <div style="visibility:hidden;" id="relative_url" class="${relative_path}"></div>
 <div style="visibility:hidden;" id="page_path_name" class="${page.path_name}"></div>
+<span id="throbber"><img src="/static/images/timer_2.gif" /> <span id="throbtext">loading... </span></span>
 <div id="wrapper">
-	<a id="logo" href="index.html"><img src="/static/images/hubweb/hub_logo.gif" alt="Hub Logo" /></a>
+	<a id="logo" href="index.html"><img src="/static/images/hubweb/hub_logo.png" alt="Hub Logo" /></a>
         <div class="container" id="menu-top">
             <div id="hub-selector">
                 <ul class="sf-menu">
@@ -66,8 +69,7 @@ render_static = False
                             <?python
                                locs = location_links()
                             ?>
-                               <li py:for="loc in locs[:-1]"><a href="${loc[0]}">${loc[1]}</a></li>
-                               <li class="last"><a py:if="len(locs)>0" href="${locs[-1][0]}">${locs[-1][1]}</a></li>
+                             <li py:for="loc in locs"><a href="${loc[0]}">${XML(loc[1])}</a></li>
                           </ul>
 		     </li>
 	        </ul>

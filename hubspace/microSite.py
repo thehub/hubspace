@@ -11,7 +11,6 @@ from hubspace.model import Location, LocationMetaData, User, RUsage, Group, Micr
 from sqlobject import AND, SQLObjectNotFound, IN, LIKE, func
 import os, re, unicodedata, md5, random, hmac as create_hmac
 from hashlib import sha1
-from urllib import quote
 import cherrypy
 from kid import XML
 from hubspace.feeds import get_local_profiles
@@ -21,6 +20,11 @@ import sendmail
 import hubspace.model
 model = hubspace.model 
 from hubspace.utilities.cache import strongly_expire
+
+
+from urllib import quote, urlencode
+from urllib2 import urlopen, Request, build_opener, install_opener, HTTPCookieProcessor, HTTPRedirectHandler
+import cookielib
 
 def place(obj):
     if isinstance(obj, Location):
@@ -33,15 +37,22 @@ def place(obj):
         raise AttributeError("object has not location")
     
 
+def bs_preprocess(html):
+     """remove distracting whitespaces and newline characters"""
+     html = re.sub('\n', ' ', html)     # convert newlines to spaces
+     return html 
+
 def html2xhtml(value):
     value = value.strip()
     value = BeautifulSoup(value).prettify()
-    try: 
+    value = bs_preprocess(value)
+    try:
         XML(value).expand()
     except:
         cherrypy.response.headers['X-JSON'] = 'error'
         print "not good XML"
     return value
+
 def get_profiles(*args, **kwargs):
     kwargs['no_of_images'] = 9
     kwargs['only_with_images'] = True
@@ -73,11 +84,121 @@ def get_events(*args, **kwargs):
         events.update(get_event(*args))
     return events
 
+
+standard_kw = ['microsite', 'page', 'location']
+
+class RedirectToClient(Exception):
+    def __init__(self, url):
+        self.url = url
+
+class HTTPRedirectClient(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        m = req.get_method()
+        if (code in (301, 302, 303, 307) and m in ("GET", "HEAD")
+            or code in (301, 302, 303) and m == "POST"):
+            # Strictly (according to RFC 2616), 301 or 302 in response
+            # to a POST MUST NOT cause a redirection without confirmation
+            # from the user (of urllib2, in this case).  In practice,
+            # essentially all clients do redirect in this case, so we
+            # do the same.
+            # be conciliant with URIs containing a space
+            newurl = newurl.replace(' ', '%20')
+            raise RedirectToClient(newurl)
+            #return Request(newurl,
+            #               headers=req.headers,
+            #               origin_req_host=req.get_origin_req_host(),
+            #               unverifiable=True)
+        else:
+            raise HTTPError(req.get_full_url(), code, msg, headers, fp)
+
+forwarded_request_headers = ['If-None-Match']
+forwarded_response_headers = ['Etag', 'Last-Modified', 'X-Pingback', 'Cache-Control', 'Pragma', 'Expires']
+
+def get_blog(*args, **kwargs):
+    blog_url = kwargs['page'].blog_url.strip()
+    args = list(args)
+    args.insert(0, blog_url)
+    url = '/'.join(args)
+    url += '/'
+    kw_args = dict((key.replace('+', '-'), val) for key, val in kwargs.iteritems() if key not in standard_kw)
+    post_data = None
+    if kw_args:
+        if cherrypy.request.method == 'GET':
+            url += '?' + urlencode(kw_args)
+        if cherrypy.request.method == 'POST':
+            post_data = urlencode(kw_args)
+   
+    if cherrypy.session.has_key('cj'):
+        cj = cherrypy.session['cj']
+    else:
+        cj = cherrypy.session['cj'] = cookielib.CookieJar() 
+
+    opener = build_opener(HTTPCookieProcessor(cj), HTTPRedirectClient)
+    install_opener(opener)   
+    headers = {}
+    for header in forwarded_request_headers:
+        if cherrypy.request.headers.get(header, 0):
+            headers[header] = cherrypy.request.headers[header]
+    try:
+        if post_data:
+            blog = Request(url, post_data, headers)
+        else:
+            blog = Request(url, headers=headers)
+        blog_handle = urlopen(blog)
+    except RedirectToClient, e:
+        redirect(e.url.replace(blog_url, cherrypy.request.base + '/public/' + kwargs['page'].path_name))
+    except IOError, e:
+        if hasattr(e, 'reason'):
+            blog_body = "Could not get blog from: " +  url + " because " + e.reason
+            blog_head = ""
+        elif hasattr(e, 'code'):
+            cherrypy.response.headers['status'] = e.code
+            blog_body = "Could not get blog from: " +  url + " because " + str(e.code)
+            blog_head = ""
+    except ValueError:
+	blog_body = ""
+	blog_head = ""
+        return {'blog': blog_body, 'blog_head': blog_head}
+
+    else:
+        content_type = blog_handle.headers.type
+        if content_type not in ['text/html', 'text/xhtml']:
+            raise redirect(url)
+        blog = blog_handle.read()
+
+        #replace any links to the blog_url current address
+        our_url = cherrypy.request.base + '/public/' + kwargs['page'].path_name
+        blog = blog.replace(blog_url, our_url)
+        
+        blog = BeautifulSoup(blog)
+        #blog = bs_preprocess(blog)
+        for input in blog.body.findAll('input', attrs={'name':re.compile('.*\-.*')}):
+            input['name'] = input['name'].replace('-', '+') #hack around the awkwardness of submitting names with '-' from FormEncode
+
+        #change back anything ending in .js .css .png .gif, .jpg .swf
+        for link in blog.findAll('link', attrs={'href':re.compile('.*' + re.escape(our_url) + '.*')}):
+            link['href'] = link['href'].replace(our_url, blog_url)
+        for link in blog.findAll('img', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
+            link['src'] = link['src'].replace(our_url, blog_url)
+        for link in blog.findAll('script', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
+            link['src'] = link['src'].replace(our_url, blog_url)
+
+        blog_head = blog.head.renderContents()
+        blog_body = blog.body.renderContents()
+
+    for header in forwarded_response_headers:
+        if blog_handle.headers.get(header, 0):
+            cherrypy.response.headers[header] = blog_handle.headers[header]
+    
+
+    return {'blog': blog_body, 'blog_head': blog_head}
+
 def get_event(*args):
     return {'event': RUsage.get(args[0])}
 
 def experience_slideshow(*args, **kwargs):
-    return {'image_source_list': [page_image_source(page, **kwargs) for page in ['index', 'events', 'spaces', 'members', 'joinus', 'contact']]}
+    return {'image_source_list': [top_image_src(page, kwargs['microsite']) for page in Page.select(AND(Page.q.locationID == kwargs['location'],
+                                                                                                       Page.q.image != None))]}
 
 
 def image_source(image_name, microsite, default=""):
@@ -87,10 +208,21 @@ def image_source(image_name, microsite, default=""):
     except:
         return default
 
-def page_image_source(page, **kwargs):
-    return image_source(page + '.png', kwargs['microsite'], "/static/images/micro/main-images/" + page + '.jpg')
+def top_image_src(page, microsite):
+    if page.image_name:
+        return microsite.upload_url + page.image_name 
+    else:
+        try:
+            os.stat(os.getcwd() + '/hubspace/static/images/micro/main-images/' + page.path_name.split('.')[0]+'.jpg')
+            return '/static/images/micro/main-images/' + page.path_name.split('.')[0]+'.jpg'
+        except OSError:
+            return '/static/images/micro/main-images/index.jpg'
 
+def page_image_source(page_name, **kwargs):
+    return image_source(page_name + '.png', kwargs['microsite'], "/static/images/micro/main-images/" + page_name + '.jpg')
 
+def standard_page(*args, **kwargs):
+    return {}
 
 valid_username_chars = r"[^0-9a-z._-]"
 valid_phone_chars = r"[^0-9/.\(\)\+-]"
@@ -189,7 +321,8 @@ def append_existing_item(list_name, obj, **kwargs):
 
 def append_to_list(list_name, **kwargs):
     if kwargs['object_type'] == Page.__name__:
-        new_obj = kwargs['site_types']['standard'].create_page(kwargs['name'], kwargs['location'])
+        page_type = kwargs.get('page_type', 'standard')
+        new_obj = kwargs['site_types'][page_type].create_page(kwargs['name'], kwargs['location'])
     else:
         object_type = getattr(model, kwargs['object_type'])
         new_obj = object_type(**{'name': kwargs['name']})
@@ -263,14 +396,15 @@ microsite_page_types =  {
     'experience': PageType('experience', 'hubspace.templates.microSiteExperience', experience_slideshow, default_vals={'name':"experience", 'subtitle':"the hub at king's cross"}),
     'events': PageType('events', 'hubspace.templates.microSiteEvents', get_events, static=True, default_vals={'name':"events", 'subtitle':"upcoming events and activities"}),
     'spaces': PageType('spaces', 'hubspace.templates.microSiteSpaces', None, static=True, default_vals={'name':"spaces", 'subtitle':"for working and much more"}),
-    'blog': PageType('blog', 'hubspace.templates.microSiteBlog'),
+    'blog': PageType('blog', 'hubspace.templates.microSiteBlog', get_blog, static=False),
     'members': PageType('members', 'hubspace.templates.microSiteMembers', get_profiles, default_vals={'name':"our members", 'subtitle':"meet people at the hub"}),
     'join': PageType('join', 'hubspace.templates.microSiteJoinus', default_vals={'name':"join us", 'subtitle':"how to become a member"}),
     'joinConfirm': PageType('joinConfirm', 'hubspace.templates.microSiteJoinus', create_enquiry, static=False, can_be_tab=False),
     'contact': PageType('contact', 'hubspace.templates.microSiteContact', default_vals={'name':"contact", 'subtitle':"get in touch"}),
     'login': login_page_type,
     'requestPassword':request_password_type,
-    'resetPassword':reset_password_type    
+    'resetPassword':reset_password_type,
+    'standard': PageType('standard', 'hubspace.templates.microSiteStandard', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
 }
 
 
@@ -402,6 +536,7 @@ class SiteList(controllers.Controller):
     @expose(template='hubspace.templates.listEditor', fragment=True)
     def render_as_table(self, list_name):
         template_args = self.get_list(list_name)
+        template_args.update({'page_types':[type[0] for type in self.site.site_types.iteritems() if type[1].can_be_tab]})
         template_args.update({'relative_path': relative_folder(self.site.site_url)})
         return template_args
 
@@ -473,7 +608,7 @@ class SiteList(controllers.Controller):
         return self.render_as_table(list_name)
 
     @expose()
-    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'name':v.UnicodeString(), 'active':v.Int(if_empty=0)})
+    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'page_type':v.UnicodeString(), 'name':v.UnicodeString(), 'active':v.Int(if_empty=0)})
     def append(self, list_name, **kwargs):
 	if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
@@ -533,26 +668,29 @@ class MicroSiteEdit(controllers.Controller):
 
     @expose()
     @validate(validators={'object_id':real_int, 'object_type':v.UnicodeString(), 'property':v.UnicodeString(), 'height':v.Int(), 'width': v.Int(), 'page_name':v.UnicodeString()})
-    def uploadImage(self, object_id, object_type, property, image, height=300, width=300, page_name='index.html'):
+    def uploadImage(self, object_id, object_type, property, image, height=None, width=None, page_name='index.html', tg_errors=None):
         # for some very strange reason height and width come through as unicode
-        height = int(height)
-        width = int(width)
-        obj = obj_of_type(object_type, object_id)
+        if tg_errors:
+            for tg_error in tg_errors:
+                print `tg_error`, str(tg_errors[tg_error])
+            return "error uploading"
+        if height:
+            height = int(height)
+        if width:
+            width = int(width)
+        obj = MetaWrapper(obj_of_type(object_type, object_id))
         location = Location.get(self.site.location)
         if not is_host(identity.current.user, location):
             raise IdentityFailure('what about not hacking the system')
 
-        if object_type == 'Location':
-            #shouldn't need to special case this, but for the fact that LocationMetaData isn't typed
-            location_file_object = save_file(object_id, image, height=height, width=width, upload_dir=self.site.upload_dir, file_name=property)            
-        elif object_type in ['PublicSpace', 'Page', 'PublicPlace']:
-            modify_attribute(obj, property, None)
-            file_object = save_file(location.id, image, height=height, width=width, upload_dir=self.site.upload_dir)            
-            modify_attribute(obj, property, file_object)
+        elif object_type in ['PublicSpace', 'Page', 'PublicPlace', 'Location']:
+            file_object = save_file(location.id, image, height=height, width=width, upload_dir=self.site.upload_dir)
+            print `obj` + `property` + str(int(file_object.id))
+            setattr(obj, property, str(int(file_object.id)))
 
         if page_name.endswith('.html'):
             self.site.render_page(page_name)
-        return ""
+        return "<div id='new_image_src'>" + self.site.upload_url + file_object.attr_name + "</div>"
 
     @expose()
     @validate(validators={'user_name':username, 'first_name':no_ws_ne_cp, 'last_name':no_ws_ne_cp, 'email_address':email_address, 'organisation':no_ws, 'home':phone})
@@ -630,10 +768,12 @@ class MicroSiteEdit(controllers.Controller):
     def attribute_edit(self, object_type=None, object_id=None, property=None, value="", page_name="index.html", tg_errors=None):
         """edit the attribute of any object type
         """
-        page_name = page_name.split('#')[0]
-        value = html2xhtml(value)
         if tg_errors:
             cherrypy.response.headers['X-JSON'] = 'error'
+            return str(tg_errors[0])
+
+        page_name = page_name.split('#')[0]
+        value = html2xhtml(value)
 
         obj = obj_of_type(object_type, object_id)
         obj = MetaWrapper(obj)
@@ -681,17 +821,15 @@ class MicroSite(controllers.Controller):
         try:
             page = MetaWrapper(Page.select(AND(Page.q.location==self.location, 
                                                Page.q.path_name==page_name))[0])
-            func = self.site_types[page.page_type].view_func
         except (KeyError, IndexError):
             #try:
                 page = MetaWrapper(Page.select(AND(Page.q.location==self.location, 
                                                    Page.q.path_name==page_name + '.html'))[0])
-                func = self.site_types[page.page_type].view_func
-            
- 
+        func = self.site_types[page.page_type].view_func
         if func:
              kwargs['location'] = self.location
              kwargs['microsite'] = self
+             kwargs['page'] = page
              args_dict = func(*args, **kwargs)
         else:
              args_dict = {}
@@ -701,7 +839,8 @@ class MicroSite(controllers.Controller):
             template_args.update({'relative_path': relative_folder(self.site_url)})
         template_args.update({'static_files_path': self.upload_url})
         template_args.update({'lists': self.lists.iterator, 'upload_url': self.upload_url})
-        template_args.update({'page_image_source': page_image_source(page_name.split('.')[0], microsite=self)})
+        template_args.update({'top_image_src': top_image_src(page, microsite=self)})
+        template_args.update({'upload_url': self.upload_url})
         template_args.update(args_dict)
         location = MetaWrapper(Location.get(self.location))
         template_args.update({'page':page, 'location':location, 'site_url': self.site_url})

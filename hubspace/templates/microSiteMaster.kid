@@ -2,7 +2,6 @@
 <?python
 import cherrypy
 from turbogears import identity
-#production = False
 #from hubspace.utilities.static_files import get_version_no, css_files, js_files
 #js_version_no = get_version_no("hubsite.js")
 from hubspace.utilities.permissions import is_host
@@ -11,6 +10,7 @@ image_source_list = []
 from hubspace.model import Location, Page
 from sqlobject import AND
 from hubspace.active import location_links
+from hubspace.file_store import get_filepath
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">
@@ -63,6 +63,8 @@ from hubspace.active import location_links
         <script src="/static/javascript/list-editor.js" type="text/javascript" charset="utf-8"></script>
         <link rel="stylesheet" href="/static/css/editor-toggle.css" type="text/css" media="screen"/>
         <script src="/static/javascript/editorToggle.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/static/javascript/overlib/overlib.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/static/javascript/jquery.timers.js" type="text/javascript" charset="utf-8"></script>
         <script src="/static/javascript/hubcms.js" type="text/javascript" charset="utf-8"></script>
     </c>
     <script src="/static/javascript/thehub.js" type="text/javascript" charset="utf-8"></script>
@@ -73,10 +75,16 @@ from hubspace.active import location_links
 <div style="visibility:hidden;" id="page_id" class="${page.id}"></div>
 <div style="visibility:hidden;" id="page_path_name" class="${page.path_name}"></div>
 <div style="visibility:hidden;" id="relative_url" class="${relative_path}"></div>
+<span id="throbber"><img src="/static/images/timer_2.gif" /> <span id="throbtext">loading... </span></span>
 <div class="container" id="menu-top">
   <div id="main-logo">
-    <a href="http://www.the-hub.net" title="back to Hub World"><img src="/static/images/micro/hub_logo.gif" width="60" height="60" alt="Hub Logo"/></a>
-  </div>
+  <img id="Location-${location.id}-micrologo" src="${get_filepath(location,'micrologo', upload_url, '/static/images/micro/hub_logo.png')}" height="70" alt="logo" usemap="#micrologo" />
+  <map py:if="not is_host(identity.current.user, location, render_static)" name="micrologo">
+      <area shape="rect" coords="0,0,70,70" href="http://www.the-hub.net" alt="back to Hub World" title="back to Hub World" />
+      <area shape="rect" coords="70,0,500,500" href="/public/" alt="Home" title="${'Hub ' + location.name + ' home'}" />
+  </map> 
+<!--    <a href="http://www.the-hub.net" title="back to Hub World"><img id="Location-${location.id}-micrologo" height="60" src="${get_filepath(location,'micrologo', upload_url, '/static/images/micro/hub_logo.gif')}" alt="Hub Logo"/></a> -->
+  </div> 
   <div py:if="is_host(identity.current.user, location, render_static)" id="admin_view_indicator">
       Admin Mode
   </div>
@@ -87,23 +95,26 @@ from hubspace.active import location_links
                             <?python
                                locs = location_links()
                             ?>
-                            <li py:for="loc in locs[:-1]"><a href="${loc[0]}">${loc[1]}</a></li>
-                            <li class="last"><a py:if="len(locs)>0" href="${locs[-1][0]}">${locs[-1][1]}</a></li>
+                            <li py:for="loc in locs"><a href="${loc[0]}">${XML(loc[1])}</a></li>
 			</ul>
 		</li>
 	</ul>
 </div>
-  <ul>
-    <li py:attrs="page.id==menu_item.object.id and {'class':'selected'} or {}" py:for="menu_item in lists('left_tabs')"><a href="${relative_path}${menu_item.object.path_name}" id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a></li>
+  <ul id="left_tabs">
+    <li py:attrs="page.id==menu_item.object.id and {'class':'selected'} or {}" py:for="menu_item in lists('left_tabs')" py:if="menu_item.active"><a href="${relative_path}${menu_item.object.path_name}" id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a></li>
+  </ul>
+    <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_list_left"><a href="#">Edit Left Navigation</a></div>
     <?python
        right_tabs = list(lists('right_tabs'))
        right_tabs.reverse()
     ?>
-    <li py:attrs="page.id==menu_item.object.id and {'class':'selected right'} or {'class': 'right'}" py:for="menu_item in right_tabs"><a href="${relative_path}${menu_item.object.path_name}"  id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a></li>
+  <ul id="right_tabs">
+    <li py:attrs="page.id==menu_item.object.id and {'class':'selected right'} or {'class': 'right'}" py:for="menu_item in right_tabs" py:if="menu_item.active"><a href="${relative_path}${menu_item.object.path_name}"  id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a></li>
   </ul>
+  <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_list_right"><a href="#">Edit Right Navigation</a></div>
 </div>
     <div id="content-highlight" class="container">
-        <img py:if="not image_source_list" id="Page-${page.id}-image" src="${page.image_name and upload_url + page.image_name or '/static/images/micro/main-images/' + page.path_name.split('.')[0]+'.jpg'}" alt="${page.image_name}" />   
+        <img py:if="not image_source_list" id="Page-${page.id}-image" src="${top_image_src}" alt="${page.image_name}" />   
         <img py:if="image_source_list" py:for="image_source in image_source_list" class="slideshow_image" id="${page.name}" src="${image_source}" />
     </div>
     <div id="content-main" class="container">
@@ -111,8 +122,8 @@ from hubspace.active import location_links
     </div>
  
 <div class="container" id="footer">
-    <div py:for="menu_item in list(lists('left_tabs'))[1:]" class="span-3"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
-    <div py:for="menu_item in lists('right_tabs')" class="span-3"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
+    <div py:for="menu_item in list(lists('left_tabs'))[1:]" py:if="menu_item.active" class="span-3"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
+    <div py:for="menu_item in lists('right_tabs')" py:if="menu_item.active" class="span-3"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
   <div class="span-3 last">
     <span class="footer-menu-desc">Spread the Hub!</span>
     <div id="add-this-widget">

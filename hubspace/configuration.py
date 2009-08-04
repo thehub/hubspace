@@ -6,7 +6,9 @@ class URLMappings(dict):
 
 
 new_or_old = URLMappings({'http://amsterdam.the-hub.net':'new',
+                          'http://bayarea.the-hub.net':'new',
                           'http://berlin.the-hub.net':'new',
+                          'http://berkeley.the-hub.net':'new',
                           'http://bombay.the-hub.net':'new',
                           'http://bristol.the-hub.net':'new',
                           'http://brussels.the-hub.net':'new',
@@ -19,6 +21,7 @@ new_or_old = URLMappings({'http://amsterdam.the-hub.net':'new',
                           'http://madrid.the-hub.net':'new',
                           'http://porto.the-hub.net':'new',
                           'http://rotterdam.the-hub.net':'new',
+                          'http://sanfrancisco.the-hub.net':'new',
                           'http://saopaulo.the-hub.net':'new',
                           'http://southbank.the-hub.net':'new',
                           'http://stockholm.the-hub.net':'new',
@@ -29,12 +32,17 @@ new_or_old = URLMappings({'http://amsterdam.the-hub.net':'new',
                           'http://members.themonksyard.co.uk':'old',
                           'http://hubspacedev.the-hub.net':'new',
                           'http://localhost:8080':'old',
-                          'http://members.the-hub.net':'old'}
+                          'http://members.the-hub.net':'old',
+                          'http://test.the-hub.net':'new',
+                          'http://test2.the-hub.net':'new',
+                          'http://testregion.the-hub.net':'new'}
 )
 
 
 title = URLMappings({'http://amsterdam.the-hub.net': 'The Hub Amsterdam',
+                     'http://bayarea.the-hub.net': 'The Hub Bay Area',
                      'http://berlin.the-hub.net': 'The Hub Berlin',
+                     'http://berkeley.the-hub.net': 'The Hub Berkeley',
                      'http://bombay.the-hub.net':'The Hub Bombay',
                      'http://bristol.the-hub.net':'The Hub Bristol',
                      'http://brussels.the-hub.net':'The Hub Brussels',
@@ -48,16 +56,20 @@ title = URLMappings({'http://amsterdam.the-hub.net': 'The Hub Amsterdam',
                      'http://porto.the-hub.net':'The Hub Porto',
                      'http://rotterdam.the-hub.net':'The Hub Rotterdam',
                      'http://saopaulo.the-hub.net':'The Hub Sao Paulo',
+                     'http://sanfrancisco.the-hub.net':'The Hub San Francisco',
                      'http://southbank.the-hub.net':'The Hub South Bank',
                      'http://stockholm.the-hub.net':'The Hub Stockholm',
                      'http://telaviv.the-hub.net':'The Hub Telaviv',
-                     'http://vienna.the-hub.net':'The Hub Telaviv',
+                     'http://vienna.the-hub.net':'The Hub Vienna',
                      'http://toronto.the-hub.net':'Centre for Social Innovation',
                      'http://members.socialinnovation.ca':'Centre for Social Innovation',
                      'http://members.themonksyard.co.uk':'The Monks Yard',
                      'http://localhost:8080':'The Hub',
                      'http://hubspacedev.the-hub.net':'The Hub',
-                     'http://members.the-hub.net':'The Hub'}
+                     'http://members.the-hub.net':'The Hub',
+                     'http://test.the-hub.net':'The Hub',
+                     'http://test2.the-hub.net':'The Hub',
+                     'http://testregion.the-hub.net':'The Hub',}
 )
 
 site_folders = URLMappings({'http://localhost:8080':'site_templates.hubspace.',
@@ -81,14 +93,3 @@ analytics_no = URLMappings({'http://localhost:8080':None,
 
 
 
-# remove this
-site_links = {4  : ("http://www.the-hub.net/places/bombay.html", "Bombay"),
-              18 : ("http://www.the-hub.net/places/cairo.html", "Cairo"),
-              8  : ("http://www.the-hub.net/places/halifax.html", "Halifax"),
-              1  : ("http://islington.the-hub.net/public/", "London - Islington"),
-              3  : ("http://www.the-hub.net/places/johannesburg.html", "Johannesburg"),
-              11 : ("http://kingscross.the-hub.net/public/", "London - Kings Cross"),
-              5  : ("http://www.the-hub.net/places/saopaulo.html", "Sao Paulo"),
-              21 : ("http://www.the-hub.net/places/southbank.html", "London - South Bank"),
-              22 : ("http://www.the-hub.net/places/telaviv.html", "Telaviv"),
-              7  :  ("http://www.the-hub.net/places/toronto.html", "Toronto")}

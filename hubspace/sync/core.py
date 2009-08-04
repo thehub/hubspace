@@ -132,7 +132,6 @@ if ldap_sync_enabled:
     
     from sqlobject.events import listen, RowUpdateSignal, RowCreatedSignal, RowDestroySignal
     
-    
     def checkSyncerResults(f):
         def wrap(*args, **kw):
             ret = f(*args)
