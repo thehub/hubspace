@@ -126,14 +126,15 @@ def loc_alpha(a, b):
 def locations(permission="manage_resources"):
     """get all the locations in which the current user has a specific permission
     """
-    locations = []
-    for group in identity.current.user.groups:
-        location = get_place(group)
-        if location:
-            if permission_or_owner(location, location, permission) and location not in locations:
-                locations.append(location)
     if identity.has_permission('superuser'):
         locations = list(Location.select())
+    else:
+        locations = []
+        for group in identity.current.user.groups:
+            location = get_place(group)
+            if location:
+                if permission_or_owner(location, location, permission) and location not in locations:
+                    locations.append(location)
     locations.sort(loc_alpha)
     return locations
 

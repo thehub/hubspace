@@ -19,6 +19,12 @@ SSOIdentityProvider = SqlObjectIdentityProvider
 _cp_filters = []
 
 def setupLDAPSync(): pass
+def sendRollbackSignal(): pass
+
+class SyncerError(Exception):
+    """
+    Raise this error when syncer transaction fails
+    """
 
 if ldap_sync_enabled:
     import syncer
@@ -126,10 +132,6 @@ if ldap_sync_enabled:
     
     from sqlobject.events import listen, RowUpdateSignal, RowCreatedSignal, RowDestroySignal
     
-    class SyncerError(Exception):
-        """
-        Raise this error when syncer transaction fails
-        """
     
     def checkSyncerResults(f):
         def wrap(*args, **kw):

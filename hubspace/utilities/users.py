@@ -3,7 +3,23 @@ from hubspace.model import User, Location
 from hubspace.utilities.permissions import user_locations
 from turbogears import identity
 from sqlobject import AND
+from hubspace.utilities.dicts import ODict
+import hubspace.tariff
+from hubspace.utilities.uiutils import now
 ###################  Members  ###################
+
+fields = ODict()
+for k,v in (
+    #("active", dict (label = "Active", value = "active", checked = "checked")),
+    ("display_name", dict (label = "Name", value = "display_name", checked = "checked")),
+    ("homeplace_name", dict (label = "Location", value = "homeplace_name", checked = "checked")),
+    ("tariff_name", dict (label = "Tariff", value = "tariff_name", checked = "checked")),
+    ("email_address", dict (label = "Email", value = "email_address", checked = "checked")),
+    ("work", dict (label = "Work Phone", value = "work")),
+    ("mobile", dict (label = "Mobile", value = "mobile")),
+    ("website", dict (label = "Website", value = "website")),
+    ):
+    fields[k] = v
 
 def alpha(user1, user2):
     if user1.display_name > user2.display_name:

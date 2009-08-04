@@ -34,7 +34,7 @@ from datetime import datetime, timedelta, time, date
 from time import ctime, mktime
 import calendar
 import compat
-from sqlobject import AND, OR
+from sqlobject import AND, OR, DESC
 from sqlobject.sqlbuilder import IN, Select
 log = logging.getLogger("hubspace.controllers")
 
@@ -1605,6 +1605,47 @@ class Root(controllers.RootController):
     feed = Feed()
     sites = Sites()
 
+    @expose("hubspace.templates.flexigrid")
+    def users_grid(self, *args, **kw):
+        return kw
+
+    def _export_users(self, location, sortname, sortorder, fields, start, end):
+        from hubspace.utilities.users import fields as user_fields
+        fields = [f for f in user_fields if f in fields]
+        sortname = (sortname in fields and sortname) or "display_name" in fields and "display_name" or fields[0]
+        if location == "all":
+            select = model.User.select(AND(model.User.q.active==1))
+        else:
+            select = model.User.select(AND(model.User.q.active==1, model.User.q.homeplaceID==int(location)))
+        total = select.count()
+        if sortname not in [c.name for c in User.sqlmeta.columnList]:
+            block = sorted(select, key=lambda u: getattr(u, sortname))
+            if sortorder == 'desc':
+                block = block[::-1][start:end]
+        else:
+            if sortorder == 'desc':
+                block = select.orderBy(DESC(getattr(model.User.q, sortname)))[start:end]
+            else:
+                block = select.orderBy(sortname)[start:end]
+        return total, [[getattr(u, k) for k in user_fields if k in fields] for u in block]
+
+    @expose_as_csv
+    @validate(validators=ExportUsersCSVSchema)
+    @identity.require(not_anonymous())
+    def export_users_csv(self, location, sortname, usercols_selction, sortorder="asc"):
+        start, end = 0, -1
+        total, rows = self._export_users(location, sortname, sortorder, usercols_selction, start, end)
+        return rows
+
+    @expose(format="json")
+    @validate(validators=ExportUsersJSONSchema)
+    def export_users_json(self, location, page=1, rp=25, sortname=None, sortorder='asc', qtype=None, query=None, **fields):
+        end = page * rp
+        start = end - rp
+        total, block = self._export_users(location, sortname, sortorder, fields, start, end)
+        rows = [dict(cell=cell) for cell in block]
+        return dict(page=page, total=total, rows=rows)
+
     @expose()
     @identity.require(identity.has_permission('superuser'))
     def regenerate_all(self):
@@ -1619,9 +1660,10 @@ class Root(controllers.RootController):
     @expose()
     @identity.require(not_anonymous())
     def devlangtest(self, text=""):
+        enc = "Default Encoding: " + sys.getdefaultencoding()
         text = _(text) or _("Hubspace Dev Test")
         lang = get_hubspace_locale()
-        out = "<hr/>".join([text, lang, _(welcome_text), _(booking_confirmation_text)])
+        out = "<hr/>".join([enc, text, lang, _(welcome_text), _(booking_confirmation_text)])
         out = out.replace('\n', "<br/>")
         return out
 
@@ -1639,7 +1681,6 @@ class Root(controllers.RootController):
         # handled by TransactionCompleter filter.
         if config.get('server.testing', False):
             cherrypy.response.status = 500
-            print "Testing setup detected."
         else:
             cherrypy.response.status = 200
         e_info = sys.exc_info()
@@ -2851,6 +2892,8 @@ Excption:
     @validate(validators=ProfileSchema())
     def save_memberProfileEdit(self, id=None, tg_errors=None, **kwargs): 
         user = User.get(id)
+        if "username" in kwargs: kwargs["username"] = user.username # quick n dirty hack to prevent username
+        # modification, if we can handle corresponding ldap uid change then ^ line is not reqd
         if permission_or_owner(user.homeplace, None, 'manage_users') and 'active' not in kwargs:
             kwargs['active'] = 0
         elif not permission_or_owner(user.homeplace, None, 'manage_users'):

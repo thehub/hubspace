@@ -17,6 +17,7 @@ from turbogears import identity
 	    <li><a style="cursor:pointer;" id="host-2" class="subsection">Times</a></li>
 	    <li><a style="cursor:pointer;" id="host-3" class="subsection">Administration</a></li>
 	    <li><a style="cursor:pointer;" id="host-4" class="subsection">Resources and Tariffs</a></li>
+	    <li><a style="cursor:pointer;" id="host-5" class="subsection">Management Data</a></li>
         </ul>
      </div>
      <div class="paneContent">
@@ -32,6 +33,10 @@ from turbogears import identity
        <div id="host-invoicingContent" class="subsectionContent" style="display:none">
            ${invoicing_search()}
        </div>
+       <div id="host-managementdataContent" class="subsectionContent" style="display:none">
+        abcf
+       </div>
+
      </div>
 </c>
 </div>

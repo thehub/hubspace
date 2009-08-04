@@ -1140,6 +1140,19 @@ var search_invoices = function (evt) {
     jq('#search_results').load('/uninvoiced_users', form, search_results_listeners);
     return false;
 };
+var get_users_csv = function (evt) {
+    var form = jq('#users_export').serializeArray();
+    var params = jQuery.param(form);
+    window.open('/export_users.csv?' + params);
+};
+var show_users_grid = function (evt) {
+    var form = jq('#users_export').serializeArray();
+
+    jq('#users_grid').remove();
+    jq('#flex1').empty();
+    jq('#flex1').load('/users_grid', form);
+    return false;
+};
 var init_search_invoices = function () {
     set_inplace_cal(jq('#display_search_from_date'), jq('#search_from_date'));
 };
@@ -1151,14 +1164,14 @@ var Tabs = function () {
     var subsections = {'network': ['addMember', 'mainProfile', 'billing', 'fulltextsearch'],
                        'profile': ['mainProfile', 'billing'],
                        'space': ['booking'],
-                       'host': ['todos', 'invoicing', 'openTimes', 'admin', 'resources']};
+                       'host': ['todos', 'invoicing', 'openTimes', 'admin', 'resources', 'managementdata']};
     var subsection_defaults = {'network': 1,
                                'profile': 0,
                                'host': 0,
                                'space': 0};
     var data_expandors = {'network': {1: {}, 2: {}, 3: {}},
                           'profile': {0: {}, 1: {}},
-                          'host': {0: {}, 1: {}, 2: {}, 3: {}, 4: {}},
+                          'host': {0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5:{}},
                           'space': {0: {}}};
     var make_section_switch = false;
     var edited_subsection = 0;
@@ -1450,6 +1463,11 @@ var Tabs = function () {
             if (section_name === 'host' && subsection_name === 'invoicing') {
                jq('#invoices_search').click(search_invoices);
             }
+            if (section_name === 'host' && subsection_name === 'managementdata') {
+               jq('#users_grid').click(show_users_grid);
+               jq('#users_csv').click(get_users_csv);
+               o.addBoxExpanders();
+            }
             if (section_name === 'host' && subsection_name === 'resources') {
                var res = new Resources();
             }
@@ -1463,6 +1481,7 @@ var Tabs = function () {
     set_tab_events();
     return o;
 };
+
 
 //////////////CARD REGISTRAION////////////////////////////////////////
 var removeCard = function() {

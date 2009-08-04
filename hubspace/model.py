@@ -327,6 +327,13 @@ class User(SQLObject):
             self.reminder_counter = 0
         self._SO_set_outstanding(amount) 
 
+    def _get_tariff_name(self):
+        return hubspace.tariff.get_tariff(self.homeplace.id, self.id, datetime.now(), True).name
+
+    def _get_homeplace_name(self):
+        return self.homeplace and self.homeplace.name or ""
+
+
 listen(create_object_reference, User, RowCreatedSignal)
 listen(delete_object_reference, User, RowDestroySignal)
 
