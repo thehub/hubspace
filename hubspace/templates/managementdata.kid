@@ -19,7 +19,7 @@ user_columns = user_fields.values()
     <div class="dataBoxContent">
         <!-- <table class="detailTable data"> -->
     
-     <form id="users_export" action="jqgrid2">
+     <form id="users_export">
      <div>
          <span>Select Location</span>
          <select name="location">
