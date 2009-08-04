@@ -39,6 +39,7 @@ def host_in_rfid_location():
         }
     </style>
     <link rel="Shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/static/javascript/flexigrid/css/flexigrid/flexigrid.css" type="text/css" />
     <c py:if="not production" py:strip="True">
     <script py:for="filename in js_files" src='/static/javascript/${filename}' ></script>
     </c>
