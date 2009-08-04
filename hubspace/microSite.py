@@ -155,6 +155,10 @@ def get_blog(*args, **kwargs):
             cherrypy.response.headers['status'] = e.code
             blog_body = "Could not get blog from: " +  url + " because " + str(e.code)
             blog_head = ""
+    except ValueError:
+	blog_body = ""
+	blog_head = ""
+        return {'blog': blog_body, 'blog_head': blog_head}
 
     else:
         content_type = blog_handle.headers.type
