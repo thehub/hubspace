@@ -37,7 +37,7 @@ user_columns = user_fields.values()
           </tr>
           <tr>
           <td> Select column to sort by</td>
-          <td> <input type="radio" py:for="attr_d in user_columns" name="sortname" value="{attr_d['value']}" 
+          <td> <input type="radio" py:for="attr_d in user_columns" name="sortname" value="${attr_d['value']}" 
             py:attrs="attr_d['value'] == 'display_name' and {'checked': '1'} or {}">${attr_d["label"]}</input> </td>
           </tr>
           </table>
