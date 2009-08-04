@@ -7,10 +7,11 @@ from turbogears.i18n import format
 from datetime import time, datetime, timedelta
 from hubspace.model import Resource, RUsage, Pricing
 from hubspace.utilities.uiutils import now
+from hubspace.utilities.permissions import locations
 import hubspace.bookinglib as bookinglib
 from cgi import escape
 
-__all__ = ['Numbers', 'phone', 'ProfileSchema', 'MemberServiceSchema', 'datetimeconverter', 'datetimeconverter2', 'timeconverter', 'timeconverterAMPM', 'AddMemberSchema', 'AddNoteSchema', 'EditNoteSchema', 'BillingDetailsSchema', 'real_int', 'IntOrNone', 'dateconverter', 'EditBookingSchema', 'CreateBookingSchema',  "CreateUsageSchema", "CreateUsageByNameSchema", "EditTodoSchema", "CreateTodoSchema", 'BristolDataSchema', "AddPricingSchema", "EditLocationSchema", "FloatInRange", 'AddAction', 'DateRange', 'NoHyphen', "StartBookingSchema", "BoolInt", "valid_rfid", 'username', 'email_address', 'no_ws_ne_cp', 'no_ws']
+__all__ = ['Numbers', 'phone', 'ExportUsersJSONSchema', 'ExportUsersCSVSchema', 'ProfileSchema', 'MemberServiceSchema', 'datetimeconverter', 'datetimeconverter2', 'timeconverter', 'timeconverterAMPM', 'AddMemberSchema', 'AddNoteSchema', 'EditNoteSchema', 'BillingDetailsSchema', 'real_int', 'IntOrNone', 'dateconverter', 'EditBookingSchema', 'CreateBookingSchema',  "CreateUsageSchema", "CreateUsageByNameSchema", "EditTodoSchema", "CreateTodoSchema", 'BristolDataSchema', "AddPricingSchema", "EditLocationSchema", "FloatInRange", 'AddAction', 'DateRange', 'NoHyphen', "StartBookingSchema", "BoolInt", "valid_rfid", 'username', 'email_address', 'no_ws_ne_cp', 'no_ws']
 
 class Numbers(v.Regex):
     """Must contain only integers and spaces (e.g. phone number)
@@ -263,9 +264,6 @@ class UniqueAttribute(v.FormValidator):
         if id:
             this_object = theclass.get(id)
             this_value = getattr(this_object, self.attr)
-            if this_value != attr_value:
-                errors[self.attr] = _("Username can not be changed")
-                raise Invalid(errors[self.attr], field_dict, state, error_dict=errors)
             
         if attr_value in [getattr(obj, self.attr) for obj in theclass.select()]: #this is extemely inefficient - rewrite with a specific sql request
             if attr_value != this_value:
@@ -273,6 +271,21 @@ class UniqueAttribute(v.FormValidator):
                 raise Invalid(
                     'That username already exists', field_dict, state, error_dict=errors)
 
+
+class ManagedLocation(v.FancyValidator):
+    def _to_python(self, value, state):
+        return value == 'all' and 'all' or int(value)
+    def validate_python(self, field_dict, state):
+        _validator = v.OneOf([loc.id for loc in locations()])
+        return _validator.validate_python(field_dict, state)
+
+class ExportUsersCSVSchema(v.Schema):
+    location = ManagedLocation()
+
+class ExportUsersJSONSchema(v.Schema):
+    location = ManagedLocation()
+    page=v.Int()
+    rp=v.Int()
 
 class AliasSchema(v.Schema):
     id = real_int
