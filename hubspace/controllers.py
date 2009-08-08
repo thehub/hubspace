@@ -68,6 +68,7 @@ from glob import glob
 from decimal import Decimal
 #add for feed generation
 from turbofeeds import FeedController
+import mechanize
 
 from turbogears.database import PackageHub, commit_all, end_all
 hub = PackageHub("turbogears.visit")
@@ -1756,26 +1757,45 @@ Excption:
 %(e_str)s
 }}}
 """ % locals()
-        description = description.encode('utf-8')
 
-        # TODO twill is not thread safe so aquire a lock here and release with finally statement
-        # TODO User hubspace.config for trac baseurl and credentials
-        import twill.commands
-        baseurl = "http://trac.the-hub.net/space"
-        loginurl = "%s/login" % baseurl
-        newticketurl = "%s/newticket" % baseurl
-        twill.commands.add_auth("hub Auth", baseurl, "webreporter", "x")
+        project = "space"
+        baseurl_exposed = "https://trac.the-hub.net"
+        baseurl = "http://172.24.0.206:13000"
+        loginurl = "%s/%s/login" % (baseurl, project)
+        newticketurl = "%s/%s/newticket" % (baseurl, project)
         try:
-            twill.commands.go(loginurl)
-            twill.commands.go(newticketurl)
-            form_no = "3" # TODO remove this hard coding
-            twill.commands.fv(form_no, "field_reporter", "%(reporter)s <%(email)s>" % locals())
-            twill.commands.fv(form_no, "field_summary", summary)
-            twill.commands.fv(form_no, "field_description", description)
-            twill.commands.fv(form_no, "field_type", "defect")
-            twill.commands.fv(form_no, "field_priority", "major")
-            twill.commands.browser.submit('submit')
-            defect_url = [lnk for lnk in twill.commands.showlinks() if  lnk.text == 'View'][0].absolute_url
+            b = mechanize.Browser()
+            b.open(loginurl)
+            forms = list(b.forms())
+            for form in forms:
+                if set(["user", "password"]).issubset(set([c.name for c in form.controls])):
+                    nr = forms.index(form)
+                    b.select_form(nr=nr)
+                    break
+            # else: no form ?
+            b['user'] = "webreporter"
+            b['password'] = "x"
+            b.submit()
+
+            b.open(newticketurl)
+            forms = list(b.forms())
+            for form in forms:
+                if set(["field_reporter", "field_summary"]).issubset(set([c.name for c in form.controls])):
+                    nr = forms.index(form)
+                    b.select_form(nr=nr)
+                    break
+            # else: no form ?
+            b["field_reporter"] = "%(reporter)s <%(email)s>" % locals()
+            b["field_summary"] = summary
+            b["field_description"] = description
+            b["field_type"] = ["defect"]
+            b["field_priority"] = ["major"]
+            #if component:
+            #    b["field_component"] = component
+            b.submit('submit')
+            links = b.links()
+            defect_url = [lnk for lnk in b.links() if lnk.text == 'View'][0].absolute_url
+            defect_url = defect_url.replace(baseurl, baseurl_exposed)
             return "Thank you, %s, you can further followup the defect at <a href=%s>Hubspace Trac</a>" % (reporter, defect_url)
         except:
             to = "world.tech.space@the-hub.net"
@@ -1784,7 +1804,7 @@ Excption:
             d = dict(url = newticketurl, e_id = e_id, trac_err = trac_err, reporter=reporter, summary=summary, description=description)
             hubspace.alerts.sendTextEmail(to, "trac_submission_failed", d)
         return "Thank you, %s!" % reporter
-    
+
     @expose(allow_json=True)
     @validate(validators={'start':dateconverter, 'end':dateconverter})
     def saveUsageReport(self, start, end, grpby, r_name, r_type, user_id, rtype, tg_errors=None):
