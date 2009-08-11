@@ -186,9 +186,9 @@ def get_blog(*args, **kwargs):
         blog_head = blog.head.renderContents()
         blog_body = blog.body.renderContents()
 
-    for header in forwarded_response_headers:
-        if blog_handle.headers.get(header, 0):
-            cherrypy.response.headers[header] = blog_handle.headers[header]
+        for header in forwarded_response_headers:
+            if blog_handle.headers.get(header, 0):
+                cherrypy.response.headers[header] = blog_handle.headers[header]
     
 
     return {'blog': blog_body, 'blog_head': blog_head}
