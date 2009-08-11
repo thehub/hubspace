@@ -184,6 +184,8 @@ def get_blog(*args, **kwargs):
             link['src'] = link['src'].replace(our_url, blog_url)
 
         blog_head = blog.head.renderContents()
+	for header in blog.body.findAll('div', attrs={'id':'header'}):
+	     header.extract()
         blog_body = blog.body.renderContents()
 
         for header in forwarded_response_headers:
