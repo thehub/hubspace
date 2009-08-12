@@ -1,9 +1,9 @@
 import sys
-import hubspace.model as model
 import turbogears
 import ldap
-import hubspace.sync as sync
 import hubspace.sync.export2ldap as export2ldap
+import hubspace.model as model
+import hubspace.sync as sync
 
 def ldapconnect():
     uri = "ldap://ldap.the-hub.net"
@@ -17,6 +17,7 @@ def ldapconnect():
 
     return conn
 
+sync.core.signon()
 conn = ldapconnect()
 
 class SyncObject(object):
@@ -60,9 +61,10 @@ class User(SyncObject):
 
 def exportMissingUsers2LDAP():
     sync.core.tls.syncer_trs = [] # <- hacky should go
-    if sync.core.signon():
-        return User().exportMissingObjs2LDAP()
-    else:
-        sys.exit("syncer signon failed")
+    return User().exportMissingObjs2LDAP()
+    #if sync.core.signon():
+    #    return User().exportMissingObjs2LDAP()
+    #else:
+    #    sys.exit("syncer signon failed")
 
 

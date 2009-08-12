@@ -5,11 +5,8 @@ import sys, datetime, time
 from sqlobject import AND, OR, DESC
 import turbogears
 turbogears.update_config(configfile="dev.cfg", modulename="hubspace.config")
-from hubspace import model
-import syncer.helpers.ldap
-import syncer.client
-import syncer.config
 import hubspace.sync.core as core
+from hubspace import model
 
 syncerclient = core.syncerclient # = syncerclient
 

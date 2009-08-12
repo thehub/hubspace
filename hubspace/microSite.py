@@ -184,11 +184,13 @@ def get_blog(*args, **kwargs):
             link['src'] = link['src'].replace(our_url, blog_url)
 
         blog_head = blog.head.renderContents()
+	for header in blog.body.findAll('div', attrs={'id':'header'}):
+	     header.extract()
         blog_body = blog.body.renderContents()
 
-    for header in forwarded_response_headers:
-        if blog_handle.headers.get(header, 0):
-            cherrypy.response.headers[header] = blog_handle.headers[header]
+        for header in forwarded_response_headers:
+            if blog_handle.headers.get(header, 0):
+                cherrypy.response.headers[header] = blog_handle.headers[header]
     
 
     return {'blog': blog_body, 'blog_head': blog_head}

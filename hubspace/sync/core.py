@@ -10,7 +10,8 @@ import sendmail
 
 try:
     ldap_sync_enabled = turbogears.config.config.configs['syncer']['sync']
-except:
+except Exception, err:
+    print err
     ldap_sync_enabled = False
 
 tls = threading.local()

@@ -17,19 +17,21 @@ from hubspace.file_store import get_filepath
     <?python
     title = Page.select(AND(Page.q.path_name=='index.html', Page.q.locationID==location.id))[0].title
     ?>
-    <title>${title and title or "The Hub King's Cross"} ${page.title and page.title != title and '| ' + page.title.title() or ""}</title>
     <div py:replace="item[:]"/>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
     <meta content="Places for meeting, working, learning, innovating and connecting dedicated to inspiring and supporting enterprising and imaginative initiatives for a radically better world. " name="description" />
-    <link rel="stylesheet" href="/static/css/micro/blueprint/screen.css" type="text/css" media="screen, projection"/>
-    <link rel="stylesheet" href="/static/css/micro/blueprint/print.css" type="text/css" media="print"/>
-    <!--[if IE]>
-    <link rel="stylesheet" href="/static/css/micro/blueprint/ie.css" type="text/css" media="screen, projection"/>
-    <![endif]-->
-    <link rel="stylesheet" href="/static/css/micro/layout.css" type="text/css" media="screen, projection"/>
-    <link rel="stylesheet" href="/static/css/micro/typography.css" type="text/css" media="screen, projection"/>
-    <link rel="stylesheet" href="/static/css/micro/colours.css" type="text/css" media="screen, projection"/>
-    <link rel="stylesheet" href="/static/css/micro/content.css" type="text/css" media="screen, projection"/>
+    <c py:if="not page.page_type=='blog'" >
+        <title>${title and title or "The Hub King's Cross"} ${page.title and page.title != title and '| ' + page.title.title() or ""}</title>
+        <link rel="stylesheet" href="/static/css/micro/blueprint/screen.css" type="text/css" media="screen, projection"/>
+    	<link rel="stylesheet" href="/static/css/micro/blueprint/print.css" type="text/css" media="print"/>
+   	 <!--[if IE]>
+    	<link rel="stylesheet" href="/static/css/micro/blueprint/ie.css" type="text/css" media="screen, projection"/>
+    	<![endif]-->
+        <link rel="stylesheet" href="/static/css/micro/layout.css" type="text/css" media="screen, projection"/>
+        <link rel="stylesheet" href="/static/css/micro/typography.css" type="text/css" media="screen, projection"/>
+        <link rel="stylesheet" href="/static/css/micro/colours.css" type="text/css" media="screen, projection"/>
+        <link rel="stylesheet" href="/static/css/micro/content.css" type="text/css" media="screen, projection"/>
+    </c>
     <link rel="stylesheet" href="/static/css/micro/superfish.css" type="text/css" media="screen"/>
     <script src="/static/javascript/jquery.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="/static/javascript/jq.noconflict.js" type="text/javascript" charset="utf-8"></script>
