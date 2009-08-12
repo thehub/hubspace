@@ -15,8 +15,12 @@ for k,v in (
     ("homeplace_name", dict (label = "Location", value = "homeplace_name", checked = "checked")),
     ("tariff_name", dict (label = "Tariff", value = "tariff_name", checked = "checked")),
     ("email_address", dict (label = "Email", value = "email_address", checked = "checked")),
-    ("work", dict (label = "Work Phone", value = "work")),
+    ("organisation", dict (label = "Organisation", value = "organisation")),
+    ("address", dict (label = "Address", value = "address")),
     ("mobile", dict (label = "Mobile", value = "mobile")),
+    ("work", dict (label = "Work Phone", value = "work")),
+    ("fax", dict (label = "Fax", value = "fax")),
+    ("skype_id", dict (label = "Skype ID", value = "skype_id")),
     ("website", dict (label = "Website", value = "website")),
     ):
     fields[k] = v

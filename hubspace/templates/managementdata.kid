@@ -45,8 +45,8 @@ user_columns = user_fields.values()
 
       <div>
           <br />
-          <input type="submit" value="View" id="users_grid" />
-          <input type="submit" value="Download spreadsheet" id="users_csv" />
+          <a href="#" id="users_grid" class="buttonlikelink">View</a>
+          <a href="#" class="buttonlikelink" id="users_csv" >Download spreadsheet</a>
       </div>
       </form>
 
