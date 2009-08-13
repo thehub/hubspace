@@ -45,8 +45,8 @@ user_columns = user_fields.values()
 
       <div>
           <br />
-          <a href="#" id="users_grid" class="buttonlikelink">View</a>
-          <a href="#" class="buttonlikelink" id="users_csv" >Download spreadsheet</a>
+          <a href="#" id="users_grid" class="small yellow nicebutton">View</a>
+          <a href="#" class="small yellow nicebutton" id="users_csv" >Download spreadsheet</a>
       </div>
       </form>
 

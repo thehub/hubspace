@@ -1331,6 +1331,42 @@ ul.resource_group li.resource_item{
 	margin:1;
 	border: 1px solid #3F3F3F;
 }
+.nicebutton, .nicebutton:visited {
+    background: #222 ; 
+    display: inline-block; 
+    padding: 5px 10px 6px; 
+    color: #fff; 
+    text-decoration: none;
+    -moz-border-radius: 5px; 
+    -webkit-border-radius: 5px;
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+    position: relative;
+    cursor: pointer;
+}
+
+    .nicebutton:hover                                                      { background-color: #111; color: #fff; }
+    .nicebutton:active                                                     { top: 1px; }
+    .small.nicebutton, .small.nicebutton:visited                      { font-size: 11px; padding: ; }
+    .nicebutton, .nicebutton:visited,
+    .medium.nicebutton, .medium.nicebutton:visited            { font-size: 13px; font-weight: bold; line-height: 1; text-shadow: 0 -1px 1px rgba(0,0,0,0.25); }
+    .large.nicebutton, .large.nicebutton:visited                      { font-size: 14px; padding: 8px 14px 9px; }
+    
+    .green.nicebutton, .green.nicebutton:visited              { background-color: #91bd09; }
+    .green.nicebutton:hover                                                { background-color: #749a02; }
+    .blue.nicebutton, .blue.nicebutton:visited                { background-color: #2daebf; }
+    .blue.nicebutton:hover                                                 { background-color: #007d9a; }
+    .red.nicebutton, .red.nicebutton:visited                  { background-color: #e33100; }
+    .red.nicebutton:hover                                                  { background-color: #872300; }
+    .magenta.nicebutton, .magenta.nicebutton:visited          { background-color: #a9014b; }
+    .magenta.nicebutton:hover                                                      { background-color: #630030; }
+    .orange.nicebutton, .orange.nicebutton:visited            { background-color: #ff5c00; }
+    .orange.nicebutton:hover                                                       { background-color: #d45500; }
+    .yellow.nicebutton, .yellow.nicebutton:visited            { background-color: #ffb515; }
+    .yellow.nicebutton:hover                                                       { background-color: #fc9200; }
+
 /*This must go last*/
 #spaceContent table.bookings td.resName {
     width:130px;
