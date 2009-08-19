@@ -1717,7 +1717,7 @@ URL: %(e_path)s
 
 user_desc: %(u_desc)s
 
-excption: 
+exception: 
 {{{
 %(e_str)s
 }}}
@@ -1752,17 +1752,16 @@ URL: %(e_path)s
 
 User Description:
 
-Excption: 
+Exception: 
 {{{
 %(e_str)s
 }}}
 """ % locals()
 
-        project = "space"
-        baseurl_exposed = "https://trac.the-hub.net"
-        baseurl = "http://172.24.0.206:13000"
-        loginurl = "%s/%s/login" % (baseurl, project)
-        newticketurl = "%s/%s/newticket" % (baseurl, project)
+        baseurl = turbogears.config.config.configs['trac']['baseurl']
+
+        loginurl = baseurl + turbogears.config.config.configs['trac']['loginpath']
+        newticketurl = baseurl + turbogears.config.config.configs['trac']['newticketpath']
         try:
             b = mechanize.Browser()
             b.open(loginurl)
@@ -1773,8 +1772,8 @@ Excption:
                     b.select_form(nr=nr)
                     break
             # else: no form ?
-            b['user'] = "webreporter"
-            b['password'] = "x"
+            b['user'] = turbogears.config.config.configs['trac']['user']
+            b['password'] = turbogears.config.config.configs['trac']['password']
             b.submit()
 
             b.open(newticketurl)
@@ -1795,9 +1794,9 @@ Excption:
             b.submit('submit')
             links = b.links()
             defect_url = [lnk for lnk in b.links() if lnk.text == 'View'][0].absolute_url
-            defect_url = defect_url.replace(baseurl, baseurl_exposed)
             return "Thank you, %s, you can further followup the defect at <a href=%s>Hubspace Trac</a>" % (reporter, defect_url)
-        except:
+        except Exception, err:
+            applogger.exception("Trac submission error:")
             to = "world.tech.space@the-hub.net"
             tb = sys.exc_info()[2]
             trac_err = traceback.format_exc(tb)
