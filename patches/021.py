@@ -7,7 +7,15 @@ from sqlobject import AND, IN, OR, NOT
 class Patch(patches.base.Patch):
     description = "Changes to the architecture of MicroSites to support the concepts of Pages, list_items, and rendered objects"
     def apply(self):
+        # This is copied from patch #25
         access_tuple = patches.utils.parseDBAccessDirective()
+        con = patches.utils.getPostgreSQLConnection(*access_tuple)
+        cur = con.cursor()
+        cur.execute("ALTER TABLE location ADD COLUMN is_region int DEFAULT 0")
+        cur.execute("ALTER TABLE location add column in_region_id INTEGER CONSTRAINT in_region_id_exists REFERENCES location(id)")
+        cur.execute("""alter table location add column city VARCHAR(40);""")
+        con.commit()
+        # end of patch # 25
         dburi = patches.utils.parseDBURI('dev.cfg').split('=')[1][1:-1]
         database.set_db_uri(dburi)
         database.run_with_transaction(setup_microsite_spaces)
@@ -73,3 +81,15 @@ def setup_microsite_spaces():
 def migrate():
     from hubspace.microSite import migrate_data 
     migrate_data()
+
+def add_cities(): 
+    """Add cities to Locations
+    """
+    from hubspace.model import Location
+    for loc in Location.select():
+        if loc.name not in ['Southbank', 'Kings Cross', 'Islington']:
+            loc.city = loc.name
+        else:
+            loc.city = "London"
+
+ 

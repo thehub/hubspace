@@ -7,6 +7,7 @@ from sqlobject import AND, IN, OR, NOT
 class Patch(patches.base.Patch):
     description = "Add city field to Location - this appears in the navigation. Once the city field is created add the location.name to location.city apart from London Hubs which will be set to 'London'"
     def apply(self):
+        return # see # 21
         access_tuple = patches.utils.parseDBAccessDirective()
         con = patches.utils.getPostgreSQLConnection(*access_tuple)
         cur = con.cursor()
