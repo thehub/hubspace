@@ -1,3 +1,4 @@
+import os
 from os.path import *
 from commands import getoutput
 
@@ -18,6 +19,9 @@ def main():
     else:
         configfile = "prod.cfg"
 
+    lucene_lock = '../index/en/write.lock'
+    if exists(lucene_lock):
+        os.unlink()
     # Patch before you start importing etc.
     import patches
     import patches.utils
@@ -32,10 +36,7 @@ def main():
     import turbogears
     import cherrypy
 
-
     cherrypy.lowercase_api = True
-
-
 
     turbogears.update_config(configfile, modulename="hubspace.config")
 
