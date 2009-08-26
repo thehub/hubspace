@@ -92,10 +92,8 @@ if ldap_sync_enabled:
     class TransactionCompleter(BaseFilter):
         def on_start_resource(self, *args, **kw):
             tls.syncer_trs = []
-            print "syncer_trs created"
         def on_end_request(self, *args, **kw):
             if hasattr(tls, 'syncer_trs') and tls.syncer_trs:
-                print "sending", tls.syncer_trs
                 syncerclient.completeTransactions(tuple(tls.syncer_trs))
 
     _cp_filters.append(TransactionCompleter())
