@@ -1,0 +1,24 @@
+to = "${MEMBER_EMAIL}"
+sender = "${HOSTS_EMAIL}"
+cc = "${HOSTS_EMAIL}"
+subject = "The Hub | welcome"
+body = """
+Dear ${MEMBER_NAME},
+
+Welcome to The Hub.
+
+You can now access information about other enterprises and innovators at the Hub.
+
+Just log on at ${LOCATION_URL} .
+
+Your username is ${USERNAME} and your password is ${PASSWORD}. Please login and change your password as soon as possible. 
+
+We invite you to add a short profile of yourself, and search other member profiles. You can also  book meeting spaces and resources as well as view the details of invoices received.
+
+Please don't hesitate to contact The Hub's hosting team at ${HOSTS_EMAIL} or ${LOCATION_PHONE}.
+
+Thank you for being part of The Hub.
+
+The Hosting Team
+"""
+

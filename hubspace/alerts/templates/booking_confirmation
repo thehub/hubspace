@@ -1,0 +1,22 @@
+to = "${MEMBER_EMAIL}"
+sender = "${BOOKING_CONTACT}"
+cc = "${BOOKING_CONTACT}"
+subject = "The Hub | booking confirmation"
+body = """
+Dear ${MEMBER_FIRST_NAME},
+
+Thank you for your booking at The Hub ${LOCATION}.
+
+You have booked ${RESOURCE} from ${BOOKING_START} to ${BOOKING_END} on ${BOOKING_DATE}. The expected cost of this usage is ${CURRENCY} ${COST}.
+% if ALSO_BOOKED:
+Also booked: ${ALSO_BOOKED}
+% endif
+
+In the event of a cancellation, the individual or organization booking the space will be charged 50% of the totaL cost, unless it is cancelled more than two weeks prior to the event.
+
+If you have any questions or further requirements please contact The Hub's hosting team at ${HOSTS_EMAIL} or call us on ${LOCATION_PHONE}.
+
+We look forward to seeing you.
+
+The ${LOCATION} Hosting Team
+"""

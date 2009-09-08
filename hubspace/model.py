@@ -1039,8 +1039,16 @@ class Report(SQLObject):
             return {}
         return val
 
+class MessageCustomization(SQLObject):
+    message = UnicodeCol()
+    location = ForeignKey("Location")
+    lang = StringCol(default=None)
+    text = UnicodeCol()
 
 class ResourceQueue(SQLObject):
     foruser = ForeignKey("User")
     rusage = ForeignKey("RUsage")
 
+# Create missing tables
+for sobj in [MessageCustomization]:
+    sobj.createTable(ifNotExists=True)

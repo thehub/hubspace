@@ -1325,8 +1325,8 @@ ul.resource_group li.resource_item{
     left: 200px;
 } 
 .buttonlikelink {
-	font-size:110%;
-	padding:3px;
+	font-size:85%;
+	padding:1px;
 	font-family:helvetica, arial, verdana, sans-serif;
 	margin:1;
 	border: 1px solid #3F3F3F;
@@ -1366,7 +1366,18 @@ ul.resource_group li.resource_item{
     .orange.nicebutton:hover                                                       { background-color: #d45500; }
     .yellow.nicebutton, .yellow.nicebutton:visited            { background-color: #ffb515; }
     .yellow.nicebutton:hover                                                       { background-color: #fc9200; }
+    .gray.nicebutton, .gray.nicebutton:visited            { background-color: #3F3F3F;}
+    .gray.nicebutton:hover                                                       { background-color: #3F3F3F;}
 
+.text {
+    font-size: 90%;
+    text-align:center;
+}
+
+.definition {
+    font-size: 90%;
+    font-weight: bold;
+}
 /*This must go last*/
 #spaceContent table.bookings td.resName {
     width:130px;
