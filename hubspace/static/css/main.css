@@ -1331,13 +1331,14 @@ ul.resource_group li.resource_item{
 	margin:1;
 	border: 1px solid #3F3F3F;
 }
+
 .nicebutton, .nicebutton:visited {
-    background: #222 ; 
-    display: inline-block; 
-    padding: 5px 10px 6px; 
-    color: #fff; 
+    background: #222 ;
+    display: inline-block;
+    padding: 5px 10px 6px;
+    color: #fff;
     text-decoration: none;
-    -moz-border-radius: 5px; 
+    -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
@@ -1353,7 +1354,7 @@ ul.resource_group li.resource_item{
     .nicebutton, .nicebutton:visited,
     .medium.nicebutton, .medium.nicebutton:visited            { font-size: 13px; font-weight: bold; line-height: 1; text-shadow: 0 -1px 1px rgba(0,0,0,0.25); }
     .large.nicebutton, .large.nicebutton:visited                      { font-size: 14px; padding: 8px 14px 9px; }
-    
+
     .green.nicebutton, .green.nicebutton:visited              { background-color: #91bd09; }
     .green.nicebutton:hover                                                { background-color: #749a02; }
     .blue.nicebutton, .blue.nicebutton:visited                { background-color: #2daebf; }
