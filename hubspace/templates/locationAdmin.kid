@@ -130,6 +130,15 @@ def makeOptDict(r, typ):
 
 
   	<div class="dataBox">
+	    <div class="dataBoxHeader"> <a class="title" id="link_adminStuff0"><h2>Message Customization</h2></a> </div>
+	    <div class="dataBoxContent">
+            <iframe src ="/static/fe/messagecust.html" width="100%" height="585" scrolling="auto" frameborder="0" style="detailTable data">
+              <p>Your browser does not support iframes.</p>
+            </iframe>
+            </div>
+        </div>
+
+  	<div class="dataBox">
 		<div class="dataBoxHeader"> <a class="title" id="link_adminStuff1"><h2>Usage Reports</h2></a> </div>
 	    <div class="dataBoxContent">
                         <h1>Quick reports </h1>

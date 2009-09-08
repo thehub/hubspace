@@ -1,4 +1,5 @@
 sender = "noreply@the-hub.net"
+to = "world.tech.space@the-hub.net"
 subject = "HubSpace Application Alert: Trac Submission Failed"
 body = """\
 Dear Developer,
@@ -7,17 +8,17 @@ The hubspace application encountered following error while submitting new ticket
 
 Trac Error
 ==========
-Trac URL  :  $url
-Exception : $trac_err
+Trac URL  :  ${tracurl}
+Exception : ${TRACEBACK}
 
 
 Hubspace Error (failed to report to trac)
 =========================================
-Error ID:  $e_id
+Error ID:  ${e_id}
 
-Ticket reporter    : $reporter
-Ticket summary     : $summary
-Ticket description : $description
+Ticket reporter    : ${USERNAME}
+Ticket summary     : ${summary}
+Ticket description : ${description}
    
 
 This is an automated alert. Do not reply.
