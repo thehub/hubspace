@@ -92,7 +92,7 @@ def notifyTentativeBookingRelease(booking):
         request.destroySelf()
     to = booking.resource.place.hosts_email
     d.update(to = to)
-    hubspace.alerts.sendTextEmail(to, "t_booking_expired_hosts", d)
+    hubspace.alerts.sendTextEmail("t_booking_expired_hosts", d)
     applogger.debug("bookinglib: release notification sent to %(to)s. %(b_id)s (%(resource_name)s: %(start)s-%(end)s)" % d)
 
 def onBookingConfirmation(booking):
