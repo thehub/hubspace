@@ -9,9 +9,10 @@ outdir = os.path.abspath("hubspace/static/fe")
 file_types_to_minify = ['js', 'css', 'html']
 build_cmd = "%(jsbuilder)s -d -m -O --print-statement -o %(outdir)s %%(src)s" % locals()
 
-if not os.path.isdir(outdir):
-    os.makedirs(outdir)
-
+for path in (srcdir, outdir):
+    if not os.path.isdir(path):
+        os.makedirs(path)
+    
 def compilePyjSources():
     dir0 = os.getcwd()
     

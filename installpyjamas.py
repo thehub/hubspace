@@ -10,18 +10,17 @@ dir0 = os.getcwd()
 bindir = os.path.join(dir0, "bin")
 pyjamasdst = "../eggs"
 
-def install():
-    os.chdir(pyjamasdst)
-    
-    commands = [
-        "wget %s" % url,
-        "tar zxvf %s" % archive,
-        "cd %(pyjversion)s && %(thispython)s bootstrap.py" % locals(),
-        "cp -v %(pyjversion)s/bin/* %(bindir)s" % locals()
-        ]
-    for cmd in commands:
-        print cmd
-        if os.system(cmd) != 0:
-            sys.exit("%(cmd)s command failed" % locals())
-    
-    os.chdir(dir0)
+os.chdir(pyjamasdst)
+
+commands = [
+    "wget %s" % url,
+    "tar zxvf %s" % archive,
+    "cd %(pyjversion)s && %(thispython)s bootstrap.py" % locals(),
+    "cp -v %(pyjversion)s/bin/* %(bindir)s" % locals()
+    ]
+for cmd in commands:
+    print cmd
+    if os.system(cmd) != 0:
+        sys.exit("%(cmd)s command failed" % locals())
+
+os.chdir(dir0)
