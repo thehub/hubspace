@@ -1,0 +1,2160 @@
+/* red        : 9D0020  */ /* yellow     : F90     */
+	/* grey       : B0A696  */ /* dark grey  : 3F3F3F */
+body {
+	margin: 0 10px;
+	font-family: verdana, helvetica, arial, sans-serif;
+	font-size: 76%;
+}
+
+h1 {
+	font-family: helvetica, arial, verdana, sans-serif;
+	color: #3F3F3F;
+	margin: 10px 0;
+	font-size: 170%;
+}
+
+a{
+	color: #B32531;
+	text-decoration:none;
+}
+
+a:link {text-decoration:none;}
+a:visited {text-decoration:none;}
+a:hover {text-decoration:underline;}
+a:active {text-decoration:underline;}
+
+#content {
+	width: 850px;
+	position: relative;
+	margin:0 auto;
+}
+
+#header {
+	background: url(/static/images/blank.jpg) no-repeat;
+	padding: 87px 0 0 0;
+}
+
+#nav {
+	margin: 0 0 0 96px;
+	padding: 0;
+	height: 26px;
+	list-style: none;
+	display: block;
+	overflow: hidden;
+}
+#throbtext {
+	position:relative;
+        bottom:5px;
+        color: #808080;
+}
+#throbber {
+        position:relative;
+        height:26px;
+        display:none;
+}
+
+.imgwrap{
+        position:relative;
+}
+.replace_image {
+        background-color: #3F3F3F;
+	color: #FFF;
+        position:relative;
+        font-size: 90%;
+        cursor: pointer;
+        text-align: center;
+        opacity: 0.4;
+        -moz-opacity: 0.5;
+        filter: alpha(opacity=40);
+}
+#nav li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: inline;
+}
+
+#nav a {
+	width: 95px;
+	margin: 0 1px 0 0;
+	float: left;
+	padding: 25px 0 0 0;
+	overflow: hidden;
+	height: 0px;
+	background-position: 0 0;
+	border-bottom: 1px solid #FFF;
+}
+
+#nav li.selected a {
+	padding: 26px 0 0 0;
+	border-bottom: none;
+}
+#nav li.deselected a {
+	#opacity: 0.8;
+}
+#networkBut a {
+	background: url(/static/images/button_network.gif)
+}
+#profileBut a {
+	background: url(/static/images/button_profile.gif)
+}
+#spaceBut a {
+	background: url(/static/images/button_space.gif)
+}
+#hostBut a {
+	background: url(/static/images/button_hosting.gif)
+}
+#nav #microSiteLink a {
+        height: 30px;
+        width: auto;
+	padding: 8px 0 0 5px;
+        font-size: 10px;
+}
+.arrowButton{
+	display:inline;
+}
+.arrowButton a{
+	width:14px;
+	height:14px;
+	display:block;
+	background-image:url(/static/images/arrow_button_in.png);
+}
+
+#members {
+	padding: 1px 3px 0 3px;
+	width: 185px;
+	background: #9D0020 url(/static/images/radius_top_left.png) no-repeat;
+	float: left;
+}
+
+#members input {
+	width: 177px;
+	-moz-border-radius: 15px;
+}
+#members input.radio_button {
+	width: auto;
+}
+
+#members a.expand {
+	position: relative;
+	top: 3px;
+}
+
+#members ul {
+	list-style-type: none;
+	margin:0;
+	padding: 0;
+	overflow: hidden;
+}
+
+#members ul li {
+	background: #EEE url(/static/images/arrow_right.png) no-repeat 172px 3px;
+	padding: 2px;
+	clear:both;
+}
+
+#members ul li.inactive {
+        background-color: #ffc46d;
+}
+#members ul li.host_managed {
+        background-color: #FF9900;
+}
+#members ul li a {
+	color: #333;
+	text-decoration: none;
+}
+
+#members ul li a.box {
+	display:inline;
+	margin-right:5px;
+}
+
+#members ul li:hover {
+	background-color: #CCC;
+	padding: 2px;
+        cursor: pointer;
+}
+
+#members .scrollArrow {
+	display: block;
+	height: 15px;
+	margin:2px 0;
+}
+/*#members #color_key {
+        background:url(/static/images/color_key.png) no-repeat;
+        height: 185px;
+}
+#members #member_color_key {
+        background:url(/static/images/color_key2.png) no-repeat;
+        height: 65px;
+}*/
+#members .up {
+	background:url(/static/images/scroll_up_mute.gif);
+}
+
+#members .down {
+	background:url(/static/images/scroll_down_mute.gif);
+}
+
+#members #up {
+	background:url(/static/images/scroll_up.gif);
+}
+
+#members #down {
+	background:url(/static/images/scroll_down.gif);
+}
+
+#members #searchExtra{
+	//display:none;
+}
+#members #searchExtra select{
+	width:180px;
+}
+#member_fulltext_search {
+        display:none;
+}
+#memberDetails {
+	background-color: #EEE;
+	margin: 2px 0;
+	padding: 8px 4px;
+        display: none;
+	font-size: 90%;
+	position: relative;
+}
+
+#memberDetails div {
+	margin-bottom: 3px;
+}
+
+#memberDetails .name {
+	font-weight: bold;
+}
+
+#memberDetails .closeDetails {
+	font-weight: bold;
+	color: #666;
+	text-decoration: none;
+	font-size: 150%;
+	position: absolute;
+	right: 5px;
+	top: 3px;
+}
+
+#membersContent {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	height: auto;
+	width: 185px;
+}
+
+.memberProfileEdit {
+	position: absolute;
+	top: 151px;
+	right: 5px;
+	padding: 0;
+	margin: 0;
+	color: #3F3F3F;
+	text-decoration:none;
+        cursor:pointer;
+}
+
+#pageLogin {
+	position: absolute;
+	top: 95px;
+	right: 0;
+}
+
+#memberList {
+	overflow: hidden;
+	position: relative;
+	top: 0px;
+	left: 0px;
+}
+
+#contentPane {
+	margin-left: 191px;
+}
+
+#contentPane .subBar {
+	background: url(/static/images/radius_right.png) top right no-repeat;
+	display: block;
+	height: 26px;
+	position: relative;
+}
+
+#contentPane .subBar ul {
+	margin: 5px 10px 0 0;
+	padding: 0;
+	list-style-type: none;
+	float: right;
+	font-size: 100%;
+	font-weight: normal;
+}
+
+#contentPane .subBar ul li {
+	display: inline;
+	margin: 0 10px 0 0;
+}
+
+#contentPane .subBar ul li a {
+	color: #BBB;
+	text-decoration: none;
+}
+
+#contentPane #hostContent .subBar ul li a {
+	color: #333;
+}
+
+#contentPane #hostContent .subBar ul li.selected a {
+	color: #FFF;
+}
+
+#contentPane .subBar ul li.selected a{
+	color: #FFF;
+}
+
+#contentPane .paneContent {
+	margin: 10px 0 10px 10px;
+}
+
+#contentPane table.memberProfile {
+	width: 100%;
+	font-size:90%;
+}
+#contentPane table.locationProfile {
+	width: 100%;
+}
+
+#contentPane table.memberProfile td {
+	vertical-align: top;
+	padding: 0 0 0 5px;
+}
+
+#contentPane table.memberProfile td.photo{
+	vertical-align: bottom;
+	background-color: #3F3F3F;
+	padding: 0;
+	width: 100px;
+}
+
+#contentPane table.memberProfile td.photo p {
+	color: #FFF;
+	font-size: 140%;
+	margin: 3px;
+	font-family: helvetica, arial, verdana, sans-serif;
+	font-weight: bold;
+}
+
+#contentPane table.memberProfile td.photo img {
+	border-top: 1px solid #FFF;
+}
+
+#contentPane table.memberProfile td.photo a.modify {
+	font-size: 70%;
+	color: #AAA;
+	text-decoration: none;
+	margin: 5px 3px;
+}
+
+
+#contentPane table.memberProfile a.modify {
+	color: #3F3F3F;
+	text-decoration: none;
+	margin: 0;
+	float: right;
+	font-size: 110%;
+} 
+#contentPane table.detailTable {
+	border: 1px solid #BBB;
+	border-right: none;
+	width: 100%;
+	border-collapse:collapse;
+}
+#contentPane table.detailTable #add_pricing_row{
+        border-top:1px solid #BBB;
+}
+#contentPane table.detailTable #add_pricing{
+        margin-left:45%;
+}
+#contentPane table.detailTable #add_pricing_divider{
+        position:relative;
+}
+#contentPane table.detailTable #submit_add_pricing{
+        position: absolute;
+        top:0px;
+        right:5%;
+        display:inline;
+}
+#contentPane table.detailTable input.text {
+	width: 300px;
+	font-size:100%;
+}
+#contentPane table.detailTable tr.header {
+	font-weight: bold;
+	background-color: #CCC;
+}
+#contentPane table.copTable {
+	width: 100%;
+}
+#contentPane ul.copList {
+	list-style-position: inside;
+	padding: 4px 8px;
+	list-style-type: square;
+}
+#contentPane ul.copList li{
+	margin:4px 0;
+}
+#contentPane table td.submit {
+	text-align: right;
+}
+#contentPane table.copTable td {
+	padding: 2px 8px;
+}
+
+#contentPane table.servicesTable td {
+	vertical-align: top;
+	padding: 2px 8px;
+}
+
+#contentPane table.servicesTable {
+	width: 100%;
+}
+
+#contentPane table.servicesTable td.line {
+	width: 220px;
+}
+
+#contentPane table.servicesTable input.text {
+	width: 300px;
+}
+
+#contentPane table.addRusageTable td {
+	vertical-align: top;
+	padding: 2px 8px;
+}
+
+#contentPane table.addRusageTable {
+	width: 100%;
+}
+
+#contentPane table.addRusageTable td.line {
+	width: 220px;
+}
+
+#contentPane table.addRusageTable input.text {
+	width: 300px;
+}
+
+#contentPane table textarea {
+	width: 300px;
+	height: 80px;
+	font-family: helvetica, arial, verdana, sans-serif;
+	font-size:100%;
+}
+
+.odd {
+	background-color: #EEE;
+}
+
+.even {
+	background-color: #EEE;
+}
+
+#contentPane table.detailTable td {
+	border-right: 1px solid #BBB;
+	padding: 3px 4px;
+	vertical-align: top;
+}
+
+#contentPane table.detailTable td.line {
+	width: 130px;
+}
+
+#contentPane table.detailTable td.wide {
+	width:260px;
+}
+#contentPane table.detailTable tr.subHead td {
+	font-weight:bold;
+	background-color:#CCC;
+}
+
+table.tariffs {
+	margin: 10px 0;
+}
+
+.pane{
+	display: none;
+}
+.pane_selected{
+	display: block;
+}
+#networkContent {
+        overflow:visible; 
+}
+
+#profileContent {
+        overflow:visible; 
+}
+
+#networkContent .subBar {
+	background-color: #9D0020;
+}
+
+#profileContent .subBar {
+	background-color: #9D0020;
+}
+
+#spaceContent .subBar {
+	background-color: #9D0020;
+}
+
+#hostContent .subBar {
+	background-color: #F90;
+}
+
+#hostContent .subBar ul li a{
+	color: #666;
+}
+
+#profileContent,#spaceContent,#hostContent {
+	margin-left: 1px;
+}
+
+#spaceContent table.bookings {
+	margin: 10px 0;
+	font-size: 85%;
+	table-layout:fixed;
+	width:100%;
+	border-collapse:collapse;
+}
+#spaceContent table.bookings tr.odd td.resName {
+	background-color: #EEE;
+}
+#desc_div {
+        position:absolute;     
+	background-color: #EEE;
+        width: 121px;
+	margin: 2px 0;
+	padding: 14px 10px;
+	font-size: 80%;
+        border: 1px solid #000000;
+}
+#desc_div .close_desc_div {
+	font-weight: bold;
+	color: #666;
+	text-decoration: none;
+	font-size: 150%;
+	position: absolute;
+	right: 3px;
+	top: 1px;
+        cursor: pointer;
+}
+.more_info {
+        display:none;
+}
+#spaceContent table.bookings tr.even td.resName {
+	background-color: #DDD;
+}
+
+
+#spaceContent table.bookings td {
+	border-left: 1px solid #CCC;
+	border-top: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+}
+
+#spaceContent table.bookings td.resName {
+	padding: 3px 6px 3px 0;
+	border: none;
+	width:30px;
+}
+
+#spaceContent table.bookings td.time {
+	width:28px;
+}
+
+
+#spaceContent table.bookings td.hour {
+	border-left: 1px solid #3F3F3F;
+}
+
+#spaceContent table.bookings td.marker {
+	border: none;
+	border-left: 1px solid #000;
+	height: 5px;
+}
+
+#spaceContent table.bookings tr.resource td {
+	height: 36px;
+	background-color: #FFF;
+}
+
+#spaceContent table.bookings tr.markers {
+	margin-bottom: 10px;
+}
+
+#spaceContent table.bookings tr.times {
+	
+}
+
+#spaceContent table.bookings tr.resource td.booked {
+	background-color: #336600;
+}
+
+#spaceContent table.bookings tr.resource td.booked_second {
+	background-color: #339900;
+}
+#spaceContent table.bookings tr.resource td.booked_self {
+	background-color: #003366;
+}
+
+#spaceContent table.bookings tr.resource td.booked_self_second {
+	background-color: #6633ff;
+}
+#spaceContent table.bookings tr.resource td.unavailable {
+	background-color: #999999;
+}
+
+
+#spaceContent table.bookings tr.times td {
+	text-align: left;
+	border: none;
+	position:relative;
+}
+
+#spaceContent table.bookings td.edge {
+	border-right: 1px solid #000;
+}
+
+#spaceContent .bookingDate {
+	margin-top: 20px;
+	border: 1px solid #3F3F3F;
+	border-left: none;
+ 	border-right: none;
+	padding: 3px 0;
+}
+#spaceContent .bookingHub {
+	float: right;
+        margin-bottom: 5px;
+}
+#spaceContent .bookingDate h2 {
+	color: #3F3F3F;
+	display: inline;
+	margin: 0;
+	font-weight: normal;
+	font-size: 120%;
+}
+#spaceContent .bookingDate #leftArrow {
+	margin: 3px;
+}
+#spaceContent .bookingDate #rightArrow {
+	margin: 3px;
+}
+a img {
+	border: none;
+}
+.dataBox {
+	margin: 10px 0;
+	clear:right;
+        width: 650px;
+}
+.dataBox ul{
+	margin: 0;
+	padding: 0;
+}
+
+.dataBoxHeader{
+	background:#B0A696 url(/static/images/radius_sm_right_exp.png) no-repeat top right;
+	height:20px;
+	padding-right:10px;
+}
+.dataBoxHeaderCollapse{
+	background:#B0A696 url(/static/images/radius_sm_right.png) no-repeat top right;
+	height:20px;
+	padding-right:10px;
+}
+.dataBoxHeaderCollapse a.title{
+	background:url(/static/images/radius_sm_left.png) no-repeat;
+	text-decoration:none;
+	padding-left:3px;
+	height:20px;
+	display:block;
+}
+
+.dataBoxHeader h2, .dataBoxHeaderCollapse h2{
+	color:#3F3F3F;
+	font-size:100%;
+	padding:3px 0 0 20px;
+	display:block;
+	font-family:helvetica, arial, verdana, sans-serif;
+	margin:0;
+}
+
+
+.dataBoxHeader a.title{
+	background:url(/static/images/radius_sm_left_exp.png) no-repeat;
+	text-decoration:none;
+	padding-left:3px;
+	height:20px;
+	display:block;
+}
+.dataBoxHeader a.modify, .dataBoxHeaderCollapse a.modify{
+	text-decoration:none;
+	margin:2px 0 0;
+	float:right;
+	color:#3F3F3F;
+	display:block;
+}
+.dataBoxHeader a.showClosed, .dataBoxHeader a.deleteBar{
+	text-decoration:none;
+	margin:2px 10px 0;
+	float:right;
+	color:#3F3F3F;
+	display:inline;
+}
+.dataBoxHeader a img, .dataBoxHeaderCollapse a img{
+	position:relative;
+	top:3px;
+}
+
+.dataBoxContent {
+	padding: 0;
+	font-size: 90%;
+	margin: 2px 0;
+}
+
+.dataBoxContent .buttons {
+	float: right;
+	margin:5px 5px 0 0;
+}
+
+
+.dataBoxContent .data {
+	background-color: #EEE;
+	border: 1px solid #BBB;
+}
+
+.dataBoxContent .dataTextBox {
+	padding: 4px 8px;
+}
+
+.dataBoxContent .dataTextBox textarea {
+	width: 100%;
+	height: 180px;
+}
+
+.dataBoxContent p {
+	margin: 0 0 8px 0;
+}
+
+.dataNote {
+	margin-bottom: 4px;
+}
+
+.dataNote p {
+	margin: 0 0 10px 0;
+}
+
+.dataNote .noteBody {
+	padding: 4px 8px;
+}
+
+.dataNote .noteHeader {
+	padding: 2px 8px;
+	font-weight: bold;
+	background-color: #DDD;
+	color: #3F3F3F;
+	margin: 0;
+}
+.dataNote .noteHeader .note_action {
+        display: block;
+        height: 15px;
+}
+.dataNote .noteHeader .show_note_action {
+        display: block;
+        font-weight: normal;
+}
+.dataNote .noteHeader .show_note_action td.label{
+        display: block;
+        font-weight: bold;
+}
+.dataNote .noteHeader .addedBy{
+	font-weight: normal;
+}
+
+.dataNote .noteHeader a {
+	float: left;
+	color: #3F3F3F;
+	text-decoration: none;
+	font-weight: normal;
+}
+
+.dataNote .noteHeader input {
+	width: 400px;
+}
+
+.dataNote .noteHeader .note_form input{
+	width: 200px;
+}
+.dataNote .noteHeader .note_form select {
+	width: 200px;
+}
+.dataNote textarea {
+	width: 100%;
+	height: 50px;
+}
+label {
+	width: 200px;
+	height: 50px;
+}
+
+
+.errorMessage {
+	color: #FF0000;
+        position: relative;
+}
+#cost_error {
+        position:absolute;
+        right: 10%;
+}
+#periodstarts_error {
+        position:absolute;
+        left: 10%;
+}
+#fulltextSearch.dataBoxContent p {
+	margin: 0;
+	padding: 5px;
+	list-style-type: none;
+	border: 1px solid #CCC;  
+        display: block;
+}
+#fulltextSearch.dataBoxContent ul#results {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	border: 1px solid #CCC;  
+        display: block;
+}
+#fulltextSearch.dataBoxContent ul#results li {
+	background-repeat: no-repeat;
+	background-position: 15px 5px;
+	padding: 4px 8px;
+	margin: 0;
+        border-bottom: 1px solid #CCC;
+        height:50px;
+} 
+#fulltextSearch.dataBoxContent ul#results li a {
+	text-decoration: none;
+	color: #3F3F3F;
+	font-weight: bold;
+}
+#fulltextSearch.dataBoxContent ul#results li .description {
+	margin-top: 4px;
+	padding: 0px;
+	background-color: #FFF;
+}
+
+#hostContent #host-todosContent .dataBoxContent ul{
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	border: 1px solid #CCC;  
+	display: block;
+}
+
+#hostContent .dataBoxContent ul li {
+	background-repeat: no-repeat;
+	background-position: 15px 5px;
+	padding: 4px 8px;
+	margin: 0;
+}
+
+#hostContent .dataBoxContent ul.tickable li {
+	background-image: none;
+	padding: 4px 8px;
+	margin: 0;
+}
+
+#hostContent .dataBoxContent ul li a {
+	text-decoration: none;
+	color: #3F3F3F;
+	font-weight: bold;
+}
+
+#hostContent .dataBoxContent ul li .enteredBy {
+	float: right;
+}
+
+#hostContent .dataBoxContent ul li .description {
+	margin-top: 4px;
+	padding: 4px;
+	background-color: #FFF;
+}
+
+#hostContent .dataBoxContent ul li .description p {
+	margin: 2px 0;
+}
+
+#hostContent .dataBoxHeader, #hostContent .dataBoxHeaderCollapse {
+	background-color: #FFA500;
+}
+
+#hostContent .dataBoxHeader h2, #hostContent .dataBoxHeaderCollapse h2 {
+	color: #3F3F3F;
+}
+
+#hostContent .urgent .dataBoxHeader, #hostContent .urgent .dataBoxHeaderCollapse {
+	background-color: #5F5F5F;
+}
+
+#hostContent .urgent .dataBoxHeader h2, #hostContent .urgent .dataBoxHeaderCollapse h2 {
+	color: #FFF
+}
+
+#hostContent .urgent .dataBoxHeader .modify, #hostContent .urgent .dataBoxHeaderCollapse .modify {
+	color: #FFF
+}
+
+.clear {
+	clear: right;
+	height:1px;
+	margin:0;
+	padding:0;
+}
+.clear_both {
+        clear: both;
+}
+.click_span {
+	float: right;
+	position: relative;
+	top: 2px;
+	right: 10px;
+	margin-left: 10px;
+	color: #3F3F3F;
+	text-decoration: none;
+	font-weight: normal;
+	cursor: pointer;
+}
+.chooseHost{
+	float:right;
+}
+select{
+	//font-size:100%;
+}
+
+div#biz_type_complete {
+      position:absolute;
+      width:250px;
+      background-color:white;
+      border:1px solid #888;
+      margin:0px;
+      padding:0px;
+}
+div#biz_type_complete ul {
+      list-style-type:none;
+      margin:0px;
+      padding:0px;
+}
+div#biz_type_complete ul li.selected { background-color: #ffb;}
+div#biz_type_complete ul li {
+      list-style-type:none;
+      display:block;
+      margin:0;
+      padding:2px;
+      height:16px;
+      cursor:pointer;
+}
+
+
+.empty_table_warning{
+        color:#FF0000;
+        text-align:center;
+}
+.sub_usage{
+   //display:none;
+}
+.composite_rusage{
+   background-color:#BBBBBB;
+}
+.view_sub_usages{
+   background:url(/static/images/arrow_right_resourcetable.png) no-repeat;
+   text-decoration:none;
+   padding-left:3px;
+   height:20px;
+   display:block;
+   cursor:pointer;
+}
+.sub_usages_open{
+   background:url(/static/images/arrow_down_resourcetable.png) no-repeat;
+   text-decoration:none;
+   padding-left:3px;
+   height:20px;
+   display:block;
+   cursor:pointer;
+}
+.date_select{
+   cursor:pointer;
+}
+div#bill_redirect {
+   position: relative;
+   height: 30px;
+}
+.create_invoice{
+   cursor:pointer;
+   position:relative;
+   left: 30px
+}
+.unsent{
+   cursor:pointer;
+}
+.send_invoice_form{
+   position: relative;
+   top: 20px;
+}
+.send_invoice_form span.inv_by_mail {
+   position:absolute;
+   right:10px;
+}
+.send_invoice_form li{
+   display:block;
+   width:400px;
+}
+#invoice_mail_subject input{
+}
+#invoice_mail_body input{
+}
+.view_invoice{
+   cursor:pointer;
+}
+.remove_invoice{
+   cursor:pointer;
+}
+.add_to_invoice{
+  cursor:pointer;
+}
+.remove_from_invoice{
+  cursor:pointer;
+}
+.del_rusage{
+  cursor:pointer;
+}
+.add_rusage_link{
+  cursor:pointer;
+}
+.add_rusage_form{
+  display:block;
+}
+#del_booking{
+  cursor:pointer;
+}
+table.bookings tr.resource{
+  cursor:pointer;
+}
+table.bookings tr.resource td.resName{
+  cursor:text;
+}
+#leftArrow{
+  cursor:pointer;
+  position:absolute;
+  left:0px;
+  top: 3px;
+}
+#leftArrowStart{
+  cursor:pointer;
+}
+#leftArrowEnd{
+  cursor:pointer;
+}
+
+#rightArrow{
+  cursor:pointer;
+  position:absolute;
+  right:0px;
+  top: 3px;
+}
+#rightArrowStart{
+  cursor:pointer;
+}
+#rightArrowEnd{
+  cursor:pointer;
+}
+.date_area,
+.date_range_area{
+  position:relative;
+  width:40%;
+  margin-left:25%;
+  margin-right:35%;
+  text-align:center;
+}
+.date_range_area{
+  margin-left:15%;
+  margin-right:25%;
+  width: 60%;
+}
+.date_range_area #space_date_field{
+        visibility:hidden;
+        position:absolute;
+        width:0%;
+        left: 23%;
+}
+.invisible_input{
+        opacity: 0;
+        -moz-opacity: 0;
+        filter: alpha(opacity=0);
+        width:0%;
+}
+#space_date{
+  display:inline;
+  cursor:pointer;
+  width:200px;
+}
+#search_start_date{
+  cursor:pointer;
+}
+#search_end_date{
+  cursor:pointer;
+}
+
+.button{
+  cursor:pointer;
+}
+a{
+	cursor:pointer;
+}
+input.submit, input.cancel{
+	margin-top:3px;
+}
+#tariff_management textarea.text_large{
+        width: 200px;
+}
+#resource_groups textarea.text_large{
+        width: 95%;
+}
+.resourceGroupName input.submit, .resourceGroupName input.cancel{
+	position:relative;
+	top:5px;
+}
+.firefox{
+        position:absolute;
+        right:0%;
+        top: 10px;
+}
+#resource_location{
+        margin-bottom:700px;
+}
+table#resource_groups .resourceName,
+table#resource_groups .resourceDescription,
+table#resource_groups .resourceType,
+table#resource_groups .resourceTimeBased,
+table#resource_groups .resourceVAT,
+table#resource_groups .resourceActive,
+table#resource_groups .handle {
+    float:left;
+    padding:3px 4px;
+    width:138px;
+}
+table#resource_groups .resourceName{
+    width:100px;
+}
+table#resource_groups .resourceVAT,
+table#resource_groups .resourceActive,
+table#resource_groups .resourceType,
+table#resource_groups .resourceTimeBased{
+    width:67px;
+}
+table#resource_groups .handle {
+    width:19px;
+    height:40px;
+    background: url(/static/images/drag_tall.png) no-repeat;
+}
+.more_res_details {
+    float:right;
+}
+.extra_details .big_popup{
+    float:left;
+}
+.close_popup {
+    float:right;
+    font-size:120%;
+    margin-right:-10px;
+    margin-top:-10px;
+}
+a.close_popup {
+    font-weight:bold;
+}
+.popup_section {
+    margin-top:30px;
+}
+.popup_section ul{
+    list-style: none;
+}
+ul.resource_group{
+    list-style-image:none;
+    list-style-type: none;
+    margin-left: 20px;
+}
+ul.resource_group li.resource_item form{
+    background: white;
+    width:183px;
+    border:1px solid #000000;
+    z-index: 100;
+    position: relative;
+    top: 0px;
+    left:0px;
+}
+#hostContent .dataBoxContent table#resource_groups tr.header div{
+    text-align:left;
+}
+#hostContent .dataBoxContent table#resource_groups tr.header div.resourceName{
+    margin-left: 54px;
+}
+#hostContent .dataBoxContent ul#resource_management li{
+    width:638px;
+    padding: 0px;
+}
+ul.resource_group li.resource_item{
+    display:none;
+    float:left;
+    border-top:1px solid #BBBBBB;
+    vertical-align:top;
+    width:600px;
+}
+#resource_groups td.updown{
+    background: url(/static/images/drag_tall.png) no-repeat 0px 10px;
+}
+#hostContent .resource_group a.button{
+    color: #B32531;
+    text-decoration: none;
+    font-weight:200;
+    padding-left:4px;
+}
+#addResourceGroup {
+    margin-right: 20px;
+}
+/*.resource_group_header {
+    background-color: #BBBBBB;
+    min-height: 50px;
+}*/
+.resource_group_header {
+    background-color: #BBBBBB;
+    height: auto;
+}
+.del_res_group {
+    text-align: right;
+    margin-right: 15px;
+    margin-top: 9px;
+}
+.del_res_group .confirm_dialog {
+    text-align: left;
+}
+.res_group_actions {
+    float: left;
+    width: 30%;
+}
+.res_group_desc {
+    margin-top: 7px;
+}
+.expand_res_group {
+    clear: left;
+    width: 30%;
+    margin-right: 5px;
+    float: right;
+}
+.expand_res_group div{
+    float: right;
+    margin-top: 2px;
+}
+.expand_res_group img{
+    width:20px;
+    float: right;
+}
+#hostContent .dataBoxContent ul li .del_res_group a {
+    color:#B32531;
+    font-weight: 100;
+}
+.resource_group_header div.res_group_attrs {
+    width:70%;
+    float: left;
+}
+.res_group_divs {
+    width: 100%;
+    overflow: auto;
+}
+.resource_group_header div.res_group_desc span {
+    display: block;
+    float: left;
+}
+.resource_group_header input.cancel, .resource_group_header input.submit{
+    top: 0px;
+    margin: 0px;
+}
+.resource_group_header input.text_small{
+    float: left;
+}
+.resource_group_header div.resourceGroupName {
+    overflow: auto;
+}
+.resource_group_header div.resourceGroupName .buttons{
+    float: left;
+    margin: 0px;
+}
+.resource_group_header h1{
+   width:70%;
+   display:inline;
+}
+#resource_groups_area{
+    padding-bottom: 40px;
+}
+.dragClass{
+    background-color: black;
+    color: yellow;
+}
+.confirm_dialog{
+    background-color: white;
+    z-index: 5;
+    color: #B32531;
+    position: absolute;
+}
+#event_feed {
+    position:relative;
+    left: 100px; 
+}
+#profile_feed {
+    position:relative;
+    left: 200px;
+} 
+.buttonlikelink {
+	font-size:110%;
+	padding:3px;
+	font-family:helvetica, arial, verdana, sans-serif;
+	margin:1;
+	border: 1px solid #3F3F3F;
+}
+/*This must go last*/
+#spaceContent table.bookings td.resName {
+    width:130px;
+}
+
+#calendarView {
+	position:absolute;
+	right: 0px;
+	margin-top: 16px;
+}
+#resource_group_description {
+	margin-top:5px;
+	margin-bottom:5px;
+	position:relative;
+}
+#spaceContent .bookingDate {
+	margin: 0px;
+	padding: 20px 0px 0px;
+	border: none;
+	text-align: center;
+}
+
+#spaceContent .bookingDate .bookingHub,
+#spaceContent .bookingHub {
+	float: right;
+	padding: 0px;
+}
+#spaceContent .bookingDate h2 {
+	color: #3F3F3F;
+	margin: 0px;
+	font-weight: normal;
+	font-size: 11px;
+	padding: 0px 10px;
+	display: inline;
+	height: 14px;
+	line-height: 14px;
+}
+#spaceContent .bookingDate #leftArrow,
+#spaceContent .bookingDate #rightArrow {
+	margin: 0px;
+	padding: 0px;
+}
+.checkbox,
+.radio {
+	margin: 0px 2px 0px 0px;
+	padding: 0px;
+}
+#room_header {
+	position: relative;
+	padding-left: 32px;
+	width: 613px;
+	height: 35px;
+	margin-top: 15px;
+	margin-bottom: 0px;
+}
+#room_header .room_selector {
+	float: left;
+	margin: 0px;
+	padding: 0px;
+}
+#room_header .label,
+#room_header .label_selected {
+	height:23px;
+	font-size: 10px;
+	color: #FFFFFF;
+	font-weight: bold;
+	padding: 2px;
+	display: block;
+	z-index: 11;
+	left: 0px;
+	top: 0px;
+	position: relative;
+	filter: Alpha(opacity=50);
+	opacity: 0.5;
+	border-style: solid;
+	border-width: 1px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	text-decoration: none;
+	margin: 0px;
+	vertical-align: middle;
+	overflow: hidden;
+}
+#room_selector_group {
+	margin-top: 6px;
+	padding-left: 32px;
+	position: relative;
+	width: 613px;
+	overflow: hidden;
+	height: auto;
+	left: 0px;
+	top: 0px;
+}
+#room_selector_group .room_selector {
+	height: auto;
+	width: auto;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	float: left;
+	padding: 0px;
+	margin: 0px 3px 5px 0px;
+}
+#room_selector_group .label,
+#room_selector_group .label_selected {
+	font-size: 10px;
+	color: #FFFFFF;
+	font-weight: bold;
+	height: auto;
+	width: 140px;
+	padding: 2px 2px 2px 4px;
+	display: block;
+	z-index: 11;
+	left: 0px;
+	top: 0px;
+	position: relative;
+	filter: Alpha(opacity=50);
+	opacity: 0.5;
+	border-style: solid;
+	border-width: 1px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	text-decoration: none;
+}
+#room_selector_group .label:hover {
+	filter: Alpha(opacity=75);
+	opacity: 0.75;
+}
+#room_selector_group .label_selected,
+#room_selector_group.dayview .label,
+#room_selector_group.dayview .label_selected {
+	filter: Alpha(opacity=100);
+	opacity: 1;
+}
+#room_selector_group .close {
+	height: 18px;
+	width: 20px;
+	display: block;
+	border-style: none;
+	padding: 0px;
+	background-repeat: no-repeat;
+	background-position: 4px 2px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	z-index: 12;
+}
+#mybookings_selector_group label {
+	height: auto;
+	width: auto;
+	padding: 2px 12px 2px 2px;
+	display: block;
+}
+#room_header .room1 .label,
+#room_selector_group .room1 .label,
+#room_selector_group .room1 .label_selected,
+#bookspacedate .room1 {
+	background-color: #9d0020;
+	border-color: #5a1514;
+}
+#room_header .room2 .label,
+#room_selector_group .room2 .label,
+#room_selector_group .room2 .label_selected,
+#bookspacedate .room2 {
+	background-color: #e8411a;
+	border-color: #9b1f11;
+}
+#room_header .room3 .label,
+#room_selector_group .room3 .label,
+#room_selector_group .room3 .label_selected,
+#bookspacedate .room3 {
+	background-color: #ff9900;
+	border-color: #b36000;
+}
+#room_header .room4 .label,
+#room_selector_group .room4 .label,
+#room_selector_group .room4 .label_selected,
+#bookspacedate .room4 {
+	background-color: #0e6fe7;
+	border-color: #003fa3;
+}
+#room_header .room5 .label,
+#room_selector_group .room5 .label,
+#room_selector_group .room5 .label_selected,
+#bookspacedate .room5 {
+	background-color: #08a0d8;
+	border-color: #006796;
+}
+#room_header .room6 .label,
+#room_selector_group .room6 .label,
+#room_selector_group .room6 .label_selected,
+#bookspacedate .room6 {
+	background-color: #00bbc2;
+	border-color: #007d83;
+}
+#room_header .room_t .label,
+#room_selector_group .room_t .label,
+#room_selector_group .room_t .label_selected,
+#bookspacedate .room_t {
+	background-color: grey;
+	border-color: #000000;
+}
+#room_selector_group .roomX {
+	width: auto;
+	filter: Alpha(opacity=100);
+	opacity: 1;
+}
+.mybooking {
+	background-image: url(/static/images/star.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+.mewatching {
+	background-image: url(/static/images/alert.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+.unavailable {
+	background-image: url(/static/images/cross.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+html>body .mybooking {
+	background-image: url(/static/images/star.png);
+}
+html>body .mewatching{
+	background-image: url(/static/images/alert.gif);
+}
+html>body .unavailable {
+	background-image: url(/static/images/cross.png);
+}
+#mybookings_selector_group {
+	position: absolute;
+	top: 0px;
+	right: -107px;
+}
+#room_add_group {
+	position: absolute;
+	top: 0px;
+	right: -107px;
+}
+.bigcal_week,
+.bigcal_day {
+	position: relative;
+	padding-left: 32px;
+	background-image: url(/static/images/calendar_week_background.png);
+	height: 505px;
+	width: 613px;
+	background-position: 0px 0px;
+	margin-top: 30px;
+}
+.bigcal_day {
+	background-image: url(/static/images/calendar_day_background.png);
+	margin-top: 0px;
+}
+.day_group {
+	position: relative;
+	width: 87px;
+	height: 100%;
+	left: 0px;
+	top: 0px;
+	float: left;
+}
+.room_group {
+	position: relative;
+	left: 0px;
+	top: 0px;
+	float: left;
+	padding: 0px;
+	margin: 0px;
+}
+.day_group .day_marker {
+	color: #3F3F3F;
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	font-size: 10px;
+	top: -15px;
+        cursor: pointer;
+}
+.bigcal_week .event,
+.bigcal_week .unavailable,
+.bigcal_day .event,
+.bigcal_day .unavailable {
+	font-size: 8px;
+	color: #FFFFFF;
+	text-decoration: none;
+	position: absolute;
+	border-style: solid;
+	border-width: 1px;
+	margin: 0px;
+	padding: 0px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	width: 87px;
+        cursor: pointer;
+	filter: Alpha(opacity=62);
+	opacity: 0.62;
+}
+.bigcal_week .layer0{
+        z-index:1;
+}
+.bigcal_week .layer1{
+        z-index:2;
+}
+.bigcal_week .layer2{
+        z-index:3;
+}
+.bigcal_week .layer3{
+        z-index:4;
+}
+.bigcal_week .layer4{
+        z-index:5;
+}
+.bigcal_week .layer5{
+        z-index:6;
+}
+.bigcal_week .layer6{
+        z-index:7;
+}
+.bigcal_week .layer7{
+        z-index:8;
+}
+.bigcal_week .event:hover,
+.bigcal_week .unavailable:hover,
+.bigcal_week .room_selected{
+	filter: Alpha(opacity=100);
+	opacity: 1;
+        z-index: 12;
+}
+.bigcal_week .room_selected{
+        z-index: 11;
+}
+.other_booking {
+        display: block;
+}
+.resource_on {
+        display: block;
+}
+.other_booking_off {
+        display: none;
+}
+.resource_off {
+        display: none;
+}
+.bigcal_day .event,
+.bigcal_day .unavailable {
+	filter: Alpha(opacity=100);
+	opacity: 1;
+	padding: 2px;
+	font-size: 9px;
+}
+#cal_key {
+	margin-left: 32px;
+	margin-top: 5px;
+}
+#mybookings {
+	background-image: url(/static/images/star_black.png);
+	background-position: left center;
+	padding-left: 15px;
+	background-repeat: no-repeat;
+	color: #3F3F3F;
+}
+#unavailable_icon {
+	background-image: url(/static/images/cross_black.png);
+	background-position: left center;
+	padding-left: 15px;
+	background-repeat: no-repeat;
+	color: #3F3F3F;
+}
+#watching {
+	background-image: url(/static/images/alert.gif);
+	background-position: left center;
+	padding-left: 15px;
+	background-repeat: no-repeat;
+	color: #3F3F3F;
+}.big_popup {
+	border: 3px solid #9d0020;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	position: relative;
+	background-color: #eeeeee;
+	left: 0px;
+	top: 0px;
+	z-index: 100;
+	margin: 0px;
+	padding: 15px 20px 5px 5px;
+}
+#booking_popup {
+	position: absolute;
+	left: 32px;
+	top: 0px;
+        display: none;
+        padding-bottom: 20px;
+}
+.booking_popupTable {
+	font-size: 90%;
+	border-collapse: collapse;
+	margin: 0px;
+	padding: 0px;
+}
+.booking_popupTable td {
+	padding: 8px;
+	vertical-align: top;
+}
+.booking_popupTable td.td_space {
+	padding: 0px;
+}
+.booking_popupTable .left {
+	width: 100px;
+	text-align: right;
+        font-weight: 600;
+}
+.booking_popupTable .right {
+	width: 425px;
+}
+#booking_popup ul,
+#booking_popup li {
+	margin: 0px;
+	padding: 0px 0px 3px;
+	list-style: none;
+}
+#booking_popup form,
+#booking_popup input,
+#booking_popup select,
+#booking_popup textarea {
+	margin: -3px 0px 0px;
+	padding: 0px;
+	font-size: 11px;
+}
+#booking_popup .right img {
+	float: left;
+	padding-right: 10px;
+}
+.rightFloat {
+	float: right;
+}
+#publicise_event {
+        width: 120px;
+}
+#booking_popup #meeting_name {
+	width: 260px;
+}
+#contentPane table textarea {
+	width: 426px;
+	height: 100px;
+	font-size: 11px;
+}
+#booking_popup #booking_for {
+	width: 428px;
+}
+#onlyMyBookings {
+        width: 30%;
+        margin-top: 16px;
+        margin-left: 27px;
+}
+a#meetingBookingEdit {
+        position:absolute;
+        right:30px;
+        top: 6px;
+}
+
+/* Main Style Sheet for jQuery UI date picker */
+#ui-datepicker-div, .ui-datepicker-inline {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	padding: 0;
+	margin: 0;
+	background: #ddd;
+	width: 185px;
+}
+#ui-datepicker-div {
+	display: none;
+	border: 1px solid #777;
+	z-index: 100; /*must have*/
+}
+.ui-datepicker-inline {
+	float: left;
+	display: block;
+	border: 0;
+}
+.ui-datepicker-rtl {
+	direction: rtl;
+}
+.ui-datepicker-dialog {
+	padding: 5px !important;
+	border: 4px ridge #ddd !important;
+}
+.ui-datepicker-disabled {
+	position: absolute;
+	z-index: 100;
+	background-color: white;
+	opacity: 0.5;
+}
+button.ui-datepicker-trigger {
+	width: 25px;
+}
+img.ui-datepicker-trigger {
+	margin: 2px;
+	vertical-align: middle;
+}
+.ui-datepicker-prompt {
+	float: left;
+	padding: 2px;
+	background: #ddd;
+	color: #000;
+}
+* html .ui-datepicker-prompt {
+	width: 185px;
+}
+.ui-datepicker-control, .ui-datepicker-links, .ui-datepicker-header, .ui-datepicker {
+	clear: both;
+	float: left;
+	width: 100%;
+	color: #fff;
+}
+.ui-datepicker-control {
+	background: #400;
+	padding: 2px 0px;
+}
+.ui-datepicker-links {
+	background: #000;
+	padding: 2px 0px;
+}
+.ui-datepicker-control, .ui-datepicker-links {
+	font-weight: bold;
+	font-size: 80%;
+}
+.ui-datepicker-links label { /* disabled links */
+	padding: 2px 5px;
+	color: #888;
+}
+.ui-datepicker-clear, .ui-datepicker-prev {
+	float: left;
+	width: 34%;
+}
+.ui-datepicker-rtl .ui-datepicker-clear, .ui-datepicker-rtl .ui-datepicker-prev {
+	float: right;
+	text-align: right;
+}
+.ui-datepicker-current {
+	float: left;
+	width: 30%;
+	text-align: center;
+}
+.ui-datepicker-close, .ui-datepicker-next {
+	float: right;
+	width: 34%;
+	text-align: right;
+}
+.ui-datepicker-rtl .ui-datepicker-close, .ui-datepicker-rtl .ui-datepicker-next {
+	float: left;
+	text-align: left;
+}
+.ui-datepicker-header {
+	padding: 1px 0 3px;
+	background: #333;
+	text-align: center;
+	font-weight: bold;
+	height: 1.3em;
+}
+.ui-datepicker-header select {
+	background: #333;
+	color: #fff;
+	border: 0px;
+	font-weight: bold;
+}
+.ui-datepicker {
+	background: #ccc;
+	text-align: center;
+	font-size: 100%;
+}
+.ui-datepicker a {
+	display: block;
+	width: 100%;
+}
+.ui-datepicker-title-row {
+	background: #777;
+}
+.ui-datepicker-days-row {
+	background: #eee;
+	color: #666;
+}
+.ui-datepicker-week-col {
+	background: #777;
+	color: #fff;
+}
+.ui-datepicker-days-cell {
+	color: #000;
+	border: 1px solid #ddd;
+}
+.ui-datepicker-days-cell a{
+	display: block;
+}
+.ui-datepicker-week-end-cell {
+	background: #ddd;
+}
+.ui-datepicker-title-row .ui-datepicker-week-end-cell {
+	background: #777;
+}
+.ui-datepicker-days-cell-over {
+	background: #fff;
+	border: 1px solid #777;
+}
+.ui-datepicker-unselectable {
+	color: #888;
+}
+.ui-datepicker-today {
+	background: #fcc !important;
+}
+.ui-datepicker-current-day {
+	background: #999 !important;
+}
+.ui-datepicker-status {
+	background: #ddd;
+	width: 100%;
+	font-size: 80%;
+	text-align: center;
+}
+
+/* ________ Datepicker Links _______
+
+** Reset link properties and then override them with !important */
+#ui-datepicker-div a, .ui-datepicker-inline a {
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
+	background: none;
+	color: #000;
+}
+.ui-datepicker-inline .ui-datepicker-links a {
+	padding: 0 5px !important;
+}
+.ui-datepicker-control a, .ui-datepicker-links a {
+	padding: 2px 5px !important;
+	color: #eee !important;
+}
+.ui-datepicker-title-row a {
+	color: #eee !important;
+}
+.ui-datepicker-control a:hover {
+	background: #fdd !important;
+	color: #333 !important;
+}
+.ui-datepicker-links a:hover, .ui-datepicker-title-row a:hover {
+	background: #ddd !important;
+	color: #333 !important;
+}
+
+/* ___________ MULTIPLE MONTHS _________*/
+
+.ui-datepicker-multi .ui-datepicker {
+	border: 1px solid #777;
+}
+.ui-datepicker-one-month {
+	float: left;
+	width: 185px;
+}
+.ui-datepicker-new-row {
+	clear: left;
+}
+
+/* ___________ IE6 IFRAME FIX ________ */
+
+.ui-datepicker-cover {
+    display: none; /*sorry for IE5*/
+    display/**/: block; /*sorry for IE5*/
+    position: absolute; /*must have*/
+    z-index: -1; /*must have*/
+    filter: mask(); /*must have*/
+    top: -4px; /*must have*/
+    left: -4px; /*must have*/
+    width: 200px; /*must have*/
+    height: 200px; /*must have*/
+}
+
+.ac_results {
+	padding: 0px;
+	border: 1px solid black;
+	background-color: white;
+	overflow: hidden;
+	z-index: 99999;
+}
+
+.ac_results ul {
+	width: 100%;
+	list-style-position: outside;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.ac_results li {
+	margin: 0px;
+	padding: 2px 5px;
+	cursor: default;
+	display: block;
+	/* 
+	if width will be 100% horizontal scrollbar will apear 
+	when scroll mode will be used
+	*/
+	/*width: 100%;*/
+	font: menu;
+	font-size: 12px;
+	/* 
+	it is very important, if line-height not setted or setted 
+	in relative units scroll will be broken in firefox
+	*/
+	line-height: 16px;
+	overflow: hidden;
+}
+
+.ac_loading {
+	background: white url('indicator.gif') right center no-repeat;
+}
+
+.ac_odd {
+	background-color: #eee;
+}
+
+.ac_over {
+	background-color: #0A246A;
+	color: white;
+}
+
+.updatesBar {
+        position: relative;
+	float: left;
+	width: 155px;
+	margin: 0 0 10px 0;
+	padding: 0px;
+	font-size: 0.9em;
+}
+.profilesFeed .update_text {
+        width:100px;
+}
+.eventsFeed .update_text {
+        width:140px;
+}
+.announce {
+        margin-left: 10px;
+}
+.announceCategoryHeader {
+	text-align: left;
+	margin-left: 15px;
+}
+.announceCategoryHeader h1 {
+	font-size: 1.3em;
+}
+div.feedLink {
+	background: url(/static/images/feed-icon.gif) no-repeat;
+	float: right;
+	width: 16px;
+	height: 16px;
+}
+.feedLink a {
+	display:  block;
+	height: 100%;
+	width: 100%;
+}
+.feedLink h1 {
+	display: none;
+}
+
+
+.update {
+        float: left;
+        clear: both;
+        position: relative;
+        margin-bottom: 10px;
+        border: 1px solid #9d0020;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px; 
+	background-color: #eeeeee;
+        padding: 0px 6px;
+        width: 150px;
+}
+.update div.update_text {
+        display: inline;
+        float:left;
+        position: relative;
+        margin-left: 8px;
+        margin-top: 4px;
+}
+.update h1{
+        margin-top:0px;
+        margin-bottom:0px;
+        font-size: 1.1em;
+}
+.update h2{
+        margin-top:0px;
+        color:#3F3F3F;
+        font-family:helvetica,arial,verdana,sans-serif;
+        font-size: 1em;
+        font-style: italic;
+}
+.update p{
+        color:#3F3F3F;
+        font-family:helvetica,arial,verdana,sans-serif;
+        font-size: 1.05em;
+        font-style: italic;
+}
+.update img {
+        position: relative;
+ 	float: left;
+        margin-top: 5px;
+        margin-bottom: 5px;
+}
+.update_item {
+	border: 2px solid #9d0020;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	position: relative;
+	background-color: #eeeeee;
+	left: 0px;
+	top: 0px;
+	z-index: 10000;
+	padding: 15px 20px 30px 10px;
+        font-size: 90%;
+	font-family: verdana, helvetica, arial, sans-serif;
+        line-height: 15px;
+}
+.clear {
+	visibility: hidden;
+        height: 30px;
+}
+
