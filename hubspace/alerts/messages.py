@@ -91,13 +91,13 @@ t_booking_expired_hosts = Message("t_booking_expired_hosts")
 t_booking_expired_hosts.available_macros = [macros.Location(), macros.Member_Name(), macros.Member_Email(),
     macros.Location_Phone(),macros.Location_URL(), macros.Booking_Contact(), macros.Booking_Start(), macros.Booking_End(),
     macros.Booking_Date(), macros.Resource(), macros.Also_Booked(), macros.Hosts_Email(), macros.Booking_Contact(),
-    macros.Member_First_Name()]
+    macros.Member_First_Name(), macros.Booked_by()]
 
 t_booking_expired_watcher = Message("t_booking_expired_watcher")
 t_booking_expired_watcher.available_macros = [macros.Location(), macros.Member_Name(), macros.Member_Email(),
     macros.Location_Phone(),macros.Location_URL(), macros.Booking_Contact(), macros.Booking_Start(), macros.Booking_End(),
     macros.Booking_Date(), macros.Resource(), macros.Also_Booked(), macros.Hosts_Email(), macros.Booking_Contact(),
-    macros.Member_First_Name()]
+    macros.Member_First_Name(), macros.Booked_by()]
 
 t_booking_reminder = Message("t_booking_reminder")
 trac_submission_failed = Message("trac_submission_failed")
