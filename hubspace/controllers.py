@@ -1162,6 +1162,8 @@ def process_entry(job, alias, start_date, aliases, resource_types):
 def book_print_resource(resource_id, resource_description, tg_errors=None, **kwargs):
     """
     """
+    resource_description = resource_description.decode('utf-8', 'replace')
+    resource_description = resource_description.encode('utf-8')
     rusages = RUsage.select(AND(RUsage.q.resourceID==resource_id,
                                 RUsage.q.resource_description==resource_description))
 
@@ -1178,7 +1180,8 @@ def book_print_resource(resource_id, resource_description, tg_errors=None, **kwa
         kwargs['resource'] = resource_id
         make_booking(**kwargs)
         return "1"
-    except:
+    except Exception, e:
+        print `e`
         return "3"
 
 
@@ -1761,6 +1764,7 @@ Excption:
         project = "space"
         baseurl_exposed = "https://trac.the-hub.net"
         baseurl = "http://172.24.0.206:13000"
+        baseurl = baseurl_exposed
         loginurl = "%s/%s/login" % (baseurl, project)
         newticketurl = "%s/%s/newticket" % (baseurl, project)
         try:

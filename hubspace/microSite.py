@@ -183,9 +183,11 @@ def get_blog(*args, **kwargs):
         for link in blog.findAll('script', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
             link['src'] = link['src'].replace(our_url, blog_url)
 
-        blog_head = blog.head.renderContents()
 	for header in blog.body.findAll('div', attrs={'id':'header'}):
 	     header.extract()
+        for css in blog.head.findAll('link', attrs={'href':re.compile('.*standalone\.css')}):
+             css.extract()
+        blog_head = blog.head.renderContents()
         blog_body = blog.body.renderContents()
 
         for header in forwarded_response_headers:

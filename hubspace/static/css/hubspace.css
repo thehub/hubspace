@@ -690,6 +690,8 @@ a img {
 	font-family:helvetica, arial, verdana, sans-serif;
 	margin:0;
 }
+
+
 .dataBoxHeader a.title{
 	background:url(/static/images/radius_sm_left_exp.png) no-repeat;
 	text-decoration:none;
@@ -1322,10 +1324,18 @@ ul.resource_group li.resource_item{
     position:relative;
     left: 200px;
 } 
+.buttonlikelink {
+	font-size:110%;
+	padding:3px;
+	font-family:helvetica, arial, verdana, sans-serif;
+	margin:1;
+	border: 1px solid #3F3F3F;
+}
 /*This must go last*/
 #spaceContent table.bookings td.resName {
     width:130px;
 }
+
 #calendarView {
 	position:absolute;
 	right: 0px;
