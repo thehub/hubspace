@@ -1,3 +1,4 @@
+import string
 from turbogears import validators as v
 from turbogears.validators import TgFancyValidator
 from formencode import All, Any, Invalid, ForEach
@@ -9,9 +10,10 @@ from hubspace.model import Resource, RUsage, Pricing
 from hubspace.utilities.uiutils import now
 from hubspace.utilities.permissions import locations
 import hubspace.bookinglib as bookinglib
+import hubspace.alerts.messages
 from cgi import escape
 
-__all__ = ['Numbers', 'phone', 'ExportUsersJSONSchema', 'ExportUsersCSVSchema', 'ProfileSchema', 'MemberServiceSchema', 'datetimeconverter', 'datetimeconverter2', 'timeconverter', 'timeconverterAMPM', 'AddMemberSchema', 'AddNoteSchema', 'EditNoteSchema', 'BillingDetailsSchema', 'real_int', 'IntOrNone', 'dateconverter', 'EditBookingSchema', 'CreateBookingSchema',  "CreateUsageSchema", "CreateUsageByNameSchema", "EditTodoSchema", "CreateTodoSchema", 'BristolDataSchema', "AddPricingSchema", "EditLocationSchema", "FloatInRange", 'AddAction', 'DateRange', 'NoHyphen', "StartBookingSchema", "BoolInt", "valid_rfid", 'username', 'email_address', 'no_ws_ne_cp', 'no_ws']
+__all__ = ['Numbers', 'phone', 'MessageCustSchema', 'ExportUsersJSONSchema', 'ExportUsersCSVSchema', 'ProfileSchema', 'MemberServiceSchema', 'datetimeconverter', 'datetimeconverter2', 'timeconverter', 'timeconverterAMPM', 'AddMemberSchema', 'AddNoteSchema', 'EditNoteSchema', 'BillingDetailsSchema', 'real_int', 'IntOrNone', 'dateconverter', 'EditBookingSchema', 'CreateBookingSchema',  "CreateUsageSchema", "CreateUsageByNameSchema", "EditTodoSchema", "CreateTodoSchema", 'BristolDataSchema', "AddPricingSchema", "EditLocationSchema", "FloatInRange", 'AddAction', 'DateRange', 'NoHyphen', "StartBookingSchema", "BoolInt", "valid_rfid", 'username', 'email_address', 'no_ws_ne_cp', 'no_ws']
 
 class Numbers(v.Regex):
     """Must contain only integers and spaces (e.g. phone number)
@@ -278,6 +280,33 @@ class ManagedLocation(v.FancyValidator):
     def validate_python(self, field_dict, state):
         _validator = v.OneOf([loc.id for loc in locations()])
         return _validator.validate_python(field_dict, state)
+
+class CheckCustMessage(v.FormValidator):
+    show_match = False
+    field_names = None
+    validate_partial_form = False
+    __unpackargs__ = ('*', 'field_names')
+    
+    def validate_python(self, field_dict, state):
+        msg = hubspace.alerts.messages.bag[field_dict["msg_name"]]
+        dummy_data = dict([(m.name, m.name) for m in msg.available_macros])
+        print dummy_data
+        try:
+            string.Template(field_dict['msg_cust']).substitute(dummy_data)
+        except KeyError, e:
+            error_text = 'Invalid Macro: %s' % e.args[0]
+            error_dict = dict(msg_cust = error_text)
+            raise Invalid(error_text, field_dict, state, error_dict=error_dict)
+        except Exception, e:
+            error_text = str(e)
+            error_dict = dict(msg_cust = error_text)
+            raise Invalid(error_text, field_dict, state, error_dict=error_dict)
+
+class MessageCustSchema(v.Schema):
+    loc_id = ManagedLocation()
+    msg_name = String
+    msg_cust = String
+    chained_validators = [ CheckCustMessage('msg_name', 'msg_cust') ]
 
 class ExportUsersCSVSchema(v.Schema):
     location = ManagedLocation()

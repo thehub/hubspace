@@ -1305,13 +1305,14 @@ var Tabs = function () {
         image_upload('upload_homelogo', 'homelogo_image', 'homelogo');
 	image_upload('upload_logo', 'logo_image', 'logo');
     };
+
     var image_upload = function(trigger_id, img_id, attr_name) {
         var trigger = jq('#' + trigger_id);
         var location_id = jq('#admin_location').attr('class');
-        var img = jq('#' + img_id + location_id);
+        var img = jq('#' + img_id + location_id).get(0);
         if (trigger && img) {
             delete uploaded_image;
-            uploaded_image = new Upload(location_id, 'Location', attr_name, img.get(0), trigger.get(0), {'edit_event':'click'});
+            uploaded_image = new Upload(location_id, 'Location', attr_name, img, trigger.get(0), {'edit_event':'click'});
         }
     };
     var dataBoxContract = function (datalink) {

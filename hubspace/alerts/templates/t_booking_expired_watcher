@@ -1,22 +1,23 @@
 sender = "noreply@the-hub.net"
 subject = "HubSpace Alert: Tentative booking release"
 body = """\
-Dear $name,
+Dear ${MEMBER_FIRST_NAME},
 
-You had requested for receiving notification on availability of "$resource_name".
+You had requested for receiving notification on availability of "${RESOURCE}".
 
-The tentative booking for "$resource_name" was just cancelled/expired. Therefore the resource is available for booking from $start_time to $end_time on $date.
+The booking for "${RESOURCE}" was just cancelled/expired. Therefore the resource would is available for booking from ${BOOKING_START} to ${BOOKING_END} on ${BOOKING_DATE}.
 
 Tentative Booking details:
-    Resource:   $resource_name
-    Start Time: $start
-    End Time:   $end
+    Resource:   ${RESOURCE}
+    Start Time: ${BOOKING_START}
+    End Time:   ${BOOKING_END}
+
 $extra_text
-You can login at $location_url to book.
+You can login at ${LOCATION_URL} to book.
 
 This is an automated alert. Please do not reply.
 
 All the best,
 
-The $location_name Hosting Team 
+The ${LOCATION} Hosting Team
 """

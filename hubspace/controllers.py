@@ -9,7 +9,7 @@ import cherrypy
 from cgi import FieldStorage, escape
 import turbogears, sendmail
 from hubspace import inplace_i18n
-from turbogears import controllers, expose, validate, redirect, exception_handler, validators as v, identity, widgets as tg_widgets, config
+from turbogears import controllers, expose, validate, redirect, exception_handler, validators as v, identity, widgets as tg_widgets, config, error_handler
 from turbogears.identity.exceptions import *
 from turbogears.i18n.utils import get_locale
 from formencode import All, Any, ForEach, Schema
@@ -552,37 +552,10 @@ def create_rusage(**kwargs):
             request = None
         if rusage.resource.type != 'tariff' and rusage.resource.time_based and request:
             #validators.Money.from_python and therefore c2s does not work outside a request - which it needs to for some scheduled jobs
-            d = {'name':rusage.user.first_name,
-                 'last_name':rusage.user.last_name,
-                 'resource_name':rusage.resource.name,
-                 'location_name':rusage.resource.place.name,
-                 'location_url':rusage.resource.place.url,
-                 'hosts_email':rusage.resource.place.hosts_email,
-                 'telephone':rusage.resource.place.telephone,
-                 'date':dateconverter.from_python(rusage.start),
-                 'start':timeconverter.from_python(rusage.start),
-                 'end':timeconverter.from_python(rusage.end_time),
-                 'currency':rusage.resource.place.currency == 'GBP' and u'\xa3' or rusage.resource.place.currency,
-                 'cost':c2s([rusage.customcost,rusage.cost][rusage.customcost == None]),
-                 'options': options,
-                 'time_left': bookinglib.timeLeftToConfirm(rusage, in_hours=True)}
-            cc = rusage.resource.place.name.lower().replace(' ', '') + ".bookings@the-hub.net"
-
-            ## backported code
-            if rusage.confirmed:
-                d.update({'resource':rusage.resource.name,
-                          'first_name': rusage.user.first_name,
-                         'location':rusage.resource.place.name,
-                         'hosts_email':rusage.resource.place.hosts_email,
-                         'options': options_text + '\n\n' })
-                body = _(booking_confirmation_text)
-                if rusage.start > now():
-                    sent = send_mail(to=rusage.user.email_address, sender=cc, subject="The Hub | booking confirmation", body=body % d, cc=cc)
-                return rusage
-            ## / backport
-
-            tmpl = rusage.confirmed and "booking_made" or "t_booking_made"
-            hubspace.alerts.sendTextEmail(rusage.user.email_address, tmpl, d, sender=cc, cc=cc)
+            location = rusage.resource.place
+            data = dict ( rusage = rusage, user = rusage.user, location = location )
+            msg_name = rusage.confirmed and "booking_confirmation" or "t_booking_made"
+            hubspace.alerts.sendTextEmail(msg_name, location, data)
     return rusage
            
 def user_stats(users):
@@ -853,40 +826,15 @@ def display_resource_table(user=None, invoice=None, earliest=None, latest=None):
     return try_render(ourdata, template='hubspace.templates.resourcetable', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
 
-welcome_text = """
-Dear %(name)s,
-
-Welcome to The Hub.
-
-You can now access information about other enterprises and innovators at the Hub.
-
-Just log on at http://members.the-hub.net.
-
-Your username is %(username)s and your password is %(password)s. Please login and change your password as soon as possible. 
-
-We invite you to add a short profile of yourself, and search other member profiles. You can also  book meeting spaces and resources as well as view the details of invoices received.
-
-Please don't hesitate to contact The Hub's hosting team at %(email)s or %(telephone)s.
-
-Thank you for being part of The Hub.
-
-The Hosting Team
-"""
-
 def send_welcome_mail(user, password):
     if not password:
         password = md5.new(str(random.random())).hexdigest()[:8]
-    location = user.homeplace.name
-    cc = user.homeplace.hosts_email
-    body = _(welcome_text)%(dict(
-        name = user.first_name,
-        location = location,
-        username = user.user_name,
-        telephone = user.homeplace.telephone,
-        email = cc,
-        password = password))
+    location = user.homeplace
+    data = dict ( location = location,
+                  user = user,
+                  password = password, )
 
-    send_mail(to=user.email_address, sender=cc, subject="The Hub | welcome", body=body, cc=cc)
+    hubspace.alerts.sendTextEmail("member_welcome", location, data)
 
     user.welcome_sent = 1
     
@@ -1603,12 +1551,67 @@ def expose_as_csv(f):
         return out.getvalue()
     return wrap
 
+
+import simplejson
+
+class RPC(controllers.Controller):
+
+    #@expose(format="json")
+    def rpc_error_handler(self, *args, **kw):
+        if 'tg_errors' in kw:
+            return dict(errors = kw['tg_errors'])
+
+    @expose(format="json")
+    @error_handler(rpc_error_handler)
+    def default(self, *args, **kw):
+        jsonin = simplejson.loads(cherrypy.request.body.read())
+        rpcver=jsonin.get("jsonrpc","1.0")
+        methodname=jsonin["method"]
+        params = jsonin['params']
+        _id = jsonin['id']
+        f = getattr(self, methodname)
+        if isinstance(params, dict):
+            ret = f(**params)
+        else:
+            ret = f(*params)
+        return dict(error=None, result=ret, id=_id)
+
+    @identity.require(not_anonymous())
+    def get_messagesdata_for_cust(self):
+        messages = dict( [(name, dict(label=o.label)) for (name, o) in hubspace.alerts.messages.bag.items() if o.can_be_customized] )
+        locations = [(loc.id, loc.name) for loc in user_locations(identity.current.user)]
+        return dict (messages=messages, locations=locations)
+
+    @identity.require(not_anonymous())
+    def get_messagecustdata(self, msg_name, loc_id):
+        loc = model.Location.get(loc_id)
+        msg = hubspace.alerts.messages.bag[msg_name]
+        return dict( text = msg.getTemplates(loc)['body'],
+                         macros = [dict(label=m.label, name=m.name) for m in msg.available_macros] )
+    
+    @identity.require(not_anonymous())
+    @error_handler(rpc_error_handler)
+    @validate(validators=MessageCustSchema)
+    def customize_message(self, loc_id, msg_name, msg_cust, lang=None):
+        loc = model.Location.get(loc_id)
+        msg = hubspace.alerts.messages.bag[msg_name]
+        lang = lang or loc.locale
+        return msg.addNewCustomization(loc, msg_cust, lang)
+
 class Root(controllers.RootController):
     members = Members()
     rfid = RFID()
     feed = Feed()
     sites = Sites()
+    rpc = RPC()
 
+    @expose("hubspace.templates.helo")
+    def echox(self, *args, **kw):
+        import time
+        time.sleep(1)
+        print "echoing ..."
+        return dict(name = 1, name2 = 2)
+   
     @expose("hubspace.templates.flexigrid")
     def users_grid(self, *args, **kw):
         return kw
@@ -1667,7 +1670,7 @@ class Root(controllers.RootController):
         enc = "Default Encoding: " + sys.getdefaultencoding()
         text = _(text) or _("Hubspace Dev Test")
         lang = get_hubspace_locale()
-        out = "<hr/>".join([enc, text, lang, _(welcome_text), _(booking_confirmation_text)])
+        out = "<hr/>".join([enc, text, lang, _(booking_confirmation_text)])
         out = out.replace('\n', "<br/>")
         return out
 
@@ -1700,36 +1703,13 @@ class Root(controllers.RootController):
             applogger.error("%(e_id)s: LDAP sync error" % locals())
         else:
             sync.sendRollbackSignal()
-        try:
-            tb = sys.exc_info()[2]
-            e_str = traceback.format_exc(tb)
-            if isinstance(e_info[1], hubspace.errors.ErrorWithHint):
-                e_hint = e_info[1].hint
-            else:
-                e_hint = ""
-            cherrypy.response.body = self.error_template("issue", dict(e_id=e_id, e_path=e_path, e_str=e_str, e_hint=e_hint))
-        except Exception, err:
-            applogger.fatal("%(e_id)s: Failed to render new issue form" % locals())
-            applogger.exception("%(e_id)s:" % locals())
-            applogger.fatal("%(e_id)s: Failed to render new issue form" % locals())
-            trac_err = traceback.format_exc(tb)
-            description = """
-Error ID: %(e_id)s
-
-URL: %(e_path)s
-
-user_desc: %(u_desc)s
-
-excption: 
-{{{
-%(e_str)s
-}}}
-""" % locals()
-
-            d = dict(url = e_path, e_id = e_id, render_err = trac_err, reporter=reporter,
-                summary="Rendering new ticket form failed.", description=description)
-            hubspace.alerts.sendTextEmail(to, "trac_submission_failed", d)
-            # send an alert
+        tb = sys.exc_info()[2]
+        e_str = traceback.format_exc(tb)
+        if isinstance(e_info[1], hubspace.errors.ErrorWithHint):
+            e_hint = e_info[1].hint
+        else:
+            e_hint = ""
+        cherrypy.response.body = self.error_template("issue", dict(e_id=e_id, e_path=e_path, e_str=e_str, e_hint=e_hint))
 
     @expose_as_csv
     @identity.require(not_anonymous())
@@ -1743,7 +1723,7 @@ excption:
     @identity.require(not_anonymous())
     def submitTicket(self, e_id, e_path, e_str, u_summary, u_desc=""):
         homeplace = identity.current.user.homeplace.name
-        reporter = identity.current.user.display_name.encode('utf-8')
+        reporter = identity.current.user.display_name
         email = identity.current.user.email_address
         summary = u_summary.encode('utf-8')
         description = """
@@ -1755,18 +1735,16 @@ URL: %(e_path)s
 
 User Description:
 
-Excption: 
+Exception: 
 {{{
 %(e_str)s
 }}}
 """ % locals()
 
-        project = "space"
-        baseurl_exposed = "https://trac.the-hub.net"
-        baseurl = "http://172.24.0.206:13000"
-        baseurl = baseurl_exposed
-        loginurl = "%s/%s/login" % (baseurl, project)
-        newticketurl = "%s/%s/newticket" % (baseurl, project)
+
+        baseurl = turbogears.config.config.configs['trac']['baseurl']
+        loginurl = baseurl + turbogears.config.config.configs['trac']['loginpath']
+        newticketurl = baseurl + turbogears.config.config.configs['trac']['newticketpath']
         try:
             b = mechanize.Browser()
             b.open(loginurl)
@@ -1777,8 +1755,8 @@ Excption:
                     b.select_form(nr=nr)
                     break
             # else: no form ?
-            b['user'] = "webreporter"
-            b['password'] = "x"
+            b['user'] = turbogears.config.config.configs['trac']['user']
+            b['password'] = turbogears.config.config.configs['trac']['password']
             b.submit()
 
             b.open(newticketurl)
@@ -1799,14 +1777,12 @@ Excption:
             b.submit('submit')
             links = b.links()
             defect_url = [lnk for lnk in b.links() if lnk.text == 'View'][0].absolute_url
-            defect_url = defect_url.replace(baseurl, baseurl_exposed)
             return "Thank you, %s, you can further followup the defect at <a href=%s>Hubspace Trac</a>" % (reporter, defect_url)
-        except:
-            to = "world.tech.space@the-hub.net"
-            tb = sys.exc_info()[2]
-            trac_err = traceback.format_exc(tb)
-            d = dict(url = newticketurl, e_id = e_id, trac_err = trac_err, reporter=reporter, summary=summary, description=description)
-            hubspace.alerts.sendTextEmail(to, "trac_submission_failed", d)
+        except Exception, err:
+            applogger.exception("Trac submission error:")
+            data = dict ( user=identity.current.user, tb=sys.exc_info()[2] )
+            extra_data = dict ( e_id=e_id, summary=summary, description=description, url=newticketurl )
+            hubspace.alerts.sendTextEmail("trac_submission_failed", data=data, extra_data=extra_data)
         return "Thank you, %s!" % reporter
 
     @expose(allow_json=True)
@@ -3565,12 +3541,17 @@ The Hub Team
         return try_render({'object':User.get(kwargs['foruser'])}, template='hubspace.templates.host', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
 
+    @expose()
+    def send_welcome_mail(self):
+        send_welcome_mail(User.by_user_name("shon"), "123")
+        return "success"
+
     @expose(template="hubspace.templates.addMember")
     @identity.require(not_anonymous())
     @validate(validators=AddMemberSchema())
     def create_user(self, tg_errors=None, **kwargs):
         home_group = None
-        if 'homeplace' in kwargs: 
+        if 'homeplace' in kwargs:
             location = Location.get(int(kwargs['homeplace']))
             ##add user to member group for this location
             home_group = Group.selectBy(level='member', place=location.id)[0]
@@ -4395,15 +4376,10 @@ The Hub Team
                 d['customcost'] = None
             del d['invoiceID']
             new_rusage = model.RUsage(**d)
+            location = rusage.resource.place
             to = rusage.resource.place.hosts_email
-            d = dict (start_time=rusage.start.strftime("%H:%M"),
-                      end_time=rusage.end_time.strftime("%H:%M"),
-                      date =rusage.start.strftime("%Y-%m-%d"),
-                      bookedby=rusage.bookedby.display_name,
-                      resource_name=rusage.resource_name,
-                      start=str(rusage.start),
-                      end=str(rusage.end_time))
-            hubspace.alerts.sendTextEmail(to, "booking_cancellation", d)
+            data = dict (rusage = rusage)
+            hubspace.alerts.sendTextEmail("booking_cancellation", data=data)
             applogger.info("Booking cancellation: %s" % rusage)
             applogger.info("Booking refund: %s" % new_rusage)
             if not rusage.confirmed:

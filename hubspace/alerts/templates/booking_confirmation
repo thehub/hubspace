@@ -1,7 +1,7 @@
 to = "${MEMBER_EMAIL}"
-sender = "noreply@the-hub.net"
+sender = "${BOOKING_CONTACT}"
 cc = "${BOOKING_CONTACT}"
-subject = "The Hub | Tentative booking confirmation"
+subject = "The Hub | booking confirmation"
 body = """
 Dear ${MEMBER_FIRST_NAME},
 
@@ -12,9 +12,7 @@ You have booked ${RESOURCE} from ${BOOKING_START} to ${BOOKING_END} on ${BOOKING
 Also booked: ${ALSO_BOOKED}
 % endif
 
-Please note, this is currently a tentative booking. Unless you confirm with a host within ${TIME_LEFT_TO_CONFIRM} hours, the booking will expire and the space will become available for other bookings. To confirm the booking, just speak to a host or logon to ${LOCATION_URL}.
-
-In the event of a cancellation or expiry you may be charged based on booking cancellation policies.
+In the event of a cancellation, the individual or organization booking the space will be charged 50% of the totaL cost, unless it is cancelled more than two weeks prior to the event.
 
 If you have any questions or further requirements please contact The Hub's hosting team at ${HOSTS_EMAIL} or call us on ${LOCATION_PHONE}.
 
