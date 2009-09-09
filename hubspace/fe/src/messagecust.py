@@ -97,15 +97,16 @@ class messagecust:
             msgpanel = VerticalPanel(Padding=2, Spacing=2)
             messagebox = TextArea()
             messagebox.setCharacterWidth(80)
-            messagebox.setVisibleLines(25)
+            height = len(self.messages_data["text"].split('\n')) + 3
+            messagebox.setVisibleLines(height)
             messagebox.setText(self.messages_data["text"])
             messagebox.setName("textBoxFormElement")
             self.messagebox = messagebox
             msgpanel.add(messagebox)
             self.statusbar = Label(StyleName="errorMessage")
             msgpanel.add(self.statusbar)
-            actionbuttons = HorizontalPanel(Padding=2)
-            updatebutton = Button("Update", self, StyleName="nicebutton small grey")
+            actionbuttons = HorizontalPanel(Spacing=2)
+            updatebutton = Button("Update", self, StyleName="nicebutton small yellow")
             updatebutton.name = "update"
             actionbuttons.add(updatebutton)
             #actionbuttons.add(Button("Send me a preview mail"))

@@ -84,7 +84,11 @@ t_booking_made.available_macros = [macros.Location(), macros.Member_Name(), macr
     macros.Member_First_Name(), macros.Currency(), macros.Cost(), macros.Time_Left_To_Confirm()]
 
 booking_cancellation = Message("booking_cancellation")
-booking_made = Message("booking_made")
+booking_cancellation.available_macros = [macros.Location(), macros.Member_Name(), macros.Member_Email(),
+    macros.Location_Phone(), macros.Location_URL(), macros.Booking_Contact(), macros.Booking_Start(), macros.Booking_End(),
+    macros.Booking_Date(), macros.Resource(), macros.Also_Booked(), macros.Hosts_Email(), macros.Booking_Contact(),
+    macros.Member_First_Name(), macros.Currency(), macros.Cost(), macros.Time_Left_To_Confirm()]
+
 new_ticket_form = Message("new_ticket_form") # render_new_ticket_form
 
 t_booking_expired_hosts = Message("t_booking_expired_hosts")
@@ -100,6 +104,12 @@ t_booking_expired_watcher.available_macros = [macros.Location(), macros.Member_N
     macros.Member_First_Name(), macros.Booked_by()]
 
 t_booking_reminder = Message("t_booking_reminder")
+t_booking_reminder.label = "Tentative booking reminder"
+t_booking_reminder.available_macros = [macros.Location(), macros.Member_Name(), macros.Member_Email(),
+    macros.Location_Phone(),macros.Location_URL(), macros.Booking_Contact(), macros.Booking_Start(), macros.Booking_End(),
+    macros.Booking_Date(), macros.Resource(), macros.Also_Booked(), macros.Hosts_Email(), macros.Booking_Contact(),
+    macros.Member_First_Name(), macros.Booked_by()]
+
 trac_submission_failed = Message("trac_submission_failed")
 
 bag = dict ([(k,v) for (k,v) in locals().items() if isinstance(v, Message)])
