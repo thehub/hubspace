@@ -64,7 +64,8 @@ class Message(object):
 member_welcome = Message("member_welcome")
 member_welcome.label = "Member Welcome"
 member_welcome.can_be_customized = True
-member_welcome.available_macros = [macros.Location(), macros.Member_Name(), macros.Member_Email(), macros.Password(), macros.Username(),
+member_welcome.available_macros = [macros.Location(), macros.Member_Name(), macros.Member_First_Name(),
+    macros.Member_Email(), macros.Password(), macros.Username(),
     macros.Location_URL(), macros.Location_Phone(), macros.Hosts_Email() ]
 
 booking_confirmation = Message("booking_confirmation")
