@@ -1370,11 +1370,6 @@ ul.resource_group li.resource_item{
     .gray.nicebutton, .gray.nicebutton:visited            { background-color: #3F3F3F;}
     .gray.nicebutton:hover                                                       { background-color: #3F3F3F;}
 
-.text {
-    font-size: 90%;
-    text-align:center;
-}
-
 .definition {
     font-size: 90%;
     font-weight: bold;
