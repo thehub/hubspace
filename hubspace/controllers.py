@@ -1575,7 +1575,7 @@ class RPC(controllers.Controller):
 
     @identity.require(not_anonymous())
     def get_messagesdata_for_cust(self):
-        messages = dict( [(name, dict(label=o.label)) for (name, o) in hubspace.alerts.messages.bag.items()] )
+        messages = dict( [(name, dict(label=o.label)) for (name, o) in hubspace.alerts.messages.bag.items() if o.can_be_customized] )
         locations = [(loc.id, loc.name) for loc in user_locations(identity.current.user)]
         return dict (messages=messages, locations=locations)
 

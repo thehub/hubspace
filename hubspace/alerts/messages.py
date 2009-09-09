@@ -63,31 +63,32 @@ class Message(object):
 
 member_welcome = Message("member_welcome")
 member_welcome.label = "Member Welcome"
-member_welcome.can_be_customized = False
+member_welcome.can_be_customized = True
 member_welcome.available_macros = [macros.Location(), macros.Member_Name(), macros.Member_Email(), macros.Password(), macros.Username(),
     macros.Location_URL(), macros.Location_Phone(), macros.Hosts_Email() ]
 
 booking_confirmation = Message("booking_confirmation")
 booking_confirmation.label = "Booking Confirmation"
-booking_confirmation.can_be_customized = False
+booking_confirmation.can_be_customized = True
 booking_confirmation.available_macros = [macros.Location(), macros.Member_Name(), macros.Member_Email(),
     macros.Location_Phone(),macros.Location_URL(), macros.Booking_Contact(), macros.Booking_Start(), macros.Booking_End(),
     macros.Booking_Date(), macros.Resource(), macros.Also_Booked(), macros.Hosts_Email(), macros.Booking_Contact(),
     macros.Member_First_Name(), macros.Currency(), macros.Cost()]
 
-#t_booking_made = Message("t_booking_made")
-#t_booking_made.can_be_customized = True
-#t_booking_made.available_macros = [macros.Location(), macros.Member_Name(), macros.Member_Email(),
-#    macros.Location_Phone(), macros.Location_URL(), macros.Booking_Contact(), macros.Booking_Start(), macros.Booking_End(),
-#    macros.Booking_Date(), macros.Resource(), macros.Also_Booked(), macros.Hosts_Email(), macros.Booking_Contact(),
-#    macros.Member_First_Name(), macros.Currency(), macros.Cost(), macros.Time_Left_To_Confirm()]
-#
-#booking_cancellation = Message("booking_cancellation")
-#booking_made = Message("booking_made")
-#new_ticket_form = Message("new_ticket_form") # render_new_ticket_form
-#t_booking_expired_hosts = Message("t_booking_expired_hosts")
-#t_booking_expired_watcher = Message("t_booking_expired_watcher")
-#t_booking_reminder = Message("t_booking_reminder")
-#trac_submission_failed = Message("trac_submission_failed")
+t_booking_made = Message("t_booking_made")
+t_booking_made.label = "Tentative Booking Confirmation"
+t_booking_made.can_be_customized = True
+t_booking_made.available_macros = [macros.Location(), macros.Member_Name(), macros.Member_Email(),
+    macros.Location_Phone(), macros.Location_URL(), macros.Booking_Contact(), macros.Booking_Start(), macros.Booking_End(),
+    macros.Booking_Date(), macros.Resource(), macros.Also_Booked(), macros.Hosts_Email(), macros.Booking_Contact(),
+    macros.Member_First_Name(), macros.Currency(), macros.Cost(), macros.Time_Left_To_Confirm()]
+
+booking_cancellation = Message("booking_cancellation")
+booking_made = Message("booking_made")
+new_ticket_form = Message("new_ticket_form") # render_new_ticket_form
+t_booking_expired_hosts = Message("t_booking_expired_hosts")
+t_booking_expired_watcher = Message("t_booking_expired_watcher")
+t_booking_reminder = Message("t_booking_reminder")
+trac_submission_failed = Message("trac_submission_failed")
 
 bag = dict ([(k,v) for (k,v) in locals().items() if isinstance(v, Message)])
