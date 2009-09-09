@@ -9,11 +9,11 @@ def sendTextEmail(message_name, location=None, data={}, to=None, cc=None, sender
     message_dict = message.make(location, data)
     sender = sender or message_dict['sender']
     to = to or message_dict['to']
-    cc = cc or message_dict['cc']
+    cc = cc or message_dict.get('cc')
     subject = message_dict['subject']
     body = message_dict['body']
     try:
-        sendmail.sendmail(to, sender=sender, subject=subject, body=body)
+        sendmail.sendmail(to, cc=cc, sender=sender, subject=subject, body=body)
     except Exception, err:
         applogger.exception("alertslib failure")
         # TODO
