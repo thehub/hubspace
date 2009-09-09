@@ -1,18 +1,12 @@
 import pyjd # this is dummy in pyjs.
 from pyjamas.ui.RootPanel import RootPanel
 from pyjamas.ui.VerticalPanel import VerticalPanel
-from pyjamas.ui.Grid import Grid
 from pyjamas.ui.HorizontalPanel import HorizontalPanel
 from pyjamas.ui.Button import Button
-from pyjamas.ui.HTML import HTML
 from pyjamas.ui.Label import Label
 from pyjamas import Window
-from pyjamas.HTTPRequest import HTTPRequest
-from pyjamas.ui.FormPanel import FormPanel
-from pyjamas.ui.TextBox import TextBox
 from pyjamas.ui.TextArea import TextArea
 from pyjamas.ui.ListBox import ListBox
-from pyjamas.ui.PushButton import PushButton
 from pyjamas.ui.CaptionPanel import CaptionPanel
 from pyjamas.ui.FlowPanel import FlowPanel
 
