@@ -87,11 +87,11 @@ def notifyTentativeBookingRelease(booking):
                     name = "%s %s" % (request.foruser.first_name, request.foruser.last_name),
                     req_id = request.id )
         d.update(d2)
-        data = dict ( rusage = rusage, user = rusage.user, location = location )
+        data = dict ( rusage = booking, user = booking.user, location = booking.resource.place )
         hubspace.alerts.sendTextEmail("t_booking_expired_watcher", to=to, data=data)
         applogger.debug("bookinglib: release notification sent to %(to)s. %(b_id)s:%(req_id)s (%(resource_name)s: %(start)s-%(end)s)" % d)
         request.destroySelf()
-    data = dict ( rusage = rusage, user = rusage.user, location = location )
+    data = dict ( rusage = booking, user = booking.user, location = booking.resource.place )
     hubspace.alerts.sendTextEmail("t_booking_expired_hosts", data=data)
     applogger.debug("bookinglib: release notification sent to %(to)s. %(b_id)s (%(resource_name)s: %(start)s-%(end)s)" % d)
 
