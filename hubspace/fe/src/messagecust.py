@@ -94,10 +94,10 @@ class messagecust:
                 macrobutton.name = macro_d['name']
                 buttonspanel.add(macrobutton)
 
-            msgpanel = VerticalPanel(Padding=2, Spacing=2)
+            msgpanel = VerticalPanel(Padding=1, Spacing=1)
             messagebox = TextArea()
             messagebox.setCharacterWidth(80)
-            height = len(self.messages_data["text"].split('\n')) + 3
+            height = len(self.messages_data["text"].split('\n')) + 1
             messagebox.setVisibleLines(height)
             messagebox.setText(self.messages_data["text"])
             messagebox.setName("textBoxFormElement")
