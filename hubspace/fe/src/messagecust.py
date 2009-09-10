@@ -15,16 +15,14 @@ import remote
 location_select_label = "--select--"
 
 def isError(response):
-    return "errors" in response
+    try:
+        return "errors" in response
+    except:
+        return False
 
 def showCustomizationResult(self, response, request_info):
-    print response
-    print isError(response)
     if isError(response):
         error_text = response["errors"]["msg_cust"]
-        print response["errors"]
-        print response["errors"]["msg_cust"]
-        print error_text
         self.statusbar.setText(error_text)
     else:
         self.statusbar.setText("Success: Message customized!")
