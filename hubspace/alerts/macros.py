@@ -6,8 +6,8 @@ class Macro(object):
         cls.inst = object.__new__(cls, *args, **kw)
         return cls.inst
     def __init__(self):
-        self.label = self.__class__.__name__.replace('_', ' ')
-        self.name = self.__class__.__name__.upper()
+        self.label = getattr(self.__class__, 'label', self.__class__.__name__.replace('_', ' '))
+        self.name = getattr(self.__class__, 'name', self.__class__.__name__.upper())
     def getValue(self, data):
         raise NotImplemented
 
@@ -60,6 +60,7 @@ class Member_Last_Name(Macro):
         return data['user'].last_name
 
 class Username(Macro):
+    name = "MEMBER_USERNAME"
     def getValue(self, data):
         return data['user'].user_name
 
