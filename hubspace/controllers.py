@@ -3538,11 +3538,6 @@ The Hub Team
         return try_render({'object':User.get(kwargs['foruser'])}, template='hubspace.templates.host', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
 
-    @expose()
-    def send_welcome_mail(self):
-        send_welcome_mail(User.by_user_name("shon"), "123")
-        return "success"
-
     @expose(template="hubspace.templates.addMember")
     @identity.require(not_anonymous())
     @validate(validators=AddMemberSchema())
