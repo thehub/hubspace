@@ -1325,56 +1325,836 @@ ul.resource_group li.resource_item{
     left: 200px;
 } 
 .buttonlikelink {
-	font-size:85%;
-	padding:1px;
+	font-size:110%;
+	padding:3px;
 	font-family:helvetica, arial, verdana, sans-serif;
 	margin:1;
 	border: 1px solid #3F3F3F;
-}
-
-.nicebutton, .nicebutton:visited {
-    background: #222 ;
-    display: inline-block;
-    padding: 2px 4px 2px;
-    color: #fff;
-    text-decoration: none;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
-    border-bottom: 1px solid rgba(0,0,0,0.25);
-    position: relative;
-    cursor: pointer;
-}
-
-    .nicebutton:hover                                                      { background-color: #111; color: #fff; }
-    .nicebutton:active                                                     { top: 1px; }
-    .small.nicebutton, .small.nicebutton:visited                      { font-size: 11px; padding: ; }
-    .nicebutton, .nicebutton:visited,
-    .medium.nicebutton, .medium.nicebutton:visited            { font-size: 13px; font-weight: bold; line-height: 1; text-shadow: 0 -1px 1px rgba(0,0,0,0.25); }
-    .large.nicebutton, .large.nicebutton:visited                      { font-size: 14px; padding: 8px 14px 9px; }
-
-    .green.nicebutton, .green.nicebutton:visited              { background-color: #91bd09; }
-    .green.nicebutton:hover                                                { background-color: #749a02; }
-    .blue.nicebutton, .blue.nicebutton:visited                { background-color: #2daebf; }
-    .blue.nicebutton:hover                                                 { background-color: #007d9a; }
-    .red.nicebutton, .red.nicebutton:visited                  { background-color: #e33100; }
-    .red.nicebutton:hover                                                  { background-color: #872300; }
-    .magenta.nicebutton, .magenta.nicebutton:visited          { background-color: #a9014b; }
-    .magenta.nicebutton:hover                                                      { background-color: #630030; }
-    .orange.nicebutton, .orange.nicebutton:visited            { background-color: #ff5c00; }
-    .orange.nicebutton:hover                                                       { background-color: #d45500; }
-    .yellow.nicebutton, .yellow.nicebutton:visited            { background-color: #ffb515; }
-    .yellow.nicebutton:hover                                                       { background-color: #fc9200; }
-    .gray.nicebutton, .gray.nicebutton:visited            { background-color: #3F3F3F;}
-    .gray.nicebutton:hover                                                       { background-color: #3F3F3F;}
-
-.definition {
-    font-size: 90%;
-    font-weight: bold;
 }
 /*This must go last*/
 #spaceContent table.bookings td.resName {
     width:130px;
 }
+
+#calendarView {
+	position:absolute;
+	right: 0px;
+	margin-top: 16px;
+}
+#resource_group_description {
+	margin-top:5px;
+	margin-bottom:5px;
+	position:relative;
+}
+#spaceContent .bookingDate {
+	margin: 0px;
+	padding: 20px 0px 0px;
+	border: none;
+	text-align: center;
+}
+
+#spaceContent .bookingDate .bookingHub,
+#spaceContent .bookingHub {
+	float: right;
+	padding: 0px;
+}
+#spaceContent .bookingDate h2 {
+	color: #3F3F3F;
+	margin: 0px;
+	font-weight: normal;
+	font-size: 11px;
+	padding: 0px 10px;
+	display: inline;
+	height: 14px;
+	line-height: 14px;
+}
+#spaceContent .bookingDate #leftArrow,
+#spaceContent .bookingDate #rightArrow {
+	margin: 0px;
+	padding: 0px;
+}
+.checkbox,
+.radio {
+	margin: 0px 2px 0px 0px;
+	padding: 0px;
+}
+#room_header {
+	position: relative;
+	padding-left: 32px;
+	width: 613px;
+	height: 35px;
+	margin-top: 15px;
+	margin-bottom: 0px;
+}
+#room_header .room_selector {
+	float: left;
+	margin: 0px;
+	padding: 0px;
+}
+#room_header .label,
+#room_header .label_selected {
+	height:23px;
+	font-size: 10px;
+	color: #FFFFFF;
+	font-weight: bold;
+	padding: 2px;
+	display: block;
+	z-index: 11;
+	left: 0px;
+	top: 0px;
+	position: relative;
+	filter: Alpha(opacity=50);
+	opacity: 0.5;
+	border-style: solid;
+	border-width: 1px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	text-decoration: none;
+	margin: 0px;
+	vertical-align: middle;
+	overflow: hidden;
+}
+#room_selector_group {
+	margin-top: 6px;
+	padding-left: 32px;
+	position: relative;
+	width: 613px;
+	overflow: hidden;
+	height: auto;
+	left: 0px;
+	top: 0px;
+}
+#room_selector_group .room_selector {
+	height: auto;
+	width: auto;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	float: left;
+	padding: 0px;
+	margin: 0px 3px 5px 0px;
+}
+#room_selector_group .label,
+#room_selector_group .label_selected {
+	font-size: 10px;
+	color: #FFFFFF;
+	font-weight: bold;
+	height: auto;
+	width: 140px;
+	padding: 2px 2px 2px 4px;
+	display: block;
+	z-index: 11;
+	left: 0px;
+	top: 0px;
+	position: relative;
+	filter: Alpha(opacity=50);
+	opacity: 0.5;
+	border-style: solid;
+	border-width: 1px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	text-decoration: none;
+}
+#room_selector_group .label:hover {
+	filter: Alpha(opacity=75);
+	opacity: 0.75;
+}
+#room_selector_group .label_selected,
+#room_selector_group.dayview .label,
+#room_selector_group.dayview .label_selected {
+	filter: Alpha(opacity=100);
+	opacity: 1;
+}
+#room_selector_group .close {
+	height: 18px;
+	width: 20px;
+	display: block;
+	border-style: none;
+	padding: 0px;
+	background-repeat: no-repeat;
+	background-position: 4px 2px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	z-index: 12;
+}
+#mybookings_selector_group label {
+	height: auto;
+	width: auto;
+	padding: 2px 12px 2px 2px;
+	display: block;
+}
+#room_header .room1 .label,
+#room_selector_group .room1 .label,
+#room_selector_group .room1 .label_selected,
+#bookspacedate .room1 {
+	background-color: #9d0020;
+	border-color: #5a1514;
+}
+#room_header .room2 .label,
+#room_selector_group .room2 .label,
+#room_selector_group .room2 .label_selected,
+#bookspacedate .room2 {
+	background-color: #e8411a;
+	border-color: #9b1f11;
+}
+#room_header .room3 .label,
+#room_selector_group .room3 .label,
+#room_selector_group .room3 .label_selected,
+#bookspacedate .room3 {
+	background-color: #ff9900;
+	border-color: #b36000;
+}
+#room_header .room4 .label,
+#room_selector_group .room4 .label,
+#room_selector_group .room4 .label_selected,
+#bookspacedate .room4 {
+	background-color: #0e6fe7;
+	border-color: #003fa3;
+}
+#room_header .room5 .label,
+#room_selector_group .room5 .label,
+#room_selector_group .room5 .label_selected,
+#bookspacedate .room5 {
+	background-color: #08a0d8;
+	border-color: #006796;
+}
+#room_header .room6 .label,
+#room_selector_group .room6 .label,
+#room_selector_group .room6 .label_selected,
+#bookspacedate .room6 {
+	background-color: #00bbc2;
+	border-color: #007d83;
+}
+#room_header .room_t .label,
+#room_selector_group .room_t .label,
+#room_selector_group .room_t .label_selected,
+#bookspacedate .room_t {
+	background-color: grey;
+	border-color: #000000;
+}
+#room_selector_group .roomX {
+	width: auto;
+	filter: Alpha(opacity=100);
+	opacity: 1;
+}
+.mybooking {
+	background-image: url(/static/images/star.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+.mewatching {
+	background-image: url(/static/images/alert.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+.unavailable {
+	background-image: url(/static/images/cross.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+html>body .mybooking {
+	background-image: url(/static/images/star.png);
+}
+html>body .mewatching{
+	background-image: url(/static/images/alert.gif);
+}
+html>body .unavailable {
+	background-image: url(/static/images/cross.png);
+}
+#mybookings_selector_group {
+	position: absolute;
+	top: 0px;
+	right: -107px;
+}
+#room_add_group {
+	position: absolute;
+	top: 0px;
+	right: -107px;
+}
+.bigcal_week,
+.bigcal_day {
+	position: relative;
+	padding-left: 32px;
+	background-image: url(/static/images/calendar_week_background.png);
+	height: 505px;
+	width: 613px;
+	background-position: 0px 0px;
+	margin-top: 30px;
+}
+.bigcal_day {
+	background-image: url(/static/images/calendar_day_background.png);
+	margin-top: 0px;
+}
+.day_group {
+	position: relative;
+	width: 87px;
+	height: 100%;
+	left: 0px;
+	top: 0px;
+	float: left;
+}
+.room_group {
+	position: relative;
+	left: 0px;
+	top: 0px;
+	float: left;
+	padding: 0px;
+	margin: 0px;
+}
+.day_group .day_marker {
+	color: #3F3F3F;
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	font-size: 10px;
+	top: -15px;
+        cursor: pointer;
+}
+.bigcal_week .event,
+.bigcal_week .unavailable,
+.bigcal_day .event,
+.bigcal_day .unavailable {
+	font-size: 8px;
+	color: #FFFFFF;
+	text-decoration: none;
+	position: absolute;
+	border-style: solid;
+	border-width: 1px;
+	margin: 0px;
+	padding: 0px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	width: 87px;
+        cursor: pointer;
+	filter: Alpha(opacity=62);
+	opacity: 0.62;
+}
+.bigcal_week .layer0{
+        z-index:1;
+}
+.bigcal_week .layer1{
+        z-index:2;
+}
+.bigcal_week .layer2{
+        z-index:3;
+}
+.bigcal_week .layer3{
+        z-index:4;
+}
+.bigcal_week .layer4{
+        z-index:5;
+}
+.bigcal_week .layer5{
+        z-index:6;
+}
+.bigcal_week .layer6{
+        z-index:7;
+}
+.bigcal_week .layer7{
+        z-index:8;
+}
+.bigcal_week .event:hover,
+.bigcal_week .unavailable:hover,
+.bigcal_week .room_selected{
+	filter: Alpha(opacity=100);
+	opacity: 1;
+        z-index: 12;
+}
+.bigcal_week .room_selected{
+        z-index: 11;
+}
+.other_booking {
+        display: block;
+}
+.resource_on {
+        display: block;
+}
+.other_booking_off {
+        display: none;
+}
+.resource_off {
+        display: none;
+}
+.bigcal_day .event,
+.bigcal_day .unavailable {
+	filter: Alpha(opacity=100);
+	opacity: 1;
+	padding: 2px;
+	font-size: 9px;
+}
+#cal_key {
+	margin-left: 32px;
+	margin-top: 5px;
+}
+#mybookings {
+	background-image: url(/static/images/star_black.png);
+	background-position: left center;
+	padding-left: 15px;
+	background-repeat: no-repeat;
+	color: #3F3F3F;
+}
+#unavailable_icon {
+	background-image: url(/static/images/cross_black.png);
+	background-position: left center;
+	padding-left: 15px;
+	background-repeat: no-repeat;
+	color: #3F3F3F;
+}
+#watching {
+	background-image: url(/static/images/alert.gif);
+	background-position: left center;
+	padding-left: 15px;
+	background-repeat: no-repeat;
+	color: #3F3F3F;
+}.big_popup {
+	border: 3px solid #9d0020;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	position: relative;
+	background-color: #eeeeee;
+	left: 0px;
+	top: 0px;
+	z-index: 100;
+	margin: 0px;
+	padding: 15px 20px 5px 5px;
+}
+#booking_popup {
+	position: absolute;
+	left: 32px;
+	top: 0px;
+        display: none;
+        padding-bottom: 20px;
+}
+.booking_popupTable {
+	font-size: 90%;
+	border-collapse: collapse;
+	margin: 0px;
+	padding: 0px;
+}
+.booking_popupTable td {
+	padding: 8px;
+	vertical-align: top;
+}
+.booking_popupTable td.td_space {
+	padding: 0px;
+}
+.booking_popupTable .left {
+	width: 100px;
+	text-align: right;
+        font-weight: 600;
+}
+.booking_popupTable .right {
+	width: 425px;
+}
+#booking_popup ul,
+#booking_popup li {
+	margin: 0px;
+	padding: 0px 0px 3px;
+	list-style: none;
+}
+#booking_popup form,
+#booking_popup input,
+#booking_popup select,
+#booking_popup textarea {
+	margin: -3px 0px 0px;
+	padding: 0px;
+	font-size: 11px;
+}
+#booking_popup .right img {
+	float: left;
+	padding-right: 10px;
+}
+.rightFloat {
+	float: right;
+}
+#publicise_event {
+        width: 120px;
+}
+#booking_popup #meeting_name {
+	width: 260px;
+}
+#contentPane table textarea {
+	width: 426px;
+	height: 100px;
+	font-size: 11px;
+}
+#booking_popup #booking_for {
+	width: 428px;
+}
+#onlyMyBookings {
+        width: 30%;
+        margin-top: 16px;
+        margin-left: 27px;
+}
+a#meetingBookingEdit {
+        position:absolute;
+        right:30px;
+        top: 6px;
+}
+
+/* Main Style Sheet for jQuery UI date picker */
+#ui-datepicker-div, .ui-datepicker-inline {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	padding: 0;
+	margin: 0;
+	background: #ddd;
+	width: 185px;
+}
+#ui-datepicker-div {
+	display: none;
+	border: 1px solid #777;
+	z-index: 100; /*must have*/
+}
+.ui-datepicker-inline {
+	float: left;
+	display: block;
+	border: 0;
+}
+.ui-datepicker-rtl {
+	direction: rtl;
+}
+.ui-datepicker-dialog {
+	padding: 5px !important;
+	border: 4px ridge #ddd !important;
+}
+.ui-datepicker-disabled {
+	position: absolute;
+	z-index: 100;
+	background-color: white;
+	opacity: 0.5;
+}
+button.ui-datepicker-trigger {
+	width: 25px;
+}
+img.ui-datepicker-trigger {
+	margin: 2px;
+	vertical-align: middle;
+}
+.ui-datepicker-prompt {
+	float: left;
+	padding: 2px;
+	background: #ddd;
+	color: #000;
+}
+* html .ui-datepicker-prompt {
+	width: 185px;
+}
+.ui-datepicker-control, .ui-datepicker-links, .ui-datepicker-header, .ui-datepicker {
+	clear: both;
+	float: left;
+	width: 100%;
+	color: #fff;
+}
+.ui-datepicker-control {
+	background: #400;
+	padding: 2px 0px;
+}
+.ui-datepicker-links {
+	background: #000;
+	padding: 2px 0px;
+}
+.ui-datepicker-control, .ui-datepicker-links {
+	font-weight: bold;
+	font-size: 80%;
+}
+.ui-datepicker-links label { /* disabled links */
+	padding: 2px 5px;
+	color: #888;
+}
+.ui-datepicker-clear, .ui-datepicker-prev {
+	float: left;
+	width: 34%;
+}
+.ui-datepicker-rtl .ui-datepicker-clear, .ui-datepicker-rtl .ui-datepicker-prev {
+	float: right;
+	text-align: right;
+}
+.ui-datepicker-current {
+	float: left;
+	width: 30%;
+	text-align: center;
+}
+.ui-datepicker-close, .ui-datepicker-next {
+	float: right;
+	width: 34%;
+	text-align: right;
+}
+.ui-datepicker-rtl .ui-datepicker-close, .ui-datepicker-rtl .ui-datepicker-next {
+	float: left;
+	text-align: left;
+}
+.ui-datepicker-header {
+	padding: 1px 0 3px;
+	background: #333;
+	text-align: center;
+	font-weight: bold;
+	height: 1.3em;
+}
+.ui-datepicker-header select {
+	background: #333;
+	color: #fff;
+	border: 0px;
+	font-weight: bold;
+}
+.ui-datepicker {
+	background: #ccc;
+	text-align: center;
+	font-size: 100%;
+}
+.ui-datepicker a {
+	display: block;
+	width: 100%;
+}
+.ui-datepicker-title-row {
+	background: #777;
+}
+.ui-datepicker-days-row {
+	background: #eee;
+	color: #666;
+}
+.ui-datepicker-week-col {
+	background: #777;
+	color: #fff;
+}
+.ui-datepicker-days-cell {
+	color: #000;
+	border: 1px solid #ddd;
+}
+.ui-datepicker-days-cell a{
+	display: block;
+}
+.ui-datepicker-week-end-cell {
+	background: #ddd;
+}
+.ui-datepicker-title-row .ui-datepicker-week-end-cell {
+	background: #777;
+}
+.ui-datepicker-days-cell-over {
+	background: #fff;
+	border: 1px solid #777;
+}
+.ui-datepicker-unselectable {
+	color: #888;
+}
+.ui-datepicker-today {
+	background: #fcc !important;
+}
+.ui-datepicker-current-day {
+	background: #999 !important;
+}
+.ui-datepicker-status {
+	background: #ddd;
+	width: 100%;
+	font-size: 80%;
+	text-align: center;
+}
+
+/* ________ Datepicker Links _______
+
+** Reset link properties and then override them with !important */
+#ui-datepicker-div a, .ui-datepicker-inline a {
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
+	background: none;
+	color: #000;
+}
+.ui-datepicker-inline .ui-datepicker-links a {
+	padding: 0 5px !important;
+}
+.ui-datepicker-control a, .ui-datepicker-links a {
+	padding: 2px 5px !important;
+	color: #eee !important;
+}
+.ui-datepicker-title-row a {
+	color: #eee !important;
+}
+.ui-datepicker-control a:hover {
+	background: #fdd !important;
+	color: #333 !important;
+}
+.ui-datepicker-links a:hover, .ui-datepicker-title-row a:hover {
+	background: #ddd !important;
+	color: #333 !important;
+}
+
+/* ___________ MULTIPLE MONTHS _________*/
+
+.ui-datepicker-multi .ui-datepicker {
+	border: 1px solid #777;
+}
+.ui-datepicker-one-month {
+	float: left;
+	width: 185px;
+}
+.ui-datepicker-new-row {
+	clear: left;
+}
+
+/* ___________ IE6 IFRAME FIX ________ */
+
+.ui-datepicker-cover {
+    display: none; /*sorry for IE5*/
+    display/**/: block; /*sorry for IE5*/
+    position: absolute; /*must have*/
+    z-index: -1; /*must have*/
+    filter: mask(); /*must have*/
+    top: -4px; /*must have*/
+    left: -4px; /*must have*/
+    width: 200px; /*must have*/
+    height: 200px; /*must have*/
+}
+
+.ac_results {
+	padding: 0px;
+	border: 1px solid black;
+	background-color: white;
+	overflow: hidden;
+	z-index: 99999;
+}
+
+.ac_results ul {
+	width: 100%;
+	list-style-position: outside;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.ac_results li {
+	margin: 0px;
+	padding: 2px 5px;
+	cursor: default;
+	display: block;
+	/* 
+	if width will be 100% horizontal scrollbar will apear 
+	when scroll mode will be used
+	*/
+	/*width: 100%;*/
+	font: menu;
+	font-size: 12px;
+	/* 
+	it is very important, if line-height not setted or setted 
+	in relative units scroll will be broken in firefox
+	*/
+	line-height: 16px;
+	overflow: hidden;
+}
+
+.ac_loading {
+	background: white url('indicator.gif') right center no-repeat;
+}
+
+.ac_odd {
+	background-color: #eee;
+}
+
+.ac_over {
+	background-color: #0A246A;
+	color: white;
+}
+
+.updatesBar {
+        position: relative;
+	float: left;
+	width: 155px;
+	margin: 0 0 10px 0;
+	padding: 0px;
+	font-size: 0.9em;
+}
+.profilesFeed .update_text {
+        width:100px;
+}
+.eventsFeed .update_text {
+        width:140px;
+}
+.announce {
+        margin-left: 10px;
+}
+.announceCategoryHeader {
+	text-align: left;
+	margin-left: 15px;
+}
+.announceCategoryHeader h1 {
+	font-size: 1.3em;
+}
+div.feedLink {
+	background: url(/static/images/feed-icon.gif) no-repeat;
+	float: right;
+	width: 16px;
+	height: 16px;
+}
+.feedLink a {
+	display:  block;
+	height: 100%;
+	width: 100%;
+}
+.feedLink h1 {
+	display: none;
+}
+
+
+.update {
+        float: left;
+        clear: both;
+        position: relative;
+        margin-bottom: 10px;
+        border: 1px solid #9d0020;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px; 
+	background-color: #eeeeee;
+        padding: 0px 6px;
+        width: 150px;
+}
+.update div.update_text {
+        display: inline;
+        float:left;
+        position: relative;
+        margin-left: 8px;
+        margin-top: 4px;
+}
+.update h1{
+        margin-top:0px;
+        margin-bottom:0px;
+        font-size: 1.1em;
+}
+.update h2{
+        margin-top:0px;
+        color:#3F3F3F;
+        font-family:helvetica,arial,verdana,sans-serif;
+        font-size: 1em;
+        font-style: italic;
+}
+.update p{
+        color:#3F3F3F;
+        font-family:helvetica,arial,verdana,sans-serif;
+        font-size: 1.05em;
+        font-style: italic;
+}
+.update img {
+        position: relative;
+ 	float: left;
+        margin-top: 5px;
+        margin-bottom: 5px;
+}
+.update_item {
+	border: 2px solid #9d0020;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	position: relative;
+	background-color: #eeeeee;
+	left: 0px;
+	top: 0px;
+	z-index: 10000;
+	padding: 15px 20px 30px 10px;
+        font-size: 90%;
+	font-family: verdana, helvetica, arial, sans-serif;
+        line-height: 15px;
+}
+.clear {
+	visibility: hidden;
+        height: 30px;
+}
+

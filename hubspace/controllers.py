@@ -1110,6 +1110,8 @@ def process_entry(job, alias, start_date, aliases, resource_types):
 def book_print_resource(resource_id, resource_description, tg_errors=None, **kwargs):
     """
     """
+    resource_description = resource_description.decode('utf-8', 'replace')
+    resource_description = resource_description.encode('utf-8')
     rusages = RUsage.select(AND(RUsage.q.resourceID==resource_id,
                                 RUsage.q.resource_description==resource_description))
 
@@ -1126,7 +1128,8 @@ def book_print_resource(resource_id, resource_description, tg_errors=None, **kwa
         kwargs['resource'] = resource_id
         make_booking(**kwargs)
         return "1"
-    except:
+    except Exception, e:
+        print `e`
         return "3"
 
 
@@ -1738,8 +1741,8 @@ Exception:
 }}}
 """ % locals()
 
-        baseurl = turbogears.config.config.configs['trac']['baseurl']
 
+        baseurl = turbogears.config.config.configs['trac']['baseurl']
         loginurl = baseurl + turbogears.config.config.configs['trac']['loginpath']
         newticketurl = baseurl + turbogears.config.config.configs['trac']['newticketpath']
         try:
