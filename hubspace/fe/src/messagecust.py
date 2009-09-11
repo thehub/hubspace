@@ -44,7 +44,6 @@ class messagecust:
 
     def onRemoteResponse(self, response, request_info):
         mname = request_info.method
-        print response
         if mname == "customize_message":
             showCustomizationResult(self, response, request_info)
             return
@@ -141,10 +140,6 @@ class messagecust:
                 break
 
         remote.server.get_messagecustdata(msg_selection, loc_id, self)
-
-        #if msg_selection not in self.messages_data:
-        #    return
-
 
 if __name__ == '__main__':
     pyjd.setup("http://127.0.0.1/examples/jsonrpc/public/JSONRPCExample.html")
