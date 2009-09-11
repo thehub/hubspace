@@ -116,7 +116,7 @@ class Cost(Macro):
 class Also_Booked(Macro):
     def getValue(self, data):
         rusage = data['rusage']
-        return ", ".join([u.resource.name for u in rusage.suggested_usages])
+        return _("Also booked: ") + ", ".join([u.resource.name for u in rusage.suggested_usages])
     
 class Time_Left_To_Confirm(Macro):
     label = "Time left to confirm"

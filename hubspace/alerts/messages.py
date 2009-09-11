@@ -5,7 +5,7 @@ import string
 import compiler
 import logging
 import macros
-from mako.template import Template
+from string import Template
 
 __all__ = ['bag']
 
@@ -58,7 +58,7 @@ class Message(object):
         d.update(extra_data)
         #print d
         #print templates
-        return dict( [(k, Template(v).render(**d)) for (k,v) in templates.items()] )
+        return dict( [(k, Template(v).substitute(**d)) for (k,v) in templates.items()] )
         
 
 member_welcome = Message("member_welcome")

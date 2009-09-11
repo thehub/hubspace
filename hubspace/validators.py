@@ -290,7 +290,6 @@ class CheckCustMessage(v.FormValidator):
     def validate_python(self, field_dict, state):
         msg = hubspace.alerts.messages.bag[field_dict["msg_name"]]
         dummy_data = dict([(m.name, m.name) for m in msg.available_macros])
-        print dummy_data
         try:
             string.Template(field_dict['msg_cust']).substitute(dummy_data)
         except KeyError, e:
