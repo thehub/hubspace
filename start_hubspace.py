@@ -19,7 +19,7 @@ def main():
     else:
         configfile = "prod.cfg"
 
-    lucene_lock = '../index/en/write.lock'
+    lucene_lock = 'index/en/write.lock'
     if exists(lucene_lock):
         os.unlink()
     # Patch before you start importing etc.
