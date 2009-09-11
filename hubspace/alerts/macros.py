@@ -60,7 +60,6 @@ class Member_Last_Name(Macro):
         return data['user'].last_name
 
 class Username(Macro):
-    name = "MEMBER_USERNAME"
     def getValue(self, data):
         return data['user'].user_name
 

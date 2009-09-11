@@ -45,7 +45,7 @@ class Message(object):
 
     def addNewCustomization(self, location, text, lang):
         MCust = model.MessageCustomization
-        custs = MCust.select(AND(MCust.q.message==self.name, MCust.q.location==location, MCust.q.text==text, MCust.q.lang==lang))
+        custs = MCust.select(AND(MCust.q.message==self.name, MCust.q.location==location, MCust.q.lang==lang))
         if custs.count():
             custs[0].text = text
         else:
