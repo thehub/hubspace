@@ -4,9 +4,9 @@ import messages
 
 applogger = logging.getLogger("hubspace")
 
-def sendTextEmail(message_name, location=None, data={}, to=None, cc=None, sender=None, notifydevonfailure=True):
+def sendTextEmail(message_name, location=None, data={}, extra_data={}, to=None, cc=None, sender=None, notifydevonfailure=True):
     message = messages.bag[message_name]
-    message_dict = message.make(location, data)
+    message_dict = message.make(location, data, extra_data)
     sender = sender or message_dict['sender']
     to = to or message_dict['to']
     cc = cc or message_dict.get('cc')
