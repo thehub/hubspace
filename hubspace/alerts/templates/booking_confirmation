@@ -8,9 +8,7 @@ Dear ${MEMBER_FIRST_NAME},
 Thank you for your booking at The Hub ${LOCATION}.
 
 You have booked ${RESOURCE} from ${BOOKING_START} to ${BOOKING_END} on ${BOOKING_DATE}. The expected cost of this usage is ${CURRENCY} ${COST}.
-% if ALSO_BOOKED:
-Also booked: ${ALSO_BOOKED}
-% endif
+${ALSO_BOOKED}
 
 In the event of a cancellation, the individual or organization booking the space will be charged 50% of the totaL cost, unless it is cancelled more than two weeks prior to the event.
 

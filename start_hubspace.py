@@ -21,7 +21,7 @@ def main():
 
     lucene_lock = 'index/en/write.lock'
     if exists(lucene_lock):
-        os.unlink()
+        os.unlink(lucene_lock)
     # Patch before you start importing etc.
     import patches
     import patches.utils

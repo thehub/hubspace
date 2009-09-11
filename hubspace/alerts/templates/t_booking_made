@@ -8,9 +8,7 @@ Dear ${MEMBER_FIRST_NAME},
 Thank you for your booking at The Hub ${LOCATION}.
 
 You have booked ${RESOURCE} from ${BOOKING_START} to ${BOOKING_END} on ${BOOKING_DATE}. The expected cost of this usage is ${CURRENCY} ${COST}.
-% if ALSO_BOOKED:
-Also booked: ${ALSO_BOOKED}
-% endif
+${ALSO_BOOKED}
 
 Please note, this is currently a tentative booking. Unless you confirm with a host within ${TIME_LEFT_TO_CONFIRM} hours, the booking will expire and the space will become available for other bookings. To confirm the booking, just speak to a host or logon to ${LOCATION_URL}.
 

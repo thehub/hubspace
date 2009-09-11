@@ -21,6 +21,7 @@ def isError(response):
         return False
 
 def showCustomizationResult(self, response, request_info):
+    #print response
     if isError(response):
         error_text = response["errors"]["msg_cust"]
         self.statusbar.setText(error_text)
