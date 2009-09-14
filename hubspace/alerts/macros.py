@@ -87,7 +87,7 @@ class Booking_Start(Macro):
         return timeconverter.from_python(data['rusage'].start)
 
 class Booking_End(Macro):
-    label = "Start"
+    label = "End"
     def getValue(self, data):
         from hubspace.validators import timeconverter, dateconverter
         return timeconverter.from_python(data['rusage'].end_time)
@@ -95,7 +95,7 @@ class Booking_End(Macro):
 class Booking_Date(Macro):
     def getValue(self, data):
         from hubspace.validators import timeconverter, dateconverter
-        return dateconverter.from_python(data['rusage'].date_booked)
+        return dateconverter.from_python(data['rusage'].start)
 
 class Booked_by(Macro):
     def getValue(self, data):
