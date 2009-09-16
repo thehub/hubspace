@@ -1621,9 +1621,9 @@ class Root(controllers.RootController):
         fields = [f for f in user_fields if f in fields]
         sortname = (sortname in fields and sortname) or "display_name" in fields and "display_name" or fields[0]
         if location == "all":
-            select = model.User.select(AND(model.User.q.active==1))
+            select = model.User.select()
         else:
-            select = model.User.select(AND(model.User.q.active==1, model.User.q.homeplaceID==int(location)))
+            select = model.User.select(AND(model.User.q.homeplaceID==int(location)))
         total = select.count()
         if sortname not in [c.name for c in User.sqlmeta.columnList]:
             block = sorted(select, key=lambda u: getattr(u, sortname))

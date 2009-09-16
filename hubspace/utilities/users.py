@@ -10,7 +10,7 @@ from hubspace.utilities.uiutils import now
 
 fields = ODict()
 for k,v in (
-    #("active", dict (label = "Active", value = "active", checked = "checked")),
+    ("active", dict (label = "Active", value = "active")),
     ("display_name", dict (label = "Name", value = "display_name", checked = "checked")),
     ("homeplace_name", dict (label = "Location", value = "homeplace_name", checked = "checked")),
     ("tariff_name", dict (label = "Tariff", value = "tariff_name", checked = "checked")),

@@ -87,7 +87,7 @@ class Booking_Start(Macro):
         return timeconverter.from_python(data['rusage'].start)
 
 class Booking_End(Macro):
-    label = "Start"
+    label = "End"
     def getValue(self, data):
         from hubspace.validators import timeconverter, dateconverter
         return timeconverter.from_python(data['rusage'].end_time)
@@ -95,7 +95,7 @@ class Booking_End(Macro):
 class Booking_Date(Macro):
     def getValue(self, data):
         from hubspace.validators import timeconverter, dateconverter
-        return dateconverter.from_python(data['rusage'].date_booked)
+        return dateconverter.from_python(data['rusage'].start)
 
 class Booked_by(Macro):
     def getValue(self, data):
@@ -116,7 +116,10 @@ class Cost(Macro):
 class Also_Booked(Macro):
     def getValue(self, data):
         rusage = data['rusage']
-        return _("Also booked: ") + ", ".join([u.resource.name for u in rusage.suggested_usages])
+        suggested_usages = [u.resource.name for u in rusage.suggested_usages]
+        if suggested_usages:
+            return _("Also booked: ") + ", ".join(suggested_usages)
+        return ""
     
 class Time_Left_To_Confirm(Macro):
     label = "Time left to confirm"
