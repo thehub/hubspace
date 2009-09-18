@@ -1147,6 +1147,11 @@ var search_invoices = function (evt) {
     jq('#search_results').load('/uninvoiced_users', form, search_results_listeners);
     return false;
 };
+var get_usage_summary = function (evt) {
+    var form = jq('#usage_summary').serializeArray();
+    var params = jQuery.param(form);
+    window.open('/usage_report.csv?' + params);
+};
 var get_users_csv = function (evt) {
     var form = jq('#users_export').serializeArray();
     var params = jQuery.param(form);
@@ -1472,6 +1477,7 @@ var Tabs = function () {
                jq('#invoices_search').click(search_invoices);
             }
             if (section_name === 'host' && subsection_name === 'managementdata') {
+               jq('#usage_summary_csv').click(get_usage_summary);
                jq('#users_grid').click(show_users_grid);
                jq('#users_csv').click(get_users_csv);
                o.addBoxExpanders();

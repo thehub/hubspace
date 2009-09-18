@@ -4414,16 +4414,24 @@ The Hub Team
 
         return addUser2Group(user, group)
 
-    @expose()
+    @expose_as_csv
     @strongly_expire
     @identity.require(not_anonymous())
     @validate(validators={'place':real_int})
-    def usage_report_csv(self,place=None, filename=None):
+    def usage_report_csv(self, place, filename=None, columns_selection=['resourcetype', 'resourceid', 'total', 'invoiced']):
         place = Location.get(place)
         if not permission_or_owner(place, None, 'manage_users'):
             raise IdentityFailure('what about not hacking the system')
-        out = StringIO.StringIO()
-        writer = csv.writer(out,quoting=csv.QUOTE_ALL)
+
+        must_columns = ['location','resourcename']
+        if isinstance(columns_selection, basestring): columns_selection = [columns_selection]
+        columns = must_columns + columns_selection
+        include_total = "total" in columns
+        if include_total:
+            columns.remove("total")
+        include_invoiced = "invoiced" in columns
+        if include_invoiced:
+            columns.remove("invoiced")
         
         rusages = [rusage for rusage in RUsage.select() if rusage.resource.place==place]
         sums = dict()
@@ -4440,35 +4448,47 @@ The Hub Team
                 keys.append(key)
             cost = [rusage.customcost,rusage.cost][rusage.customcost == None]
             old = sums.setdefault(resourceid,{}).setdefault(key,{})
-            old.setdefault('total', 0)
-            old.setdefault('invoiced', 0)
-            if rusage.invoice:
-                sums[resourceid][key]['invoiced'] = old['invoiced'] + cost
-            sums[resourceid][key]['total'] = old['total'] + cost
+            if include_invoiced:
+                old.setdefault('invoiced', 0)
+                if rusage.invoice:
+                    sums[resourceid][key]['invoiced'] = old['invoiced'] + cost
+            if include_total:
+                old.setdefault('total', 0)
+                sums[resourceid][key]['total'] = old['total'] + cost
         sums = sums.items()
         sums.sort()
         keys.sort()
 
-        row = ['location','resourcename','resourceid']
+        titlerow = columns
         for key in keys:
-            row.append(key.strftime('%B, %Y') + ' - total')
-            row.append(key.strftime('%B, %Y') + ' - invoiced')
+            if include_total: titlerow.append(key.strftime('%B, %Y') + ' - total')
+            if include_invoiced: titlerow.append(key.strftime('%B, %Y') + ' - invoiced')
                        
-        writer.writerow(row)
+        rows_ungrouped = []
 
         for id,monthlysum in sums:
             resource = resources[id]
-            row = [resource.place.name.encode('utf-8'), resource.name.encode('utf-8'), id]
+            row = [resource.place.name, resource.name]
+            if 'resourcetype' in columns_selection:
+                row.append(resource.type)
+            if 'resourceid' in columns_selection:
+                row.append(resource.id)
             for key in keys:
                 amounts = monthlysum.get(key, {'total':0, 'invoiced':0})
-                row.append(amounts.get('total', 0))
-                row.append(amounts.get('invoiced', 0))
-            writer.writerow(row)
-            
-        cherrypy.response.headerMap["Content-Type"] = "text/csv"
-        cherrypy.response.headerMap["Content-Length"] = out.len
+                if include_total: row.append(amounts.get('total', 0))
+                if include_invoiced: row.append(amounts.get('invoiced', 0))
+            rows_ungrouped.append(row)
+        
+        grouper = lambda row: row[2]
 
-        return out.getvalue()
+        rows = []
+
+        for (rtype, grp) in reportutils.sortAndGrpby(rows_ungrouped, grouper):
+            rows += list(grp)
+
+        rows.insert(0, titlerow)
+
+        return rows
 
 
     ##################  Resource  ####################

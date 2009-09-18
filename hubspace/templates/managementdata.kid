@@ -14,10 +14,48 @@ user_columns = user_fields.values()
 
     <div class="dataBox">
         <div class="dataBoxHeader">
+	    <a class="title" id="link_adminStuff"><h2>Download Usage summary</h2></a>
+	</div>
+        <div class="dataBoxContent">
+            <form id="usage_summary">
+            <div>
+                <span>Select Location</span>
+                <select name="place">
+                   <option py:for="location in locations()" value="${location.id}" py:attrs="select_home_hub(location)">${location.name}</option>
+                </select>
+        
+            </div>
+            <div>
+                 <table border="0">
+                 <tr>
+                 <td> Select columns to include</td>
+                 <td> <input type="checkbox" name="columns_selection" value="resourcetype">Resource Type</input> </td>
+                 <td> <input type="checkbox" name="columns_selection" value="resourceid">Resource ID</input> </td>
+                 <td> <input type="checkbox" name="columns_selection" value="invoiced" checked="checked">Invoiced</input> </td>
+                 <td> <input type="checkbox" name="columns_selection" value="total" checked="checked">Total</input> </td>
+                 </tr>
+                 <!--
+                 <tr>
+                 <td> Only active resources </td>
+                 <td> <input type="checkbox" name="only_active" value="1" checked="checked"></input> </td>
+                 </tr>
+                 -->
+                 </table>
+            </div>
+        
+             <div>
+                 <br />
+                 <a href="#" class="small yellow nicebutton" id="usage_summary_csv" >Download spreadsheet</a>
+             </div>
+             </form>    
+           </div>
+        </div>
+        
+    <div class="dataBox">
+        <div class="dataBoxHeader">
 	    <a class="title" id="link_adminStuff"><h2>Export User Data</h2></a>
 	</div>
     <div class="dataBoxContent">
-        <!-- <table class="detailTable data"> -->
     
      <form id="users_export">
      <div>
