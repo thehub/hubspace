@@ -81,10 +81,6 @@ def role_selected(user, location, level):
        return {'checked':'checked'}
     return {}
 
-def readonly(user):
-    if hasattr(user, 'id'):
-        return dict(readonly = '1')
-    return {}
 ?>
 
 <div py:strip="True" xmlns:py="http://purl.org/kid/ns#">
@@ -103,7 +99,7 @@ def readonly(user):
                     </tr>
 		    <tr>
                         <td class="line">Username</td>
-                        <td><input name="user_name" id="user_name" type="text" class="text" value="${object.user_name}" py:attrs="readonly(object)"/><div class="errorMessage" py:if="tg_errors">${print_error('user_name', tg_errors)}</div></td>
+                        <td><input name="user_name" id="user_name" type="text" class="text" value="${object.user_name}"/><div class="errorMessage" py:if="tg_errors">${print_error('user_name', tg_errors)}</div></td>
                     </tr>
                     <tr>
                         <td class="line"></td>
