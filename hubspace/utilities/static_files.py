@@ -11,7 +11,7 @@ js_files = ['prototype-1.6.0.3.js', 'scroll.js', 'browserdetect.js', 'jquery.min
 'ui.datepicker.js',  'jquery.timepicker.js', 'overlib/overlib.js', 'jquery.bgiframe.min.js', 'jquery.dimensions.js',
 'jquery.autocomplete.min.js', 'delayed-observer-0.4b.js', 'jquery.ajaxQueue.js', 'jquery.timers.js',
 'jquery.confirm.js', 'jquery.confirm-1.1.js',  'effects.core.js', 'effects.blind.js', 'effects.highlight.js',
-'jquery.flot.js', 'hubcms.js', 'hub.js']
+'jquery.flot.js', 'hubcms.js', 'json2.js', 'hub.js']
 
 admin_js_files = ['ui.core.js', 'ui.sortable.js', 'jquery.tablednd.js', 'my.sortable.js']
 

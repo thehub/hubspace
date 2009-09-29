@@ -88,7 +88,7 @@ booking_cancellation = Message("booking_cancellation")
 booking_cancellation.available_macros = [macros.Location(), macros.Member_Name(), macros.Member_Email(),
     macros.Location_Phone(), macros.Location_URL(), macros.Booking_Contact(), macros.Booking_Start(), macros.Booking_End(),
     macros.Booking_Date(), macros.Resource(), macros.Also_Booked(), macros.Hosts_Email(), macros.Booking_Contact(),
-    macros.Member_First_Name(), macros.Currency(), macros.Cost(), macros.Time_Left_To_Confirm()]
+    macros.Member_First_Name(), macros.Currency(), macros.Cost(), macros.Time_Left_To_Confirm(), macros.Booked_by()]
 
 new_ticket_form = Message("new_ticket_form") # render_new_ticket_form
 

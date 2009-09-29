@@ -1838,7 +1838,7 @@ var create_booking = function (date_str) {
     };
     var reload_booking_details = function (data) {
         set_space_listeners();
-        rusage_id = eval('(' + data + ')').rusage_id;
+        rusage_id = JSON.parse(data).rusage_id;
         jq('#day_rusage-' + rusage_id).click();
     };
     var load_booking_details = function (rusage_data, event, listener) {
@@ -1864,7 +1864,6 @@ var create_booking = function (date_str) {
         },
                        message: 'Are you sure you want to cancel this booking? '};
         jq("#del_booking").confirm_action(options);
-
         jq('.notify_on_available').click(function (evt) {
             var r_id = Event.element(evt).id.split('-')[1];
             var req = new Ajax.Request('/addToResourceQueue', {parameters: "rusage_id=" + r_id, method: 'post', onComplete: jq(this).remove()});
@@ -1919,7 +1918,11 @@ var create_booking = function (date_str) {
                 success: function (data) {
                     load_booking_details(data, event, listener);
                 },
-                dataType: "json"
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+		    var data = JSON.parse(XMLHttpRequest.responseText);	//jquery's json parser doesn't always work
+ 		    load_booking_details(data, event, listener);
+		},
+		dataType: "json"
             });
         },
         explain_unavailable: function (event, listener, rusage_id, resource_id) {

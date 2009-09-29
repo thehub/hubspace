@@ -4373,7 +4373,7 @@ The Hub Team
             new_rusage = model.RUsage(**d)
             location = rusage.resource.place
             to = rusage.resource.place.hosts_email
-            data = dict (rusage = rusage)
+            data = dict ( rusage = rusage, user = rusage.user, location = location )
             hubspace.alerts.sendTextEmail("booking_cancellation", data=data)
             applogger.info("Booking cancellation: %s" % rusage)
             applogger.info("Booking refund: %s" % new_rusage)
