@@ -100,7 +100,7 @@ class Booking_Date(Macro):
 class Booked_by(Macro):
     def getValue(self, data):
         from hubspace.validators import timeconverter, dateconverter
-        return dateconverter.from_python(data['rusage'].bookedby)
+        return dateconverter.from_python(data['rusage'].bookedby.display_name)
 
 class Currency(Macro):
     def getValue(self, data):

@@ -387,15 +387,15 @@ def lang():
         <font face="arial" size="2">
          ${invoice.location.bank}
          <br />
-         Account Number <c py:strip="True">${invoice.location.account_no}</c>
+         <c py:if="invoice.location.account_no" py:strip="True">Account Number ${invoice.location.account_no}</c>         
          <br />
          <c py:strip="True" py:if="invoice.location.sort_code"><br />Sort Code <c py:strip="True">${invoice.location.sort_code}</c></c>
          <br />
-         Swift Code <c py:strip="True">${invoice.location.swift_no}</c>
+         <c py:if="invoice.location.swift_no" py:strip="True">Swift Code ${invoice.location.swift_no}</c>         
          <br />
-         IBAN <c py:strip="True">${invoice.location.iban_no}</c>
+         <c py:if="invoice.location.iban_no" py:strip="True">IBAN ${invoice.location.iban_no}</c>         
          <br />
-         VAT Number <c py:strip="True">${invoice.location.vat_no}</c>
+         <c py:if="invoice.location.vat_no" py:strip="True">VAT Number ${invoice.location.vat_no}</c>         
          <br />
          Payment Terms <c py:strip="True">${invoice.location.payment_terms}</c>
         </font>
