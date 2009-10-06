@@ -3937,12 +3937,14 @@ The Hub Team
         return pdf
     
     @expose()
+    @identity.require(identity.has_any_permission("host","superuser"))
     def new_invoices(self):
         invoice_ids = (inv.id for inv in model.Invoice.selectBy(location = identity.current.user.homeplace)[:10])
         invoice_urls = ("<a href=/show_newinvoice/%s> %s </a>" % (invoice_id, invoice_id) for invoice_id in invoice_ids)
         return "<br/>".join(invoice_urls)
 
     @expose()
+    @identity.require(identity.has_any_permission("host","superuser"))
     def show_newinvoice(self, invoiceid):
         MCust = model.MessageCustomization
         invoice=model.Invoice.get(int(invoiceid))
