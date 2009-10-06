@@ -4,6 +4,8 @@ import logging
 import re
 import itertools
 import string
+import cStringIO
+import ho.pisa as pisa
 
 import cherrypy
 from cgi import FieldStorage, escape
@@ -3931,12 +3933,41 @@ The Hub Team
         if not permission_or_owner(invoice.user.homeplace, invoice, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
         pdf = self.create_pdf_invoice(invoiceid=invoiceid,html2ps=html2ps)
-        cherrypy.response.headers['Content-type'] = 'application/pdf'
+        #cherrypy.response.headers['Content-type'] = 'application/pdf'
         return pdf
     
+    @expose()
+    def new_invoices(self):
+        invoice_ids = (inv.id for inv in model.Invoice.selectBy(location = identity.current.user.homeplace)[:10])
+        invoice_urls = ("<a href=/show_newinvoice/%s> %s </a>" % (invoice_id, invoice_id) for invoice_id in invoice_ids)
+        return "<br/>".join(invoice_urls)
+
+    @expose()
+    def show_newinvoice(self, invoiceid):
+        MCust = model.MessageCustomization
+        invoice=model.Invoice.get(int(invoiceid))
+        try:
+            freetext1 = MCust.select(AND(MCust.q.message=="invoice_freetext_1", MCust.q.location==invoice.location))[0].text
+        except:
+            freetext1 = ""
+
+        try:
+            freetext2 = MCust.select(AND(MCust.q.message=="invoice_freetext_2", MCust.q.location==invoice.location))[0].text
+        except:
+            freetext2 = ""
+        d = dict(invoice=invoice, freetext1=freetext1, freetext2=freetext2)
+        html =  try_render(d, template='hubspace.templates.newinvoice', format='html', headers={'content-type':'text/html'})
+        html = html.replace("NEXTPAGEHACK", "<div> <pdf:nextpage/> </div> ")
+        src = cStringIO.StringIO(html)
+        dst = cStringIO.StringIO()
+        pdf = pisa.CreatePDF(src, dst)
+        dst.seek(0)
+        cherrypy.response.headers['Content-type'] = 'application/pdf'
+        return dst.read()
+
     def create_pdf_invoice(self, invoiceid, html2ps=None):
         invoiceid = int(invoiceid)
-        invoice = Invoice.get(invoiceid)    
+        invoice = Invoice.get(invoiceid)
         html =  try_render(dict(invoice=invoice),template='hubspace.templates.invoice', format='html', headers={'content-type':'text/html'})
         if html2ps:
             command = 'html2ps | ps2pdf13 - -'
@@ -3950,8 +3981,8 @@ The Hub Team
         stdin.write(html)
         stdin.close()
         pdf = stdout.read()
-        print `stderr.read()`	
         stdout.close()
+        cherrypy.response.headers['Content-type'] = 'application/pdf'
         return pdf
 
 

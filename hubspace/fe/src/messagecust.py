@@ -113,7 +113,7 @@ class messagecust:
             editorbox = VerticalPanel(Padding=1)
             editorbox.add(buttonspanel)
             editorbox.add(msgpanel)
-            editorpanel = CaptionPanel("Message editor", editorbox, Padding=1, StyleName=text)
+            editorpanel = CaptionPanel("Message editor", editorbox, Padding=1, StyleName="text")
             editorpanel.name = "editorpanel"
             self.editorpanel = editorpanel
 

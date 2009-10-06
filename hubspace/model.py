@@ -643,6 +643,7 @@ class Location(SQLObject):
     iban_no = UnicodeCol(default=None)
     swift_no = UnicodeCol(default=None)
     payment_terms = UnicodeCol(default=None)
+    invoice_duedate = IntCol(default=-1)
     defaulttariff = ForeignKey("Resource", default=None)
     groups = MultipleJoin("Group",joinColumn='place_id')
     resources = MultipleJoin("Resource",joinColumn='place_id')

@@ -32,7 +32,7 @@ class Message(object):
 
     def getTemplates(self, location=None):
         tmpl_path = os.path.join(tmpl_dir, self.tmplname)
-        msgvars = readConfigSafe(tmpl_path)
+        msgvars = os.path.isfile(tmpl_path) and readConfigSafe(tmpl_path) or dict(body="")
         if location:
             custs = model.MessageCustomization.selectBy(location=location, message=self.tmplname)
             if custs.count():
@@ -112,5 +112,13 @@ t_booking_reminder.available_macros = [macros.Location(), macros.Member_Name(), 
     macros.Member_First_Name(), macros.Booked_by()]
 
 trac_submission_failed = Message("trac_submission_failed")
+
+invoice_freetext_1 = Message("invoice_freetext_1")
+invoice_freetext_1.label = "Invoice Free Text (Page 1)"
+invoice_freetext_1.can_be_customized = True
+
+invoice_freetext_2 = Message("invoice_freetext_2")
+invoice_freetext_2.label = "Invoice Free Text (Last Page)"
+invoice_freetext_2.can_be_customized = True
 
 bag = dict ([(k,v) for (k,v) in locals().items() if isinstance(v, Message)])
