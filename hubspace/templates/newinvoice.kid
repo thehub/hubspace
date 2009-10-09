@@ -2,7 +2,6 @@
 
 <?python
 import datetime
-import cgi
 from hubspace.controllers import get_collected_invoice_data
 from hubspace.controllers import show_quantity_or_duration, sum_resource_costs
 from hubspace.utilities.uiutils import c2s
@@ -49,10 +48,16 @@ nl2br = lambda s: s.replace("\n","<br/>")
     margin-right: 1cm;
     height: 1cm;
   }
-  @frame nextpage {
-    -pdf-frame-content: nextpage;
+@frame nextpage {
+  -pdf-frame-content: nextpage;
   }
 }
+.freetext {
+    font-family: Helvetica; 
+    white-space: pre;
+    border:.1px solid black;
+    padding: 1;
+    }
 </style>
 
 <body>
@@ -97,9 +102,9 @@ nl2br = lambda s: s.replace("\n","<br/>")
 </tr>
 </table>
 
-<p>
-${XML(nl2br(cgi.escape(freetext1)))}
-</p>
+<pre class="freetext" py:if="freetext1">
+${freetext1}
+</pre>
 
 <h2>Summary of usage</h2>
 
@@ -132,6 +137,10 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
         </td>
     </tr>
     </div>
+    <tr>
+        <td><strong>Total</strong></td>
+        <td align="right">${c2s(invoice.amount)}</td>
+    </tr>
     </table>
 
 </div>
@@ -145,7 +154,7 @@ c = itertools.count(1)
 
 <h2>Usage details</h2>
 
-<table width="100%" border="0.1" style="background: #eee; padding: 0.2em;">
+<table width="100%" border="0.1" style="background: #eee; padding: 0.2em;"  repeat="1">
 <tbody>
 <thead style="background: #C0C0C0;">
 <tr>
@@ -177,11 +186,11 @@ rusages = sorted(invoice.rusages, key=sorter)
     </td>
 </tr>
 <tr bgcolor="lightblue">
-    <td>Total</td>
     <td></td>
     <td></td>
     <td></td>
     <td></td>
+    <td><strong>Total</strong></td>
     <td align="right">${c2s(invoice.amount)}</td>
 </tr>
 </tbody>
@@ -192,8 +201,8 @@ rusages = sorted(invoice.rusages, key=sorter)
 
 <table>
 <tr py:if="freetext2">
-<td border="1">
-${XML(nl2br(cgi.escape(freetext2)))}
+<td border="1" class="freetext">
+${freetext2}
 <br/>
 </td>
 </tr>
