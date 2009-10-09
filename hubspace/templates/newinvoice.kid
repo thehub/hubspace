@@ -41,7 +41,7 @@ nl2br = lambda s: s.replace("\n","<br/>")
 @page {
   size: a4;
   margin: 1cm;
-  margin-bottom: 2.5cm;
+  margin-bottom: 3cm;
   @frame footer {
     -pdf-frame-content: footerContent;
     bottom: 2cm;

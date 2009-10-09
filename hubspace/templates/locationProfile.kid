@@ -15,7 +15,7 @@ from hubspace.utilities.i18n import languages_dict
 							<td class="line">Location Name</td>
 							<td>${location.name}</td>
 						</tr>
-                                                <tr py:if="attr_not_none(location, 'currency') and permission_or_owner(location, location, 'manage_locations')" >
+                                                <tr py:if="attr_not_none(location,'currency') and permission_or_owner(location, location, 'manage_locations')" >
 							<td class="line">Local Currency</td>
 							<td>${location.currency}</td>
 						</tr>
@@ -31,10 +31,6 @@ from hubspace.utilities.i18n import languages_dict
 							<td class="line">Tentative booking available</td>
 							<td>${location.tentative_booking_enabled and 'yes' or 'no'}</td>
 						</tr>
-                                                <tr>
-							<td class="line">New Invoice numbering scheme </td>
-							<td>${location.invoice_newscheme and 'yes' or 'no'}</td>
-						</tr>
 						<tr>
 							<td class="line">RFID Enabled</td>
 							<td>${location.rfid_enabled and 'yes' or 'no'}</td>
@@ -42,6 +38,18 @@ from hubspace.utilities.i18n import languages_dict
 						<tr>
 							<td class="line">MicroSite Active</td>
 							<td>${location.microsite_active and 'yes' or 'no'}</td>
+						</tr>
+                                                <tr>
+							<td class="line">Invoice dute date (days after sending invoice)</td>
+							<td>${location.invoice_duedate or ""}</td>
+						</tr>
+                                                <tr py:if="attr_not_none(location, 'payment_terms')" >
+							<td class="line">Payment_Terms</td>
+							<td>${location.payment_terms}</td>
+						</tr>
+                                                <tr>
+							<td class="line">New Invoice numbering scheme </td>
+							<td>${location.invoice_newscheme and 'yes' or 'no'}</td>
 						</tr>
                                                 <tr>
 							<td class="line">Vat Included</td>
@@ -90,10 +98,6 @@ from hubspace.utilities.i18n import languages_dict
                                                 <tr py:if="attr_not_none(location, 'telephone')" >
 							<td class="line">Telephone</td>
 							<td>${location.telephone}</td>
-						</tr>
-                                                <tr py:if="attr_not_none(location, 'payment_terms')" >
-							<td class="line">Payment_Terms</td>
-							<td>${location.payment_terms}</td>
 						</tr>
                                                 <tr py:if="attr_not_none(location, 'homepage_title')" >
 							<td class="line">Homepage Title</td>

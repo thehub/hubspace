@@ -40,28 +40,36 @@ def lang_selected(location, lang):
 		</tr>
        	        <tr py:if='identity.has_permission("superuser")'>
                      <td class="line">Vat Included</td>
-		     <td><input name="vat_included" type="checkbox" value="1" py:attrs="location.vat_included and {'checked':'checked'} or {}" /><div class="errorMessage" py:if="tg_errors">${print_error('vat_included', tg_errors)}</div></td>
+		     <td><input name="vat_included" type="checkbox" value="1" py:attrs="getattr(location, 'vat_included', None) and {'checked':'checked'} or {}" /><div class="errorMessage" py:if="tg_errors">${print_error('vat_included', tg_errors)}</div></td>
 		</tr>
                 <tr>
 		    <td class="line">Tentative booking available</td>
 	            <td> <input name="tentative_booking_enabled" type="checkbox" value="1"
-                    py:attrs="location.tentative_booking_enabled and {'checked':'checked'} or {}" /><div
+                    py:attrs="getattr(location, 'tentative_booking_enabled', None) and {'checked':'checked'} or {}" /><div
                     class="errorMessage" py:if="tg_errors">${print_error('tentative_booking_enabled', tg_errors)}</div></td>
 	        </tr>
                 <tr>
 	            <td class="line">New Invoice numbering scheme</td>
 		    <td><input name="invoice_newscheme" type="checkbox" value="1"
-                    py:attrs="location.invoice_newscheme and {'checked':'checked'} or {}" /><div
+                    py:attrs="getattr(location, 'invoice_newscheme', None) and {'checked':'checked'} or {}" /><div
                      class="errorMessage" py:if="tg_errors">${print_error('invoice_newscheme', tg_errors)}</div></td>
 	        </tr>
+                <tr>
+	            <td class="line">Invoice dute date (days after sending invoice)</td>
+	            <td><input name="invoice_duedate" type="text" value="${location.invoice_duedate or ''}" cols="2"/> <div class="errorMessage" py:if="tg_errors">${print_error('invoice_duedate', tg_errors)}</div></td>
+	        </tr>
+		<tr>
+                     <td class="line">Payment Terms</td>
+		     <td><input name="payment_terms" type="text" value="${location.payment_terms or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('payment_terms', tg_errors)}</div></td>
+		</tr>
 
        	        <tr py:if='identity.has_permission("superuser")'>
                      <td class="line">RFID Enabled</td>
-		     <td><input name="rfid_enabled" type="checkbox" value="1" py:attrs="location.rfid_enabled and {'checked':'checked'} or {}" /><div class="errorMessage" py:if="tg_errors">${print_error('rfid_enabled', tg_errors)}</div></td>
+		     <td><input name="rfid_enabled" type="checkbox" value="1" py:attrs="getattr(location, 'rfid_enabled', None) and {'checked':'checked'} or {}" /><div class="errorMessage" py:if="tg_errors">${print_error('rfid_enabled', tg_errors)}</div></td>
 		</tr>                
        	        <tr py:if='identity.has_permission("superuser")'>
                      <td class="line">Microsite Active</td>
-		     <td><input name="microsite_active" type="checkbox" value="1" py:attrs="location.microsite_active and {'checked':'checked'} or {}" /><div class="errorMessage" py:if="tg_errors">${print_error('microsite_active', tg_errors)}</div></td>
+		     <td><input name="microsite_active" type="checkbox" value="1" py:attrs="getattr(location, 'microsite_active', None) and {'checked':'checked'} or {}" /><div class="errorMessage" py:if="tg_errors">${print_error('microsite_active', tg_errors)}</div></td>
 		</tr>
        	        <tr>
                      <td class="line">Vat Number</td>
@@ -106,10 +114,6 @@ def lang_selected(location, lang):
 		<tr>
                      <td class="line">Telephone</td>
 		     <td><input name="telephone" type="text" value="${location.telephone or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('telephone', tg_errors)}</div></td>
-		</tr>
-		<tr>
-                     <td class="line">Payment Terms</td>
-		     <td><input name="payment_terms" type="text" value="${location.payment_terms or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('payment_terms', tg_errors)}</div></td>
 		</tr>
 		<tr>
                      <td class="line">Homepage Title</td>
