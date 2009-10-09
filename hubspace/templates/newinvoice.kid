@@ -175,8 +175,9 @@ rusages = sorted(invoice.rusages, key=sorter)
 <tr py:for="rusage in rusages">
     <td>${c.next()}</td>
     <td>${rusage.user.display_name}</td>
-    <td>${rusage.resource.name}</td>
-    <td>${rusage.quantity}</td>
+    <td>${rusage.resource.name} <div py:if="rusage.cancelled and not rusage.refund"><em>(Cancelled)</em></div>
+                                <div py:if="rusage.refund"><em>(Refund)</em></div> </td>
+    <td>${rusage.resource.time_based and "-" or rusage.quantity}</td>
     <td py:if="rusage.resource.time_based">${formatDateTime(rusage.start)} - <br/> ${formatDateTime(rusage.end_time)}</td>
     <td py:if="not rusage.resource.time_based">${rusage.resource.type == 'tariff' and dtc(rusage.start) or formatDateTime(rusage.start)}</td>
     <td align="right">
