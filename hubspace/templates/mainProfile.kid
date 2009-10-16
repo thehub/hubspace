@@ -11,12 +11,12 @@ from hubspace.templates.bristolData import load_bristolData
 from hubspace.templates.notes import show_notes
 from hubspace.templates.relationshipStatus import load_relationship_status
 from hubspace.model import Location
-from hubspace.utilities.permissions import pip,gip,is_owner, permission_or_owner, user_locations
+from hubspace.utilities.permissions import pip,gip,is_owner, permission_or_owner, user_locations, locations
 
 from turbogears import identity
 oddness = oddOrEven()
 
-def locations(object):
+def xlocations(object): # not used TODO: clean up
     locations = []
     for group in object.groups:
             if group.place not in locations and group.place:
@@ -36,7 +36,7 @@ def current_loc(loc, location):
 			<div py:if='permission_or_owner(location, object, "manage_users")' class="dataBoxHeader"><a py:if='permission_or_owner(location, None, "manage_users")' class="modify" id="tariffHistory-${object.id}Edit">edit</a><a class="title" id="link_tariffHistory-${location.id}"><h2>Membership history</h2></a></div>  
 			<div class="dataBoxContent">
                                <select id="tariff_location_select-${object.id}">
-                                   <option py:for="loc in locations(object)" py:attrs="current_loc(loc, location)" value="${loc.id}">
+                                   <option py:for="loc in locations('manage_users')" py:attrs="current_loc(loc, location)" value="${loc.id}">
                                       ${loc.name}  
                                    </option>
                                </select>
