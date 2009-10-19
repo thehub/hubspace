@@ -999,7 +999,7 @@ Search.prototype = {
         this.member_search_element.focus(function () {
             that.remove_default_text();
         });
-        this.member_search_element.delayedObserver(0.5, function () {
+        this.member_search_element.delayedObserver(1, function () {
             that.filter_members();
         }, {event: 'keyup'});
         jq('#search_locality').change(function () {

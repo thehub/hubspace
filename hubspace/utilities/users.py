@@ -66,28 +66,38 @@ def filter_by_text(users, text_filter, type):
         return User.select(AND(User.q.rfid == text_filter))
 
 def filter_members(location, text_filter, type, active_only, start, end, override_user=None):
-    if override_user:
-        user_locs = Location.select()
-    else:
-        user_locs = user_locations(identity.current.user)
+    text_filter = u"%" + u" ".join(text_filter.split()).replace("'","\\'") + u"%"
 
-    if location:
-        users = set()
-        users = set(User.select("""active = %s AND
-                                   homeplace_id = %s"""%(1, location.id)))
-        if not active_only: # get inactive users from the hosts locations
-            if location in user_locs:
-	        users = users.union(set(User.select(AND(User.q.active in [None, 0],
-                                                        User.q.homeplaceID==location.id))))
-    else:
-        users = set(User.selectBy(active=1))
-        if not active_only: # get inactive users from the hosts locations
-            for loc in user_locs:
-                users = users.union(set(User.select(AND(User.q.active in [None, 0], User.q.homeplaceID==loc.id))))
+    if type == "member_search":
+        if override_user:
+            user_locs = Location.select()
+        else:
+            user_locs = user_locations(identity.current.user)
+
+        if location:
+            users = set(User.select("homeplace_id = %s AND display_name ilike '%s' order by display_name" % (location.id, text_filter)))
+            if active_only:
+                users = [user for user in users if user.active]
+            else:
+                if location not in user_locs:
+                    users = [user for user in users if user.active]
+        else:
+            print(User.select("display_name ilike '%s' order by display_name" % text_filter))
+            users = set(User.select("display_name ilike '%s' order by display_name" % text_filter))
+            if active_only:
+                users = [user for user in users if user.active or user.homeplace in user_locs]
+            else:
+                users = [user for user in users if user.active and user.homeplace in user_locs]
         
-    users = filter_by_text(users, text_filter, type)
+    elif type == 'rfid_member_search':
+            users = User.select(AND(User.q.rfid == text_filter))
+
+    elif type == 'fulltext_member_search':
+            users = [] # broken atm
+
     if start != None and end != None:
         users = users[start:end]
+
     try:
         webapi = User.selectBy(first_name="web", last_name="api")[0]
         if webapi in users and not identity.has_permission("superuser"):
