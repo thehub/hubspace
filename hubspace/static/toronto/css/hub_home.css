@@ -1,7 +1,0 @@
-
-/*Styles to override for local hub. This one is currently for Toronto. Should be moved to /toronto folder and find a way that app can find it.*/
-
-#header {
-	background: no-repeat url(/static/toronto/images/hub_csi_banner.png);
-        height: 120px;
-}
