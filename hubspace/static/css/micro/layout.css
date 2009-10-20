@@ -1,0 +1,58 @@
+/**
+ * Navigation
+ */
+div#menu-top { position:relative; }
+div#menu-top { margin-top:100px; }
+div#menu-top ul { margin:0px; padding:0px; list-style: none; }
+div#menu-top ul li { float:left; height:30px; margin-right:1px; }
+div#menu-top ul li.right { float:right;}
+div#menu-top ul li a { display:block; padding:7px 13px 3px 13px; }
+
+/**
+ * Logo
+ */
+div#main-logo { position:absolute; top:130px; left:0px; z-index:50;}
+
+/**
+ * Footer
+ */
+#footer{margin-bottom:50px; margin-top:20px; min-height:70px; padding-bottom: 3px;}
+* html #footer {height:70px;}
+#footer .span-3 a{display:block; margin:0 5px 0px 5px;}
+#footer .span-3 span{display:block; margin:0px 5px}
+#footer .span-3 br{display:none;}
+#footer .last span{padding:5px 5px 0px 5px; }
+#footer .last #add-this-widget{margin:5px 5px}
+
+/**
+ * General layout
+ */
+#content-highlight{height:250px}
+#content-main{padding:20px 0px}
+#content-intro p{padding-right:20px}
+#content-intro h3{padding-right:20px}
+
+/**
+ * Sub-content boxes
+ */
+#content-main .content-sub{ min-height:220px; margin-bottom:10px }
+#content-main .content-sub ul{list-style: none;}
+#content-main .content-sub h3{padding:10px;}
+#content-main .content-sub ul li h4 { margin-bottom:0px; }
+#content-main .content-sub ul li p { margin:0px; }
+#content-main .content-sub ul li { margin-bottom:18px;}
+#content-main .content-sub p { margin:10px }
+
+
+
+/**
+ * Forms
+ */
+label{ display:block }
+.input-select{ display:block; margin-top:10px }
+form{ margin:10px }
+
+/**
+ * iframe
+ */
+iframe {width:900px;position:relative;z-index:100;}

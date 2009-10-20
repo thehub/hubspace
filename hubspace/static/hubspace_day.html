@@ -1,0 +1,1051 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type">
+<title>The Hub</title>
+<link href="css/main.css" rel="stylesheet" type="text/css" />
+<link href="css/newcalendar.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+#pageLogin {
+	font-size: 10px;
+	font-family: verdana;
+	text-align: right;
+}
+</style>
+</head>
+<body>
+<div id="content">
+	<div style="background-image: url(http://members.the-hub.net:8082/display_image/0/Location/0/logo);" id="header">
+		<div id="pageLogin">
+			<span> Hello Vijay.
+			<a href="http://members.the-hub.net:8082/logout">Logout</a>
+			</span>		</div>
+		<!-- Main navigation-->
+		<div id="main_body">
+			<div id="pageLogin">
+				<span> Hello Vijay.
+				<a href="http://members.the-hub.net:8082/logout">Logout</a>
+				</span>			</div>
+			<ul id="nav">
+				<li id="networkBut" class="deselected">
+					<a style="cursor: pointer;" class="load_section" id="0">Network</a>
+				</li>
+				<li id="profileBut" class="deselected">
+					<a style="cursor: pointer;" class="load_section" id="1">My Profile</a>
+				</li>
+				<li id="spaceBut" class="selected">
+					<a style="cursor: pointer;" class="load_section" id="2">Space</a>
+				</li>
+				<li style="" id="hostBut" class="deselected">
+					<a style="cursor: pointer;" class="load_section" id="3">Hosting</a>
+				</li>
+				<li><span id="throbber"><img src="hubspace_files/timer_2.gif">
+					<span id="throbtext">loading... </span></span></li>
+			</ul>
+			<!-- Members list-->
+	    <div id="members">
+		<input id="member_search" value="Search member names" type="search">
+                <div id="search_type">
+                    <div>
+                       <input checked="checked" name="type" class="radio_button" value="member_search" id="member_search_button" type="radio">
+                       <label>Search member names</label>
+                    </div>
+                    <div>
+                       <input id="fulltext_member_search_button" class="radio_button" value="fulltext_member_search" name="type" type="radio">
+                       <label>Search everything</label>
+                    </div>
+                </div>
+                <div>
+                    <input id="tariff_search_button" class="radio_button" value="tariff_search" name="type" type="radio">
+                    <label>Search Tariff</label>
+                </div>
+                <div>
+                    <input id="resource_search_button" class="radio_button" value="resource_search" name="type" type="radio">
+                    <label>Search Resource</label>
+                </div>
+                <div>
+                    <input name="date" value="2007-12-09" id="end_date" type="hidden">
+                    <img onmouseover="this.style.background='red';" src="hubspace_files/calendar.gif" id="f_trigger_c" onmouseout="this.style.background=''" title="Date selector">End Date
+                    <script type="text/javascript">
+                        Calendar.setup({
+                            inputField     :    "end_date",
+                            ifFormat       :    "%Y-%m-%d",
+                            button         :    "f_trigger_c",
+                            align          :    "Tl",
+                            singleClick    :    true,
+                            onUpdate       :     tariff_resource_search,
+                            });
+                        </script>
+                </div>
+		<div id="searchExtra">
+		    <select id="search_locality" name="hub">
+			<option selected="selected" value="0">All Centres</option>
+		        <option value="1">London</option><option value="2">Bristol</option><option value="3">Johannesburg</option><option value="4">Bombay</option><option value="5">Sao paulo</option><option value="6">Berlin</option><option value="7">Toronto</option>
+		    </select>
+		</div>
+		<div class="scrollArrow up"><div style="visibility: visible;" class="scrollArrow" id="up"></div></div>
+	        <div id="drag"></div>
+	        <div id="track"></div>
+	        <div style="height: 742px;" id="memberList">
+		    <ul style="top: 0px;" id="membersContent">
+			  <li class="even"><a style="cursor: pointer;" class="box" id="box-357"><img src="hubspace_files/memberDetailBox.gif" alt="display quick member details"></a><a style="cursor: pointer;" class="load_user" id="user-357">Adam Vaughan</a></li><li class="odd"><a style="cursor: pointer;" class="box" id="box-460"><img src="hubspace_files/memberDetailBox.gif" alt="display quick member details"></a><a style="cursor: pointer;" class="load_user" id="user-460">Ady Harold</a></li><li class="even"><a style="cursor: pointer;" class="box" id="box-455"><img src="hubspace_files/memberDetailBox.gif" alt="display quick member details"></a><a style="cursor: pointer;" class="load_user" id="user-455">Akhil Dhanuka</a></li><li class="odd"><a style="cursor: pointer;" class="box" id="box-389"><img src="hubspace_files/memberDetailBox.gif" alt="display quick member details"></a><a style="cursor: pointer;" class="load_user" id="user-389">Al Tepper</a></li><li class="even"><a style="cursor: pointer;" class="box" id="box-148"><img src="hubspace_files/memberDetailBox.gif" alt="display quick member details"></a><a style="cursor: pointer;" class="load_user" id="user-148">Alan Wagenberg</a></li><li class="odd"><a style="cursor: pointer;" class="box" id="box-420"><img src="hubspace_files/memberDetailBox.gif" alt="display quick member details"></a><a style="cursor: pointer;" class="load_user" id="user-420">Alex Martinelli</a></li><li class="even"><a style="cursor: pointer;" class="box" id="box-592"><img src="hubspace_files/memberDetailBox.gif" alt="display quick member details"></a><a style="cursor: pointer;" class="load_user" id="user-592">Alex Phillips</a></li><li class="odd"><a style="cursor: pointer;" class="box" id="box-279"><img src="hubspace_files/memberDetailBox.gif" alt="display quick member details"></a><a style="cursor: pointer;" class="load_user" id="user-279">Alex Templeton</a></li><li class="even"><a style="cursor: pointer;" class="box" id="box-312"><img src="hubspace_files/memberDetailBox.gif" alt="display quick member details"></a><a style="cursor: pointer;" class="load_user" id="user-312">Allanna Mcaspurn</a></li><li class="odd"><a style="cursor: pointer;" class="box" id="box-221"><img src="hubspace_files/memberDetailBox.gif" alt="display quick member details"></a><a style="cursor: pointer;" class="load_user" id="user-221">Alok Singh</a></li><li class="even"><a style="cursor: pointer;" class="box" id="box-411"><img src="hubspace_files/memberDetailBox.gif" alt="display quick member details"></a><a style="cursor: pointer;" class="load_user" id="user-411">Andrea Krause</a></li>
+		    </ul>
+	        </div>
+	        <div class="scrollArrow down"><div style="visibility: visible;" class="scrollArrow" id="down"></div></div>	
+                <div id="color_key"></div>
+       	        <div style="display: none;" id="memberDetails">	        </div>
+            </div>			
+        <!-- Main content area-->
+			<div id="contentPane">
+				<div style="display: none;" id="networkContent" class="pane">
+					<div class="subBar">
+						<ul>
+							<li>
+								<a style="cursor: pointer;" id="network-0" class="subsection">Add new member</a>
+							</li>
+							<li class="selected">
+								<a style="cursor: pointer;" id="network-1" class="subsection">Profile</a>
+							</li>
+							<li>
+								<a style="cursor: pointer;" id="network-2" class="subsection">Billing</a>
+							</li>
+							<li>
+								<a style="cursor: pointer;" id="network-3" class="subsection">Search results</a>
+							</li>
+						</ul>
+					</div>
+					<div class="paneContent">
+						<div id="network-addMemberContent" class="subsectionContent">						</div>
+						<div id="network-mainProfileContent" class="subsectionContent">
+							<a title="Click here to edit" id="memberProfile_573Edit" class="modify memberProfileEdit">edit</a>
+							<div id="memberProfile_573" class="memberProfile">
+								<table class="memberProfile" cellpadding="0" cellspacing="0">
+									<tbody>
+										<tr>
+											<td class="photo" id="photo573"><div class="innerPhoto">
+													<p> Steve Norris</p>
+													<div class="imgwrap">
+														<img src="hubspace_files/shadow.html" id="profile_image573">													</div>
+												</div>
+												<div id="upload_image573" class="replace_image">replace image</div>
+												<div id="iframe_area573"></div></td>
+											<td><table class="memberProfileInner detailTable" cellpadding="0" cellspacing="0">
+													<tbody>
+														<tr class="odd">
+															<td class="line">Username</td>
+															<td>steve.norris</td>
+														</tr>
+														<tr class="even">
+															<td class="line">Organisation</td>
+															<td>South West Community Chaplaincy</td>
+														</tr>
+														<tr class="odd">
+															<td class="line">Active?</td>
+															<td>Yes</td>
+														</tr>
+														<tr class="even">
+															<td class="line">Home Hub</td>
+															<td>Bristol</td>
+														</tr>
+														<tr class="odd">
+															<td class="line">Mobile</td>
+															<td>07894 631063</td>
+														</tr>
+														<tr class="even">
+															<td class="line">Default Email</td>
+															<td><a href="mailto:norris@blueyonder.co.uk">norris@blueyonder.co.uk</a></td>
+														</tr>
+														<tr class="odd">
+															<td class="line">Membership number</td>
+															<td>573</td>
+														</tr>
+														<tr class="even">
+															<td class="line">Member of The Hub in</td>
+															<td></td>
+														</tr>
+													</tbody>
+												</table>
+												<script type="text/javascript">
+                    set_inplace_edit(573, 'User', 'memberProfile_573', null, null, null, null, refresh_upload, null, autocomplete_biz_type, null);
+</script>											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="dataBox">
+								<div class="dataBoxHeader">
+									<a title="Click here to edit" class="modify" id="memberDescription_573Edit">edit</a>
+									<a class="title" id="link_memberDesc">
+										<h2>About me</h2>
+									</a>
+								</div>
+								<div class="dataBoxContent">
+									<div class="dataTextBox data" id="memberDescription_573">
+										<script type="text/javascript">
+                    set_inplace_edit(573, 'User', 'memberDescription_573', 'memberDescriptionEdit');
+           </script>
+									</div>
+								</div>
+							</div>
+							<div class="dataBox">
+								<div class="dataBoxHeader">
+									<a title="Click here to edit" class="modify" id="relationshipStatus_573Edit">edit</a>
+									<a class="title" id="relstatus">
+										<h2>Relationship Details</h2>
+									</a>
+								</div>
+								<div class="dataBoxContent" id="relationshipStatus_573">
+									<table class="servicesTable data" cellpadding="" cellspacing="0">
+										<tbody>
+											<tr>
+												<td class="line">Introduced By</td>
+												<td>Unknown</td>
+											</tr>
+											<tr>
+												<td class="line">Signed Up By</td>
+												<td>Unknown</td>
+											</tr>
+											<tr>
+												<td class="line">Host Contact</td>
+												<td>Unknown</td>
+											</tr>
+										</tbody>
+									</table>
+									<script type="text/javascript">
+               set_inplace_edit(573, 'User', 'relationshipStatus_573', 'relationshipStatusEdit');
+           </script>
+								</div>
+							</div>
+							<div class="dataBox">
+								<div class="dataBoxHeader">
+									<a id="add_note_573" class="modify">add new note</a>
+									<a class="title" id="link_notes">
+										<h2>Relationship History</h2>
+									</a>
+								</div>
+								<div class="dataBoxContent" id="notes_area_573">
+									<div id="user_notes-573">
+										<div class="dataNote data" id="note_19">
+											<span class="click_span" id="19NoteEdit">edit</span>
+											<span class="click_span" id="19NoteDelete">delete</span>
+											<div id="19Note" class="note">
+												<div class="noteHeader">
+													<div> - <span class="addedBy">added by Sabi Grivec on Tue, 14 August 2007 15:44</span></div>
+													<div class="note_form">
+														<div class="note_action">
+															<a href="#" id="19NoteAddAction" title="Add Follow-Up Action"><img src="hubspace_files/bell_add.png"></a>
+														</div>
+														<div style="display: none;" id="19noteActionDisplay">
+															<form id="19notecreateAction">
+																<table>
+																	<tbody>
+																		<tr>
+																			<td><label>Details</label></td>
+																			<td><textarea name="body"></textarea></td>
+																		</tr>
+																		<tr>
+																			<td><label>Date to Follow Up</label></td>
+																			<td><input name="due" value="Sun, 09 December 2007" id="due_19" type="hidden">
+																				<span style="cursor: pointer;" id="show_due_19"><img src="hubspace_files/calendar.gif"> Sun, 09 December 2007</span>
+																				<script type="text/javascript">
+		    Calendar.setup({
+		    inputField     :    "due_19",
+		    ifFormat       :    "%a, %d %B %Y",
+		    daFormat       :    ' <img src="/static/images/calendar.gif" /> '+ "%a, %d %B %Y",
+		    displayArea    :    "show_due_19"
+		    });	  
+		    </script>																			</td>
+																		</tr>
+																		<tr>
+																			<td><label>For User</label></td>
+																			<td><select name="foruser">
+																					<option value="411">Andrea Krause</option>
+																					<option value="604">Anja Fiedler</option>
+																					<option value="581">Björn-Erik Wenz</option>
+																					<option value="257">Ceri Clements</option>
+																					<option value="580">Chrstian Pelz</option>
+																					<option value="340">Claire Pellett</option>
+																					<option value="387">David Weatherall</option>
+																					<option value="582">Eli Malinsky</option>
+																					<option value="150">Femke van Zandvoort</option>
+																					<option value="602">Frauke Godat</option>
+																					<option value="339">Guest User</option>
+																					<option value="539">Henrique Bussacos</option>
+																					<option value="282">Jo Maiden</option>
+																					<option value="414">Joerg Baach</option>
+																					<option value="2">Jonathan Robinson</option>
+																					<option value="6">Lesley Williams</option>
+																					<option value="618">Manja Rauhut</option>
+																					<option value="4">Maria Glauser</option>
+																					<option value="5">Menka Parekh</option>
+																					<option value="536">Mike Morris</option>
+																					<option value="578">Mike Thompson</option>
+																					<option value="26">Mike Zeidler</option>
+																					<option value="258">Nicky Parkinson</option>
+																					<option value="213">Pablo Handl</option>
+																					<option value="572">Paula Cazal</option>
+																					<option value="226">Pooja Warier</option>
+																					<option value="410">Sabi Grivec</option>
+																					<option value="33">Simon Cooper</option>
+																					<option value="10">The Hub Bristol Hosts</option>
+																					<option value="603">Thomas Bernstein</option>
+																					<option selected="selected" value="1">Vijay Kumar</option>
+																					<option value="569">Wiebke Koch</option>
+																				</select>																			</td>
+																		</tr>
+																		<tr>
+																			<td></td>
+																			<td><input id="19noteSubmitAction" value="Create Follow-Up Action" type="submit"></td>
+																		</tr>
+																	</tbody>
+																</table>
+															</form>
+														</div>
+													</div>
+												</div>
+												<div class="noteBody">
+													<p></p>
+													<div class="document">
+														<p>Charity - booking rooms at £15/hour</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--
+		<div class="dataBox">
+
+			<div class="dataBoxHeader"><a py:if='permission_or_owner(object.homeplace,object,"manage_users")' class="modify" id="memberCommunities_${object.id}Edit">edit</a><a  class="title" id="link_communities"><h2>Knowledge Clusters</h2></a></div>
+
+                     <div  class="dataBoxContent">
+	                 <ul class="copList data" id="memberCommunities_${object.id}">
+		              ${load_memberCommunities(object)}
+                         </ul>
+                     </div>
+		</div>
+			-->
+							<div class="dataBox">
+								<div class="dataBoxHeader">
+									<a title="Click here to edit" class="modify" id="memberServices_573Edit">edit</a>
+									<a class="title" id="link_services">
+										<h2>Member services</h2>
+									</a>
+								</div>
+								<div class="dataBoxContent" id="memberServices_573">
+									<table class="servicesTable data" cellpadding="" cellspacing="0">
+									</table>
+									<script type="text/javascript">
+                    		set_inplace_edit(573, 'User', 'memberServices_573', 'memberServicesEdit');
+                	   </script>
+								</div>
+							</div>
+							<div id="tariff_booking_area-573">
+								<div class="dataBox">
+									<div class="dataBoxHeader">
+										<a title="Click here to edit" class="modify" id="tariffHistory-573Edit">edit</a>
+										<a class="title" id="link_tariffHistory-2">
+											<h2>Membership history</h2>
+										</a>
+									</div>
+									<div class="dataBoxContent">
+										<select id="tariff_location_select-573">
+										</select>
+										<div id="tariffHistory-573">
+											<table class="detailTable tariffs data" cellpadding="0" cellspacing="0">
+												<tbody>
+													<tr class="header">
+														<td></td>
+														<td>2007 Tariffs</td>
+														<td>2008 Tariffs</td>
+														<td>2009 Tariffs</td>
+													</tr>
+													<tr class="odd">
+														<td class="line">January</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">February</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">March</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">April</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">May</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">June</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">July</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">August</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">September</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">October</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">November</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">December</td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<script type="text/javascript">
+                      set_inplace_edit(573, 'User', 'tariffHistory-573', 'tariffHistoryEdit', null, null, {'location':2}, show_tariff_switch, null, set_tariff_booking_edit, show_tariff_switch);
+                </script>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div style="position: relative; height: 500px;"></div>
+						</div>
+						<div id="network-billingContent" class="subsectionContent">						</div>
+						<div id="network-fulltextsearchContent" class="subsectionContent">						</div>
+					</div>
+				</div>
+				<div style="display: none;" id="profileContent" class="pane">
+					<div style="display: none;" id="current_user_id" class="1"></div>
+					<div style="display: none;" id="current_user_class" class="User"></div>
+					<div class="subBar">
+						<ul>
+							<li class="selected">
+								<a style="cursor: pointer;" id="profile-0" class="subsection">Profile</a>
+							</li>
+							<li>
+								<a style="cursor: pointer;" id="profile-1" class="subsection">Billing</a>
+							</li>
+						</ul>
+					</div>
+					<div class="paneContent">
+						<div id="profile-mainProfileContent" class="subsectionContent">
+							<a title="Click here to edit" id="memberProfile_1Edit" class="modify memberProfileEdit">edit</a>
+							<div id="memberProfile_1" class="memberProfile">
+								<table class="memberProfile" cellpadding="0" cellspacing="0">
+									<tbody>
+										<tr>
+											<td class="photo" id="photo1"><div class="innerPhoto">
+													<p> Vijay Kumar</p>
+													<div class="imgwrap">
+														<img src="hubspace_files/shadow.html" id="profile_image1">													</div>
+												</div>
+												<div title="Click to change photo" id="upload_image1" class="replace_image">replace image</div>
+												<div id="iframe_area1"></div></td>
+											<td><table class="memberProfileInner detailTable" cellpadding="0" cellspacing="0">
+													<tbody>
+														<tr class="odd">
+															<td class="line">Username</td>
+															<td>vijay</td>
+														</tr>
+														<tr class="even">
+															<td class="line">Organisation</td>
+															<td>Open Coop</td>
+														</tr>
+														<tr class="odd">
+															<td class="line">Role</td>
+															<td>Mr</td>
+														</tr>
+														<tr class="even">
+															<td class="line">Active?</td>
+															<td>Yes</td>
+														</tr>
+														<tr class="odd">
+															<td class="line">Home Hub</td>
+															<td>London</td>
+														</tr>
+														<tr class="even">
+															<td class="line">Mobile</td>
+															<td>07967 099480</td>
+														</tr>
+														<tr class="odd">
+															<td class="line">Work Phone</td>
+															<td>02073576407</td>
+														</tr>
+														<tr class="even">
+															<td class="line">Home Phone</td>
+															<td>02073576407</td>
+														</tr>
+														<tr class="odd">
+															<td class="line">Default Email</td>
+															<td><a href="mailto:tom.salfield@the-hub.net">tom.salfield@the-hub.net</a></td>
+														</tr>
+														<tr class="even">
+															<td class="line">Email 2</td>
+															<td><a href="mailto:tom@ud.com">tom@ud.com</a></td>
+														</tr>
+														<tr class="odd">
+															<td class="line">Skype name</td>
+															<td>tomsalfield</td>
+														</tr>
+														<tr class="even">
+															<td class="line">Address</td>
+															<td>60 Heaven Mansions</td>
+														</tr>
+														<tr class="odd">
+															<td class="line">Membership number</td>
+															<td>1</td>
+														</tr>
+														<tr class="even">
+															<td class="line">Member of The Hub in</td>
+															<td>London, Bristol</td>
+														</tr>
+													</tbody>
+												</table>
+												<script type="text/javascript">
+                    set_inplace_edit(1, 'User', 'memberProfile_1', null, null, null, null, refresh_upload, null, autocomplete_biz_type, null);
+</script>											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="dataBox">
+								<div class="dataBoxHeader">
+									<a title="Click here to edit" class="modify" id="memberDescription_1Edit">edit</a>
+									<a class="title" id="link_memberDesc">
+										<h2>About me</h2>
+									</a>
+								</div>
+								<div class="dataBoxContent">
+									<div class="dataTextBox data" id="memberDescription_1">
+										<div class="document">
+											<p>I am a collaborative systems architect and Internet technologist. I
+												am involved with developing Free and Open Source software with the goal
+												of increasing collaboration and knowledge sharing between social
+												enterprises.</p>
+											<p>One of my most recent projects is the software that this site is
+												running. I am currently working for the Hub improving this system and
+												making newer better ones. Maybe one day we will be better than
+												facebook! But seriously the plan now is to build virtual organisation
+												tools to create an global social enterprise platform rooted in the
+												physical communities provided by Hubs. Coincidentally, I did a Masters
+												thesis on "Virtual Open Organisational Platforms".</p>
+											<p>I have studied both Economics and Computing at University and have a
+												keen interest in subverting conventional wisdom and practice in both
+												areas. I don't know maybe I am just subversive by nature? I also
+												co-founded
+												<a href="http://uniteddiversity.com/" class="reference">http://uniteddiversity.com</a>
+												and
+												<a href="http://open.coop/" class="reference">http://open.coop</a>
+												and am still working with the people involved in those projects.</p>
+											<p>The reason I got involved in software and technology (some years
+												ago) was due to a realisation that the world needs new monetary systems
+												and the internet is the best hope of a platform for free and democratic
+												money. I recently saw this 50 minute film which summarized very well a
+												few years of my thinking on what is wrong with the world's monetary
+												system.
+												<a href="http://video.google.com/videoplay?docid=-9050474362583451279" class="reference">http://video.google.com/videoplay?docid=-9050474362583451279</a>
+												Of course it doesn't cover in any detail the possible solutions but you can't learn everything in 50mins.</p>
+											<p>N.B. I get really annoyed when people who think they are socially
+												progressive or ethical, start talking about intellectual property and
+												copyright as if they are there to help small business and inventors. I
+												can't understand why it is not obvious that a society in which all
+												information is privately owned can be free or democratic. One of my
+												favourite presentations is "free culture" by Laurence Lessig since it
+												makes this really clear. I also love the style of the presentation
+												<a href="http://randomfoo.net/oscon/2002/lessig/free.html" class="reference">http://randomfoo.net/oscon/2002/lessig/free.html</a>
+											</p>
+										</div>
+										<script type="text/javascript">
+                    set_inplace_edit(1, 'User', 'memberDescription_1', 'memberDescriptionEdit');
+           </script>
+									</div>
+								</div>
+							</div>
+							<div class="dataBox">
+								<div class="dataBoxHeader">
+									<a title="Click here to edit" class="modify" id="relationshipStatus_1Edit">edit</a>
+									<a class="title" id="relstatus">
+										<h2>Relationship Details</h2>
+									</a>
+								</div>
+								<div class="dataBoxContent" id="relationshipStatus_1">
+									<table class="servicesTable data" cellpadding="" cellspacing="0">
+										<tbody>
+											<tr>
+												<td class="line">Introduced By</td>
+												<td>Unknown</td>
+											</tr>
+											<tr>
+												<td class="line">Signed Up By</td>
+												<td>Unknown</td>
+											</tr>
+											<tr>
+												<td class="line">Host Contact</td>
+												<td>Unknown</td>
+											</tr>
+										</tbody>
+									</table>
+									<script type="text/javascript">
+               set_inplace_edit(1, 'User', 'relationshipStatus_1', 'relationshipStatusEdit');
+           </script>
+								</div>
+							</div>
+							<div class="dataBox">
+								<div class="dataBoxHeader">
+									<a id="add_note_1" class="modify">add new note</a>
+									<a class="title" id="link_notes">
+										<h2>Relationship History</h2>
+									</a>
+								</div>
+								<div class="dataBoxContent" id="notes_area_1">
+									<div id="user_notes-1">									</div>
+								</div>
+							</div>
+							<!--
+		<div class="dataBox">
+
+			<div class="dataBoxHeader"><a py:if='permission_or_owner(object.homeplace,object,"manage_users")' class="modify" id="memberCommunities_${object.id}Edit">edit</a><a  class="title" id="link_communities"><h2>Knowledge Clusters</h2></a></div>
+
+                     <div  class="dataBoxContent">
+	                 <ul class="copList data" id="memberCommunities_${object.id}">
+		              ${load_memberCommunities(object)}
+                         </ul>
+                     </div>
+		</div>
+			-->
+							<div class="dataBox">
+								<div class="dataBoxHeader">
+									<a title="Click here to edit" class="modify" id="memberServices_1Edit">edit</a>
+									<a class="title" id="link_services">
+										<h2>Member services</h2>
+									</a>
+								</div>
+								<div class="dataBoxContent" id="memberServices_1">
+									<table class="servicesTable data" cellpadding="" cellspacing="0">
+									</table>
+									<script type="text/javascript">
+                    		set_inplace_edit(1, 'User', 'memberServices_1', 'memberServicesEdit');
+                	   </script>
+								</div>
+							</div>
+							<div id="tariff_booking_area-1">
+								<div class="dataBox">
+									<div class="dataBoxHeader">
+										<a title="Click here to edit" class="modify" id="tariffHistory-1Edit">edit</a>
+										<a class="title" id="link_tariffHistory-1">
+											<h2>Membership history</h2>
+										</a>
+									</div>
+									<div class="dataBoxContent">
+										<select id="tariff_location_select-1">
+											<option selected="selected" value="1"> London </option>
+											<option value="2"> Bristol </option>
+										</select>
+										<div id="tariffHistory-1">
+											<table class="detailTable tariffs data" cellpadding="0" cellspacing="0">
+												<tbody>
+													<tr class="header">
+														<td></td>
+														<td>2006 Tariffs</td>
+														<td>2007 Tariffs</td>
+														<td>2008 Tariffs</td>
+														<td>2009 Tariffs</td>
+													</tr>
+													<tr class="odd">
+														<td class="line">January</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">February</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">March</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">April</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">May</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">June</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">July</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">August</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">September</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">October</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">November</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<tr class="odd">
+														<td class="line">December</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+													</tr>
+													<script type="text/javascript">
+                      set_inplace_edit(1, 'User', 'tariffHistory-1', 'tariffHistoryEdit', null, null, {'location':1}, show_tariff_switch, null, set_tariff_booking_edit, show_tariff_switch);
+                </script>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div style="position: relative; height: 500px;"></div>
+						</div>
+						<div id="profile-billingContent" class="subsectionContent">						</div>
+					</div>
+				</div>
+				<div style="display: block;" id="spaceContent" class="pane">
+					<div class="subBar">					</div>
+					<div class="paneContent">
+						<div id="space-spaceContent" class="subsectionContent">
+							<h1>Space and Resource Booking</h1>
+									<div class="bookingHub">Select Hub
+										<select id="location" name="location">
+											<option selected="selected" id="1" value="1">London</option>
+											<option id="2" value="2">Bristol</option>
+											<option id="3" value="3">Johannesburg</option>
+											<option id="4" value="4">Bombay</option>
+											<option id="5" value="5">Sao paulo</option>
+											<option id="6" value="6">Berlin</option>
+											<option id="7" value="7">Toronto</option>
+										</select>
+									</div>
+							<div class="dataBox">
+								<div class="dataBoxHeaderCollapse" id="booking_help">
+									<a class="title" id="help_Booking_Help">
+										<h2>Need Help with Booking?</h2>
+									</a>
+								</div>
+								<div style="display: none;" class="dataBoxContent">To make a booking, or modify an existing one:
+									<ol>
+										<li>Select the date you are looking for.</li>
+										<li>Click on the space and the time you would like.</li>
+										<li>Provide us with the booking details required.</li>
+									</ol>
+									<p>In the event of a cancellation, the individual or organization
+										booking the space will be charged 50% of the total cost, unless it is
+										cancelled more than two weeks prior to the event.</p>
+									<p> A confirmation will be emailed to you as soon as the booking is made.
+										For further information or to cancel a booking (starting in the next
+										two weeks) please email
+										<a href="mailto:london.hosts@the-hub.net">london.hosts@the-hub.net</a>
+										.</p>
+								</div>
+							</div>
+								<div class="room_selector roomX">
+									Choose Resource type <select name="add_room">
+										<option selected="selected" disabled="disabled">Meeting Room</option>
+										<option value="Room 1">Whatever Room</option>
+										<option value="Room 1">that is not on the page</option>
+										<option value="Room 1">yet</option>
+									</select>
+									View <select name="add_room">
+										<option selected="selected" disabled="disabled">Meeting Room</option>
+										<option value="Room 1">Whatever Room</option>
+										<option value="Room 1">that is not on the page</option>
+										<option value="Room 1">yet</option>
+									</select>
+								</div>
+							<div id="room_selector_group" class="dayview">
+								<div class="room_selector room1">
+									<a class="label" onclick="this.className='label_selected'">sdgsdf asf sadf dMeeting Room</a>
+									<a class="close"></a>
+								</div>
+								<div class="room_selector room2">
+									<a class="label" onclick="this.className='label_selected'">Workshop Space</a>
+									<a class="close"></a>
+								</div>
+								<div class="room_selector room3">
+									<a class="label" onclick="this.className='label_selected'">Library Space</a>
+									<a class="close"></a>
+								</div>
+								<div class="room_selector room4">
+									<a class="label" onclick="this.className='label_selected'">Platform 1</a>
+									<a class="close"></a>
+								</div>
+								<div class="room_selector room5">
+									<a class="label" onclick="this.className='label_selected'">Platform 2</a>
+									<a class="close"></a>
+								</div>
+								<div class="room_selector room6">
+									<a class="label" onclick="this.className='label_selected'">Platform 3</a>
+									<a class="close"></a>
+								</div>
+
+								<!--<div id="mybookings_selector_group">
+									<label style="background: url(images/star_black.png) no-repeat right 2px">
+									<input name="my_bookings" type="radio" value="" checked class="radio" />
+									My bookings
+									</label>
+									<label>
+									<input name="my_bookings" type="radio" value="" class="radio" />
+									All bookings
+									</label>
+								</div>-->
+							</div>
+							
+							<div class="bookingDate">
+								<form id="space_loc_time">
+									<a id="leftArrow" class="Fri, 07 December 2007"><img src="images/booking_left.png" alt="&lt;"></a>
+									<h2 id="space_date">Monday, 26 November  2007 <img src="images/booking_down.png"></h2>
+									<a id="rightArrow" class="Sun, 09 December 2007"><img src="images/booking_right.png" alt="&gt;"></a>
+									<input name="date" value="Sat, 08 December 2007" id="space_date_field" type="hidden">
+								</form>
+							</div>
+							
+							<div id="bookspacedate" class="bigcal_day">
+                                                            <div>
+								<div id="day_group">
+<!-- take 6px of calculated height to account for border and padding-->
+									<div class="event room1" style="top: -33px; height: 27px;">Meeting Room</div>
+									<div class="event room2" style="top: -33px; height: 27px;">Workshop Space</div>
+									<div class="event room1 mybooking" style="top: 0px; height: 47px;">13:00-14:00</div>
+									<div class="event room2" style="top: 40px; height: 89px;">13:00-14:00</div>
+									<div class="event room3 mybooking" style="top: 240px; height: 47px;">13:00-14:00</div>
+									<div class="event room4" style="top: 84px; height: 65px;">13:00-14:00</div>
+									<div class="event room5 mybooking" style="top: 60px; height: 47px;">13:00-14:00</div>
+									<div class="event room6" style="top: 61px; height: 41px;">13:00-14:00</div>
+									<div class="event room6" style="top: 108px; height: 41px;">13:00-14:00</div>
+									<div class="event room6" style="top: 457px; height: 41px;">13:00-14:00</div>
+								</div>
+                                                            </div>
+							</div>
+							<div id="mybookings">My bookings</div>
+							<div id="booking_area"></div>
+						</div>
+					</div>
+				</div>
+				<div style="display: block;" id="hostContent" class="pane">				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div style="position: absolute; visibility: hidden; z-index: 1000; top: -10000px; left: -10000px; background-image: none;" id="overDiv">
+	<table bgcolor="#333399" border="0" cellpadding="1" cellspacing="0" width="200">
+		<tbody>
+			<tr>
+				<td><table bgcolor="#ccccff" border="0" cellpadding="2" cellspacing="0" width="100%">
+						<tbody>
+							<tr>
+								<td valign="top"><font color="#000000" face="Verdana,Arial,Helvetica" size="1">hotbed, with lots of cushions and books.</font></td>
+							</tr>
+						</tbody>
+					</table></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div style="position: absolute; display:none" class="calendar">
+	<table style="visibility: visible;" cellpadding="0" cellspacing="0">
+		<thead>
+			<tr>
+				<td class="button" colspan="1"><div unselectable="on">?</div></td>
+				<td style="cursor: move;" class="title" colspan="6">December, 2007</td>
+				<td class="button" colspan="1"><div unselectable="on">×</div></td>
+			</tr>
+			<tr class="headrow">
+				<td class="button nav" colspan="1"><div unselectable="on">«</div></td>
+				<td class="button nav" colspan="1"><div unselectable="on">‹</div></td>
+				<td class="button" colspan="4"><div unselectable="on">Today</div></td>
+				<td class="button nav" colspan="1"><div unselectable="on">›</div></td>
+				<td class="button nav" colspan="1"><div unselectable="on">»</div></td>
+			</tr>
+			<tr class="daynames">
+				<td class="name wn">wk</td>
+				<td class="name bigcal_day weekend">Sun</td>
+				<td class="bigcal_day name">Mon</td>
+				<td class="bigcal_day name">Tue</td>
+				<td class="bigcal_day name">Wed</td>
+				<td class="bigcal_day name">Thu</td>
+				<td class="bigcal_day name">Fri</td>
+				<td class="name bigcal_day weekend">Sat</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="daysrow">
+				<td class="bigcal_day wn">47</td>
+				<td class="emptycell">&nbsp;</td>
+				<td class="emptycell">&nbsp;</td>
+				<td class="emptycell">&nbsp;</td>
+				<td class="emptycell">&nbsp;</td>
+				<td class="emptycell">&nbsp;</td>
+				<td class="emptycell">&nbsp;</td>
+				<td class="bigcal_day weekend">1</td>
+			</tr>
+			<tr class="daysrow">
+				<td class="bigcal_day wn">48</td>
+				<td class="bigcal_day weekend">2</td>
+				<td class="bigcal_day">3</td>
+				<td class="bigcal_day">4</td>
+				<td class="bigcal_day">5</td>
+				<td class="bigcal_day">6</td>
+				<td class="bigcal_day">7</td>
+				<td class="bigcal_day selected weekend">8</td>
+			</tr>
+			<tr class="daysrow">
+				<td class="bigcal_day wn">49</td>
+				<td class="bigcal_day tobigcal_day weekend">9</td>
+				<td class="bigcal_day">10</td>
+				<td class="bigcal_day">11</td>
+				<td class="bigcal_day">12</td>
+				<td class="bigcal_day">13</td>
+				<td class="bigcal_day">14</td>
+				<td class="bigcal_day weekend">15</td>
+			</tr>
+			<tr class="daysrow">
+				<td class="bigcal_day wn">50</td>
+				<td class="bigcal_day weekend">16</td>
+				<td class="bigcal_day">17</td>
+				<td class="bigcal_day">18</td>
+				<td class="bigcal_day">19</td>
+				<td class="bigcal_day">20</td>
+				<td class="bigcal_day">21</td>
+				<td class="bigcal_day weekend">22</td>
+			</tr>
+			<tr class="daysrow">
+				<td class="bigcal_day wn">51</td>
+				<td class="bigcal_day weekend">23</td>
+				<td class="bigcal_day">24</td>
+				<td class="bigcal_day">25</td>
+				<td class="bigcal_day">26</td>
+				<td class="bigcal_day">27</td>
+				<td class="bigcal_day">28</td>
+				<td class="bigcal_day weekend">29</td>
+			</tr>
+			<tr class="daysrow">
+				<td class="bigcal_day wn">52</td>
+				<td class="bigcal_day weekend">30</td>
+				<td class="day">31</td>
+				<td class="emptycell">&nbsp;</td>
+				<td class="emptycell">&nbsp;</td>
+				<td class="emptycell">&nbsp;</td>
+				<td class="emptycell">&nbsp;</td>
+				<td class="emptycell">&nbsp;</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr class="footrow">
+				<td style="cursor: move;" class="ttip" colspan="8"><div unselectable="on">Select date</div></td>
+			</tr>
+		</tfoot>
+	</table>
+	<div class="combo">
+		<div class="label">Jan</div>
+		<div class="label">Feb</div>
+		<div class="label">Mar</div>
+		<div class="label">Apr</div>
+		<div class="label">May</div>
+		<div class="label">Jun</div>
+		<div class="label">Jul</div>
+		<div class="label">Aug</div>
+		<div class="label">Sep</div>
+		<div class="label">Oct</div>
+		<div class="label">Nov</div>
+		<div class="label">Dec</div>
+	</div>
+	<div class="combo">
+		<div class="label"></div>
+		<div class="label"></div>
+		<div class="label"></div>
+		<div class="label"></div>
+		<div class="label"></div>
+		<div class="label"></div>
+		<div class="label"></div>
+		<div class="label"></div>
+		<div class="label"></div>
+		<div class="label"></div>
+		<div class="label"></div>
+		<div class="label"></div>
+	</div>
+</div>
+</body>
+</html>
