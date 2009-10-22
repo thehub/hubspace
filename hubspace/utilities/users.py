@@ -75,19 +75,18 @@ def filter_members(location, text_filter, type, active_only, start, end, overrid
             user_locs = user_locations(identity.current.user)
 
         if location:
-            users = set(User.select("homeplace_id = %s AND display_name ilike '%s' order by display_name" % (location.id, text_filter)))
+            users = list(User.select("homeplace_id = %s AND display_name ilike '%s' order by display_name" % (location.id, text_filter)))
             if active_only:
                 users = [user for user in users if user.active]
             else:
                 if location not in user_locs:
                     users = [user for user in users if user.active]
         else:
-            print(User.select("display_name ilike '%s' order by display_name" % text_filter))
-            users = set(User.select("display_name ilike '%s' order by display_name" % text_filter))
+            users = list(User.select("display_name ilike '%s' order by display_name" % text_filter))
             if active_only:
                 users = [user for user in users if user.active or user.homeplace in user_locs]
             else:
-                users = [user for user in users if user.active and user.homeplace in user_locs]
+                users = [user for user in users if user.homeplace in user_locs]
         
     elif type == 'rfid_member_search':
             users = User.select(AND(User.q.rfid == text_filter))
