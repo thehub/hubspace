@@ -9,6 +9,13 @@ def price(resource, tariff):
     pricing = get_pricing(tariff, resource)
     return c2s(pricing) 
 
+def order_resources(group):
+    # #461
+    resources_order = group.resources_order
+    resources = [Resource.get(res_id) for res_id in resources_order]
+    resources = resources + [resource for resource in group.resources if resource.id not in resources_order]
+    return resources
+
 from docutils.core import publish_parts
 ?>
 
@@ -52,10 +59,7 @@ from docutils.core import publish_parts
                                </div>
                              </div>
                            </li>
-                         <c py:strip="True" py:for="resource_id in group.resources_order">
-                           <?python
-                               resource = Resource.get(resource_id)
-                           ?>
+                         <c py:strip="True" py:for="resource in order_resources(group)">
                            <li title="drag the resource using arrows to the left re-order it" id="item-${resource.id}" class="resource_item">
                                <div class="handle"></div>
                                <div class="resourceName"><span id="resourceName_${resource.id}">${resource.name}</span><a id="resourceName_${resource.id}Edit" class="button">edit</a></div>

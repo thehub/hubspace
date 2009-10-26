@@ -3972,6 +3972,8 @@ The Hub Team
     def create_pdf_invoice(self, invoiceid, html2ps=None):
         invoiceid = int(invoiceid)
         invoice = Invoice.get(invoiceid)
+        if invoice.location.id in (26,):
+            return self.show_newinvoice(invoiceid)
         html =  try_render(dict(invoice=invoice),template='hubspace.templates.invoice', format='html', headers={'content-type':'text/html'})
         if html2ps:
             command = 'html2ps | ps2pdf13 - -'
