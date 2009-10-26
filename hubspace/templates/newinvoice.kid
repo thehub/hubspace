@@ -113,9 +113,9 @@ invoice_data = get_collected_invoice_data(invoice=invoice)[0].items()
 vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_included
 ?>
 
-<div width="80%" border="0.20" py:for="user, ivd in invoice_data">
+<div width="80%" py:for="user, ivd in invoice_data">
 
-    <h3>${user.display_name}</h3>
+    <h3 style="padding: 0.2em; border-style:solid; border-width:0.5; background-color:#C0C0C5;">${user.display_name}</h3>
 
     <table width="100%" border="0.1" style="padding: 0.2em;">
     <thead style="background: #C0C0C0;">
