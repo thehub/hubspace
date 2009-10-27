@@ -2,6 +2,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 del sys.setdefaultencoding
+print "default encoding: utf-8"
 
 #monkeypatch cherrypy, see
 #http://trac.turbogears.org/turbogears/ticket/1022

@@ -1,4 +1,4 @@
-import turbolucene
+import hubspace.search
 from hubspace.model import User, Location
 from hubspace.utilities.permissions import user_locations
 from turbogears import identity
@@ -65,10 +65,13 @@ def filter_by_text(users, text_filter, type):
     if type=='rfid_member_search':
         return User.select(AND(User.q.rfid == text_filter))
 
+
 def filter_members(location, text_filter, type, active_only, start, end, override_user=None):
-    text_filter = u"%" + u" ".join(text_filter.split()).replace("'","\\'") + u"%"
 
     if type == "member_search":
+
+        text_filter = u"%" + u" ".join(text_filter.split()).replace("'","\\'") + u"%"
+
         if override_user:
             user_locs = Location.select()
         else:
@@ -92,7 +95,7 @@ def filter_members(location, text_filter, type, active_only, start, end, overrid
             users = User.select(AND(User.q.rfid == text_filter))
 
     elif type == 'fulltext_member_search':
-            users = [] # broken atm
+            users = hubspace.search.do_search(text_filter)
 
     if start != None and end != None:
         users = users[start:end]

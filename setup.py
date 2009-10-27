@@ -36,7 +36,8 @@ setup(name='hubspace',
            "pycountry",
 	   "nose",
            "BeautifulSoup",
-           "mechanize"
+           "mechanize",
+           "whoosh"
       ],
       entry_points="""
 [console_scripts]

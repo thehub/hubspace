@@ -51,6 +51,7 @@ from hubspace.utilities.users import filter_members
 from hubspace.tariff import get_tariff
 
 import hubspace.sync.core as sync
+import hubspace.search
 
 from hubspace.validators import *
 from turbogears.validators import Money
@@ -87,9 +88,6 @@ from hubspace.configuration import site_default_lang,  site_folders, title, new_
 ####SCHEDULED
 from cherrypy._cphttptools import Request
 import urllib2
-
-import turbolucene
-from turbolucene import *
 
 def update_tariff_bookings():
     """get the last month for which tariffs have been booked anywhere in the system
@@ -150,8 +148,7 @@ from hubspace.scheduler import _start_scheduler, add_oneoff_task, add_weekday_ta
 
 def startup():
     config.update({'i18n.get_locale':get_hubspace_locale})
-    turbolucene.start(make_document, results_formatter)
-    turbogears.startup.call_on_shutdown.append(turbolucene._stop)
+    #hubspace.search.populate()
     hubspace_compile()
     for location in Location.select():
         get_updates_data(location)
@@ -187,7 +184,6 @@ def start_scheduler():
     add_monthday_task(schedule_access_policy_updates, [3], (0,0))
     if datetime.now() > datetime(datetime.today().year, datetime.today().month, 3):
         schedule_access_policy_updates()
-    #turbogears.scheduler.add_interval_task(fulltext_index_users, 1000, initialdelay=10)
 
 turbogears.startup.call_on_startup.append(startup)
 
@@ -351,11 +347,10 @@ def results_formatter(results):
 
 def fulltext_index_users():
     import time
-    for user in User.select():    
+    for user in User.select():
         time.sleep(1)
-        turbolucene.update(user)
+        hubspace.search.update(user)
     return "success"
-
 
 
 
@@ -2871,7 +2866,7 @@ Exception:
             location = user.homeplace
             clear_cache('profiles', location)
     
-        turbolucene.update(user)
+        hubspace.search.update(user)
         cherrypy.response.headers['X-JSON'] = 'success'
         return {'object':user}
 
@@ -2888,22 +2883,12 @@ Exception:
     @validate(validators={'q':v.UnicodeString()})
     def complete_biz_type(self, q="", **kwargs):
         biz_type = q.strip()
-        biz_type = biz_type.lower()
         biz_typ = u" ".join([word+u"*" for word in biz_type.split(u" ")])
         biz_typ = 'biz_type:'+biz_typ
-        results = turbolucene.search(biz_typ, 'en')
+        results = hubspace.search.do_search(biz_typ)
         
-        suggestions = []
-        if results:
-            for result in results:
-                freetext = get_freetext_metadata(result, 'biz_type')#.encode('utf-8')
-                for word in freetext.split(" "):
-                    if biz_type == word.lower()[:len(biz_type)]: #.decode('utf-8')
-                        if word not in suggestions:
-                            suggestions.append(word)
-
-        output = [sugg for sugg in suggestions]
-        return '\n'.join(output)
+        suggestions = [res['biz_type'] for res in results]
+        return '\n'.join(suggestions)
 
 
     @expose()
@@ -2973,7 +2958,7 @@ Exception:
 
         model.hub.commit() # this is rather dangerous
         model.hub.begin()
-        turbolucene.update(user)
+        hubspace.search.update(user)
 
         location = user.homeplace # this will have to do changed once its possible to have users with no homeplace
         try:
@@ -3614,7 +3599,7 @@ The Hub Team
         if user.active:
             send_welcome_mail(user, kwargs['password'])
         model.hub.commit()
-        turbolucene.update(user)
+        hubspace.search.update(user)
         if kwargs['public_field']==1:
             clear_cache('profiles', location)
         cherrypy.response.headers['X-JSON'] = 'success'
