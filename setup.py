@@ -44,6 +44,7 @@ setup(name='hubspace',
 run_hubspace = start_hubspace:main
 export2ldap  = hubspace.sync.export2ldap:main
 exportmissingusers2ldap = hubspace.sync.tools:exportMissingUsers2LDAP
+sync_static = git_postmerge:main
       """,
       test_suite = 'nose.collector',
       )
