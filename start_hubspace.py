@@ -40,6 +40,18 @@ def main():
 
     turbogears.update_config(configfile, modulename="hubspace.config")
 
+    staic_target = turbogears.config.config.configs['global']['static_target_dir']
+    static_link = turbogears.config.config.configs['/static']['static_filter.dir']
+
+    if os.path.exists(static_link):
+        if os.path.islink(static_link):
+            os.remove(static_link)
+        else:
+            sys.exit("%s is not a link" % static_link)
+
+    os.symlink(staic_target, static_link)
+    print "Staic target: %s" % staic_target
+
     from hubspace.controllers import Root
     turbogears.start_server(Root())
 

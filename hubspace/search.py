@@ -41,7 +41,7 @@ def add(user):
         writer.add_document(**user2dict(user))
         writer.commit()
     except Exception, err:
-        applogger.exception("indexing user '%s' failed: " % username)
+        applogger.exception("indexing user '%s' failed: " % user.username)
         return False
     return True
 
