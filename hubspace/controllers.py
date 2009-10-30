@@ -610,6 +610,8 @@ def get_pricing(tariff, resource, month_datetime=None):
     start = datetime(month_datetime.year, month_datetime.month, 1,0,0,1)
     end = datetime(month_datetime.year, month_datetime.month, 1,0,0,0)+ timedelta(calendar.monthrange(month_datetime.year, month_datetime.month)[1])
 
+    if resource.type == 'tariff': tariff = resource # tariff change is happening
+
     try:
         pricing = Pricing.select(AND(Pricing.q.tariffID == tariff.id,
                                      Pricing.q.resourceID == resource.id,
@@ -2776,7 +2778,7 @@ Exception:
 
                 #did we move back to the guest tariff - if so destroy old booking and recalculate costs
                 if current_tariff_booking and not tariffid:
-                    current_tariff_booking.destroySelf()
+                    self.delete_rusage(current_tariff_booking.id)
                     invoiced_usages = tariff_booking_changed_recalculate(user, location.defaulttariff, \
                         current_tariff_booking.start, current_tariff_booking.end_time, True)
                     already_invoiced += invoiced_usages
@@ -2784,7 +2786,7 @@ Exception:
                 #Do we have a change in tariffs or move onto a tariff? if so book the new tariff (recalculate any related bookings)
                 if tariffid and (current_tariff_booking==None or current_tariff_booking.tariff.id != tariffid):
                     if current_tariff_booking:
-                        current_tariff_booking.destroySelf()
+                        self.delete_rusage(current_tariff_booking.id)
                     tariff_booking = self.book_tariff(userid=user.id, tariffid=tariffid, year=int(year), month=int(month), recalculate=False)
                     invoiced_usages = tariff_booking_changed_recalculate(user, tariff_booking.resource, tariff_booking.start, tariff_booking.end_time, True)
                     already_invoiced += invoiced_usages
@@ -4136,8 +4138,9 @@ The Hub Team
     @identity.require(not_anonymous())
     @validate(validators={'userid':v.Int(), 'invoiceid':v.Int(), 'start':dateconverter, 'end_time':dateconverter})
     def update_resource_table(self, tg_errors=None, userid=None, invoiceid=None, start=None, end_time=None, **kwargs):
+        print tg_errors
         if tg_errors:
-            raise `str(tg_errors['invoiceid'])`
+            raise `str(tg_errors.get('invoiceid') or tg_errors)`
         user=None
         invoice = None
         if userid:

@@ -30,6 +30,11 @@ def getDueDate(invoice):
     due = sent + datetime.timedelta(invoice.location.invoice_duedate)
     return formatDate(due)
 
+from itertools import chain
+
+def sumUsageCosts(ivd):
+    return c2s(sum_resource_costs(chain(*ivd[0].values())))
+
 nl2br = lambda s: s.replace("\n","<br/>")
 ?>
 
@@ -115,7 +120,7 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
 
 <div width="80%" py:for="user, ivd in invoice_data">
 
-    <h3 style="padding: 0.2em; border-style:solid; border-width:0.5; background-color:#C0C0C5;">${user.display_name}</h3>
+    <h3>${user.display_name}</h3>
 
     <table width="100%" border="0.1" style="padding: 0.2em;">
     <thead style="background: #C0C0C0;">
@@ -138,12 +143,21 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
     </tr>
     </div>
     <tr>
-        <td><strong>Total</strong></td>
-        <td align="right">${c2s(invoice.amount)}</td>
+        <td><strong>Sub Total</strong></td>
+        <td align="right">${sumUsageCosts(ivd)} </td>
     </tr>
     </table>
 
 </div>
+
+<br/>
+
+<table width="100%" border="0.1" style="padding: 0.2em;">
+<tr>
+<td align="center"><strong>Total</strong></td>
+<td align="right">${c2s(invoice.amount)} </td>
+</tr>
+</table>
 
 <?python
 import itertools
