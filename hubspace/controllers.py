@@ -1663,16 +1663,6 @@ class Root(controllers.RootController):
                 pass
         return "done"
 
-    @expose()
-    @identity.require(not_anonymous())
-    def devlangtest(self, text=""):
-        enc = "Default Encoding: " + sys.getdefaultencoding()
-        text = _(text) or _("Hubspace Dev Test")
-        lang = get_hubspace_locale()
-        out = "<hr/>".join([enc, text, lang, _(booking_confirmation_text)])
-        out = out.replace('\n', "<br/>")
-        return out
-
     _cp_filters = sync._cp_filters
 
     def _cpOnError(self):

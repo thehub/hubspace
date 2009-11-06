@@ -77,9 +77,10 @@ nl2br = lambda s: s.replace("\n","<br/>")
     <td align="left" width="20%">
         <br/>
         <strong>${invoice.user.display_name}</strong><br/>
+        Membership No. ${str(invoice.user.id)}<br/>
         <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address)} </c>
         <c py:strip="True" py:if="not invoice.user.bill_to_profile"> ${nl2br(invoice.user.billingaddress)} </c>
-        <c py:strip="True" py:if="not invoice.user.bill_company_no and not invoice.user.bill_to_profile"> Company No. ${invoice.user.bill_company_no} </c>
+        <c py:strip="True" py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"> Company No. ${invoice.user.bill_company_no} </c>
         <br/>
     </td>
     <td width="40%">
@@ -133,12 +134,12 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
     <tr width="80%" border="0.20">
         <td>
             <strong> ${resource.name} </strong> <br/>
-            <small>
-                <em> Inclusive of ${getResourceVat(invoice, resource)} % VAT </em>(${invoice.location.currency} ${getResourceVATAmount(invoice, resource)})
-            </small>
         </td>
         <td align="right"> 
             ${getResourceUsageCost(ivd, resource)} <br/>
+            <small>
+                <em> Inclusive of ${getResourceVat(invoice, resource)} % VAT </em>(${invoice.location.currency} ${getResourceVATAmount(invoice, resource)})
+            </small>
         </td>
     </tr>
     </div>
@@ -151,10 +152,24 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
 </div>
 
 <br/>
-
+<h3>Invoice Total</h3>
 <table width="100%" border="0.1" style="padding: 0.2em;">
+<thead style="background: #C0C0C0;">
 <tr>
-<td align="center"><strong>Total</strong></td>
+    <td>Description</td>
+    <td align="right">Amount ${invoice.location.currency}</td>
+</tr>
+</thead>
+<tr>
+<td>Excluding VAT</td>
+<td align="right">${c2s(invoice.amount - invoice.total_tax)} </td>
+</tr>
+<tr>
+<td>VAT</td>
+<td align="right">${c2s(invoice.total_tax)} </td>
+</tr>
+<tr>
+<td align="left"><strong>Total</strong></td>
 <td align="right">${c2s(invoice.amount)} </td>
 </tr>
 </table>
@@ -174,7 +189,7 @@ c = itertools.count(1)
 <tr>
     <td valign="middle" width="5%">Sr. No.</td>
     <td>Member</td>
-    <td>Resource</td>
+    <td>Description</td>
     <td width="10%">Quantity</td>
     <td>Time</td>
     <td align="right">Amount ${invoice.location.currency}</td>
@@ -190,15 +205,23 @@ rusages = sorted(invoice.rusages, key=sorter)
     <td>${c.next()}</td>
     <td>${rusage.user.display_name}</td>
     <td>${rusage.resource.name} <div py:if="rusage.cancelled and not rusage.refund"><em>(Cancelled)</em></div>
-                                <div py:if="rusage.refund"><em>(Refund)</em></div> </td>
+                                <div py:if="rusage.refund"><em>(Refund)</em></div>
+        <div py:if="rusage.meeting_name"><em>${rusage.meeting_name}</em></div></td>
     <td>${rusage.resource.time_based and "-" or rusage.quantity}</td>
     <td py:if="rusage.resource.time_based">${formatDateTime(rusage.start)} - <br/> ${formatDateTime(rusage.end_time)}</td>
     <td py:if="not rusage.resource.time_based">${rusage.resource.type == 'tariff' and dtc(rusage.start) or formatDateTime(rusage.start)}</td>
     <td align="right">
-        ${c2s(rusage.cost)}<br/>
-        <small> <em> Inclusive of ${getResourceVat(invoice, rusage.resource)} % VAT</em> </small>
-
+        ${c2s(rusage.cost)}
+        <!-- <br/> <small> <em> Inclusive of ${getResourceVat(invoice, rusage.resource)} % VAT</em> </small> -->
     </td>
+</tr>
+<tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><strong>VAT</strong></td>
+    <td align="right">${c2s(invoice.total_tax)}</td>
 </tr>
 <tr bgcolor="lightblue">
     <td></td>
