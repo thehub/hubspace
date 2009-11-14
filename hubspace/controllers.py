@@ -3949,8 +3949,17 @@ The Hub Team
     def create_pdf_invoice(self, invoiceid, html2ps=None):
         invoiceid = int(invoiceid)
         invoice = Invoice.get(invoiceid)
-        if invoice.location.id in (26,):
-            return self.show_newinvoice(invoiceid)
+        return self.show_newinvoice(invoiceid)
+
+    @expose()
+    @identity.require(not_anonymous())
+    def old_invoice(self, invoice_no, html2ps=None):
+        try:
+            invoice = Invoice.selectBy(number=invoice_no)[0]
+        except:
+            invoice = Invoice.get(int(invoice_no))
+        if not permission_or_owner(invoice.user.homeplace, invoice, 'manage_invoices'):
+            raise IdentityFailure('what about not hacking the system')
         html =  try_render(dict(invoice=invoice),template='hubspace.templates.invoice', format='html', headers={'content-type':'text/html'})
         if html2ps:
             command = 'html2ps | ps2pdf13 - -'

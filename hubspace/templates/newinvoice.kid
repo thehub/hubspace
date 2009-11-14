@@ -9,6 +9,7 @@ from hubspace.validators import dateconverter
 from turbogears.validators import DateTimeConverter
 
 formatDate = dateconverter.from_python
+formatDate = lambda t: t.strftime("%b %-d %Y")
 formatDateTime = lambda t: t.strftime("%b %-d %Y %l:%M%P")
 dtc = DateTimeConverter("%B %Y").from_python
 
@@ -79,25 +80,27 @@ nl2br = lambda s: s.replace("\n","<br/>")
         <strong>${invoice.user.display_name}</strong><br/>
         Membership No. ${str(invoice.user.id)}<br/>
         <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address)} </c>
-        <c py:strip="True" py:if="not invoice.user.bill_to_profile"> ${nl2br(invoice.user.billingaddress)} </c>
+        <c py:strip="True" py:if="not invoice.user.bill_to_profile"> ${XML(nl2br(invoice.user.billingaddress))} </c>
         <c py:strip="True" py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"> Company No. ${invoice.user.bill_company_no} </c>
+        <c py:if="invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><br/>VAT ${invoice.user.bill_vat_no}</c>
         <br/>
     </td>
-    <td width="40%">
+    <td width="50%">
     </td>
     <td>
+        <strong>Invoice details</strong>
         <table>
         <tr>
-            <td><strong>Invoice no.</strong></td>
-            <td><strong>${invoice.number}</strong></td>
+            <td width="20%">Number</td>
+            <td width="80%">${invoice.number}</td>
         </tr>
         <tr>
-            <td>Invoice Date</td>
+            <td>Date</td>
             <td>${formatDate(invoice.sent or datetime.datetime.now())}</td>  
         </tr>
         <tr>
-            <td>Invoice Period</td>
-            <td>${formatDate(invoice.start)} to  <br/> ${formatDate(invoice.end_time)}</td>
+            <td>Period</td>
+            <td>${formatDate(invoice.start)} to ${formatDate(invoice.end_time)}</td>
         </tr>
         <tr py:if="invoice.location.invoice_duedate > -1">
             <td>Due Date</td>
@@ -133,12 +136,15 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
     <div py:for="resource in ivd[0]">
     <tr width="80%" border="0.20">
         <td>
-            <strong> ${resource.name} </strong> <br/>
+            <!-- <strong> ${resource.name} </strong> <br/> -->
+            <strong> ${ivd[0][resource][0].resource_name} </strong> <br/>
         </td>
         <td align="right"> 
             ${getResourceUsageCost(ivd, resource)} <br/>
             <small>
-                <em> Inclusive of ${getResourceVat(invoice, resource)} % VAT </em>(${invoice.location.currency} ${getResourceVATAmount(invoice, resource)})
+                <em py:if="invoice.vat_included">Inclusive of ${getResourceVat(invoice, resource)} % VAT </em>
+                <em py:if="not invoice.vat_included">Exclusive of ${getResourceVat(invoice, resource)} % VAT </em>
+                (${invoice.location.currency} ${getResourceVATAmount(invoice, resource)})
             </small>
         </td>
     </tr>
@@ -204,16 +210,13 @@ rusages = sorted(invoice.rusages, key=sorter)
 <tr py:for="rusage in rusages">
     <td>${c.next()}</td>
     <td>${rusage.user.display_name}</td>
-    <td>${rusage.resource.name} <div py:if="rusage.cancelled and not rusage.refund"><em>(Cancelled)</em></div>
+    <td>${rusage.resource_name} <div py:if="rusage.cancelled and not rusage.refund"><em>(Cancelled)</em></div>
                                 <div py:if="rusage.refund"><em>(Refund)</em></div>
         <div py:if="rusage.meeting_name"><em>${rusage.meeting_name}</em></div></td>
     <td>${rusage.resource.time_based and "-" or rusage.quantity}</td>
     <td py:if="rusage.resource.time_based">${formatDateTime(rusage.start)} - <br/> ${formatDateTime(rusage.end_time)}</td>
     <td py:if="not rusage.resource.time_based">${rusage.resource.type == 'tariff' and dtc(rusage.start) or formatDateTime(rusage.start)}</td>
-    <td align="right">
-        ${c2s(rusage.cost)}
-        <!-- <br/> <small> <em> Inclusive of ${getResourceVat(invoice, rusage.resource)} % VAT</em> </small> -->
-    </td>
+    <td align="right">${getRusageCost(rusage)} </td>
 </tr>
 <tr>
     <td></td>
@@ -261,7 +264,8 @@ ${freetext2}
 
 <div id="footerContent">
     <p align="center">
-    <small>${invoice.location.billing_address} | ${invoice.location.url} | ${invoice.location.telephone}</small>
+    <small>${invoice.location.billing_address} <c py:strip="True" py:if="invoice.location.company_no">| ${invoice.location.company_no} </c> 
+    | <a href="invoice.location.url">${invoice.location.url}</a> | ${invoice.location.telephone}</small>
     </p>
 </div>
 
