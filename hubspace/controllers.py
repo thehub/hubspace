@@ -3941,7 +3941,7 @@ The Hub Team
         html = html.replace("NEXTPAGEHACK", "<div> <pdf:nextpage/> </div> ")
         src = cStringIO.StringIO(html)
         dst = cStringIO.StringIO()
-        pdf = pisa.CreatePDF(src, dst)
+        pdf = pisa.CreatePDF(src, dst, encoding='utf-8')
         dst.seek(0)
         cherrypy.response.headers['Content-type'] = 'application/pdf'
         return dst.read()

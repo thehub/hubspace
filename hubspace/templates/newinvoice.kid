@@ -2,6 +2,7 @@
 
 <?python
 import datetime
+import cherrypy
 from hubspace.controllers import get_collected_invoice_data
 from hubspace.controllers import show_quantity_or_duration, sum_resource_costs
 from hubspace.utilities.uiutils import c2s
@@ -37,10 +38,12 @@ def sumUsageCosts(ivd):
     return c2s(sum_resource_costs(chain(*ivd[0].values())))
 
 nl2br = lambda s: s.replace("\n","<br/>")
+
+def lang():
+    return cherrypy.session.get('locale', 'en')
 ?>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" >
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" xml:lang="${lang()}" lang="${lang()}">
 
 <style>
 @page {
