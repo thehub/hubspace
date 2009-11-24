@@ -1,10 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <?python
+
+"""
+invoice_data
+
+[ 
+    ( user, ( {resource: rusages,}, {resource: quantity}),
+    ..       
+]
+
+"""
 import datetime
 import cherrypy
 from hubspace.controllers import get_collected_invoice_data
 from hubspace.controllers import show_quantity_or_duration, sum_resource_costs
+from hubspace.invoice import calc_tax
 from hubspace.utilities.uiutils import c2s
 from hubspace.validators import dateconverter
 from turbogears.validators import DateTimeConverter
@@ -78,9 +89,10 @@ def lang():
 
 <table border="0" align="center" width="100%">
 <tr>
-    <td align="left" width="20%">
+    <td align="left" width="25%">
         <br/>
-        <strong>${invoice.user.display_name}</strong><br/>
+        <strong>${invoice.user.bill_to_profile and invoice.user.organisation or invoice.user.bill_to_company}</strong><br/>
+        ${invoice.user.display_name}<br/>
         Membership No. ${str(invoice.user.id)}<br/>
         <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address)} </c>
         <c py:strip="True" py:if="not invoice.user.bill_to_profile"> ${XML(nl2br(invoice.user.billingaddress))} </c>
@@ -136,10 +148,10 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
         <td align="right">Amount ${invoice.location.currency}</td>
     </tr>
     </thead>
-    <div py:for="resource in ivd[0]">
+    <div py:for="resource, rusages in ivd[0].items()">
+    <div py:if="resource.type != 'custom'">
     <tr width="80%" border="0.20">
         <td>
-            <!-- <strong> ${resource.name} </strong> <br/> -->
             <strong> ${ivd[0][resource][0].resource_name} </strong> <br/>
         </td>
         <td align="right"> 
@@ -151,6 +163,23 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
             </small>
         </td>
     </tr>
+    </div>
+    <div py:if="resource.type == 'custom'">
+    <tr py:for="rusage in rusages">
+        <td>
+            <strong> ${rusage.resource_name}</strong><br/>
+            <!-- <strong> ${rusage.resource_name}</strong>  X ${show_quantity_or_duration(rusage)} <br/> -->
+        </td>
+        <td align="right"> 
+            ${getRusageCost(rusage)}<br/>
+            <small>
+                <em py:if="invoice.vat_included">Inclusive of ${getResourceVat(invoice, rusage.resource)} % VAT </em>
+                <em py:if="not invoice.vat_included">Exclusive of ${getResourceVat(invoice, rusage.resource)} % VAT </em>
+                (${invoice.location.currency} ${calc_tax(rusage.cost or rusage.customcost, getResourceVat(invoice, rusage.resource), invoice.vat_included)}
+            </small>
+        </td>
+    </tr>
+    </div>
     </div>
     <tr>
         <td><strong>Sub Total</strong></td>
