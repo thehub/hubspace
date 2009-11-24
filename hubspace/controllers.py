@@ -895,14 +895,14 @@ def make_booking(**kwargs):
     rusage = create_rusage(**kwargs)
 
     if 'options' in kwargs:
-        for option in kwargs['options']:
-            start=kwargs['start']
-            end_time = kwargs['start']
-            if Resource.get(option).time_based:
-                end_time=kwargs['end_time']
-            create_rusage(usagesuggestedby=rusage.id, resource=option, user=kwargs['user'], start=start, end_time=end_time, quantity=1)
+        book_suggested_resources(kwargs['options'], rusage, kwargs['user'], kwargs['start'], kwargs['end_time'])
 
     return rusage
+
+def book_suggested_resources(resource_ids, booking, user, start, end_time):
+    for resource in resource_ids:
+        end_time = Resource.get(resource).time_based and end_time or start
+        create_rusage(usagesuggestedby=booking.id, resource=resource, user=user, start=start, end_time=end_time, quantity=1)
 
 
 def printer_resources(loc_id):
@@ -2588,6 +2588,31 @@ Exception:
         keys_affect_cost = ('start', 'end_time', 'tariff', 'customcost', 'resource', 'quantity')
 
         change = dict([(k,v) for (k, v) in kwargs.items() if k in old_values and v != old_values[k] and k not in keys_just_cant_change])
+        if 'customcost' in change and float(rusage.customcost) == change['customcost']:
+            del change['customcost']
+
+        old_options = [ru.resource.id for ru in rusage.suggested_usages]
+        new_options = kwargs.get('options', [])
+
+        options_changed = sorted(old_options) != sorted(kwargs.get('options', []))
+        if options_changed:
+            options_to_cancel = [option for option in old_options if option not in new_options]
+            options_to_add = [option for option in new_options if option not in old_options]
+            applogger.debug("options to cancel/delete: %s" % str(options_to_cancel))
+            applogger.debug("options to add: %s" % str(options_to_add))
+
+            for option in options_to_cancel:
+                ousage = [ru for ru in rusage.suggested_usages if ru.resource.id == option][0]
+                if rusage.invoiced:
+                    applogger.debug("cancelling: %s" % ousage.id)
+                    self.cancel_rusage(ousage.id)
+                else:
+                    applogger.debug("deleting: %s" % ousage.id)
+                    self.delete_rusage(ousage.id)
+
+            for option in options_to_add:
+                applogger.debug("adding: %s" % option)
+                book_suggested_resources(options_to_add, rusage, kwargs.get('user', rusage.user.user_name), kwargs['start'], kwargs['end_time'])
 
         if rusage.resource.type != resource.type:
             for k in keys_can_change_if_same_type:

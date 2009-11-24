@@ -55,7 +55,7 @@ create = False
 def option_selected(rusage, option):
    if hasattr(rusage, 'options') and option.id in [int(option) for option in rusage.options]:
        return {'checked':'checked'}
-   elif hasattr(rusage, 'suggested_usages') and option in [rusage.resource for rusage in rusage.suggested_usages]:     
+   elif hasattr(rusage, 'suggested_usages') and option in [rusage.resource for rusage in rusage.suggested_usages if not rusage.cancelled]:     
        return {'checked':'checked'}
    return {}
 

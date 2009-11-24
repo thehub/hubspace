@@ -62,7 +62,9 @@ def public_or_private(rusage):
 	                <tr py:if="rusage.suggested_usages">
 				<td class="left">Extras</td>
 				<td class="right">
-                                     ${", ".join([usage.resource_name for usage in rusage.suggested_usages])}
+                                    <li>
+                                        <ul py:for="usage in [usage for usage in rusage.suggested_usages if not usage.cancelled]">${usage.resource_name}</ul>
+                                    </li>
                                 </td>
 			</tr>
                         <tr>
