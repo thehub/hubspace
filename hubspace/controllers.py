@@ -4099,6 +4099,8 @@ The Hub Team
 
         to = invoice.user.bill_to_profile and invoice.user.email_address or invoice.user.bill_email
         if not to:
+            if not invoice.user.bill_to_profile and not invoice.user.bill_email:
+                return _("Problem sending the invoice: Member's billing preferences are set to not to use profile details and billing preferences has no email address specified. You may want visit member's 'Billing Details' section.")
             return "user has no email address"
 
         pdf = self.create_pdf_invoice(invoiceid=invoiceid)
