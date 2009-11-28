@@ -63,6 +63,7 @@ def get_hubspace_locale():
     tool.compile_message_catalogs(locale)
     return cherrypy.session.get('locale')
 
+get_po_path = lambda: tool_instance().get_locale_catalog(cherrypy.session['locale'], "messages")
 
 ################## I18N #########################
 from turbogears.command.i18n import InternationalizationTool, copy_file
