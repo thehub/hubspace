@@ -1533,7 +1533,7 @@ class Members(controllers.Controller):
 
 
 from hubspace.utilities.booking import booking_offset_plus_height, default_booking_params
-from hubspace.utilities.i18n import get_hubspace_locale, get_location_from_base_url
+from hubspace.utilities.i18n import get_hubspace_locale, get_location_from_base_url, get_po_path
 from hubspace.microSite import Sites
 ##################  Root  ####################
 
@@ -1604,12 +1604,14 @@ class Root(controllers.RootController):
     sites = Sites()
     rpc = RPC()
 
-    @expose("hubspace.templates.helo")
-    def echox(self, *args, **kw):
-        import time
-        time.sleep(1)
-        print "echoing ..."
-        return dict(name = 1, name2 = 2)
+    @identity.require(not_anonymous())
+    @expose()
+    def download_messages_po(self, *args, **kw):
+        po_path = get_po_path()
+        out = file(po_path).read()
+        cherrypy.response.headerMap["Content-Type"] = "application/x-gettext"
+        cherrypy.response.headerMap["Content-Length"] = len(out)
+        return out
    
     @expose("hubspace.templates.flexigrid")
     def users_grid(self, *args, **kw):

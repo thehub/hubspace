@@ -129,9 +129,18 @@ def makeOptDict(r, typ):
      </div>
 
 
-  	<div class="dataBox">
-	    <div class="dataBoxHeader"> <a class="title" id="link_adminStuff0"><h2>Message Customization</h2></a> </div>
+  	<div class="dataBox" py:if='permission_or_owner(location, location, "manage_locations")'>
+	    <div class="dataBoxHeader"> <a class="title" id="link_adminStuff0"><h2>Messages</h2></a> </div>
 	    <div class="dataBoxContent">
+            <h1>Translation</h1>
+	    <table class="detailTable data">
+            <tr>
+                <td> Message catalogue file (.po) </td>
+                <td><a href="/download_messages.po">Download</a> | <a href="mailto:world.tech.space@the-hub.net"> Send updated translation file </a></td>
+                <td align="left"><a target="_blank" href="http://the-hub.pbworks.com/HubSpace%3A-Working-with-message-catalogues">Help</a></td>
+            </tr>
+            </table>
+            <h1>Customization</h1>
             <iframe src ="/static/fe/messagecust.html" width="100%" height="595" scrolling="auto" frameborder="0" style="detailTable data">
               <p>Your browser does not support iframes.</p>
             </iframe>
