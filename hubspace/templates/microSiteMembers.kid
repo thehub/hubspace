@@ -50,12 +50,11 @@ user = None
         <div class="span-12 last content-sub" id="recent-profiles">
             <h3 id="profiles_header" class="text_small">${page.profiles_header and page.profiles_header or "Recently Updated Profiles"}</h3>
 				<ul id="members-profiles">
-				  <li class="member" py:for="member in profiles"><img class="bigpic" src="${image_src(member, 'image', '/static/images/shadow.png')}" />
-                                      <a href="${relative_path}members/${member.user_name}" class="member-bio" title="Click for full bio">
-					 <span>
+				  <li class="member" py:for="member in profiles">
+                                      <a href="${relative_path}members/${member.user_name}" title="Click for full bio">
+				      <span><img src="${image_src(member, 'image', '/static/images/shadow.png')}"/></span>
 				      <span class="member-name">${member.display_name}</span>
 				      <span class="member-company">${member.organisation}</span>
-				     </span>
 					</a>
 				  </li>
 				</ul>

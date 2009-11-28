@@ -32,7 +32,7 @@ name_map = name_attribute({'User' : 'display_name'})
             <td py:if="list_mode=='add_new'" id="add"><input type="text" name="name" value="" /></td>
             <td py:if="list_mode=='add_existing'" id="add_existing"><input type="text" class="find_${list_types[0]}" id="display_name" name="get_object_id" value="" /><input type="hidden" id="object_id" name="object_id" value="0" /></td>
             <td><select name="object_type" id="object_type"><option py:for="type in list_types" value="${type}">${type}</option></select></td>
-            <td><select name="page_type" id="page_type" py:if="item.object_ref.object_type=='Page'"><option py:for="type in page_types" value="${type}">${type}</option></select></td>
+            <td><select name="page_type" id="page_type" py:if="type=='Page'"><option py:for="type in page_types" value="${type}">${type}</option></select></td>
             <td><input type="checkbox" checked="checked" name="active" value="1" /></td>
             <td class="add_remove"><input type="submit" value="Add" class="add_item" /></td>
         </tr>
