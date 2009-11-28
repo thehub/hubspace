@@ -94,7 +94,7 @@ class messagecust:
 
             msgpanel = VerticalPanel(Padding=1, Spacing=1)
             messagebox = TextArea()
-            messagebox.setCharacterWidth(80)
+            messagebox.setCharacterWidth(70)
             height = len(self.messages_data["text"].split('\n')) + 1
             messagebox.setVisibleLines(height)
             messagebox.setText(self.messages_data["text"])
