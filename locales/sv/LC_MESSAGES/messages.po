@@ -23,7 +23,7 @@ msgstr ""
 msgid " (Hint: You should not include currency signs)"
 msgstr ""
 
-#: hubspace/controllers.py:3310 hubspace/utilities/login.py:16
+#: hubspace/controllers.py:3335 hubspace/utilities/login.py:16
 msgid "Your username or password were incorrect. Please try again."
 msgstr "Felaktigt användarnamn eller lösenord. Var vänlig försök igen."
 
@@ -31,7 +31,7 @@ msgstr "Felaktigt användarnamn eller lösenord. Var vänlig försök igen."
 msgid "Please log in."
 msgstr "Vänligen logga in."
 
-#: hubspace/controllers.py:3342 hubspace/utilities/login.py:46
+#: hubspace/controllers.py:3367 hubspace/utilities/login.py:46
 msgid "Please enter the email address associated with your account"
 msgstr "Skriv in den mailadress som är knutet till ditt användarkonto"
 
@@ -39,15 +39,15 @@ msgstr "Skriv in den mailadress som är knutet till ditt användarkonto"
 msgid "A confirmation email was sent to you. "
 msgstr "Ett bekräftelsemail har skickats till dig."
 
-#: hubspace/controllers.py:3364 hubspace/utilities/login.py:68
+#: hubspace/controllers.py:3389 hubspace/utilities/login.py:68
 msgid "The email was not correct"
 msgstr "Mailet var inte korrekt"
 
-#: hubspace/controllers.py:3372 hubspace/utilities/login.py:76
+#: hubspace/controllers.py:3397 hubspace/utilities/login.py:76
 msgid "The confirmation key is wrong - maybe you need to check your email?"
 msgstr "Bekräftelsnyckeln är fel. Du måste kanske dubbelkolla i ditt mail?"
 
-#: hubspace/controllers.py:3393 hubspace/utilities/login.py:95
+#: hubspace/controllers.py:3418 hubspace/utilities/login.py:95
 msgid "The new password was sent to you."
 msgstr "Det nya lösenordet har skickats till dig."
 
@@ -1352,15 +1352,19 @@ msgid "Add new Todo list"
 msgstr "Lägg till Att-göralista"
 
 #: hubspace/templates/newinvoice.kid:strong
-msgid "Invoice no."
+msgid "Invoice details"
 msgstr ""
 
 #: hubspace/templates/newinvoice.kid:td
-msgid "Invoice Date"
+msgid "Number"
 msgstr ""
 
 #: hubspace/templates/newinvoice.kid:td
-msgid "Invoice Period"
+msgid "Date"
+msgstr "Datum"
+
+#: hubspace/templates/newinvoice.kid:td
+msgid "Period"
 msgstr ""
 
 #: hubspace/templates/newinvoice.kid:td
@@ -1371,9 +1375,29 @@ msgstr ""
 msgid "Summary of usage"
 msgstr ""
 
+#: hubspace/templates/newinvoice.kid:em
+msgid "Inclusive of VAT"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:em
+msgid "Exclusive of VAT"
+msgstr ""
+
 #: hubspace/templates/newinvoice.kid:strong
 msgid "Sub Total"
 msgstr "Delsumma"
+
+#: hubspace/templates/newinvoice.kid:h3
+msgid "Invoice Total"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:td
+msgid "Excluding VAT"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:td
+msgid "VAT"
+msgstr "Moms (25%)"
 
 #: hubspace/templates/newinvoice.kid:strong
 msgid "Total"
@@ -1698,10 +1722,6 @@ msgstr "Beskriv kortfattat dina uppgifter i organisationen"
 #: hubspace/templates/bristolDataEdit.kid:td
 msgid "Please outline any of your organisations practices that could be described as progressive"
 msgstr "Beskriv övergripande de aktiviteter i er organisation som kan beskrivas som framåtskridande/socialt positiva"
-
-#: hubspace/templates/publicEvent.kid:td
-msgid "Date"
-msgstr "Datum"
 
 #: hubspace/templates/microSitePassword.kid:h3
 msgid "Request Username/Password"
@@ -2115,10 +2135,6 @@ msgstr "Pris"
 msgid "Special price for this booking"
 msgstr "Anpassat pris för den här bokningen"
 
-#: hubspace/templates/meetingBookingEdit.kid:td
-msgid "VAT"
-msgstr "Moms (25%)"
-
 #: hubspace/templates/meetingBookingEdit.kid:em
 msgid "All prices include VAT"
 msgstr "Alla priser är inklusive moms"
@@ -2216,6 +2232,10 @@ msgstr "Host-kontakt"
 #: hubspace/templates/locationProfileEdit.kid:td
 msgid "Local Language"
 msgstr "Lokalt språk"
+
+#: hubspace/templates/locationProfileEdit.kid:em
+msgid "0 to disable due date calculation"
+msgstr ""
 
 #: hubspace/templates/locationProfileEdit.kid:td
 msgid "Payment Terms"

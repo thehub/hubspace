@@ -23,7 +23,7 @@ msgstr ""
 msgid " (Hint: You should not include currency signs)"
 msgstr ""
 
-#: hubspace/controllers.py:3310 hubspace/utilities/login.py:16
+#: hubspace/controllers.py:3335 hubspace/utilities/login.py:16
 msgid "Your username or password were incorrect. Please try again."
 msgstr "O seu usuário ou senha estão incorretos. Por favor, tente novamente. "
 
@@ -31,7 +31,7 @@ msgstr "O seu usuário ou senha estão incorretos. Por favor, tente novamente. "
 msgid "Please log in."
 msgstr "Faça o login."
 
-#: hubspace/controllers.py:3342 hubspace/utilities/login.py:46
+#: hubspace/controllers.py:3367 hubspace/utilities/login.py:46
 msgid "Please enter the email address associated with your account"
 msgstr "Por favor digite o endereço de e-mail associado à sua conta"
 
@@ -39,15 +39,15 @@ msgstr "Por favor digite o endereço de e-mail associado à sua conta"
 msgid "A confirmation email was sent to you. "
 msgstr "Um email de confirmação foi-lhe enviado."
 
-#: hubspace/controllers.py:3364 hubspace/utilities/login.py:68
+#: hubspace/controllers.py:3389 hubspace/utilities/login.py:68
 msgid "The email was not correct"
 msgstr "O e-mail está incorreto"
 
-#: hubspace/controllers.py:3372 hubspace/utilities/login.py:76
+#: hubspace/controllers.py:3397 hubspace/utilities/login.py:76
 msgid "The confirmation key is wrong - maybe you need to check your email?"
 msgstr "A chave de confirmação está incorrecta - verifique a sua chave no e-mail enviado pelo sistema."
 
-#: hubspace/controllers.py:3393 hubspace/utilities/login.py:95
+#: hubspace/controllers.py:3418 hubspace/utilities/login.py:95
 msgid "The new password was sent to you."
 msgstr "Uma nova senha foi-lhe enviada."
 
@@ -1352,15 +1352,19 @@ msgid "Add new Todo list"
 msgstr "Adicionar nova Lista de Tarefas"
 
 #: hubspace/templates/newinvoice.kid:strong
-msgid "Invoice no."
+msgid "Invoice details"
 msgstr ""
 
 #: hubspace/templates/newinvoice.kid:td
-msgid "Invoice Date"
+msgid "Number"
 msgstr ""
 
 #: hubspace/templates/newinvoice.kid:td
-msgid "Invoice Period"
+msgid "Date"
+msgstr "Data"
+
+#: hubspace/templates/newinvoice.kid:td
+msgid "Period"
 msgstr ""
 
 #: hubspace/templates/newinvoice.kid:td
@@ -1371,9 +1375,29 @@ msgstr ""
 msgid "Summary of usage"
 msgstr ""
 
+#: hubspace/templates/newinvoice.kid:em
+msgid "Inclusive of VAT"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:em
+msgid "Exclusive of VAT"
+msgstr ""
+
 #: hubspace/templates/newinvoice.kid:strong
 msgid "Sub Total"
 msgstr "Sub total"
+
+#: hubspace/templates/newinvoice.kid:h3
+msgid "Invoice Total"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:td
+msgid "Excluding VAT"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:td
+msgid "VAT"
+msgstr "VAT"
 
 #: hubspace/templates/newinvoice.kid:strong
 msgid "Total"
@@ -1698,10 +1722,6 @@ msgstr "Por favor descreva brevemente suas responsabilidades na sua organizaçã
 #: hubspace/templates/bristolDataEdit.kid:td
 msgid "Please outline any of your organisations practices that could be described as progressive"
 msgstr "Por favor, resuma quaisquer práticas organizacionais que poderiam ser descritas como progressivas"
-
-#: hubspace/templates/publicEvent.kid:td
-msgid "Date"
-msgstr "Data"
 
 #: hubspace/templates/microSitePassword.kid:h3
 msgid "Request Username/Password"
@@ -2113,10 +2133,6 @@ msgstr "Preço"
 msgid "Special price for this booking"
 msgstr "Preço especial para esta reserva"
 
-#: hubspace/templates/meetingBookingEdit.kid:td
-msgid "VAT"
-msgstr "VAT"
-
 #: hubspace/templates/meetingBookingEdit.kid:em
 msgid "All prices include VAT"
 msgstr "Todos os preços incluem VAT"
@@ -2214,6 +2230,10 @@ msgstr "Anfitrião de contato"
 #: hubspace/templates/locationProfileEdit.kid:td
 msgid "Local Language"
 msgstr "Idioma local"
+
+#: hubspace/templates/locationProfileEdit.kid:em
+msgid "0 to disable due date calculation"
+msgstr ""
 
 #: hubspace/templates/locationProfileEdit.kid:td
 msgid "Payment Terms"
