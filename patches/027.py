@@ -8,6 +8,6 @@ class Patch(patches.base.Patch):
         access_tuple = patches.utils.parseDBAccessDirective()
         con = patches.utils.getPostgreSQLConnection(*access_tuple)
         cur = con.cursor()
-        cur.execute("ALTER TABLE location ADD COLUMN invoice_duedate int DEFAULT -1")
+        cur.execute("ALTER TABLE location ADD COLUMN invoice_duedate int DEFAULT 0")
         con.commit()
 

@@ -56,7 +56,8 @@ def lang_selected(location, lang):
 	        </tr>
                 <tr>
 	            <td class="line">Invoice dute date (days after sending invoice)</td>
-	            <td><input name="invoice_duedate" type="text" value="${location.invoice_duedate or ''}" cols="2"/> <div class="errorMessage" py:if="tg_errors">${print_error('invoice_duedate', tg_errors)}</div></td>
+	            <td><input name="invoice_duedate" type="text" value="${location.invoice_duedate or 0}" cols="2"/><em>0 to disable due date calculation</em>
+                    <div class="errorMessage" py:if="tg_errors">${print_error('invoice_duedate', tg_errors)}</div></td>
 	        </tr>
 		<tr>
                      <td class="line">Payment Terms</td>

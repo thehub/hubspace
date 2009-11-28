@@ -8,5 +8,5 @@ class Patch(patches.base.Patch):
         con = patches.utils.getPostgreSQLConnection(*access_tuple)
         cur = con.cursor()
         cur.execute("ALTER TABLE location DROP COLUMN invoice_start")
-        cur.execute("ALTER TABLE location ADD COLUMN invoice_newscheme int DEFAULT 0")
+        cur.execute("ALTER TABLE location ADD COLUMN invoice_newscheme int DEFAULT 1")
         con.commit()

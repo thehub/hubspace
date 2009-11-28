@@ -117,7 +117,7 @@ def lang():
             <td>Period</td>
             <td>${formatDate(invoice.start)} to ${formatDate(invoice.end_time)}</td>
         </tr>
-        <tr py:if="invoice.location.invoice_duedate > -1">
+        <tr py:if="invoice.location.invoice_duedate">
             <td>Due Date</td>
             <td>${getDueDate(invoice)} </td>
         </tr>
@@ -157,8 +157,8 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
         <td align="right"> 
             ${getResourceUsageCost(ivd, resource)} <br/>
             <small>
-                <em py:if="invoice.vat_included">Inclusive of ${getResourceVat(invoice, resource)} % VAT </em>
-                <em py:if="not invoice.vat_included">Exclusive of ${getResourceVat(invoice, resource)} % VAT </em>
+                <span py:if="invoice.vat_included"> <em>Inclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %) : </em> </span>
+                <span py:if="not invoice.vat_included"> <em>Exclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %): </em> </span>
                 (${invoice.location.currency} ${getResourceVATAmount(invoice, resource)})
             </small>
         </td>
@@ -173,8 +173,8 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
         <td align="right"> 
             ${getRusageCost(rusage)}<br/>
             <small>
-                <em py:if="invoice.vat_included">Inclusive of ${getResourceVat(invoice, rusage.resource)} % VAT </em>
-                <em py:if="not invoice.vat_included">Exclusive of ${getResourceVat(invoice, rusage.resource)} % VAT </em>
+                <span py:if="invoice.vat_included"> <em>Inclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %) : </em> </span>
+                <span py:if="not invoice.vat_included"> <em>Exclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %): </em> </span>
                 (${invoice.location.currency} ${calc_tax(rusage.cost or rusage.customcost, getResourceVat(invoice, rusage.resource), invoice.vat_included)}
             </small>
         </td>
