@@ -19,7 +19,7 @@ user = None
 <body>	
 	<div id="people_links">
 		<ul id="people_list" py:if="not user">
-			<li py:for="member in lists('people_list')" id="User-${member.object.id}" py:if="member.active" >
+			<li py:for="member in lists('people_list')" id="User-${member.object.id}" py:if="member.object.active and member.object.public_field" >
 				<a href="${relative_path}people/${quote(member.object.user_name)}" title="${member.object.display_name}" class="people-link" id="${member.object.user_name}">
 					<img src="${image_src(member.object, 'image', '/static/images/shadow.png')}" alt="${member.object.display_name + ' ' +member.object.organisation}"/>
 					<span>${member.object.display_name}<br />{member.object.organisation}</span>
