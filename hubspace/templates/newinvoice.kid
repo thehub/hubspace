@@ -30,7 +30,7 @@ def getResourceUsageCost(ivd, resource):
     return c2s(sum_resource_costs(rusages))
 
 def getRusageCost(rusage):
-    return c2s(rusage.customcost or rusage.cost)
+    return c2s(rusage.effectivecost)
 
 def getResourceVat(invoice, resource):
     return invoice.resource_tax_dict[resource.id][1]
@@ -95,7 +95,7 @@ def lang():
         ${invoice.user.display_name}<br/>
         Membership No. ${str(invoice.user.id)}<br/>
         <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address)} </c>
-        <c py:strip="True" py:if="not invoice.user.bill_to_profile"> ${XML(nl2br(invoice.user.billingaddress))} </c>
+        <c py:strip="True" py:if="not invoice.user.bill_to_profile"> ${nl2br(invoice.user.billingaddress)} </c>
         <c py:strip="True" py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"> Company No. ${invoice.user.bill_company_no} </c>
         <c py:if="invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><br/>VAT ${invoice.user.bill_vat_no}</c>
         <br/>
@@ -175,7 +175,7 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
             <small>
                 <span py:if="invoice.vat_included"> <em>Inclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %) : </em> </span>
                 <span py:if="not invoice.vat_included"> <em>Exclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %): </em> </span>
-                (${invoice.location.currency} ${calc_tax(rusage.cost or rusage.customcost, getResourceVat(invoice, rusage.resource), invoice.vat_included)}
+                (${invoice.location.currency} ${calc_tax(rusage.effectivecost, getResourceVat(invoice, rusage.resource), invoice.vat_included)}
             </small>
         </td>
     </tr>
