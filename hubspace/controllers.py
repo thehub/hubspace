@@ -1578,7 +1578,7 @@ class RPC(controllers.Controller):
     @identity.require(not_anonymous())
     def get_messagesdata_for_cust(self):
         messages = dict( [(name, dict(label=o.label)) for (name, o) in hubspace.alerts.messages.bag.items() if o.can_be_customized] )
-        locations = [(loc.id, loc.name) for loc in user_locations(identity.current.user)]
+        locations = sorted([(loc.id, loc.name) for loc in user_locations(identity.current.user)], key=lambda x:x[1])
         return dict (messages=messages, locations=locations)
 
     @identity.require(not_anonymous())
@@ -2590,8 +2590,9 @@ Exception:
         keys_affect_cost = ('start', 'end_time', 'tariff', 'customcost', 'resource', 'quantity')
 
         change = dict([(k,v) for (k, v) in kwargs.items() if k in old_values and v != old_values[k] and k not in keys_just_cant_change])
-        if 'customcost' in change and float(rusage.customcost) == change['customcost']:
-            del change['customcost']
+        #if 'customcost' in change and float(rusage.customcost) == change['customcost']:
+        #    del change['customcost'] # this was part of commit for #480 but is responsible for #511. I don't think we
+        #    need this check anyways. Commenting out for now.
 
         old_options = [ru.resource.id for ru in rusage.suggested_usages]
         new_options = kwargs.get('options', [])
@@ -4318,7 +4319,7 @@ The Hub Team
         if not permission_or_owner(invoice.user.homeplace, invoice, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
         
-        if invoice.sent and force==True and permission_or_owner(None, None, 'superuser'):
+        if invoice.sent and force and permission_or_owner(None, None, 'superuser'):
             tmp = invoice.sent
             invoice.sent = None
             calculate_tax_and_amount(invoice)
@@ -4400,7 +4401,7 @@ The Hub Team
         rusage.destroySelf()
 
         if invoice_updt_reqd:
-            self.update_invoice_amount(rusage)
+            self.update_invoice_amount(invoice.id)
 
         return ''
  
@@ -4427,9 +4428,10 @@ The Hub Team
             location = rusage.resource.place
             to = rusage.resource.place.hosts_email
             data = dict ( rusage = rusage, user = rusage.user, location = location )
-            hubspace.alerts.sendTextEmail("booking_cancellation", data=data)
-            applogger.info("Booking cancellation: %s" % rusage)
-            applogger.info("Booking refund: %s" % new_rusage)
+            if not rusage.resource.type == 'tariff':
+                hubspace.alerts.sendTextEmail("booking_cancellation", data=data)
+            applogger.info("Rusage cancellation: %s" % rusage)
+            applogger.info("Rusage refund: %s" % new_rusage)
             if not rusage.confirmed:
                 bookinglib.notifyTentativeBookingRelease(rusage)
             return str(new_rusage.id)
