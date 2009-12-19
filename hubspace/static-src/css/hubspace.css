@@ -1569,6 +1569,27 @@ ul.resource_group li.resource_item{
 	background-color: #00bbc2;
 	border-color: #007d83;
 }
+#room_header .room7 .label,
+#room_selector_group .room7 .label,
+#room_selector_group .room7 .label_selected,
+#bookspacedate .room7 {
+	background-color: #ffd700;
+	border-color: #006796;
+}
+#room_header .room8 .label,
+#room_selector_group .room8 .label,
+#room_selector_group .room8 .label_selected,
+#bookspacedate .room8 {
+	background-color: #008000;
+	border-color: #006796;
+}
+#room_header .room9 .label,
+#room_selector_group .room9 .label,
+#room_selector_group .room9 .label_selected,
+#bookspacedate .room9 {
+	background-color: #ff00ff;
+	border-color: #006796;
+}
 #room_header .room_t .label,
 #room_selector_group .room_t .label,
 #room_selector_group .room_t .label_selected,
