@@ -2159,7 +2159,9 @@ var pdf_invoice = function () {
     var invoice_id = jq(this).attr('id').split('_')[1];
     var invoice_name = escape(jq(this).attr('id').split('_')[2]);
 
-    window.open('/pdf_invoice/' + invoice_id + '/' + invoice_name + '.pdf');
+    invoice_url = '/pdf_invoice/' + invoice_id + '/' + invoice_name + '.pdf'
+    window.open(invoice_url, "_blank");
+
 };
 
 var on_view_invoice = function (response) {
