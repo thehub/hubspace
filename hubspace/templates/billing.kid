@@ -17,8 +17,7 @@ def billingEdit(object):
 
 def genInvoiceName(invoice):
     invoice_no = invoice.number
-    # This is not required if default encoding is utf-8
-    display_name = urllib.quote(invoice.user.display_name.encode("UTF-8")) # 211, 212
+    display_name = invoice.user.display_name.replace(" ","_")
     try:
         sent_time = invoice.sent.strftime('%Y%m%d')
     except:
@@ -58,7 +57,7 @@ def genInvoiceName(invoice):
                                            <a py:if="invoice.sent or not permission_or_owner(object.homeplace, None, 'manage_invoices')" class="view_invoice" id="invoice_${invoice.id}">As HTML</a>
                                            <a class="view_invoice" id="invoice_${invoice.id}" py:if="not invoice.sent and permission_or_owner(object.homeplace, None, 'manage_invoices')">Modify</a>&nbsp;&nbsp;
                                            <a class="remove_invoice" id="removeInvoice_${invoice.id}" py:if="not invoice.sent and permission_or_owner(object.homeplace, None, 'manage_invoices')">Remove</a> &nbsp;&nbsp;
-                                           <a class="pdf_invoice" id="pdfInvoice_${invoice.id}_${genInvoiceName(invoice)}" target="_blank">As PDF</a></td>
+                                           <a href="/pdf_invoice/${invoice.id}/${genInvoiceName(invoice)}.pdf" target="_blank">As PDF</a></td>
 
 
 				</tr>
