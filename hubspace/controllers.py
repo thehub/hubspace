@@ -178,10 +178,11 @@ def start_scheduler():
     """start the scheduler and add the timed jobs. These jobs must be sure to do model.hub.commit() in all cases EVEN IF THEY ONLY READ - otherwise they will hold onto database transaction in postgres forever! Its often wise to break them down into smaller transactions, by committing and then beginning new transactions using model.hub.begin().
     """
     #turbogears.scheduler.add_interval_task(action=parse_print_file, taskname='parse the print log', initialdelay=0, interval=600)
-    turbogears.scheduler.add_interval_task(schedSafe(bookinglib.requestBookingConfirmations), taskname="Request booking confirmations", initialdelay=60 * 60, interval=60 * 60)
+    add_interval_task(schedSafe(bookinglib.requestBookingConfirmations), taskname="Request booking confirmations", initialdelay=60 * 60, interval=60 * 60)
     add_weekday_task(send_unknown_aliases, [1], (0,0))
     add_monthday_task(update_tariff_bookings, [1], (0,0))
     add_monthday_task(schedule_access_policy_updates, [3], (0,0))
+    add_interval_task(reportutils.do_report_maintainance, taskname="Report generation routine tasks", initialdelay=24*60*60, interval=24*60*60)
     if datetime.now() > datetime(datetime.today().year, datetime.today().month, 3):
         schedule_access_policy_updates()
 
@@ -1604,6 +1605,93 @@ class Root(controllers.RootController):
     sites = Sites()
     rpc = RPC()
 
+    @expose("hubspace.templates.managementReport")
+    def generate_report(self, locations, report_types, period=None, start=None, end=None,format="web"):
+        if not isinstance(locations, list): locations = [locations]
+        if not isinstance(report_types, list): report_types = [report_types]
+        locations = [int(loc) for loc in locations]
+        if not set(locations).issubset(tuple(loc.id for loc in user_locations(identity.current.user))):
+            raise IdentityFailure('what about not hacking the system')
+        if not period:
+            start, end = dateconverter(start), dateconverter(end)
+        mode = len(locations) > 1 and "comparison" or "onelocation"
+        report = dict(((loc, {}) for loc in locations))
+        for location in locations:
+            lstats = reportutils.LocationStats(location, period, start, end)
+            for report_type in report_types:
+                print report_type
+                report[location][report_type] = getattr(lstats, 'get_' + report_type)()
+        if "revenue_by_resource" in report_types:
+            for loc in locations:
+                stats = report[loc]["revenue_by_resource"]
+                data = dict(( ( Resource.get(r_id).name, float(revenue)) for (r_id, revenue) in stats.items() ))
+                report[loc]["revenue_by_resource"] = reportutils.plot_pie_chart(data)
+        if "revenue_by_resourcetype" in report_types:
+            for loc in locations:
+                data = report[loc]["revenue_by_resourcetype"]
+                report[loc]["revenue_by_resourcetype"] = reportutils.plot_pie_chart(data)
+        if "revenue_by_tariff" in report_types:
+            for loc in locations:
+                data = report[loc]["revenue_by_tariff"]
+                print data
+                report[loc]["revenue_by_tariff"] = reportutils.plot_pie_chart(data)
+        if "churn_stats" in report_types:
+            for loc in locations:
+                stats = report[loc]["churn_stats"]
+                h_labels = []
+                data = {"Members left":[], "Members came back":[]}
+                for month, members_left, members_back in stats:
+                    h_labels.append("%s %s" % (calendar.month_abbr[month[1]], month[0]))
+                    data["Members left"].append(members_left)
+                    data["Members came back"].append(members_back)
+                report[loc]["churn_stats"] = reportutils.plot_dot_line(data, h_labels)
+        if "revenue_stats" in report_types:
+            for loc in locations:
+                stats, currency = report[loc]["revenue_stats"]
+                h_labels = []
+                data = []
+                print stats
+                for month, invoiced, uninvoiced in stats:
+                    h_labels.append("%s %s" % (calendar.month_abbr[month[1]], month[0]))
+                    data.append(invoiced)
+                report[loc]["revenue_stats"] = reportutils.plot_vbars(data, h_labels)
+        if "usage_by_tariff" in report_types:
+            for loc in locations:
+                stats = report[loc]["usage_by_tariff"]
+                report[loc]["usage_by_tariff"] = []
+                for r_type in model.resource_types: # CHANGE
+                    try:
+                        res_data = [(tariff, [stats[tariff][r_type][r_id] for r_id in sorted(stats[tariff][r_type])]) for tariff in stats]
+                    except KeyError:
+                        continue
+                    res_data = sorted(res_data, key=lambda x: sum(x[1]))
+                    relevant_data = [(t_id, usage) for t_id, usage in res_data if sum(usage)]
+                    y_labels = [Resource.get(t_data[0]).name for t_data in relevant_data]
+                    data = [t_data[1] for t_data in relevant_data]
+                    legend = [Resource.get(r_id).name for r_id in sorted(stats.values()[0][r_type].keys())]
+                    print "===="
+                    print loc
+                    print data
+                    print "===="
+                    report[loc]["usage_by_tariff"].append((r_type, reportutils.plot_hbars(data, y_labels=y_labels, legend=legend)))
+        if "members_by_tariff" in report_types:
+            for loc in locations:
+                stats = report[loc]["members_by_tariff"]
+                print stats
+                data = dict( (Resource.get(r_id).name, len(tuple(usages))) for (r_id, usages) in stats )
+                report[loc]["members_by_tariff"] = reportutils.plot_pie_chart(data)
+        print report
+        return dict(report_types=report_types, locations=locations, report=report, start=lstats.start, end=lstats.end)
+
+    @identity.require(not_anonymous())
+    @expose()
+    def report_image(self, *path):
+        mimetype = "image/png"
+        cherrypy.response.headerMap["Content-Type"] = str(mimetype)
+        path = os.sep.join(path)
+        return file(path).read()
+
+   
     @identity.require(not_anonymous())
     @expose()
     def download_messages_po(self, *args, **kw):

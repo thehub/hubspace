@@ -5,11 +5,10 @@ from pytz import common_timezones, timezone
 from datetime import datetime, timedelta
 from sqlobject import AND
 
-def select_home_hub(location):
+def select_home_hub(location, attrname="selected"):
     if identity.current.user.homeplace == location:
-        return {'selected':'selected'}
+       return {attrname: attrname}
     return {}
-    
 
 class oddOrEven:
     def __init__(self):

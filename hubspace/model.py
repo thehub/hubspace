@@ -866,6 +866,9 @@ class RUsage(SQLObject):
     def _isInvoiced(self):
         return bool(self.invoice and self.invoice.sent)
     invoiced = property(_isInvoiced)
+    def _get_duration_or_quantity(self):
+        return self.resource.time_based and self.end_time - self.start or self.quantity
+    duration_or_quantity = property(_get_duration_or_quantity)
     cost=CurrencyCol(default=0)
     customcost = CurrencyCol(default=None)
     def _get_effective_cost(self): # to avoid mistakes like 1. usage.customcost or usage.cost (problem if former is 0) and 2. to serve as a shortcut
