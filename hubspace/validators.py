@@ -345,7 +345,7 @@ class ProfileSchema(v.Schema):
     password2=v.MinLength(5)
     homeplace = All(v.Int, v.NotEmpty())
     aliases = ForEach(AliasSchema())
-    new_alias = no_ws
+    new_alias = ForEach(convert_to_list=True)
     postcode= v.UnicodeString() #PostCode(if_empty="")
     biz_type = v.UnicodeString()
     public_field = v.Int(if_empty=0)
@@ -415,7 +415,7 @@ class AddMemberSchema(v.Schema):
     password2=All(v.MinLength(5), v.NotEmpty())
     description=no_ws
     billto=v.Int()
-    new_alias = no_ws
+    new_alias = ForEach(convert_to_list=True)
     postcode = v.UnicodeString() #needs to work interationally # PostCode()
     biz_type = v.UnicodeString()
     public_field = v.Int(if_empty=0)

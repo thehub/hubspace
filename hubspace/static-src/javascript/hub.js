@@ -134,9 +134,15 @@ var plot_lreports = function (evt) {
 };
 
 /////////////////////Autocomplete//////////////////////
-var autocomplete_biz_type = function () {
-    jq("#biz_type").autocomplete("/complete_biz_type", {width: 260, selectFirst: true, matchSubset: false});
+var add_alias_box = function () {
+    jq("#add_more_alias").before("<input name='new_alias' type='text' class='text'/>");
 };
+
+var editMemberProfileListeners = function () {
+    jq("#biz_type").autocomplete("/complete_biz_type", {width: 260, selectFirst: true, matchSubset: false});
+    jq("#add_more_alias").click(add_alias_box);
+};
+
 
 //////////////////////Resources////////////////////////
 var Resources = Class.create();
@@ -1454,7 +1460,7 @@ var Tabs = function () {
                 set_space_listeners();
             }
             if (subsection_name === 'mainProfile') {
-                set_inplace_edit(current_profile_id, 'User', 'memberProfile_' + current_profile_id, null, null, null, null, o.image_listeners, null, autocomplete_biz_type, null);
+                set_inplace_edit(current_profile_id, 'User', 'memberProfile_' + current_profile_id, null, null, null, null, o.image_listeners, null, editMemberProfileListeners, null);
                 set_inplace_edit(current_profile_id, 'User', 'memberDescription_' + current_profile_id, 'memberDescriptionEdit');
                 set_inplace_edit(current_profile_id, 'User', 'memberServices_' + current_profile_id, 'memberServicesEdit');
                 set_inplace_edit(current_profile_id, 'User', 'relationshipStatus_' + current_profile_id, 'relationshipStatusEdit');
@@ -2022,7 +2028,7 @@ var edit_billing = function () {
     var disable_address = function () {
         var checkbox = jq(this);
         if (checkbox.attr('checked')) {
-            disable_other_form_fields(form, checkbox);
+            // disable_other_form_fields(form, checkbox); // commented to solve #493 #490 need a close look later
         } else {
             enable_form_fields(form);
         }

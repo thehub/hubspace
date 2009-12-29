@@ -195,6 +195,8 @@ def role_selected(user, location, level):
 								<div class="errorMessage" py:if="tg_errors">${print_error('aliases', tg_errors)}</div>
 								<div>
 									<input name="new_alias" type="text" class="text"  value="${new_aliases(object)}" />
+                                                                <a href="#alias_area" id="add_more_alias" title="Add More Aliases">
+                                                                    <big name="alias_area">+</big></a>
 								<div class="errorMessage" py:if="tg_errors">${print_error('new_alias', tg_errors)}</div>
 								</div>
                  </td>

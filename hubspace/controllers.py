@@ -3082,8 +3082,8 @@ Exception:
         if 'groups' in kwargs:
             groups = kwargs['groups']
 
-        if 'new_alias' in kwargs and kwargs['new_alias']:
-            create_object('Alias', user = id, alias_name=kwargs['new_alias'])
+        for alias_name in kwargs.get('new_alias'):
+            if alias_name: create_object('Alias', user = id, alias_name=alias_name)
             
         if 'aliases' in kwargs:
             for alias in kwargs['aliases']:
