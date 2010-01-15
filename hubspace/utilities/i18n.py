@@ -22,7 +22,13 @@ def get_location_from_base_url():
     try:
         return Location.select(Location.q.url==cherrypy.request.base)[0]
     except IndexError:
-        return Location.get(1)
+        try:
+            # try w/o www. Ref: website #89
+            url_wo_www = cherrypy.request.base.replace("://www.", "")
+            return Location.select(Location.q.url==url_wo_www)[0]
+        except IndexError:
+            pass
+    return Location.get(1)
 
 
 def get_hubspace_user_locale():
