@@ -109,12 +109,8 @@ user_columns = user_fields.values()
             <span>2. Select options to be included in the report</span><br/>
             <table>
             <tr>
-                <td> <input name="report_types" value="member_summary" type="checkbox" checked="1"/> </td>
-                <td> Member Summary  </td>
-            </tr>
-            <tr>
-                <td> <input name="report_types" value="revenue_summary" type="checkbox" checked="1"/> </td>
-                <td> Revenue Summary  </td>
+                <td> <input name="report_types" value="summary" type="checkbox" checked="1"/> </td>
+                <td> Summary  </td>
             </tr>
             <tr>
                 <td> <input name="report_types" value="revenue_stats" type="checkbox" checked="1"/> </td>

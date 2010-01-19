@@ -182,7 +182,7 @@ def start_scheduler():
     add_weekday_task(send_unknown_aliases, [1], (0,0))
     add_monthday_task(update_tariff_bookings, [1], (0,0))
     add_monthday_task(schedule_access_policy_updates, [3], (0,0))
-    add_interval_task(reportutils.do_report_maintainance, taskname="Report generation routine tasks", initialdelay=24*60*60, interval=24*60*60)
+    add_interval_task(reportutils.do_report_maintainance, taskname="Report generation routine tasks", initialdelay=30*60, interval=24*60*60)
     if datetime.now() > datetime(datetime.today().year, datetime.today().month, 3):
         schedule_access_policy_updates()
 
@@ -1612,76 +1612,49 @@ class Root(controllers.RootController):
         locations = [int(loc) for loc in locations]
         if not set(locations).issubset(tuple(loc.id for loc in user_locations(identity.current.user))):
             raise IdentityFailure('what about not hacking the system')
-        if not period:
-            start, end = dateconverter(start), dateconverter(end)
+        if start and end:
+            start, end = dateconverter.to_python(start), dateconverter.to_python(end)
         mode = len(locations) > 1 and "comparison" or "onelocation"
-        report = dict(((loc, {}) for loc in locations))
+        stats = dict(((Location.get(loc).name, {}) for loc in locations))
         for location in locations:
             lstats = reportutils.LocationStats(location, period, start, end)
+            loc_name = Location.get(location).name
             for report_type in report_types:
-                print report_type
-                report[location][report_type] = getattr(lstats, 'get_' + report_type)()
-        if "revenue_by_resource" in report_types:
-            for loc in locations:
-                stats = report[loc]["revenue_by_resource"]
-                data = dict(( ( Resource.get(r_id).name, float(revenue)) for (r_id, revenue) in stats.items() ))
-                report[loc]["revenue_by_resource"] = reportutils.plot_pie_chart(data)
-        if "revenue_by_resourcetype" in report_types:
-            for loc in locations:
-                data = report[loc]["revenue_by_resourcetype"]
-                report[loc]["revenue_by_resourcetype"] = reportutils.plot_pie_chart(data)
-        if "revenue_by_tariff" in report_types:
-            for loc in locations:
-                data = report[loc]["revenue_by_tariff"]
-                print data
-                report[loc]["revenue_by_tariff"] = reportutils.plot_pie_chart(data)
-        if "churn_stats" in report_types:
-            for loc in locations:
-                stats = report[loc]["churn_stats"]
-                h_labels = []
-                data = {"Members left":[], "Members came back":[]}
-                for month, members_left, members_back in stats:
-                    h_labels.append("%s %s" % (calendar.month_abbr[month[1]], month[0]))
-                    data["Members left"].append(members_left)
-                    data["Members came back"].append(members_back)
-                report[loc]["churn_stats"] = reportutils.plot_dot_line(data, h_labels)
-        if "revenue_stats" in report_types:
-            for loc in locations:
-                stats, currency = report[loc]["revenue_stats"]
-                h_labels = []
-                data = []
-                print stats
-                for month, invoiced, uninvoiced in stats:
-                    h_labels.append("%s %s" % (calendar.month_abbr[month[1]], month[0]))
-                    data.append(invoiced)
-                report[loc]["revenue_stats"] = reportutils.plot_vbars(data, h_labels)
-        if "usage_by_tariff" in report_types:
-            for loc in locations:
-                stats = report[loc]["usage_by_tariff"]
-                report[loc]["usage_by_tariff"] = []
-                for r_type in model.resource_types: # CHANGE
-                    try:
-                        res_data = [(tariff, [stats[tariff][r_type][r_id] for r_id in sorted(stats[tariff][r_type])]) for tariff in stats]
-                    except KeyError:
-                        continue
-                    res_data = sorted(res_data, key=lambda x: sum(x[1]))
-                    relevant_data = [(t_id, usage) for t_id, usage in res_data if sum(usage)]
-                    y_labels = [Resource.get(t_data[0]).name for t_data in relevant_data]
-                    data = [t_data[1] for t_data in relevant_data]
-                    legend = [Resource.get(r_id).name for r_id in sorted(stats.values()[0][r_type].keys())]
-                    print "===="
-                    print loc
-                    print data
-                    print "===="
-                    report[loc]["usage_by_tariff"].append((r_type, reportutils.plot_hbars(data, y_labels=y_labels, legend=legend)))
-        if "members_by_tariff" in report_types:
-            for loc in locations:
-                stats = report[loc]["members_by_tariff"]
-                print stats
-                data = dict( (Resource.get(r_id).name, len(tuple(usages))) for (r_id, usages) in stats )
-                report[loc]["members_by_tariff"] = reportutils.plot_pie_chart(data)
-        print report
-        return dict(report_types=report_types, locations=locations, report=report, start=lstats.start, end=lstats.end)
+                data = getattr(lstats, 'get_' + report_type)()
+                if report_type in ('members_by_tariff', 'revenue_by_resource', 'revenue_by_resourcetype', 'revenue_by_tariff'):
+                    data = ((name, ((0, number),)) for name, number in data)
+                    options = dict(title = report_type.replace('_', ' ').title())
+                    stats[loc_name][report_type] = reportutils.Report(data, options)
+                elif report_type == 'summary':
+                    stats[loc_name][report_type] = data
+                elif report_type == 'revenue_stats':
+                    options = dict ( axis = dict(x = dict(
+                                                ticks = [dict(v=i, label=cell[0]) for i, cell in enumerate(data)],
+                                                label = 'Month', rotate = 25) ),
+                                     title = "Revenue Stats" )
+                    data = ('months', tuple((i, cell[1]) for i,cell in enumerate(data)))
+                    stats[loc_name][report_type] = reportutils.Report(data, options)
+                elif report_type == 'churn_stats':
+                    options = dict ( axis = dict(x = dict(
+                                                ticks = [dict(v=i, label=cell[0]) for i, cell in enumerate(data)],
+                                                label = 'Month', rotate = 50) ),
+                                     title = "Churn rate" )
+                    left_data = tuple((i, cell[1][0]) for i,cell in enumerate(data))
+                    back_data = tuple((i, cell[1][1]) for i,cell in enumerate(data))
+                    data = [('Members left', left_data), ('Members came back', back_data)]
+                    stats[loc_name][report_type] = reportutils.Report(data, options)
+                elif report_type == 'usage_by_tariff':
+                    stats[loc_name][report_type] = dict()
+                    for r_type, rt_data in data.items():
+                        tariffs_iter = list(enumerate(set(itertools.chain(*(t_dict.keys() for t_dict in rt_data.values())))))
+                        tariffs_dict = dict(tariffs_iter)
+                        data = [(r_name, tuple((i, r_data.get(t,0)) for i,t in tariffs_iter)) for r_name, r_data in rt_data.items()]
+                        options = dict ( axis = dict(x = dict(
+                                                        ticks = [dict(v=i, label=Resource.get(t).name) for i,t in tariffs_iter])),
+                                         title = "Usage By Tariff (%s)" % r_type )
+                        stats[loc_name][report_type][r_type] = reportutils.Report(data, options)
+
+        return dict(stats=stats, report_types=report_types, start=lstats.start, end=lstats.end)
 
     @identity.require(not_anonymous())
     @expose()

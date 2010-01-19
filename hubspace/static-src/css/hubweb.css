@@ -25,7 +25,12 @@ a:hover {
 p {
 	padding-bottom	: 1.5em;
 }
-
+p {
+        min-height : 15px;
+}
+#place_info p {
+        padding-bottom	: 0;
+}
 img {
 	border		: 0;
 }

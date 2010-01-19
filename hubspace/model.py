@@ -872,7 +872,7 @@ class RUsage(SQLObject):
     cost=CurrencyCol(default=0)
     customcost = CurrencyCol(default=None)
     def _get_effective_cost(self): # to avoid mistakes like 1. usage.customcost or usage.cost (problem if former is 0) and 2. to serve as a shortcut
-        return self.customcost is not None and self.customcost or self.cost
+        return self.customcost if self.customcost is not None else self.cost
     effectivecost = property(_get_effective_cost)
     resource_name = UnicodeCol(length=200)
     resource_description = UnicodeCol(default=None)
