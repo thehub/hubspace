@@ -75,7 +75,7 @@ class Report(object):
     def draw_hsbars_chart(self):
         width, height = (500, 400)
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-        options = dict(colorScheme=dict(name='rainbow'))
+        options = dict(colorScheme=dict(name='rainbow'), legend=dict(position=dict(top=20, left=None, bottom=None, right=5)), labelWidth=100,)
         options.update(self.options)
         chart = pycha.stackedbar.StackedHorizontalBarChart(surface, options)
         chart.addDataset(self.data)
@@ -84,9 +84,10 @@ class Report(object):
         surface.write_to_png(img_path)
         return img_path
     def draw_vbars_chart(self):
-        width, height = (500, 400)
+        width, height = (500, 500)
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-        options = dict(colorScheme=dict(name='rainbow'), legend=dict(hide=True))
+        bar_width = 0.75 if len(self.data[0][1]) > 3 else 0.50
+        options = dict(colorScheme=dict(name='rainbow'), legend=dict(hide=True), barWidthFillFraction=bar_width)
         options.update(self.options)
         chart = pycha.bar.VerticalBarChart(surface, options)
         chart.addDataset(self.data)

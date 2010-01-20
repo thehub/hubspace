@@ -1622,7 +1622,7 @@ class Root(controllers.RootController):
             for report_type in report_types:
                 data = getattr(lstats, 'get_' + report_type)()
                 if report_type in ('members_by_tariff', 'revenue_by_resource', 'revenue_by_resourcetype', 'revenue_by_tariff'):
-                    data = ((name, ((0, number),)) for name, number in data)
+                    data = tuple((name, ((0, number),)) for name, number in data)
                     options = dict(title = report_type.replace('_', ' ').title())
                     stats[loc_name][report_type] = reportutils.Report(data, options)
                 elif report_type == 'summary':
@@ -1630,14 +1630,16 @@ class Root(controllers.RootController):
                 elif report_type == 'revenue_stats':
                     options = dict ( axis = dict(x = dict(
                                                 ticks = [dict(v=i, label=cell[0]) for i, cell in enumerate(data)],
-                                                label = 'Month', rotate = 25) ),
-                                     title = "Revenue Stats" )
-                    data = ('months', tuple((i, cell[1]) for i,cell in enumerate(data)))
+                                                label = 'Months', rotate = 25),
+                                                y = dict(label='Revenue')),
+                                     title = "Revenue Stats",
+                                     padding = dict(left = 75, bottom = 75))
+                    data = [('months', tuple((i, cell[1]) for i,cell in enumerate(data)))]
                     stats[loc_name][report_type] = reportutils.Report(data, options)
                 elif report_type == 'churn_stats':
                     options = dict ( axis = dict(x = dict(
                                                 ticks = [dict(v=i, label=cell[0]) for i, cell in enumerate(data)],
-                                                label = 'Month', rotate = 50) ),
+                                                label = 'Months', rotate = 25) ),
                                      title = "Churn rate" )
                     left_data = tuple((i, cell[1][0]) for i,cell in enumerate(data))
                     back_data = tuple((i, cell[1][1]) for i,cell in enumerate(data))
@@ -1649,12 +1651,24 @@ class Root(controllers.RootController):
                         tariffs_iter = list(enumerate(set(itertools.chain(*(t_dict.keys() for t_dict in rt_data.values())))))
                         tariffs_dict = dict(tariffs_iter)
                         data = [(r_name, tuple((i, r_data.get(t,0)) for i,t in tariffs_iter)) for r_name, r_data in rt_data.items()]
-                        options = dict ( axis = dict(x = dict(
-                                                        ticks = [dict(v=i, label=Resource.get(t).name) for i,t in tariffs_iter])),
+                        options = dict ( axis = dict(x = dict(label='Tariffs', ticks = [dict(v=i, label=Resource.get(t).name) for i,t in tariffs_iter]),
+                                                     y = dict(label='Months', tickCount=5),),
+                                         padding = dict(left = 150, bottom = 75),
                                          title = "Usage By Tariff (%s)" % r_type )
                         stats[loc_name][report_type][r_type] = reportutils.Report(data, options)
 
-        return dict(stats=stats, report_types=report_types, start=lstats.start, end=lstats.end)
+        d =dict(stats=stats, report_types=report_types, start=lstats.start, end=lstats.end)
+        if format == 'web':
+            return d
+        elif format == 'pdf':
+            html =  try_render(d, template='hubspace.templates.managementReport', format='html', headers={'content-type':'text/html'})
+            html = html.replace("NEXTPAGEHACK", "<div> <pdf:nextpage/> </div> ")
+            src = cStringIO.StringIO(html)
+            dst = cStringIO.StringIO()
+            pdf = pisa.CreatePDF(src, dst, encoding='utf-8')
+            dst.seek(0)
+            cherrypy.response.headers['Content-type'] = 'application/pdf'
+            return dst.read()
 
     @identity.require(not_anonymous())
     @expose()

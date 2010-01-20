@@ -59,18 +59,23 @@ report_type = 'revenue_stats'
         <?python
         loc_id = loc.replace(' ','_')
         report = stats[loc][report_type]
-        data = report.data
-        report.data = [report.data]
+        nodata = not bool(stats[loc][report_type].data[0][1])
         ?>
+        <div py:if="nodata">No Data</div>
+        <div py:if="not nodata">
+
+        <div>
         <label for="toggle-${report_type}-${loc_id}">Visualize</label>
         <input type="checkbox" id="toggle-${report_type}-${loc_id}" class="toggle-${report_type}" checked="checked"/>
+        </div>
+
         <table id="table-${report_type}-${loc_id}" class="table-${report_type}">
         <caption>${report.options['title']}</caption>
         <tr>
             <th>Month</th>
             <th>Revenue</th>
         </tr>
-        <tr py:for="row in data[1]">
+        <tr py:for="row in report.data[0][1]">
             <th>${report.options['axis']['x']['ticks'][row[0]]['label']}</th> 
             <td>${row[1]}</td>
         </tr>
@@ -89,6 +94,8 @@ report_type = 'revenue_stats'
             });
         </script>
 
+        </div>
+
     </td></tr>
 </div>
 
@@ -99,10 +106,15 @@ report_type = 'revenue_stats'
         title = title or report_type.replace('_', " ").capitalize()
         loc_id = loc.replace(' ','_')
         report = stats[loc][report_type]
-        report.data = tuple(report.data)
+        nodata = not bool(report.data and any(x[1][0][1] for x in report.data))
         ?>
+        <div py:if="nodata">No Data</div>
+        <div py:if="not nodata">
+
+        <div>
         <label for="toggle-${report_type}-${loc_id}">Visualize</label>
         <input type="checkbox" id="toggle-${report_type}-${loc_id}" class="toggle-${report_type}" checked="checked"/>
+        </div>
 
         <table class="table-${report_type}" id="table-${report_type}-${loc_id}">
         <caption>${title}</caption>
@@ -112,7 +124,7 @@ report_type = 'revenue_stats'
         </tr>
         </table>
 
-        <img class="canvas-${report_type}" id="canvas-${report_type}-${loc_id}" src="/report_image/${report.draw_pie_chart()}"/>
+        <img class="canvas-${report_type}" id="canvas-${report_type}-${loc_id}" src="${report.draw_pie_chart()}"/>
 
         <script>
         $('.table-${report_type}').hide();
@@ -127,6 +139,8 @@ report_type = 'revenue_stats'
             });
         </script>
 
+        </div>
+
     </td></tr>
 </div>
 </div>
@@ -137,15 +151,22 @@ ${draw_pies(stats, "revenue_by_resource", def_width, def_height)}
 <?python
 report_type = 'churn_stats'
 ?>
-<div py:if="report_type in report_types">
+<div py:if="report_type in report_types and stats[loc][report_type]">
     <tr> <td py:for="loc in stats"> 
         <?python
         loc_id = loc.replace(' ','_')
         report = stats[loc][report_type]
         data = report.data
+        nodata = not any(row[1][0][1] and row[1][1][1] for row in report.data)
         ?>
+        <div py:if="nodata">No Data</div>
+        <div py:if="not nodata">
+
+        <div>
         <label for="toggle-${report_type}-${loc_id}">Visualize</label>
         <input type="checkbox" id="toggle-${report_type}-${loc_id}" class="toggle-${report_type}" checked="checked"/>
+        </div>
+
         <table id="table-${report_type}-${loc_id}" class="table-${report_type}">
         <caption>Churn Rate</caption>
         <tr>
@@ -174,6 +195,8 @@ report_type = 'churn_stats'
             });
         </script>
 
+        </div>
+
     </td></tr>
 </div>
 
@@ -196,9 +219,15 @@ resource_types = stats[loc][report_type].keys()
         canvas_id = canvas_cls + loc_id
         toggle_cls = "toggle-%s-%s" % (report_type, resource_type)
         toggle_id = toggle_cls + loc_id
+        nodata = not bool(report.data)
         ?>
+        <div py:if="nodata">No Data</div>
+        <div py:if="not nodata">
+
+        <div>
         <label for="${toggle_id}">Visualize</label>
         <input type="checkbox" id="${toggle_id}" class="${toggle_cls}" checked="checked"/>
+        </div>
 
         <table id="${table_id}" class="${table_cls}">
         <caption>${report.options['title']}</caption>
@@ -213,7 +242,6 @@ resource_types = stats[loc][report_type].keys()
        </table>
 
         <img class="${canvas_cls}" id="${canvas_id}" src="/report_image/${report.draw_hsbars_chart()}" />
-        </td>
         <script>
         $('.${table_cls}').hide();
         $('.${canvas_cls}').show();
@@ -226,6 +254,9 @@ resource_types = stats[loc][report_type].keys()
                 $('.${canvas_cls}').hide(); }
             });
         </script>
+
+        </div>
+        </td>
     </tr>
 </div>
 </table>
