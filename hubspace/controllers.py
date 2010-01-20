@@ -1631,9 +1631,8 @@ class Root(controllers.RootController):
                     options = dict ( axis = dict(x = dict(
                                                 ticks = [dict(v=i, label=cell[0]) for i, cell in enumerate(data)],
                                                 label = 'Months', rotate = 25),
-                                                y = dict(label='Revenue')),
-                                     title = "Revenue Stats",
-                                     padding = dict(left = 75, bottom = 75))
+                                                y = dict(label='Revenue', tickCount=5)),
+                                     title = "Revenue Stats")
                     data = [('months', tuple((i, cell[1]) for i,cell in enumerate(data)))]
                     stats[loc_name][report_type] = reportutils.Report(data, options)
                 elif report_type == 'churn_stats':
@@ -1665,7 +1664,7 @@ class Root(controllers.RootController):
             html = html.replace("NEXTPAGEHACK", "<div> <pdf:nextpage/> </div> ")
             src = cStringIO.StringIO(html)
             dst = cStringIO.StringIO()
-            pdf = pisa.CreatePDF(src, dst, encoding='utf-8')
+            pdf = pisa.CreatePDF(src, dst, default_css=file("hubspace/static/css/micro/blueprint/screen.css").read(), encoding='utf-8')
             dst.seek(0)
             cherrypy.response.headers['Content-type'] = 'application/pdf'
             return dst.read()

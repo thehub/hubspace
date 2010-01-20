@@ -2,11 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" >
 <head>
         <link rel="stylesheet" href="/static/css/micro/blueprint/screen.css" type="text/css" media="screen, projection, print"/>
-    	<link rel="stylesheet" href="/static/css/micro/blueprint/print.css" type="text/css" media="print"/>
    	 <!--[if IE]>
     	<link rel="stylesheet" href="/static/css/micro/blueprint/ie.css" type="text/css" media="screen, projection"/>
     	<![endif]-->
-    	<link rel="stylesheet" href="/static/css/micro/blueprint/typography.css" type="text/css" media="print"/>
+    	<link rel="stylesheet" href="/static/css/micro/blueprint/typography.css" type="text/css" media="screen, projection, print"/>
+    	<link rel="stylesheet" href="/static/css/micro/blueprint/print.css" type="text/css" media="print"/>
+        
+        <STYLE type="text/css" media="print">
+        .dontprint {
+            display: none;
+        }
+        </STYLE>
           
         <script type="text/javascript" src="/static/javascript/jquery.min.js"></script>
 
@@ -20,7 +26,7 @@ def_width = 600 if len(stats) == 1 else 550
 import hubspace.reportutils as reportutils
 ?>
 <tr>
-<td py:for="loc in stats" ><h1>Hub ${loc}</h1><em>${start.strftime ("%b %d %Y")} - ${end.strftime ("%b %d %Y")}</em></td>
+<td py:for="loc in sorted(stats)" ><h1>${loc}</h1><em>${start.strftime ("%b %d %Y")} - ${end.strftime ("%b %d %Y")}</em></td>
 </tr>
 <tr py:if="'summary' in report_types" title="Dashboard">
     <td py:for="loc in stats" >
@@ -59,12 +65,12 @@ report_type = 'revenue_stats'
         <?python
         loc_id = loc.replace(' ','_')
         report = stats[loc][report_type]
-        nodata = not bool(stats[loc][report_type].data[0][1])
+        nodata = not any(row[1] for row in stats[loc][report_type].data[0][1])
         ?>
         <div py:if="nodata">No Data</div>
         <div py:if="not nodata">
 
-        <div>
+        <div class="dontprint">
         <label for="toggle-${report_type}-${loc_id}">Visualize</label>
         <input type="checkbox" id="toggle-${report_type}-${loc_id}" class="toggle-${report_type}" checked="checked"/>
         </div>
@@ -111,7 +117,7 @@ report_type = 'revenue_stats'
         <div py:if="nodata">No Data</div>
         <div py:if="not nodata">
 
-        <div>
+        <div class="dontprint">
         <label for="toggle-${report_type}-${loc_id}">Visualize</label>
         <input type="checkbox" id="toggle-${report_type}-${loc_id}" class="toggle-${report_type}" checked="checked"/>
         </div>
@@ -162,7 +168,7 @@ report_type = 'churn_stats'
         <div py:if="nodata">No Data</div>
         <div py:if="not nodata">
 
-        <div>
+        <div class="dontprint">
         <label for="toggle-${report_type}-${loc_id}">Visualize</label>
         <input type="checkbox" id="toggle-${report_type}-${loc_id}" class="toggle-${report_type}" checked="checked"/>
         </div>
@@ -224,7 +230,7 @@ resource_types = stats[loc][report_type].keys()
         <div py:if="nodata">No Data</div>
         <div py:if="not nodata">
 
-        <div>
+        <div class="dontprint">
         <label for="${toggle_id}">Visualize</label>
         <input type="checkbox" id="${toggle_id}" class="${toggle_cls}" checked="checked"/>
         </div>

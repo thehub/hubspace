@@ -43,11 +43,16 @@ class Report(object):
     def __init__(self, data, options={}):
         self.data = data
         self.options = options
+    def merge_options(self, chart_options):
+        options = dict(colorScheme=dict(name="rainbow"), padding = dict(left = 75, bottom = 75))
+        options.update(chart_options)
+        options.update(self.options)
+        return options
     def draw_pie_chart(self):
         width, height = (500, 400)
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-        options = dict(colorScheme=dict(name='rainbow'), legend=dict(hide=True))
-        options.update(self.options)
+        chart_options = dict(legend=dict(hide=True))
+        options = self.merge_options(chart_options)
         data_sorted = self.sort_by_value()
         data = data_sorted[:7]
         c = itertools.cycle((0, -1))
@@ -64,8 +69,8 @@ class Report(object):
     def draw_multiline_chart(self):
         width, height = (500, 400)
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-        options = dict(colorScheme=dict(name='rainbow'), shouldFill=False)
-        options.update(self.options)
+        chart_options = dict(shouldFill=False)
+        options = self.merge_options(chart_options)
         chart = pycha.line.LineChart(surface, options)
         chart.addDataset(self.data)
         chart.render()
@@ -75,8 +80,8 @@ class Report(object):
     def draw_hsbars_chart(self):
         width, height = (500, 400)
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-        options = dict(colorScheme=dict(name='rainbow'), legend=dict(position=dict(top=20, left=None, bottom=None, right=5)), labelWidth=100,)
-        options.update(self.options)
+        chart_options = dict(legend=dict(position=dict(top=20, left=None, bottom=None, right=5)))
+        options = self.merge_options(chart_options)
         chart = pycha.stackedbar.StackedHorizontalBarChart(surface, options)
         chart.addDataset(self.data)
         chart.render()
@@ -84,10 +89,11 @@ class Report(object):
         surface.write_to_png(img_path)
         return img_path
     def draw_vbars_chart(self):
-        width, height = (500, 500)
+        width, height = (500, 400)
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
         bar_width = 0.75 if len(self.data[0][1]) > 3 else 0.50
-        options = dict(colorScheme=dict(name='rainbow'), legend=dict(hide=True), barWidthFillFraction=bar_width)
+        chart_options = dict(legend=dict(hide=True), barWidthFillFraction=bar_width)
+        options = self.merge_options(chart_options)
         options.update(self.options)
         chart = pycha.bar.VerticalBarChart(surface, options)
         chart.addDataset(self.data)
