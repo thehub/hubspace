@@ -124,7 +124,7 @@ report_type = 'revenue_stats'
         </tr>
         </table>
 
-        <img class="canvas-${report_type}" id="canvas-${report_type}-${loc_id}" src="${report.draw_pie_chart()}"/>
+        <img class="canvas-${report_type}" id="canvas-${report_type}-${loc_id}" src="/report_image/${report.draw_pie_chart()}"/>
 
         <script>
         $('.table-${report_type}').hide();
