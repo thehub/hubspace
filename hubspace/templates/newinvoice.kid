@@ -90,10 +90,10 @@ def lang():
 <table border="0" align="center" width="100%">
 <tr>
     <td align="left" width="25%">
+        <strong>${invoice.user.bill_to_profile and invoice.user.organisation or invoice.user.bill_to_company}</strong>
         <br/>
-        <strong>${invoice.user.bill_to_profile and invoice.user.organisation or invoice.user.bill_to_company}</strong><br/>
         ${invoice.user.display_name}<br/>
-        Membership No. ${str(invoice.user.id)}<br/>
+        Membership No. ${invoice.user.id} <br/>
         <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address)} </c>
         <address py:if="not invoice.user.bill_to_profile">
             <c py:for="line in invoice.user.billingaddress.split('\n')">${line}<br/></c>
