@@ -19,17 +19,15 @@
 </head>
 
 <body style="width:${len(stats) * 550}px">  
-<table border="1">
 <?python
-def_height = 700 if len(stats) == 1 else 600
-def_width = 600 if len(stats) == 1 else 550
-import hubspace.reportutils as reportutils
+locs = sorted(stats)
 ?>
+<table border="1">
 <tr>
-<td py:for="loc in sorted(stats)" ><h1>${loc}</h1><em>${start.strftime ("%b %d %Y")} - ${end.strftime ("%b %d %Y")}</em></td>
+<td py:for="loc in locs" ><h1>${loc}</h1><em>${start.strftime ("%b %d %Y")} - ${end.strftime ("%b %d %Y")}</em></td>
 </tr>
 <tr py:if="'summary' in report_types" title="Dashboard">
-    <td py:for="loc in stats" >
+    <td py:for="loc in locs" >
         <table >
          <caption>Dashboard</caption>
            <?python
@@ -61,7 +59,7 @@ import hubspace.reportutils as reportutils
 report_type = 'revenue_stats'
 ?>
 <div py:if="report_type in report_types">
-    <tr> <td py:for="loc in stats"> 
+    <tr> <td py:for="loc in locs"> 
         <?python
         loc_id = loc.replace(' ','_')
         report = stats[loc][report_type]
@@ -105,9 +103,9 @@ report_type = 'revenue_stats'
     </td></tr>
 </div>
 
-<div py:def="draw_pies(stats, report_type, def_width=500, def_height=550, title=None)">
+<div py:def="draw_pies(stats, report_type, title=None)">
 <div py:if="report_type in report_types">
-    <tr> <td py:for="loc in stats"> 
+    <tr> <td py:for="loc in sorted(stats)"> 
         <?python
         title = title or report_type.replace('_', " ").capitalize()
         loc_id = loc.replace(' ','_')
@@ -151,14 +149,14 @@ report_type = 'revenue_stats'
 </div>
 </div>
 
-${draw_pies(stats, "revenue_by_resourcetype", def_width, def_height)}
-${draw_pies(stats, "revenue_by_resource", def_width, def_height)}
+${draw_pies(stats, "revenue_by_resourcetype")}
+${draw_pies(stats, "revenue_by_resource")}
 
 <?python
 report_type = 'churn_stats'
 ?>
 <div py:if="report_type in report_types and stats[loc][report_type]">
-    <tr> <td py:for="loc in stats"> 
+    <tr> <td py:for="loc in locs"> 
         <?python
         loc_id = loc.replace(' ','_')
         report = stats[loc][report_type]
@@ -206,16 +204,18 @@ report_type = 'churn_stats'
     </td></tr>
 </div>
 
-${draw_pies(stats, "members_by_tariff", def_width, def_height)}
-${draw_pies(stats, "revenue_by_tariff", def_width, def_height)}
+${draw_pies(stats, "members_by_tariff")}
+${draw_pies(stats, "revenue_by_tariff")}
 
 <div py:if="'usage_by_tariff' in report_types">
 <?python
 report_type = 'usage_by_tariff'
-resource_types = stats[loc][report_type].keys()
 ?>
-    <tr py:for="resource_type in resource_types">
-    <td py:for="loc in stats"> 
+<tr>
+    <td py:for="loc in locs" style="vertical-align:top"> 
+    <table>
+    <tr py:for="resource_type in sorted(stats[loc][report_type])">
+        <td>
         <?python
         loc_id = loc.replace(' ','_')
         report = stats[loc][report_type][resource_type]
@@ -245,7 +245,7 @@ resource_types = stats[loc][report_type].keys()
             <td>${res}</td>
             <td py:for="cell in t_data">${cell[1]}</td>
         </tr>
-       </table>
+        </table>
 
         <img class="${canvas_cls}" id="${canvas_id}" src="/report_image/${report.draw_hsbars_chart()}" />
         <script>
@@ -264,7 +264,11 @@ resource_types = stats[loc][report_type].keys()
         </div>
         </td>
     </tr>
+    </table>
+    </td>
+</tr>
 </div>
+
 </table>
 </body>
 
