@@ -803,7 +803,19 @@ class MicroSite(controllers.Controller):
         self.initialized = False
         self.site_types = site_types
         self.add_edit_controllers()
-                   
+                       
+    def _cpOnError(self):
+        try:
+            raise # http://www.cherrypy.org/wiki/ErrorsAndExceptions#a2.2
+        except Exception, err:
+            if isinstance(err, IndexError): # construct_args throws IndexError if the page requested does not exists
+                cherrypy.response.status = 404
+                cherrypy.response.body = "404"
+            else:
+                cherrypy.response.status = 500
+                cherrypy.response.body = "500"
+        
+
     def attr_changed(self, property, page_name):
         if property in ('name', 'subtitle'):
             self.regenerate_all()
@@ -823,12 +835,10 @@ class MicroSite(controllers.Controller):
     def construct_args(self, page_name, *args, **kwargs):
         template_args = dict(site_template_args)
         try:
-            page = MetaWrapper(Page.select(AND(Page.q.location==self.location, 
-                                               Page.q.path_name==page_name))[0])
+            page = MetaWrapper(Page.select(AND(Page.q.location==self.location, Page.q.path_name==page_name))[0])
         except (KeyError, IndexError):
-            #try:
-                page = MetaWrapper(Page.select(AND(Page.q.location==self.location, 
-                                                   Page.q.path_name==page_name + '.html'))[0])
+            page = MetaWrapper(Page.select(AND(Page.q.location==self.location, Page.q.path_name==page_name + '.html'))[0])
+
         func = self.site_types[page.page_type].view_func
         if func:
              kwargs['location'] = self.location
