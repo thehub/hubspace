@@ -3358,9 +3358,18 @@ Exception:
     def default(self, *args, **kwargs):
         version = new_or_old[cherrypy.request.base]
         if version == 'old':
-            return self.default_old(*args, **kwargs)
+            default_method = self.default_old
         else:
-            return self.default_new(*args, **kwargs)
+            default_method = self.default_new
+        try:
+            return default_method(*args, **kwargs)
+        except AttributeError, err:
+            print err
+            if identity.current.anonymous:
+                cherrypy.response.status = 404
+                return "404"
+            else:
+                raise
 
     ############################TO BE REMOVED LATER#########################################################
     def default_old(self, *args, **kwargs):
@@ -3396,11 +3405,10 @@ Exception:
                 reset_pass_args = self.login_args(*args, **kwargs)
                 reset_pass_args.update(self.resetPassword(*args, **kwargs))
                 return try_render(reset_pass_args,  template='password', format='xhtml', headers={'content-type':'text/html'}, fragment=False, folder_paths=site_folder_paths)
-
    
         if '_'in kwargs:
             del kwargs['_']
-        return self.application()        
+        return self.application()
 
 
     def login_args(self, previous_url=None, *args, **kwargs):
