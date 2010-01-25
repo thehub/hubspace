@@ -65,7 +65,7 @@ def get_profiles(*args, **kwargs):
 def get_user(*args, **kwargs):
     if len(args) >= 1:
         user = User.by_user_name(args[0])
-        if user.public_field:
+        if user.public_field and user.active:
             return {'user': user}
     return {}
 
