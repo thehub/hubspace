@@ -1774,7 +1774,8 @@ class Root(controllers.RootController):
             e_hint = e_info[1].hint
         else:
             e_hint = ""
-        cherrypy.response.body = self.error_template("issue", dict(e_id=e_id, e_path=e_path, e_str=e_str, e_hint=e_hint))
+        d = dict(e_id=e_id, e_path=e_path, e_str=e_str, e_hint=e_hint)
+        cherrypy.response.body = try_render(d, template='hubspace.templates.issue', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
     @expose_as_csv
     @identity.require(not_anonymous())

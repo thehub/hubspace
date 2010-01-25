@@ -9,7 +9,7 @@ from hubspace.utilities.permissions import is_host, addUser2Group
 from hubspace.utilities.object import modify_attribute, obj_of_type
 from hubspace.model import Location, LocationMetaData, User, RUsage, Group, MicroSiteSpace, ObjectReference, ListItem, Page, MetaWrapper, PublicPlace
 from sqlobject import AND, SQLObjectNotFound, IN, LIKE, func
-import os, re, unicodedata, md5, random, hmac as create_hmac
+import os, re, unicodedata, md5, random, sys, datetime, traceback, hmac as create_hmac
 from hashlib import sha1
 import cherrypy
 from kid import XML
@@ -20,6 +20,7 @@ import sendmail
 import hubspace.model
 model = hubspace.model 
 from hubspace.utilities.cache import strongly_expire
+import hubspace.sync.core as sync
 
 
 from urllib import quote, urlencode
@@ -812,9 +813,40 @@ class MicroSite(controllers.Controller):
                 cherrypy.response.status = 404
                 cherrypy.response.body = "404"
             else:
-                cherrypy.response.status = 500
-                cherrypy.response.body = "500"
-        
+                """log the error and give the user a trac page to submit the bug
+                We should give the error a UID so that we can find the error associated more easily
+                """
+                # If syncer transaction fails the syncer daemon takes care of rolling back the changes also
+                # syncerclient then raises SyncerError effectively stops TG transaction from commiting
+                # changes to native database.
+                # For all other errors we should call syncer rollback here.
+                # And finally if there is no error, we send transaction complete signal to syncer. Which is
+                # handled by TransactionCompleter filter.
+                if config.get('server.testing', False):
+                    cherrypy.response.status = 500
+                else:
+                    cherrypy.response.status = 200
+                e_info = sys.exc_info()
+                e_id = str(datetime.now())
+                e_path = cherrypy.request.path
+                _v = lambda v: str(v)[:20]
+                e_params = dict([(k, _v(v)) for (k, v) in cherrypy.request.paramMap.items()])
+                e_hdr = cherrypy.request.headerMap
+                applogger.error("%(e_id)s: Path:%(e_path)s" % locals())
+                applogger.error("%(e_id)s: Params:%(e_params)s" % locals())
+                applogger.exception("%(e_id)s:" % locals())
+                if isinstance(e_info[1], sync.SyncerError):
+                    applogger.error("%(e_id)s: LDAP sync error" % locals())
+                else:
+                    sync.sendRollbackSignal()
+                tb = sys.exc_info()[2]
+                e_str = traceback.format_exc(tb)
+                if isinstance(e_info[1], hubspace.errors.ErrorWithHint):
+                    e_hint = e_info[1].hint
+                else:
+                    e_hint = ""
+                d = dict(e_id=e_id, e_path=e_path, e_str=e_str, e_hint=e_hint)
+                cherrypy.response.body = try_render(d, template='hubspace.templates.issue', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
     def attr_changed(self, property, page_name):
         if property in ('name', 'subtitle'):
