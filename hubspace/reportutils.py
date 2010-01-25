@@ -78,7 +78,7 @@ class Report(object):
         surface.write_to_png(img_path)
         return img_path
     def draw_hsbars_chart(self):
-        width, height = (500, 400)
+        width, height = (500, ((len(self.options['axis']['x']['ticks']) * 25 * 2) + self.options['padding']['top']))
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
         chart_options = dict(legend=dict(position=dict(top=20, left=None, bottom=None, right=5)))
         options = self.merge_options(chart_options)

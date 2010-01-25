@@ -1650,9 +1650,9 @@ class Root(controllers.RootController):
                         tariffs_iter = list(enumerate(set(itertools.chain(*(t_dict.keys() for t_dict in rt_data.values())))))
                         tariffs_dict = dict(tariffs_iter)
                         data = [(r_name, tuple((i, r_data.get(t,0)) for i,t in tariffs_iter)) for r_name, r_data in rt_data.items()]
-                        options = dict ( axis = dict(x = dict(label='Tariffs', ticks = [dict(v=i, label=Resource.get(t).name) for i,t in tariffs_iter]),
-                                                     y = dict(label='Months', tickCount=5),),
-                                         padding = dict(left = 150, bottom = 75),
+                        options = dict ( axis = dict(x = dict(label='Tariffs', ticks = [dict(v=i, label=Resource.get(t).name) for i,t in tariffs_iter], ),
+                                                     y = dict(tickCount=5, rotate = -25)),
+                                         padding = dict(left = 150, bottom = 75, top = len (data) * 20),
                                          title = "Usage By Tariff (%s)" % r_type )
                         stats[loc_name][report_type][r_type] = reportutils.Report(data, options)
 
