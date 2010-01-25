@@ -80,6 +80,7 @@ def get_local_profiles(*args, **kwargs):
         profiles = [profile for profile in profiles if profile.image]
     if kwargs.get('no_of_images', None):
         profiles = profiles[:kwargs['no_of_images']]
+    profiles = [profile for profile in profiles if profile.active and profile.public_field]
     return {'profiles': profiles}
 
 def get_local_future_events(*args, **kwargs):
