@@ -95,7 +95,7 @@ user_columns = user_fields.values()
 
     <div class="dataBox">
         <div class="dataBoxHeader">
-	    <a class="title" id="management_reports"><h2>Reports (Preview feature)</h2></a>
+	    <a class="title" id="management_reports"><h2>Reports</h2></a>
             <div class="dataBoxContent">
             <form id="report_conf" action="/generate_report" method="post">
             <div>
@@ -188,8 +188,10 @@ user_columns = user_fields.values()
             </p>
 
             <a href="#" id="generate_report" class="small yellow nicebutton">View >> </a>
+            <!--
             <a href="#"  class="small yellow nicebutton">Download spreadsheet</a>
             <a href="#"  class="small yellow nicebutton">Email spreadsheet</a>
+            -->
             </form>
             </div>
 	</div>
