@@ -1623,16 +1623,14 @@ class Root(controllers.RootController):
                 data = getattr(lstats, 'get_' + report_type)()
                 if report_type in ('members_by_tariff', 'revenue_by_resource', 'revenue_by_resourcetype', 'revenue_by_tariff'):
                     data = tuple((name, ((0, number),)) for name, number in data)
-                    options = dict(title = report_type.replace('_', ' ').title())
-                    stats[loc_name][report_type] = reportutils.Report(data, options)
+                    stats[loc_name][report_type] = reportutils.Report(data)
                 elif report_type == 'summary':
                     stats[loc_name][report_type] = data
                 elif report_type == 'revenue_stats':
                     options = dict ( axis = dict(x = dict(
                                                 ticks = [dict(v=i, label=cell[0]) for i, cell in enumerate(data)],
                                                 label = 'Months', rotate = 25),
-                                                y = dict(label='Revenue', tickCount=5)),
-                                     title = "Revenue Stats")
+                                                y = dict(label='Revenue', tickCount=5)),)
                     data = [('months', tuple((i, cell[1]) for i,cell in enumerate(data)))]
                     stats[loc_name][report_type] = reportutils.Report(data, options)
                 elif report_type == 'churn_stats':
@@ -1651,9 +1649,8 @@ class Root(controllers.RootController):
                         tariffs_dict = dict(tariffs_iter)
                         data = [(r_name, tuple((i, r_data.get(t,0)) for i,t in tariffs_iter)) for r_name, r_data in rt_data.items()]
                         options = dict ( axis = dict(x = dict(label='Tariffs', ticks = [dict(v=i, label=Resource.get(t).name) for i,t in tariffs_iter], ),
-                                                     y = dict(tickCount=5, rotate = -25)),
-                                         padding = dict(left = 150, bottom = 75, top = len (data) * 20),
-                                         title = "Usage By Tariff (%s)" % r_type )
+                                                     y = dict(tickCount=5, rotate = -25, label="Usage hours/quantity")),
+                                         padding = dict(left = 150, bottom = 75, top = len (data) * 20))
                         stats[loc_name][report_type][r_type] = reportutils.Report(data, options)
 
         d =dict(stats=stats, report_types=report_types, start=lstats.start, end=lstats.end)

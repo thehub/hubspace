@@ -13,6 +13,17 @@
             display: none;
         }
         </STYLE>
+        <STYLE type="text/css" media="screen">
+        .clicker {
+	    font-size:95%;
+	    padding:1px;
+	    font-family:helvetica, arial, verdana, sans-serif;
+	    margin:1;
+	    border: 1px solid #3F3F3F;
+            cursor:pointer;
+            text-decoration: none;
+        }
+        </STYLE>
           
         <script type="text/javascript" src="/static/javascript/jquery.min.js"></script>
 
@@ -59,22 +70,23 @@ locs = sorted(stats)
 report_type = 'revenue_stats'
 ?>
 <div py:if="report_type in report_types">
-    <tr> <td py:for="loc in locs"> 
+    <tr><td py:for="loc in locs"> 
         <?python
         loc_id = loc.replace(' ','_')
         report = stats[loc][report_type]
         nodata = not any(row[1] for row in stats[loc][report_type].data[0][1])
+        title = "Revenue Stats"
         ?>
+        <h3>${title}</h3>
         <div py:if="nodata">No Data</div>
         <div py:if="not nodata">
 
         <div class="dontprint">
-        <label for="toggle-${report_type}-${loc_id}">Visualize</label>
-        <input type="checkbox" id="toggle-${report_type}-${loc_id}" class="toggle-${report_type}" checked="checked"/>
+        <a id="toggle-${report_type}-${loc_id}" class="toggle-${report_type} clicker ">Switch to Table view</a>
         </div>
 
         <table id="table-${report_type}-${loc_id}" class="table-${report_type}">
-        <caption>${report.options['title']}</caption>
+        <caption>${title}</caption>
         <tr>
             <th>Month</th>
             <th>Revenue</th>
@@ -85,41 +97,50 @@ report_type = 'revenue_stats'
         </tr>
         </table>
         <img class="canvas-${report_type}" id="canvas-${report_type}-${loc_id}" src="/report_image/${report.draw_vbars_chart()}"/>
-        <script>
-        $('.table-${report_type}').hide();
-        $('.canvas-${report_type}').show();
-        $('.toggle-${report_type}').click( function () {
-            if ($(this).attr('checked')) {
-                $('.table-${report_type}').hide();
-                $('.canvas-${report_type}').show(); }
-            else {
-                $('.table-${report_type}').show();
-                $('.canvas-${report_type}').hide(); }
-            });
-        </script>
+
+        ${script_toggle_switch(report_type, loc_id)}
 
         </div>
 
     </td></tr>
 </div>
 
+<div py:def="script_toggle_switch(report_type, loc_id)">
+    <script>
+    $('.table-${report_type}').hide();
+    $('.canvas-${report_type}').show();
+    $('.toggle-${report_type}').click( function () {
+        if ($(this).text() == 'Switch to Graph view') {
+            $('.table-${report_type}').hide();
+            $('.canvas-${report_type}').show();
+            $('.toggle-${report_type}').text('Switch to Table view'); }
+        else {
+            $('.table-${report_type}').show();
+            $('.canvas-${report_type}').hide();
+            $('.toggle-${report_type}').text('Switch to Graph view'); }
+        });
+    </script>
+</div>
+
 <div py:def="draw_pies(stats, report_type, title=None)">
 <div py:if="report_type in report_types">
     <tr> <td py:for="loc in sorted(stats)"> 
         <?python
-        title = title or report_type.replace('_', " ").capitalize()
+        title = title or report_type.replace('_', " ").title()
         loc_id = loc.replace(' ','_')
         report = stats[loc][report_type]
         nodata = not bool(report.data and any(x[1][0][1] for x in report.data))
         ?>
+        <h3>${title}</h3>
+
         <div py:if="nodata">No Data</div>
         <div py:if="not nodata">
 
         <div class="dontprint">
-        <label for="toggle-${report_type}-${loc_id}">Visualize</label>
-        <input type="checkbox" id="toggle-${report_type}-${loc_id}" class="toggle-${report_type}" checked="checked"/>
+        <a id="toggle-${report_type}-${loc_id}" class="toggle-${report_type} clicker ">Switch to Table view</a>
         </div>
 
+        <br/>
         <table class="table-${report_type}" id="table-${report_type}-${loc_id}">
         <caption>${title}</caption>
         <tr py:for="res_name, revenue in report.data">
@@ -130,18 +151,7 @@ report_type = 'revenue_stats'
 
         <img class="canvas-${report_type}" id="canvas-${report_type}-${loc_id}" src="/report_image/${report.draw_pie_chart()}"/>
 
-        <script>
-        $('.table-${report_type}').hide();
-        $('.canvas-${report_type}').show();
-        $('.toggle-${report_type}').click( function () {
-            if ($(this).attr('checked')) {
-                $('.table-${report_type}').hide();
-                $('.canvas-${report_type}').show(); }
-            else {
-                $('.table-${report_type}').show();
-                $('.canvas-${report_type}').hide(); }
-            });
-        </script>
+        ${script_toggle_switch(report_type, loc_id)}
 
         </div>
 
@@ -163,14 +173,16 @@ report_type = 'churn_stats'
         data = report.data
         nodata = not any(row[1][0][1] and row[1][1][1] for row in report.data)
         ?>
+        <h3>Churn Rate</h3>
+
         <div py:if="nodata">No Data</div>
         <div py:if="not nodata">
 
         <div class="dontprint">
-        <label for="toggle-${report_type}-${loc_id}">Visualize</label>
-        <input type="checkbox" id="toggle-${report_type}-${loc_id}" class="toggle-${report_type}" checked="checked"/>
+        <a id="toggle-${report_type}-${loc_id}" class="toggle-${report_type} clicker ">Switch to Table view</a>
         </div>
 
+        <br/>
         <table id="table-${report_type}-${loc_id}" class="table-${report_type}">
         <caption>Churn Rate</caption>
         <tr>
@@ -186,18 +198,7 @@ report_type = 'churn_stats'
         </table>
         <img class="canvas-${report_type}" id="canvas-${report_type}-${loc_id}" src="/report_image/${report.draw_multiline_chart()}"/>
 
-        <script>
-        $('.table-${report_type}').hide();
-        $('.canvas-${report_type}').show();
-        $('.toggle-${report_type}').click( function () {
-            if ($(this).attr('checked')) {
-                $('.table-${report_type}').hide();
-                $('.canvas-${report_type}').show(); }
-            else {
-                $('.table-${report_type}').show();
-                $('.canvas-${report_type}').hide(); }
-            });
-        </script>
+        ${script_toggle_switch(report_type, loc_id)}
 
         </div>
 
@@ -226,17 +227,19 @@ report_type = 'usage_by_tariff'
         toggle_cls = "toggle-%s-%s" % (report_type, resource_type)
         toggle_id = toggle_cls + loc_id
         nodata = not bool(report.data)
+        title = "Usage By Tariff (%s)" % resource_type
         ?>
+        <h3>${title}</h3>
+
         <div py:if="nodata">No Data</div>
         <div py:if="not nodata">
 
         <div class="dontprint">
-        <label for="${toggle_id}">Visualize</label>
-        <input type="checkbox" id="${toggle_id}" class="${toggle_cls}" checked="checked"/>
+        <a id="${toggle_id}" class="${toggle_cls} clicker ">Switch to Table view</a>
         </div>
 
         <table id="${table_id}" class="${table_cls}">
-        <caption>${report.options['title']}</caption>
+        <caption>${title}</caption>
         <tr>
             <th></th>
             <th py:for="tick in report.options['axis']['x']['ticks']">${tick['label']}</th>
@@ -248,18 +251,8 @@ report_type = 'usage_by_tariff'
         </table>
 
         <img class="${canvas_cls}" id="${canvas_id}" src="/report_image/${report.draw_hsbars_chart()}" />
-        <script>
-        $('.${table_cls}').hide();
-        $('.${canvas_cls}').show();
-        $('.${toggle_cls}').click( function () {
-            if ($(this).attr('checked')) {
-                $('.${table_cls}').hide();
-                $('.${canvas_cls}').show(); }
-            else {
-                $('.${table_cls}').show();
-                $('.${canvas_cls}').hide(); }
-            });
-        </script>
+
+        ${script_toggle_switch(report_type + '-' + resource_type, loc_id)}
 
         </div>
         </td>

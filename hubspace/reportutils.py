@@ -49,7 +49,7 @@ class Report(object):
         options.update(self.options)
         return options
     def draw_pie_chart(self):
-        width, height = (500, 400)
+        width, height = (400, 400)
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
         chart_options = dict(legend=dict(hide=True))
         options = self.merge_options(chart_options)
@@ -265,6 +265,7 @@ class LocationStats(object):
                   tariff2: ..
                 }
         } 
+        usage: hours/quantity
         """
         tariff_ids = tuple(resource.id for resource in self.location.resources if resource.type == 'tariff')
         relevant_usages = tuple(ru for ru in self.usages if ru.resourceID not in tariff_ids)
@@ -277,7 +278,7 @@ class LocationStats(object):
         result = dict((r_type, dict((res, defaultdict(lambda: 0)) for res in type_resources_map[r_type])) for r_type in r_types)
         for ru in relevant_usages:
             quantity = isinstance(ru.duration_or_quantity, datetime.timedelta) and \
-                ((ru.duration_or_quantity.days * 24 * 60 * 60) + ru.duration_or_quantity.seconds) or ru.duration_or_quantity
+                (((ru.duration_or_quantity.days * 24 * 60 * 60) + ru.duration_or_quantity.seconds) / 60 *60) or ru.duration_or_quantity
             result[ru.resource.type][ru.resource.name][ru.tariffID] += quantity
         return result
 
