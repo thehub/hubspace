@@ -1187,14 +1187,14 @@ var Tabs = function () {
     var subsections = {'network': ['addMember', 'mainProfile', 'billing', 'fulltextsearch'],
                        'profile': ['mainProfile', 'billing'],
                        'space': ['booking'],
-                       'host': ['todos', 'invoicing', 'openTimes', 'admin', 'resources', 'managementdata']};
+                       'host': ['invoicing', 'openTimes', 'admin', 'resources', 'managementdata']};
     var subsection_defaults = {'network': 1,
                                'profile': 0,
                                'host': 0,
                                'space': 0};
     var data_expandors = {'network': {1: {}, 2: {}, 3: {}},
                           'profile': {0: {}, 1: {}},
-                          'host': {0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5:{}},
+                          'host': {0: {}, 1: {}, 2: {}, 3: {}, 4: {}},
                           'space': {0: {}}};
     var make_section_switch = false;
     var edited_subsection = 0;
@@ -1477,9 +1477,9 @@ var Tabs = function () {
                 o.addBoxExpanders();
                 set_billing_listeners();
             }
-            if (section_name === 'host' && subsection_name === 'todos') {
-                var todo = new Todos();
-            }
+            // if (section_name === 'host' && subsection_name === 'todos') {
+            //    var todo = new Todos();
+            // }
             if (section_name === 'host' && subsection_name === 'admin') {
                jq('#select_admin_location').change(load_admin);
 	       admin_listeners();
