@@ -188,7 +188,7 @@ user_columns = user_fields.values()
             </p>
 
             <a href="#" id="generate_report" class="small yellow nicebutton">View >> </a>
-            <!--
+            <!-- 
             <a href="#"  class="small yellow nicebutton">Download spreadsheet</a>
             <a href="#"  class="small yellow nicebutton">Email spreadsheet</a>
             -->
