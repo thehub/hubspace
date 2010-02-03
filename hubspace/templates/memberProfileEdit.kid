@@ -2,8 +2,9 @@
 from hubspace.utilities.uiutils import oddOrEven, print_error, get_freetext_metadata, selected_single
 from hubspace.utilities.dicts import AttrDict
 from hubspace.controllers import get_place, permission_or_owner, roles_grantable
-from hubspace.model import Location
+from hubspace.model import Location, User, Group
 from turbogears import identity
+import itertools as it
 
 oddness = oddOrEven()
 tg_errors = None
@@ -81,6 +82,28 @@ def role_selected(user, location, level):
        return {'checked':'checked'}
     return {}
 
+
+roles = ('member', 'host', 'director')
+add_role_perms = ['add_' + role + 's' for role in roles]
+
+def get_current_roles(user):
+    return dict((loc, tuple(g[1] for g in groups)) for loc, groups in it.groupby(sorted((g.place, g.level) for g in user.groups if g.place), lambda x: x[0]))
+
+def can_edit(editable_roles, location, role):
+    if location in editable_roles:
+        return ('add_' + role + 's') in editable_roles[location]
+    return False
+
+def current_role(current_roles, location, role):
+    if location in current_roles:
+        return role in current_roles[location]
+    return False
+
+def get_location_data(current_roles, editable_roles, location):
+    return dict((role, (current_role(current_roles, location, role), can_edit(editable_roles, location, role))) for role in roles)
+
+def get_roles_data(current_roles, editable_roles, locations):
+    return dict((location, get_location_data(current_roles, editable_roles, location)) for location in locations)
 ?>
 
 <div py:strip="True" xmlns:py="http://purl.org/kid/ns#">
@@ -206,20 +229,33 @@ def role_selected(user, location, level):
                      <td>
                          <table>
                             <tr><th>location</th><th>home hub</th><th>member</th><th>host</th><th>director</th></tr>
-                            <tr py:for="location in locations(object)">            
+<?python
+c_user = identity.current.user
+is_superuser = Group.by_group_name('superuser') and Group.by_group_name('superuser') in c_user.groups
+if is_superuser:
+    editable_roles = dict([(g.place, add_role_perms) for g in c_user.groups if g.place])
+else:
+    editable_roles = dict([(g.place, [p.permission_name for p in g.permissions if p.permission_name in add_role_perms]) for g in c_user.groups if g.place])
+current_roles = get_current_roles(object)
+all_locations = list(set(current_roles.keys() + editable_roles.keys()))
+roles_data = get_roles_data(current_roles, editable_roles, all_locations)
+?>
+                            <tr py:for="location in all_locations">
                                 <td>
-                                   ${location.name}
-                                   <div class="errorMessage" py:if="tg_errors">${print_error('groups', tg_errors)}</div>
-                                </td>  
-                                <td>
-                                <input type="radio" name="homeplace" value="${location.id}" py:attrs="current_home(location, object)" /><div class="errorMessage" py:if="tg_errors">${print_error('homeplace', tg_errors)}</div>
+                                    ${location.name}
+                                    <div class="errorMessage" py:if="tg_errors">${print_error('groups', tg_errors)}</div>
                                 </td>
-                                <td py:for="role in ['member', 'host', 'director']">
-                                     <input py:if="role in roles_grantable(location)" type="checkbox" name="groups.${location.id}.${role}" value="1" py:attrs="role_selected(object, location, role)" />
-                                     <span py:if="role not in roles_grantable(location)">
-                                         <c py:if="has_role(object, location, role)" py:strip="True">Yes</c>
-                                         <c py:if="not has_role(object, location, role)" py:strip="True"></c>
-                                     </span>
+                                <td>
+                                    <input type="radio" name="homeplace" value="${location.id}" py:attrs="current_home(location, object)" />
+                                    <div class="errorMessage" py:if="tg_errors">${print_error('homeplace', tg_errors)}</div>
+                                </td>
+                                <td py:for="role in roles">
+                                    <input py:if="roles_data[location][role][1]" type="checkbox" name="groups.${location.id}.${role}" 
+                                        value="1" py:attrs="roles_data[location][role][0] and {'checked':'checked'} or {}"/>
+                                    <span py:if="not roles_data[location][role][1]">
+                                        <c py:if="roles_data[location][role][0]" py:strip="True">Yes</c>
+                                        <c py:if="not roles_data[location][role][0]" py:strip="True"></c>
+                                    </span>
                                 </td>
                             </tr>
                          </table>
