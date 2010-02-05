@@ -17,7 +17,7 @@ user_columns = user_fields.values()
 	    <a class="title" id="link_adminStuff0"><h2>Download Usage summary</h2></a>
 	</div>
         <div class="dataBoxContent">
-            <form id="usage_summary">
+            <form id="usage_summary" action="/usage_report.csv" method="post">
             <div>
                 <span>Select Location</span>
                 <select name="place">
@@ -45,7 +45,7 @@ user_columns = user_fields.values()
         
              <div>
                  <br />
-                 <a href="#" class="small yellow nicebutton" id="usage_summary_csv" >Download spreadsheet</a>
+                 <input type="submit" class="small yellow nicebutton" value="Download spreadsheet"/>
              </div>
              </form>    
            </div>
@@ -57,7 +57,7 @@ user_columns = user_fields.values()
 	</div>
     <div class="dataBoxContent">
     
-     <form id="users_export">
+     <form id="users_export" action="/export_users.csv" method="post">
      <div>
          <span>Select Location</span>
          <select name="location">
@@ -83,8 +83,8 @@ user_columns = user_fields.values()
 
       <div>
           <br />
-          <a href="#" id="users_grid" class="small yellow nicebutton">View</a>
-          <a href="#" class="small yellow nicebutton" id="users_csv" >Download spreadsheet</a>
+          <input type="button" id="users_grid" class="small yellow nicebutton" value="View"/>
+          <input type="submit" class="small yellow nicebutton" value="Download spreadsheet"/>
       </div>
       </form>
 
