@@ -2,6 +2,10 @@ from turbogears import identity, redirect
 from hubspace.model import *
 from hubspace.utilities.object import create_object
 from sqlobject import AND, IN
+import itertools as it
+
+roles = ('member', 'host', 'director')
+add_role_perms = ['add_' + role + 's' for role in roles]
 
 ##################  Rights management  ##########
 
@@ -170,3 +174,21 @@ def addUser2Group(user=None, group=None, book=True):
         kwargs = {'user':user, 'group':group}
         create_object('UserGroup', **kwargs)
     return 'ok'
+
+def get_editable_roles(user):
+    """
+    -> {location1: [level1, level2,..], location2: ...}
+    """
+    c_user = identity.current.user
+    is_superuser = Group.by_group_name('superuser') and Group.by_group_name('superuser') in c_user.groups
+    if is_superuser:
+        editable_roles = dict([(location, add_role_perms) for location in Location.select()])
+    else:
+        editable_roles = dict([(g.place, [p.permission_name for p in g.permissions if p.permission_name in add_role_perms]) for g in c_user.groups if g.place])
+    return editable_roles
+
+def get_current_roles(user):
+    """
+    -> {Location1: [level1, level2, ..], location2:...}
+    """
+    return dict((loc, tuple(g[1] for g in groups)) for loc, groups in it.groupby(sorted((g.place, g.level) for g in user.groups if g.place), lambda x: x[0]))

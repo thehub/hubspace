@@ -4,9 +4,8 @@ from hubspace.utilities.dicts import AttrDict
 from hubspace.controllers import get_place, permission_or_owner, roles_grantable
 from hubspace.model import Location, User, Group
 from turbogears import identity
-import itertools as it
+from hubspace.utilities.permissions import roles, add_role_perms, get_editable_roles, get_current_roles
 
-oddness = oddOrEven()
 tg_errors = None
 
 def get_aliases(object):
@@ -25,6 +24,7 @@ def checked(user, attr):
     if getattr(user, attr):
         return {'checked':'checked'}
     return {}
+
 def alpha(a, b):
    if a.name > b.name:
       return 1
@@ -82,12 +82,6 @@ def role_selected(user, location, level):
        return {'checked':'checked'}
     return {}
 
-
-roles = ('member', 'host', 'director')
-add_role_perms = ['add_' + role + 's' for role in roles]
-
-def get_current_roles(user):
-    return dict((loc, tuple(g[1] for g in groups)) for loc, groups in it.groupby(sorted((g.place, g.level) for g in user.groups if g.place), lambda x: x[0]))
 
 def can_edit(editable_roles, location, role):
     if location in editable_roles:
@@ -230,17 +224,15 @@ def get_roles_data(current_roles, editable_roles, locations):
                          <table>
                             <tr><th>location</th><th>home hub</th><th>member</th><th>host</th><th>director</th></tr>
 <?python
-c_user = identity.current.user
-is_superuser = Group.by_group_name('superuser') and Group.by_group_name('superuser') in c_user.groups
-if is_superuser:
-    editable_roles = dict([(g.place, add_role_perms) for g in c_user.groups if g.place])
+editable_roles = get_editable_roles(object)
+if hasattr(object, 'groups'):
+    current_roles = get_current_roles(object)
 else:
-    editable_roles = dict([(g.place, [p.permission_name for p in g.permissions if p.permission_name in add_role_perms]) for g in c_user.groups if g.place])
-current_roles = get_current_roles(object)
-all_locations = list(set(current_roles.keys() + editable_roles.keys()))
-roles_data = get_roles_data(current_roles, editable_roles, all_locations)
+    current_roles = {}
+locations_relevant = sorted(set(current_roles.keys() + editable_roles.keys()), key=lambda loc: loc.name)
+roles_data = get_roles_data(current_roles, editable_roles, locations_relevant)
 ?>
-                            <tr py:for="location in all_locations">
+                            <tr py:for="location in locations_relevant">
                                 <td>
                                     ${location.name}
                                     <div class="errorMessage" py:if="tg_errors">${print_error('groups', tg_errors)}</div>
