@@ -3,6 +3,7 @@ from hubspace.model import *
 from hubspace.utilities.object import create_object
 from sqlobject import AND, IN
 import itertools as it
+import collections
 
 roles = ('member', 'host', 'director')
 add_role_perms = ['add_' + role + 's' for role in roles]
@@ -184,7 +185,13 @@ def get_editable_roles(user):
     if is_superuser:
         editable_roles = dict([(location, add_role_perms) for location in Location.select()])
     else:
-        editable_roles = dict([(g.place, [p.permission_name for p in g.permissions if p.permission_name in add_role_perms]) for g in c_user.groups if g.place])
+        editable_roles = collections.defaultdict(list)
+        for g in c_user.groups:
+            if g.place:
+                for g in c_user.groups:
+                    editable_roles[g.place].extend( [p.permission_name for p in g.permissions if p.permission_name in add_role_perms] )
+        for k,v in editable_roles.items():
+            editable_roles[k] = set(v)
     return editable_roles
 
 def get_current_roles(user):
