@@ -391,11 +391,13 @@ Page objects have a foreignkey into the location, which may be equal to None (as
     name = UnicodeCol(default="")
     title = UnicodeCol(default="")
     page_type = UnicodeCol(default="PublicSpace") #determines the template used, functions calculated for it (including lists)
-    location = ForeignKey('Location', default=None)
+    location = ForeignKey('Location',default=None)
     #locale = 'en'
     subtitle = UnicodeCol(default="")
     content = UnicodeCol(default="")
     image = ForeignKey('LocationFiles', default=None) # the id  of the LocationFile
+    lists = MultipleJoin('List',joinColumn='page_id')
+
     def _get_image_name(self):
          if self.image:
              return self.image.attr_name
@@ -417,6 +419,10 @@ listen(delete_object_reference, Page, RowDestroySignal)
 #    item = ForeignKey('MetaData', notNull=True, cascade=True)
 
 
+#Lists and Listitems: Lists belong to a location, and (optionally) to a page -
+#e.g. if its a list of subpages. For identifying the list one should use its
+#name, e.g. 'subpages' or 'spaces_list'
+
 class ListItem(SQLObject):
     """This is used for managing UI navigation lists. We can have multiple lists per location, which are diffentiated by a 'list_name'. Each list begins with the item where previous=None, and can be traversed through next and previous references. ListItems can be active or not, and will be displayed or not accordingly by the gui. 
     """
@@ -425,12 +431,25 @@ class ListItem(SQLObject):
     previous = SingleJoin("ListItem", joinColumn='next_id')
     location = ForeignKey("Location", default=None)
     object_ref = ForeignKey("ObjectReference", notNull=True, cascade=True)
+    list = ForeignKey("List")
+
     def _get_object(self):
         return self.object_ref.object
     def _get_meta_object(self):
         return MetaWrapper(self.object)
     active = IntCol(default=1)
 
+class List(SQLObject):
+    """This is an actual list. Lists are specific to location and a page"""
+    list_name = UnicodeCol()
+    location = ForeignKey("Location")
+    page = ForeignKey('Page') #so we might have 
+    mode = UnicodeCol()
+    object_types = UnicodeCol() # [Foo,Bar,Blub] serialized as "Foo,Bar,Blub"
+    listitems = MultipleJoin("ListItem",joinColumn='list_id')
+
+# Page <- List <- ListItem <- ObjectRef
+# show on each template the index.html lists    
 
 class PublicPlace(SQLObject):
     """This should be referenced by a ListItem or a page
@@ -652,6 +671,7 @@ class Location(SQLObject):
     vat_included = IntCol(default=1)
     rfid_enabled = IntCol(default=0)
     messages = PickleCol(default={}, length=2**16+1)
+
     def _get_messages(self):
         val = self._SO_get_messages()
         if not val:
@@ -662,6 +682,9 @@ class Location(SQLObject):
     homepage_title = UnicodeCol(default=u"")
     homepage_description = UnicodeCol(default=u"")
     holidays = PickleCol(default=[], length=2**16+1)
+    lists = MultipleJoin('List',joinColumn='location_id')
+
+
     def _get_holidays(self):
         val = self._SO_get_holidays()
         if not val:

@@ -103,7 +103,8 @@ from hubspace.file_store import get_filepath
 	</ul>
 </div>
   <ul id="left_tabs">
-    <li py:attrs="page.id==menu_item.object.id and {'class':'selected'} or {}" py:for="menu_item in lists('left_tabs')" py:if="menu_item.active"><a href="${relative_path}${menu_item.object.path_name}" id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a></li>
+    <li py:attrs="(page.id==menu_item.object.id or str(page.subpage_of)==str(menu_item.object.id)) and {'class':'selected'} or {}" py:for="menu_item in lists('left_tabs')" py:if="menu_item.active"><a href="${relative_path}${menu_item.object.path_name}" id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}
+    </a></li>
   </ul>
     <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_list_left"><a href="#">Edit Left Navigation</a></div>
     <?python
@@ -114,7 +115,17 @@ from hubspace.file_store import get_filepath
     <li py:attrs="page.id==menu_item.object.id and {'class':'selected right'} or {'class': 'right'}" py:for="menu_item in right_tabs" py:if="menu_item.active"><a href="${relative_path}${menu_item.object.path_name}"  id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a></li>
   </ul>
   <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_list_right"><a href="#">Edit Right Navigation</a></div>
+    <?python
+        subpageid = (page.subpage_of=='' or page.subpage==None) and 'subpages_%s' % page.id or 'subpages_%s' % page.subpage_of
+    ?>
+    <ul id='subpages_foo' style='clear:both' py:attrs="{'id':subpageid}">
+        <li py:for="subpage in lists(subpageid)" py:if="subpage.active" py:attrs="subpage.object.id==page.id and {'class':'selected'} or {}"><a href="${relative_path}${subpage.object.path_name}" id="Page-${subpage.object.id}-name">${subpage.object.name}</a></li>
+    </ul>
+    <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_subpages"><a href="#">Edit Subpages</a></div>
+
+
 </div>
+    
     <div id="content-highlight" class="container">
         <img py:if="not image_source_list" id="Page-${page.id}-image" src="${top_image_src}" alt="${page.image_name}" />   
         <img py:if="image_source_list" py:for="image_source in image_source_list" class="slideshow_image" id="${page.name}" src="${image_source}" />

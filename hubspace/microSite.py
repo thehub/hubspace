@@ -7,7 +7,7 @@ from hubspace.utilities.login import login_args, requestPassword, resetPassword
 from hubspace.utilities.dicts import AttrDict
 from hubspace.utilities.permissions import is_host, addUser2Group
 from hubspace.utilities.object import modify_attribute, obj_of_type
-from hubspace.model import Location, LocationMetaData, User, RUsage, Group, MicroSiteSpace, ObjectReference, ListItem, Page, MetaWrapper, PublicPlace
+from hubspace.model import Location, LocationMetaData, User, RUsage, Group, MicroSiteSpace, ObjectReference, ListItem, Page, MetaWrapper, PublicPlace, List
 from sqlobject import AND, SQLObjectNotFound, IN, LIKE, func
 import os, re, unicodedata, md5, random, sys, datetime, traceback, hmac as create_hmac
 from hashlib import sha1
@@ -26,6 +26,10 @@ import hubspace.sync.core as sync
 from urllib import quote, urlencode
 from urllib2 import urlopen, Request, build_opener, install_opener, HTTPCookieProcessor, HTTPRedirectHandler
 import cookielib
+
+
+import logging
+applogger = logging.getLogger("hubspace") 
 
 def place(obj):
     if isinstance(obj, Location):
@@ -84,6 +88,14 @@ def get_events(*args, **kwargs):
     if len(args) >=1:
         events.update(get_event(*args))
     return events
+
+def parseSubpageId(list_name):
+    if list_name.startswith('subpage'):
+        list_name,pageid=list_name.split('_')
+    else:
+        pageid = None
+    return (list_name,pageid)        
+
 
 
 standard_kw = ['microsite', 'page', 'location']
@@ -307,27 +319,66 @@ list_types = {'spaces_list': {'object_types':['PublicSpace'], 'mode':'add_new'},
               'people_list': {'object_types':['User'], 'mode':'add_existing'},
               'featured_list': {'object_types':['Location', 'User', 'Page'], 'mode':'add_existing'}
 }
+#jhb: idea could be to have the list_types in the database, (as per Tom), add a 'context' to them, eg. 
+#the page on which they should appear.
+
+
+def getList(list_name,location):
+    #list_name,pageid = parseSubpageId(list_name)
+    #if pageid:
+    #    lists = List.selectBy(list_name=list_name,location=location,page=pageid)
+    #else:        
+    #    lists = List.selectBy(list_name=list_name,location=location)
+    lists = List.selectBy(list_name=list_name,location=location)
+    if lists.count() == 1:
+        return lists[0]
+    else:
+        return None
 
 def last_item(list_name, location):
-    try:
-        return ListItem.select(AND(ListItem.q.nextID == None,
-                                   ListItem.q.list_name == list_name,
-                                   ListItem.q.locationID == location))[0]
-    except IndexError:
-        return None 
+    thelist = getList(list_name,location)
+    if thelist:
+        try:
+            return ListItem.select(AND(ListItem.q.nextID == None,
+                                   ListItem.q.listID == thelist))[0]
+        except IndexError:
+            return None
+    return None
+
+
+#    try:
+#        return ListItem.select(AND(ListItem.q.nextID == None,
+#                                   ListItem.q.list_name == list_name,
+#                                   ListItem.q.locationID == location))[0]
+#    except IndexError:
+#        return None 
 
 def append_existing_item(list_name, obj, **kwargs):
+    #import pdb; pdb.set_trace()
+    thelist = getList(list_name,kwargs['location'])
     old_last = last_item(list_name, kwargs['location'])
     object_ref = ObjectReference.select(AND(ObjectReference.q.object_type ==  obj.__class__.__name__, 
                                             ObjectReference.q.object_id == obj.id))[0]
-    new_last = ListItem(**{'list_name':list_name, 'location':kwargs['location'], 'active':kwargs['active'], 'object_ref':object_ref})
+    new_last = ListItem(**{'list_name':list_name, 'location':kwargs['location'], 'active':kwargs['active'], 'object_ref':object_ref,'list':thelist})
     if old_last:
         old_last.next = new_last
 
 def append_to_list(list_name, **kwargs):
+    #we could be adding to a subpages list. If foo.html gets a bar subpage, 
+    #the name needs to be foo__bar.html
+    #import pdb; pdb.set_trace()
+    
     if kwargs['object_type'] == Page.__name__:
+        path_name = kwargs['name']
+        subpage_of=None
+        if list_name.startswith('subpages_'):
+            thelist = getList(list_name,kwargs['location'])
+            page = thelist.page
+            pagenamebase = page.path_name.split('.html')[0]
+            path_name = pagenamebase+'__'+kwargs['name']
+            subpage_of = list_name.split('subpages_')[1]
         page_type = kwargs.get('page_type', 'standard')
-        new_obj = kwargs['site_types'][page_type].create_page(kwargs['name'], kwargs['location'])
+        new_obj = kwargs['site_types'][page_type].create_page(kwargs['name'], kwargs['location'],path_name=path_name,subpage_of=subpage_of)
     else:
         object_type = getattr(model, kwargs['object_type'])
         new_obj = object_type(**{'name': kwargs['name']})
@@ -346,11 +397,14 @@ class PageType(object):
         else:
             self.default_vals = {}
  
-    def create_page(self, page_name, location, initial_vals=None):
+    def create_page(self, page_name, location, initial_vals=None,path_name=None,subpage_of=None):
+        #import pdb; pdb.set_trace()
+        if not path_name:
+            path_name=page_name
+
         if self.static:
-            path_name = page_name + '.html'
-        else:
-            path_name = page_name
+            path_name = path_name + '.html'
+        
         attr_vals = dict(**self.default_vals)
         if initial_vals:
             attr_vals.update(initial_vals)
@@ -359,7 +413,17 @@ class PageType(object):
                        'name': page_name,
                        'path_name': path_name,
                        'location': location})
+        #pages can have subpages
+        List(list_name='subpages_%s' % page.id,
+             object_types='Page',
+             mode='add_new',
+             page=page,
+             location=page.location)
         page_wrapper = MetaWrapper(page)
+        
+        if subpage_of:
+            attr_vals['subpage_of'] = subpage_of
+
         for attr, val in attr_vals.items():
             if not getattr(page_wrapper, attr):
                 setattr(page_wrapper, attr, val)
@@ -531,18 +595,39 @@ class SiteList(controllers.Controller):
         super(SiteList, self).__init__()
         self.site = site
 
-    def get_list(self, list_name):
+    def get_list(self, list_name, page=None):
         """This should return a list of objects which can be rendered by the appropriate templates
         e.g. in the case of spaces this should return a list of objects with the attributes 'name', 'description' and 'image'
         e.g.2. in the case of the site tabs, this should return a list of site_page 'objects' with the relavant metadate fields as attributes
         """
-        return {'list_items':self.iterator(list_name), 'list_name':list_name, 'list_types':list_types[list_name]['object_types'], 'list_mode':list_types[list_name]['mode']}
+        #if page:
+        #    lists = List.selectBy(location=self.site.location,list_name=list_name,page=page)
+        #else:
+        #    lists = List.selectBy(location=self.site.location,list_name=list_name)
+        lists = List.selectBy(location=self.site.location,list_name=list_name)
+        if lists.count() == 1:
+            thelist = lists[0]
+            return {'list_items':self.iterator(list_name), 'list_name':list_name, 'list_types':thelist.object_types.split(','), 'list_mode':thelist.mode}
+        #return {'list_items':self.iterator(list_name), 'list_name':list_name, 'list_types':list_types[list_name]['object_types'], 'list_mode':list_types[list_name]['mode']}
 
     @expose(template='hubspace.templates.listEditor', fragment=True)
     def render_as_table(self, list_name):
+        relative_path = relative_folder(self.site.site_url)
+        #list_name,pageid = parseSubpageId(list_name)
+        #import pdb; pdb.set_trace()
+        #hack
+        #if pageid :
+        #    page = Page.get(pageid)
+        #    template_args = self.get_list(list_name,page)
+        #    #relative_path =  relative_path[3:] #remove the first ../           
+        #    template_args.update({'pageid':pageid})
+        #else:
+        #    template_args = self.get_list(list_name)
+        #    template_args.update({'pageid':None})
         template_args = self.get_list(list_name)
         template_args.update({'page_types':[type[0] for type in self.site.site_types.iteritems() if type[1].can_be_tab]})
-        template_args.update({'relative_path': relative_folder(self.site.site_url)})
+        template_args.update({'relative_path': relative_path})
+        #template_args.update({'orig_name':orig_name})
         return template_args
 
     @expose()
@@ -578,10 +663,12 @@ class SiteList(controllers.Controller):
         return last_item(list_name, self.site.location)
 
     def first(self, list_name):
-        for item in ListItem.select(AND(ListItem.q.locationID == self.site.location,
-                                        ListItem.q.list_name == list_name)):
-            if item.previous == None:
-               return item
+        lists = List.selectBy(list_name=list_name,location=self.site.location)
+        if lists.count() == 1:
+            thelist = lists[0]
+            for item in ListItem.selectBy(list=thelist):
+                if item.previous == None:
+                   return item
         #below doesn't work because .previous doesn't exist where it isn't referenced by another "Space" with .next()
         #try:
         #    return MicroSiteSpace.select(AND(MicroSiteSpace.q.previous == None,
@@ -599,9 +686,10 @@ class SiteList(controllers.Controller):
 
 
     @expose()
-    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'object_id':v.Int(), 'active':v.Int(if_empty=0)})
+    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'object_id':v.Int(), 'active':v.Int(if_empty=0),'pageid':v.Int(if_missing=1)})
     def append_existing(self, list_name, **kwargs):
-	if not is_host(identity.current.user, Location.get(self.site.location)):
+        #import pdb; pdb.set_trace()
+        if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
         kwargs['location'] = self.site.location
         kwargs['site_types'] = self.site.site_types
@@ -613,9 +701,10 @@ class SiteList(controllers.Controller):
         return self.render_as_table(list_name)
 
     @expose()
-    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'page_type':v.UnicodeString(), 'name':v.UnicodeString(), 'active':v.Int(if_empty=0)})
+    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'page_type':v.UnicodeString(), 'name':v.UnicodeString(), 'active':v.Int(if_empty=0),'pageid':v.Int(if_missing=1)})
     def append(self, list_name, **kwargs):
-	if not is_host(identity.current.user, Location.get(self.site.location)):
+        #import pdb; pdb.set_trace()
+        if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
         kwargs['location'] = self.site.location
         kwargs['site_types'] = self.site.site_types
@@ -625,7 +714,7 @@ class SiteList(controllers.Controller):
     @expose()
     @validate(validators={'list_name':v.UnicodeString(), 'item_id':v.Int(if_empty=None)})
     def remove(self, list_name, item_id):
-	if not is_host(identity.current.user, Location.get(self.site.location)):
+        if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
         item = ListItem.get(item_id)
         if item.previous:
@@ -633,6 +722,13 @@ class SiteList(controllers.Controller):
                 item.previous.next = item.next
             else:
                 item.previous.next = None
+        #pages have subpages - lets destroy them first               
+        if item.object.__class__ == Page:
+            for list in item.object.lists:
+                for item in list.listitems:
+                    item.object.destroySelf()
+                    item.destroySelf()
+                list.destroySelf()
         item.object.destroySelf()
         item.destroySelf()
         return self.render_as_table(list_name)
@@ -640,7 +736,7 @@ class SiteList(controllers.Controller):
     @expose()
     @validate(validators={'list_name':v.UnicodeString(), 'item_id':v.Int(if_empty=None)})
     def remove_existing(self, list_name, item_id):
-	if not is_host(identity.current.user, Location.get(self.site.location)):
+        if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
         item = ListItem.get(item_id)
         if item.previous:
@@ -655,7 +751,7 @@ class SiteList(controllers.Controller):
     @expose()
     @validate(validators={'list_name':v.UnicodeString(), 'object_id':v.UnicodeString(), 'active':v.Int(if_empty=0)})
     def toggle_active(self, list_name, object_id,  active=0):
-	if not is_host(identity.current.user, Location.get(self.site.location)):
+        if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
         item = ListItem.get(object_id)
         item.active = active
@@ -808,8 +904,9 @@ class MicroSite(controllers.Controller):
     def _cpOnError(self):
         try:
             raise # http://www.cherrypy.org/wiki/ErrorsAndExceptions#a2.2
-        except Exception, err:
-            if isinstance(err, IndexError): # construct_args throws IndexError if the page requested does not exists
+        #except Exception, err:
+        except:
+            if 0 and isinstance(err, IndexError): # construct_args throws IndexError if the page requested does not exists
                 cherrypy.response.status = 404
                 cherrypy.response.body = "404"
             else:
@@ -827,7 +924,7 @@ class MicroSite(controllers.Controller):
                 else:
                     cherrypy.response.status = 200
                 e_info = sys.exc_info()
-                e_id = str(datetime.now())
+                e_id = str(datetime.datetime.now())
                 e_path = cherrypy.request.path
                 _v = lambda v: str(v)[:20]
                 e_params = dict([(k, _v(v)) for (k, v) in cherrypy.request.paramMap.items()])
@@ -893,13 +990,19 @@ class MicroSite(controllers.Controller):
         return template_args
 
     @expose()
+    def jhb(self, *args, **kwargs):
+        raise 'foo2'
+        return 'foo bar'
+
+    @expose()
     def default(self, *args, **kwargs):
         """This needs securing a little bit
         """
+        #import pdb; pdb.set_trace()
         if kwargs.get('tg_errors', None):
              return str(kwargs['tg_errors'])
         if cherrypy.request.path.split('/')[-1] == self.site_dir.split('/')[-1]:
-	    redirect(cherrypy.request.path + '/')
+             redirect(cherrypy.request.path + '/')
 
         if not args or args[0]=='':
             path_name = 'index.html'

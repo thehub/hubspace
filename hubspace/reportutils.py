@@ -33,7 +33,7 @@ def do_report_maintainance():
             applogger.warn("reportutils: Error removing file: %s" % f)
     global get_all_usages
     get_all_usages = AllUsages()
-    get_all_usages.update()
+    #get_all_usages.update()
 
 class Report(object):
     """

@@ -1605,6 +1605,10 @@ class Root(controllers.RootController):
     sites = Sites()
     rpc = RPC()
 
+    @expose()
+    def test123(self):
+        return pp
+
     @expose("hubspace.templates.managementReport")
     def generate_report(self, locations, report_types, period=None, start=None, end=None,format="web"):
         if not isinstance(locations, list): locations = [locations]
@@ -1748,6 +1752,7 @@ class Root(controllers.RootController):
         # For all other errors we should call syncer rollback here.
         # And finally if there is no error, we send transaction complete signal to syncer. Which is
         # handled by TransactionCompleter filter.
+        #import pdb; pdb.set_trace()
         if config.get('server.testing', False):
             cherrypy.response.status = 500
         else:

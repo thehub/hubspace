@@ -8,7 +8,7 @@ name_map = name_attribute({'User' : 'display_name'})
 ?>
 <div xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#">
   <form id="${list_name}_form" action="${relative_path}lists/${list_mode=='add_existing' and 'append' or 'append_existing'}/${list_name}" method="Post">
-    <table class="draglist" id="${list_name}_table" >
+    <table class="draglist" id="${list_name}_table">
         <tr>
            <th><a id="close_${list_name}"  href="#">close</a></th>
            <th>Name</th>
@@ -17,6 +17,7 @@ name_map = name_attribute({'User' : 'display_name'})
            <th>Active</th>
            <th>Delete</th>
         </tr>
+
         <tr id="${list_name}-${item.id}" class="active" py:for="item in list_items" >
            <td><img src="/static/images/drag.png" /></td>
            <td>${getattr(item.object, name_map[item.object_ref.object_type])}</td>
