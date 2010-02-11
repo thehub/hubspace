@@ -94,7 +94,7 @@ def lang():
         <p>
         ${invoice.user.display_name}<br/>
         Membership No. ${invoice.user.id} <br/>
-        </p>
+
         <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address)} </c>
         <address py:if="not invoice.user.bill_to_profile">
             <c py:for="line in invoice.user.billingaddress.split('\n')">${line}<br/></c>
@@ -102,13 +102,15 @@ def lang():
 
         <c py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"> Company No. ${invoice.user.bill_company_no} </c>
         <c py:if="invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><br/>VAT ${invoice.user.bill_vat_no}</c>
-        <br/>
+        <c py:if="invoice.user.billto"><br/>${invoice.user.billto.display_name}</c>
+        <c py:if="invoice.user.billto and invoice.user.billto.bill_vat_no"><br/><c>VAT</c> ${invoice.user.billto.bill_vat_no}</c>
+        </p>
     </td>
     <td width="50%">
     </td>
     <td>
         <strong>Invoice details</strong>
-        <table>
+        <table cellpadding="2">
         <tr>
             <td width="20%">Number</td>
             <td width="80%">${invoice.number}</td>
