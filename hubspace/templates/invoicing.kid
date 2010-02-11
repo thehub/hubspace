@@ -25,6 +25,18 @@ from turbogears import identity
           <span>which finished on or before&nbsp;&nbsp;&nbsp;</span> 
           <a id="display_search_from_date"  class="date_select">${dateconverter.from_python(now(identity.current.user.homeplace))} <img src="/static/images/booking_down.png" /></a>
           <input id="search_from_date" class="invisible_input" name="search_from_date" type="text" value="${dateconverter.from_python(now(identity.current.user.homeplace))}"/>
+            <script type="text/javascript">
+              var show_calender = function() {
+                  var date_input = jq('#search_from_date');
+                  var date_trigger = jq('#display_search_from_date');
+                  date_input.datepicker({onSelect:function(datetext){jq('#display_search_from_date').html(datetext);}});
+                  date_trigger.click(function() {  
+                      date_input.datepicker('show');
+                      date_input.blur();
+                  });
+              };
+              show_calender();
+            </script>
 
       </div>
       <div>

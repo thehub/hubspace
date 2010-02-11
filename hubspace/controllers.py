@@ -1544,7 +1544,7 @@ def expose_as_csv(f):
     def wrap(*args, **kw):
         rows = f(*args, **kw)
         out = StringIO.StringIO()
-        writer = csv.writer(out, lineterminator='\n') #quoting=csv.QUOTE_ALL
+        writer = csv.writer(out, lineterminator='\n', quoting=csv.QUOTE_ALL)
         writer.writerows(rows)
         cherrypy.response.headerMap["Content-Type"] = "text/csv"
         cherrypy.response.headerMap["Content-Length"] = out.len
