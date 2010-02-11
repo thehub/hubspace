@@ -1,1 +1,11 @@
-logs directory
+access.log: All requests
+------------------------
+
+hubspace.log: Application messages
+----------------------------------
+>>> import logging
+>>> applogger = logging.getLogger("hubspace")
+>>> 
+>>> applogger.warn("this is a warning")
+>>> applogger.info("success")
+>>> applogger.error("ops")

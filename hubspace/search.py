@@ -12,8 +12,8 @@ applogger = logging.getLogger("hubspace")
 
 indexdir = "indexdir"
 props = ['id', 'user_name', 'display_name', 'description', 'organisation', 'biz_type']
-schema = Schema(id=ID(stored=True), user_name=ID(stored=True, unique=True), display_name=TEXT(stored=True), description=TEXT(), organisation=TEXT(stored=True), biz_type=TEXT(stored=True))
-mparser = MultifieldParser(["display_name", "user_name", "organisation", "id"], schema=schema)
+schema = Schema(id=ID(stored=True, unique=True), user_name=TEXT(stored=True), display_name=TEXT(stored=True), description=TEXT(), organisation=TEXT(stored=True), biz_type=TEXT(stored=True))
+mparser = MultifieldParser(["display_name", "user_name", "organisation", "id", "description"], schema=schema)
 
 def user2dict(user):
     d = dict([(prop, unicode(getattr(user, prop, None))) for prop in props])
