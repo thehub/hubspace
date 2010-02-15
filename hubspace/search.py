@@ -22,7 +22,6 @@ def user2dict(user):
 
 def populate():
     print "Populating whoosh..."
-    writer = ix.writer()
     for user in model.User.select():
         writer.add_document(**user2dict(user))
     writer.delete_by_term("user_name", "webapi")
@@ -36,7 +35,6 @@ def do_search(qry_text):
     return [AttrDict(item) for item in searcher.search(qry, sortedby="display_name")]
 
 def add(user):
-    writer = ix.writer()
     try:
         writer.add_document(**user2dict(user))
         writer.commit()
@@ -45,10 +43,16 @@ def add(user):
         return False
     return True
 
-update = add
+def update(user):
+    try:
+        writer.update_document(**user2dict(user))
+        writer.commit()
+    except Exception, err:
+        applogger.exception("search: updating user '%s' failed: " % user.username)
+        return False
+    return True
 
 def remove(user_name):
-    writeg = ix.writer()
     writer.delete_by_term("user_name", user_name)
     return True
 
@@ -63,6 +67,7 @@ if not os.path.exists(indexdir):
     populate()
 else:
     ix = open_dir(indexdir)
+writer = ix.writer()
 
 if __name__ == '__main__':
     def test():
