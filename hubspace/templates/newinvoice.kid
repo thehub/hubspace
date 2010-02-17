@@ -90,20 +90,23 @@ def lang():
 <table border="0" align="center" width="100%">
 <tr>
     <td align="left" width="25%">
-        <strong>${invoice.user.bill_to_profile and invoice.user.organisation or invoice.user.bill_to_company}</strong>
+        <br/>
         <p>
-        ${invoice.user.display_name}<br/>
+        <strong> ${invoice.user.display_name}<br/> </strong>
         Membership No. ${invoice.user.id} <br/>
+        </p>
+        <p>
+        <strong py:strip="True">${invoice.user.bill_to_profile and invoice.user.organisation or invoice.user.bill_to_company}<br/></strong>
+        <strong py:strip="True" py:if="invoice.user.billto">${invoice.user.billto.display_name}<br/></strong>
 
         <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address)} </c>
-        <address py:if="not invoice.user.bill_to_profile">
+        <address py:if="not invoice.user.bill_to_profile" py:strip="True">
             <c py:for="line in invoice.user.billingaddress.split('\n')">${line}<br/></c>
         </address>
 
-        <c py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"> Company No. ${invoice.user.bill_company_no} </c>
-        <c py:if="invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><br/>VAT ${invoice.user.bill_vat_no}</c>
-        <c py:if="invoice.user.billto"><br/>${invoice.user.billto.display_name}</c>
-        <c py:if="invoice.user.billto and invoice.user.billto.bill_vat_no"><br/><c>VAT</c> ${invoice.user.billto.bill_vat_no}</c>
+        <c py:strip="True" py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"><c>Company No. </c>${invoice.user.bill_company_no}<br/></c>
+        <c py:strip="True" py:if="invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><c>VAT</c> ${invoice.user.bill_vat_no}</c>
+        <c py:strip="True" py:if="invoice.user.billto and invoice.user.billto.bill_vat_no"><br/><c>VAT</c> ${invoice.user.billto.bill_vat_no}</c>
         </p>
     </td>
     <td width="50%">
