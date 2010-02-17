@@ -49,6 +49,16 @@ def main():
     os.symlink(staic_target, static_link)
     print "Static link: %s -> %s" % (static_link, staic_target)
 
+    
+    def add_sync_filters():
+        import hubspace.sync.core
+        cherrypy.root._cp_filters.extend(hubspace.sync.core._cp_filters)
+
+    import hubspace.search
+
+    turbogears.startup.call_on_startup.append(add_sync_filters)
+    turbogears.startup.call_on_shutdown.append(hubspace.search.stop)
+
     from hubspace.controllers import Root
     turbogears.start_server(Root())
 

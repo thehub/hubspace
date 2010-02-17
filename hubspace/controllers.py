@@ -46,6 +46,7 @@ from hubspace.utilities.dicts import AttrDict
 from hubspace.utilities.image_preview import create_image_preview
 from hubspace.utilities.static_files import hubspace_compile
 from hubspace.utilities.uiutils import c2s, inv_currency, unsent_for_user, get_multiselected, set_multiselected, set_freetext_metadata, get_freetext_metadata, set_singleselected, get_singleselected, now
+from hubspace.utilities.permissions import user_locations, addUser2Group, get_current_roles, get_editable_roles
 from hubspace.utilities.permissions import user_locations, addUser2Group
 from hubspace.utilities.users import filter_members
 from hubspace.tariff import get_tariff
@@ -296,8 +297,8 @@ def setup():
 if not model.User.select().count():
     setup()
 
-sync.setupLDAPSync()
-
+sync.setupSync()
+#sync.setupHubPlusSync()
 ################## TurboLucene ##################
 
 def make_document(user):
@@ -1538,6 +1539,20 @@ from hubspace.utilities.i18n import get_hubspace_locale, get_location_from_base_
 from hubspace.microSite import Sites
 ##################  Root  ####################
 
+def syncer_expose(f):
+    @expose(format="json")
+    @identity.require(identity.has_permission('superuser'))
+    def wrap(*args, **kw):
+        try:
+            res = f(*args, **kw)
+            ret = dict(error=None, result=res)
+        except Exception, err:
+            applogger.exception("syncer_expose: ")
+            ret = dict(error=str(err), result=None)
+        return ret
+    return wrap
+
+
 def expose_as_csv(f):
     @expose()
     @strongly_expire
@@ -1735,8 +1750,6 @@ class Root(controllers.RootController):
             except:
                 pass
         return "done"
-
-    _cp_filters = sync._cp_filters
 
     def _cpOnError(self):
         """log the error and give the user a trac page to submit the bug
@@ -2208,7 +2221,8 @@ Exception:
                 group = new_group(place=location.id, level=level, display_name=location.name+" "+level, group_name=location.name.lower() + "_" + level)
                 access_policy = add_accessPolicy2Proxy(cal, group.id, 'Group', 5, None, None)
                 create_default_open_times(access_policy)
-	        locations = location.select() 
+
+        locations = location.select()
         if locations.count() == 1:
             super_users = User.select(AND(Group.q.group_name == 'superuser',
                                           UserGroup.q.groupID == Group.q.id,
@@ -3062,10 +3076,6 @@ Exception:
             user.modified = datetime.now()
             clear_cache('profiles', location)
 
-        groups = {}
-        if 'groups' in kwargs:
-            groups = kwargs['groups']
-
         for alias_name in kwargs.get('new_alias'):
             if alias_name: create_object('Alias', user = id, alias_name=alias_name)
             
@@ -3077,35 +3087,41 @@ Exception:
                     if len(al.alias_name)==0:
                         al.destroySelf()
                 
-        
+        groups = {}
+        if 'groups' in kwargs:
+            groups = kwargs['groups']
+
+        std_roles = ('member', 'host', 'director')
         locations = user_locations(user, ['member', 'host', 'director'])
         for location_id in groups:
             locations.append(Location.get(location_id))
 
-        for location in locations:
-            if str(location.id) not in groups: 
-                groups[str(location.id)] = {}
-   
-        for location in locations:
-            for role in roles_grantable(location):
-                group = Group.selectBy(level=role, place=location)[0]
-                if role in groups[str(location.id)]:
+        editable_roles = get_editable_roles(user)
+        current_roles = get_current_roles(user)
+
+        for location, roles in editable_roles.items():
+            loc_current_roles = set(current_roles.get(location, []))
+            new_roles = str(location.id) in groups and set(role for role in groups[str(location.id)]) or set()
+            if not set(new_roles) == set(roles): # somehing chnaged
+                roles_2_grant = new_roles.difference(loc_current_roles)
+                roles_2_revoke = loc_current_roles.difference(new_roles)
+                for role in roles_2_grant:
+                    group = Group.selectBy(level=role, place=location)[0]
                     self.addUser2Group(user, group)
-                elif role not in groups[str(location.id)] and group in user.groups:
-                    user_group = UserGroup.select(AND(UserGroup.q.userID==user.id,
-                                                      UserGroup.q.groupID==group.id))
+                for role in roles_2_revoke:
+                    user_group = UserGroup.select(AND(UserGroup.q.userID==user.id, UserGroup.q.groupID==group.id))
                     for membership in user_group:
                         membership.destroySelf()
 
-        if home_group and 'homeplace' in changed_attrs:        
+        if home_group and 'homeplace' in changed_attrs:
             self.addUser2Group(user, home_group)
                   
         cherrypy.response.headers['X-JSON'] = 'success'
-        return {'object':user} 
+        return {'object':user}
 
 
     def error_template(self, widget_name, dict):
-        return try_render(dict, template='hubspace.templates.'+str(widget_name), format='xhtml', headers={'content-type':'text/html'}, fragment=True)   
+        return try_render(dict, template='hubspace.templates.'+str(widget_name), format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
 
     @expose(template="hubspace.templates.relationshipStatus")
@@ -3546,6 +3562,7 @@ The Hub Team
    
         if '_'in kwargs:
             del kwargs['_']
+      	
         return self.application()
 
 
@@ -3704,6 +3721,49 @@ The Hub Team
             clear_cache('profiles', location)
         cherrypy.response.headers['X-JSON'] = 'success'
         return str(user.id)
+
+    @syncer_expose
+    @validate(validators={'id':real_int})
+    def onuseradd(self, id):
+        user = User.get(id)
+        if user.active: send_welcome_mail(user, None)
+        hubspace.search.add(user)
+        if user.public_field: clear_cache('profiles', user.homeplace)
+        return True
+
+    @syncer_expose
+    @validate(validators={'id':real_int})
+    def onusermod(self, id):
+        user = User.get(id)
+        hubspace.search.add(user)
+        if user.public_field: clear_cache('profiles', user.homeplace)
+        return True
+
+    @syncer_expose
+    @validate(validators={'id':real_int})
+    def onlocationadd(self, id):
+        location = Location.get(id)
+        self.create_tariff(active=1, place=location.id, name="Guest Membership "+ location.name, description="", tariff_cost=0, default=True)
+
+        #create a dummy resource called calendar which will be used for access_policies to arbitrate access to the calendar
+        
+        cal = create_object('Resource', type='calendar', time_based=1, active=0, place=location.id, name='calendar', description='calendar', )
+        location.calendar = cal
+
+        for group in location.groups:
+            if group.level in ['member', 'host', 'director']:
+                access_policy = add_accessPolicy2Proxy(cal, group.id, 'Group', 5, None, None)
+                create_default_open_times(access_policy)
+        return True
+
+    @syncer_expose
+    @validate(validators={'id':real_int})
+    def onlocationrename(self, new_name, old_name):
+        location = Location.selectBy(name=new_name)[0]
+        get_locale_name = lambda name: name.lower().replace(' ', '')
+        for locale_path in glob('locales/*_'+get_locale_name(old_name)):
+            os.rename(locale_path, os.path.join(os.path.dirname(locale_path), os.path.basename(locale_path).split('_')[0] + '_' + get_locale_name(new_name)))
+        return True
 
     @expose()
     @strongly_expire

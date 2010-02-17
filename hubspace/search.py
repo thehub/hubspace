@@ -39,7 +39,7 @@ def add(user):
         writer.add_document(**user2dict(user))
         writer.commit()
     except Exception, err:
-        applogger.exception("indexing user '%s' failed: " % user.username)
+        applogger.exception("indexing user '%s' failed: " % user.user_name)
         return False
     return True
 
@@ -48,12 +48,13 @@ def update(user):
         writer.update_document(**user2dict(user))
         writer.commit()
     except Exception, err:
-        applogger.exception("search: updating user '%s' failed: " % user.username)
+        applogger.exception("search: updating user '%s' failed: " % user.user_name)
         return False
     return True
 
 def remove(user_name):
     writer.delete_by_term("user_name", user_name)
+    writer.commit()
     return True
 
 def sync():
@@ -67,7 +68,15 @@ if not os.path.exists(indexdir):
     populate()
 else:
     ix = open_dir(indexdir)
+
 writer = ix.writer()
+
+def stop():
+    global writer
+    del writer # required?
+    ix.close()
+    ix.unlock()
+    print "search shutdown"
 
 if __name__ == '__main__':
     def test():
