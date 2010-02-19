@@ -73,6 +73,7 @@ from hubspace.file_store import get_filepath
     <link href="/static/images/favicon.ico" type="image/x-icon" rel="Shortcut icon"/>
 </head>
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()"  class="yui-skin-sam">
+<div id="hsheader">
 <div style="visibility:hidden;" id="location_id" class="${location.id}"></div>
 <div style="visibility:hidden;" id="page_id" class="${page.id}"></div>
 <div style="visibility:hidden;" id="page_path_name" class="${page.path_name}"></div>
@@ -125,7 +126,8 @@ from hubspace.file_store import get_filepath
 
 
 </div>
-    
+</div>
+<div id="hscontent">
     <div id="content-highlight" class="container">
         <img py:if="not image_source_list" id="Page-${page.id}-image" src="${top_image_src}" alt="${page.image_name}" />   
         <img py:if="image_source_list" py:for="image_source in image_source_list" class="slideshow_image" id="${page.name}" src="${image_source}" />
@@ -133,7 +135,8 @@ from hubspace.file_store import get_filepath
     <div id="content-main" class="container">
          <div py:replace="item[:]"/>
     </div>
- 
+</div>
+<div id="hsfooter">
 <div class="container" id="footer">
     <div py:for="menu_item in list(lists('left_tabs'))[1:]" py:if="menu_item.active" class="span-3"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
     <div py:for="menu_item in lists('right_tabs')" py:if="menu_item.active" class="span-3"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
@@ -146,6 +149,7 @@ from hubspace.file_store import get_filepath
     </div>
   </div>
 </div>
+<!--
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -155,7 +159,8 @@ try {
 var pageTracker = _gat._getTracker("UA-9039567-1");
 pageTracker._setDomainName(".the-hub.net");
 pageTracker._trackPageview();
-} catch(err) {}</script>
+} catch(err) {}</script>-->
 <script py:if="page.page_type in ['home', 'contact']" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAiA7tLHdzZr8yhGAEbo5FGxS_srkAJTD0j5T3EF3o06M_52NTAhQM2w0ugG9dZdoyPl3s9RqydGrzpQ" type="text/javascript"></script>
+</div>
 </body>
 </html>

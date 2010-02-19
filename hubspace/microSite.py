@@ -127,12 +127,25 @@ class HTTPRedirectClient(HTTPRedirectHandler):
 forwarded_request_headers = ['If-None-Match']
 forwarded_response_headers = ['Etag', 'Last-Modified', 'X-Pingback', 'Cache-Control', 'Pragma', 'Expires']
 
+class MediaContent(Exception):
+    def __init__(self, response):
+        self.response = response
+
+class AjaxContent(Exception):
+    def __init__(self, html):
+        self.html = html
+
+
+
+
 def get_blog(*args, **kwargs):
+    #import pdb; pdb.set_trace()
     blog_url = kwargs['page'].blog_url.strip()
     args = list(args)
     args.insert(0, blog_url)
     url = '/'.join(args)
-    url += '/'
+    if not (url.endswith('/') or '.' in args[-1]):
+        url += '/'
     kw_args = dict((key.replace('+', '-'), val) for key, val in kwargs.iteritems() if key not in standard_kw)
     post_data = None
     if kw_args:
@@ -154,14 +167,18 @@ def get_blog(*args, **kwargs):
             headers[header] = cherrypy.request.headers[header]
     try:
         if post_data:
-            blog = Request(url, post_data, headers)
+            blog = Request(url, data=post_data, headers=headers)
         else:
             blog = Request(url, headers=headers)
         blog_handle = urlopen(blog)
     except RedirectToClient, e:
         redirect(e.url.replace(blog_url, cherrypy.request.base + '/public/' + kwargs['page'].path_name))
     except IOError, e:
-        if hasattr(e, 'reason'):
+        errorbody = e.read()
+        if '<body id="error-page">' in errorbody:
+            blog_body = "There was an error with wp. Short version: it sucks"
+            blog_head = ""
+        elif hasattr(e, 'reason'):
             blog_body = "Could not get blog from: " +  url + " because " + e.reason
             blog_head = ""
         elif hasattr(e, 'code'):
@@ -176,7 +193,9 @@ def get_blog(*args, **kwargs):
     else:
         content_type = blog_handle.headers.type
         if content_type not in ['text/html', 'text/xhtml']:
-            raise redirect(url)
+            raise MediaContent(blog_handle)
+
+        #import pdb; pdb.set_trace()
         blog = blog_handle.read()
 
         #replace any links to the blog_url current address
@@ -185,7 +204,8 @@ def get_blog(*args, **kwargs):
         
         blog = BeautifulSoup(blog)
         #blog = bs_preprocess(blog)
-        for input in blog.body.findAll('input', attrs={'name':re.compile('.*\-.*')}):
+        #for input in blog.body.findAll('input', attrs={'name':re.compile('.*\-.*')}):
+        for input in blog.findAll('input', attrs={'name':re.compile('.*\-.*')}):
             input['name'] = input['name'].replace('-', '+') #hack around the awkwardness of submitting names with '-' from FormEncode
 
         #change back anything ending in .js .css .png .gif, .jpg .swf
@@ -196,17 +216,19 @@ def get_blog(*args, **kwargs):
         for link in blog.findAll('script', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
             link['src'] = link['src'].replace(our_url, blog_url)
 
-	for header in blog.body.findAll('div', attrs={'id':'header'}):
-	     header.extract()
+    if blog.body:
+        for header in blog.body.findAll('div', attrs={'id':'header'}):
+             header.extract()
         for css in blog.head.findAll('link', attrs={'href':re.compile('.*standalone\.css')}):
-             css.extract()
+            css.extract()
         blog_head = blog.head.renderContents()
         blog_body = blog.body.renderContents()
 
         for header in forwarded_response_headers:
             if blog_handle.headers.get(header, 0):
                 cherrypy.response.headers[header] = blog_handle.headers[header]
-    
+    else:
+           raise AjaxContent(blog.renderContents())
 
     return {'blog': blog_body, 'blog_head': blog_head}
 
@@ -474,6 +496,7 @@ microsite_page_types =  {
     'requestPassword':request_password_type,
     'resetPassword':reset_password_type,
     'standard': PageType('standard', 'hubspace.templates.microSiteStandard', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
+    'blog2': PageType('blog2', 'hubspace.templates.microSiteBlog2', static=False),
 }
 
 
@@ -716,22 +739,27 @@ class SiteList(controllers.Controller):
     def remove(self, list_name, item_id):
         if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
+        
+        self._remove(list_name,item_id)
+        return self.render_as_table(list_name)           
+
+    def _remove(self,list_name,item_id): #XXX is this secured against web attacks?
         item = ListItem.get(item_id)
         if item.previous:
             if item.next:
                 item.previous.next = item.next
             else:
                 item.previous.next = None
-        #pages have subpages - lets destroy them first               
+        #pages have subpages - lets destroy them first, which could have subpages...               
         if item.object.__class__ == Page:
-            for list in item.object.lists:
-                for item in list.listitems:
-                    item.object.destroySelf()
-                    item.destroySelf()
-                list.destroySelf()
+            for sublist in item.object.lists:
+                for subitem in sublist.listitems:
+                    self._remove(sublist.list_name,subitem.id)
+                    #item.object.destroySelf()
+                    #item.destroySelf()
+                sublist.destroySelf()
         item.object.destroySelf()
         item.destroySelf()
-        return self.render_as_table(list_name)
 
     @expose()
     @validate(validators={'list_name':v.UnicodeString(), 'item_id':v.Int(if_empty=None)})
@@ -904,46 +932,51 @@ class MicroSite(controllers.Controller):
     def _cpOnError(self):
         try:
             raise # http://www.cherrypy.org/wiki/ErrorsAndExceptions#a2.2
+        #use this for getting 404s...
         #except Exception, err:
-        except:
-            if 0 and isinstance(err, IndexError): # construct_args throws IndexError if the page requested does not exists
-                cherrypy.response.status = 404
-                cherrypy.response.body = "404"
+        #    if isinstance(err, IndexError):
+
+        #...or this for getting logging                
+        #except:
+        #    if 0: 
+        except IndexError,err:
+            cherrypy.response.status = 404
+            cherrypy.response.body = "404"
+        except Exception,err:
+            """log the error and give the user a trac page to submit the bug
+            We should give the error a UID so that we can find the error associated more easily
+            """
+            # If syncer transaction fails the syncer daemon takes care of rolling back the changes also
+            # syncerclient then raises SyncerError effectively stops TG transaction from commiting
+            # changes to native database.
+            # For all other errors we should call syncer rollback here.
+            # And finally if there is no error, we send transaction complete signal to syncer. Which is
+            # handled by TransactionCompleter filter.
+            if config.get('server.testing', False):
+                cherrypy.response.status = 500
             else:
-                """log the error and give the user a trac page to submit the bug
-                We should give the error a UID so that we can find the error associated more easily
-                """
-                # If syncer transaction fails the syncer daemon takes care of rolling back the changes also
-                # syncerclient then raises SyncerError effectively stops TG transaction from commiting
-                # changes to native database.
-                # For all other errors we should call syncer rollback here.
-                # And finally if there is no error, we send transaction complete signal to syncer. Which is
-                # handled by TransactionCompleter filter.
-                if config.get('server.testing', False):
-                    cherrypy.response.status = 500
-                else:
-                    cherrypy.response.status = 200
-                e_info = sys.exc_info()
-                e_id = str(datetime.datetime.now())
-                e_path = cherrypy.request.path
-                _v = lambda v: str(v)[:20]
-                e_params = dict([(k, _v(v)) for (k, v) in cherrypy.request.paramMap.items()])
-                e_hdr = cherrypy.request.headerMap
-                applogger.error("%(e_id)s: Path:%(e_path)s" % locals())
-                applogger.error("%(e_id)s: Params:%(e_params)s" % locals())
-                applogger.exception("%(e_id)s:" % locals())
-                if isinstance(e_info[1], sync.SyncerError):
-                    applogger.error("%(e_id)s: LDAP sync error" % locals())
-                else:
-                    sync.sendRollbackSignal()
-                tb = sys.exc_info()[2]
-                e_str = traceback.format_exc(tb)
-                if isinstance(e_info[1], hubspace.errors.ErrorWithHint):
-                    e_hint = e_info[1].hint
-                else:
-                    e_hint = ""
-                d = dict(e_id=e_id, e_path=e_path, e_str=e_str, e_hint=e_hint)
-                cherrypy.response.body = try_render(d, template='hubspace.templates.issue', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
+                cherrypy.response.status = 200
+            e_info = sys.exc_info()
+            e_id = str(datetime.datetime.now())
+            e_path = cherrypy.request.path
+            _v = lambda v: str(v)[:20]
+            e_params = dict([(k, _v(v)) for (k, v) in cherrypy.request.paramMap.items()])
+            e_hdr = cherrypy.request.headerMap
+            applogger.error("%(e_id)s: Path:%(e_path)s" % locals())
+            applogger.error("%(e_id)s: Params:%(e_params)s" % locals())
+            applogger.exception("%(e_id)s:" % locals())
+            if isinstance(e_info[1], sync.SyncerError):
+                applogger.error("%(e_id)s: LDAP sync error" % locals())
+            else:
+                sync.sendRollbackSignal()
+            tb = sys.exc_info()[2]
+            e_str = traceback.format_exc(tb)
+            if isinstance(e_info[1], hubspace.errors.ErrorWithHint):
+                e_hint = e_info[1].hint
+            else:
+                e_hint = ""
+            d = dict(e_id=e_id, e_path=e_path, e_str=e_str, e_hint=e_hint)
+            cherrypy.response.body = try_render(d, template='hubspace.templates.issue', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
     def attr_changed(self, property, page_name):
         if property in ('name', 'subtitle'):
@@ -1001,6 +1034,7 @@ class MicroSite(controllers.Controller):
         #import pdb; pdb.set_trace()
         if kwargs.get('tg_errors', None):
              return str(kwargs['tg_errors'])
+
         if cherrypy.request.path.split('/')[-1] == self.site_dir.split('/')[-1]:
              redirect(cherrypy.request.path + '/')
 
@@ -1013,8 +1047,33 @@ class MicroSite(controllers.Controller):
         if not self.initialized:
             self.regenerate_all()
             self.initialized = True
+        try:
+            return self.render_page(path_name, *args, **kwargs)
+        except MediaContent, e:
+            cherrypy.response.headers['Content-Type'] = e.response.headers['Content-Type']
+            cherrypy.response.headers['Content-Length'] = e.response.headers['Content-Length']
+            return e.response.read()
+        except AjaxContent, e:
+            return e.html
+
+    @expose()
+    def blog_media_content(*args,**kwargs):
+        path_name = args[0]
+        subpath = '/'.join(args[1:])
+
+        try:
+            page = MetaWrapper(Page.select(AND(Page.q.location==self.location, Page.q.path_name==page_name))[0])
+        except (KeyError, IndexError):
+            page = MetaWrapper(Page.select(AND(Page.q.location==self.location, Page.q.path_name==page_name + '.html'))[0])
         
-        return self.render_page(path_name, *args, **kwargs)
+        if not page.page_type == 'blog': #should always be the case (in normal use)
+            raise 'shit'
+        if subpath.endswith('/'):
+            subpath = subpath[:-1]
+            
+                
+
+            
 
     def render_page(self, path_name, *args, **kwargs):
         path_name = path_name.split('#')[0]

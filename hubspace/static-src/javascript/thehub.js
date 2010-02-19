@@ -123,7 +123,10 @@ jq(document).ready(function () {
             var list_name = jq(this).prev().attr('id');
             jq(this).after('<div id="'+ list_name + '_overlay"></div>');
             var load_area = jq(this).next();
+            //debugger;
             load_area.load(relative_url + 'lists/render_as_table/' + list_name, function () {activate(list_name, jq(this))});
+            //load_area.load('http://baach.de/static/hello.html');
+            return false;
     };
 
     //entry point for editing lists
@@ -252,7 +255,8 @@ jq(document).ready(function () {
     }
     
     var activate = function (list_name, load_area) {
-        activate_list(list_name);
+        //debugger;
+        activate_list(list_name); // see list-editor.js
         //autocomplete the object_id field from a search on a different property which is a string
         var object_type = jq('#object_type option:selected').val();
         var autocomplete_property = jq('.find_' + object_type).attr('id');
@@ -267,6 +271,7 @@ jq(document).ready(function () {
             jq('div#'+ list_name + '_overlay').remove();
             //this_list.one('click', list_manage);
             window.location.reload();
+            return false;
         });
 
         var options = {'action': function (ele) {
