@@ -13,7 +13,7 @@ for k,v in (
     ("active", dict (label = "Active", value = "active")),
     ("display_name", dict (label = "Name", value = "display_name", checked = "checked")),
     ("homeplace_name", dict (label = "Location", value = "homeplace_name", checked = "checked")),
-    ("tariff_name", dict (label = "Tariff", value = "tariff_name", checked = "checked")),
+    ("tariff_name", dict (label = "Tariff", value = "tariff_name")),
     ("email_address", dict (label = "Email", value = "email_address", checked = "checked")),
     ("organisation", dict (label = "Organisation", value = "organisation")),
     ("address", dict (label = "Address", value = "address")),
@@ -22,6 +22,7 @@ for k,v in (
     ("fax", dict (label = "Fax", value = "fax")),
     ("skype_id", dict (label = "Skype ID", value = "skype_id")),
     ("website", dict (label = "Website", value = "website")),
+    ("public_field", dict (label = "Public Profile", value = "public_field", field_type = "bool")),
     ):
     fields[k] = v
 

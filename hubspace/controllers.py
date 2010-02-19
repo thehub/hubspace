@@ -1721,7 +1721,13 @@ class Root(controllers.RootController):
                 block = select.orderBy(DESC(getattr(model.User.q, sortname)))[start:end]
             else:
                 block = select.orderBy(sortname)[start:end]
-        return total, [[getattr(u, k) for k in user_fields if k in fields] for u in block]
+        def format_value(user, field):
+            is_bool_type = user_fields[field].get('field_type') == 'bool'
+            value = getattr(user, field)
+            if is_bool_type:
+                return value and _('Yes') or _('No')
+            return value
+        return total, [[format_value(user, field) for field in user_fields if field in fields] for user in block]
 
     @expose_as_csv
     @validate(validators=ExportUsersCSVSchema)
