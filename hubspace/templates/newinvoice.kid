@@ -96,8 +96,11 @@ def lang():
         Membership No. ${invoice.user.id} <br/>
         </p>
         <p>
-        <strong py:strip="True">${invoice.user.bill_to_profile and invoice.user.organisation or invoice.user.bill_to_company}<br/></strong>
-        <strong py:strip="True" py:if="invoice.user.billto">${invoice.user.billto.display_name}<br/></strong>
+        <?python
+        company_name = invoice.user.bill_to_profile and invoice.user.organisation or invoice.user.bill_to_company or invoice.user.billto.display_name
+        if company_name == invoice.user.display_name: company_name = ""
+        ?>
+        <strong> ${company_name} <br/> </strong>
 
         <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address)} </c>
         <address py:if="not invoice.user.bill_to_profile" py:strip="True">
@@ -105,7 +108,7 @@ def lang():
         </address>
 
         <c py:strip="True" py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"><c>Company No. </c>${invoice.user.bill_company_no}<br/></c>
-        <c py:strip="True" py:if="invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><c>VAT</c> ${invoice.user.bill_vat_no}</c>
+        <c py:strip="True" py:if="not invoice.user.billto and invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><c>VAT</c> ${invoice.user.bill_vat_no}</c>
         <c py:strip="True" py:if="invoice.user.billto and invoice.user.billto.bill_vat_no"><br/><c>VAT</c> ${invoice.user.billto.bill_vat_no}</c>
         </p>
     </td>
