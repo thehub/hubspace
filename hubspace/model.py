@@ -132,7 +132,8 @@ class User(SQLObject):
     user_name = UnicodeCol(length=40, 
                            alternateID=True,
                            alternateMethodName="by_user_name")
-    username = UnicodeCol(length=40)
+    def _get_username(self):
+        return self.user_name
     email_address = UnicodeCol(length=255, 
                               alternateID=True,
                               alternateMethodName="by_email_address")
