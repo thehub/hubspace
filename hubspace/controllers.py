@@ -3098,7 +3098,7 @@ Exception:
             groups = kwargs['groups']
 
         std_roles = ('member', 'host', 'director')
-        locations = user_locations(user, ['member', 'host', 'director'])
+        locations = user_locations(user, std_roles)
         for location_id in groups:
             locations.append(Location.get(location_id))
 
@@ -3115,6 +3115,7 @@ Exception:
                     group = Group.selectBy(level=role, place=location)[0]
                     self.addUser2Group(user, group)
                 for role in roles_2_revoke:
+                    group = Group.selectBy(level=role, place=location)[0]
                     user_group = UserGroup.select(AND(UserGroup.q.userID==user.id, UserGroup.q.groupID==group.id))
                     for membership in user_group:
                         membership.destroySelf()
