@@ -11,9 +11,18 @@ from hubspace.model import Location, Page
 from sqlobject import AND
 from hubspace.active import location_links
 from hubspace.file_store import get_filepath
+
+def pn(thepage):
+    if thepage.page_type=='blog2':
+        return thepage.path_name+'/'
+    else:
+        return thepage.path_name
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">
+    
+    <!-- sidebar headers -->
+
     <?python
     title = Page.select(AND(Page.q.path_name=='index.html', Page.q.locationID==location.id))[0].title
     ?>
@@ -71,6 +80,7 @@ from hubspace.file_store import get_filepath
     </c>
     <script src="/static/javascript/thehub.js" type="text/javascript" charset="utf-8"></script>
     <link href="/static/images/favicon.ico" type="image/x-icon" rel="Shortcut icon"/>
+
 </head>
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()"  class="yui-skin-sam">
 <div id="hsheader">
@@ -104,7 +114,7 @@ from hubspace.file_store import get_filepath
 	</ul>
 </div>
   <ul id="left_tabs">
-    <li py:attrs="(page.id==menu_item.object.id or str(page.subpage_of)==str(menu_item.object.id)) and {'class':'selected'} or {}" py:for="menu_item in lists('left_tabs')" py:if="menu_item.active"><a href="${relative_path}${menu_item.object.path_name}" id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}
+    <li py:attrs="(page.id==menu_item.object.id or str(page.subpage_of)==str(menu_item.object.id)) and {'class':'selected'} or {}" py:for="menu_item in lists('left_tabs')" py:if="menu_item.active"><a href="${relative_path}${pn(menu_item.object)}" id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}
     </a></li>
   </ul>
     <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_list_left"><a href="#">Edit Left Navigation</a></div>
@@ -113,17 +123,18 @@ from hubspace.file_store import get_filepath
        right_tabs.reverse()
     ?>
   <ul id="right_tabs">
-    <li py:attrs="page.id==menu_item.object.id and {'class':'selected right'} or {'class': 'right'}" py:for="menu_item in right_tabs" py:if="menu_item.active"><a href="${relative_path}${menu_item.object.path_name}"  id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a></li>
+    <li py:attrs="page.id==menu_item.object.id and {'class':'selected right'} or {'class': 'right'}" py:for="menu_item in right_tabs" py:if="menu_item.active"><a href="${relative_path}${pn(menu_item.object)}"  id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a></li>
   </ul>
   <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_list_right"><a href="#">Edit Right Navigation</a></div>
     <?python
         subpageid = (page.subpage_of=='' or page.subpage==None) and 'subpages_%s' % page.id or 'subpages_%s' % page.subpage_of
     ?>
+  <ul py:if="not page.page_type.startswith('blog')" >
     <ul id='subpages_foo' style='clear:both' py:attrs="{'id':subpageid}">
-        <li py:for="subpage in lists(subpageid)" py:if="subpage.active" py:attrs="subpage.object.id==page.id and {'class':'selected'} or {}"><a href="${relative_path}${subpage.object.path_name}" id="Page-${subpage.object.id}-name">${subpage.object.name}</a></li>
+        <li py:for="subpage in lists(subpageid)" py:if="subpage.active" py:attrs="subpage.object.id==page.id and {'class':'selected'} or {}"><a href="${relative_path}${pn(subpage.object)}" id="Page-${subpage.object.id}-name">${subpage.object.name}</a></li>
     </ul>
     <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_subpages"><a href="#">Edit Subpages</a></div>
-
+  </ul>
 
 </div>
 </div>
@@ -134,6 +145,9 @@ from hubspace.file_store import get_filepath
     </div>
     <div id="content-main" class="container">
          <div py:replace="item[:]"/>
+         <div id='sidebar'>
+         <!-- sidebar content -->
+         </div>
     </div>
 </div>
 <div id="hsfooter">
@@ -144,7 +158,7 @@ from hubspace.file_store import get_filepath
     <span class="footer-menu-desc">Spread the Hub!</span>
     <div id="add-this-widget">
     <!-- AddThis Button BEGIN -->
-    <a href="http://www.addthis.com/bookmark.php" onmouseover="return addthis_open(this, '', '[URL]', '[TITLE]')" onmouseout="addthis_close()" onclick="return addthis_sendto()"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
+    <!--<a href="http://www.addthis.com/bookmark.php" onmouseover="return addthis_open(this, '', '[URL]', '[TITLE]')" onmouseout="addthis_close()" onclick="return addthis_sendto()"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>-->
     <!-- AddThis Button END -->
     </div>
   </div>

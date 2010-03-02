@@ -22,12 +22,14 @@ model = hubspace.model
 from hubspace.utilities.cache import strongly_expire
 import hubspace.sync.core as sync
 
-
+from turbogears import database
+import urlparse
 from urllib import quote, urlencode
 from urllib2 import urlopen, Request, build_opener, install_opener, HTTPCookieProcessor, HTTPRedirectHandler
 import cookielib
 
-
+import vobject
+import patches
 import logging
 applogger = logging.getLogger("hubspace") 
 
@@ -140,11 +142,13 @@ class AjaxContent(Exception):
 
 def get_blog(*args, **kwargs):
     #import pdb; pdb.set_trace()
-    blog_url = kwargs['page'].blog_url.strip()
+    thispage = kwargs['page']
+    blog_url = thispage.blog_url.strip()
     args = list(args)
     args.insert(0, blog_url)
     url = '/'.join(args)
-    if not (url.endswith('/') or '.' in args[-1]):
+    #add a / if its not a .jpg or if its just the domain name
+    if not url.endswith('/') and (not '.' in args[-1] or url.count('/') <3):
         url += '/'
     kw_args = dict((key.replace('+', '-'), val) for key, val in kwargs.iteritems() if key not in standard_kw)
     post_data = None
@@ -176,7 +180,7 @@ def get_blog(*args, **kwargs):
     except IOError, e:
         errorbody = e.read()
         if '<body id="error-page">' in errorbody:
-            blog_body = "There was an error with wp. Short version: it sucks"
+            blog_body = "There was an error with wp"
             blog_head = ""
         elif hasattr(e, 'reason'):
             blog_body = "Could not get blog from: " +  url + " because " + e.reason
@@ -189,7 +193,6 @@ def get_blog(*args, **kwargs):
 	blog_body = ""
 	blog_head = ""
         return {'blog': blog_body, 'blog_head': blog_head}
-
     else:
         content_type = blog_handle.headers.type
         if content_type not in ['text/html', 'text/xhtml']:
@@ -209,28 +212,111 @@ def get_blog(*args, **kwargs):
             input['name'] = input['name'].replace('-', '+') #hack around the awkwardness of submitting names with '-' from FormEncode
 
         #change back anything ending in .js .css .png .gif, .jpg .swf
-        for link in blog.findAll('link', attrs={'href':re.compile('.*' + re.escape(our_url) + '.*')}):
-            link['href'] = link['href'].replace(our_url, blog_url)
-        for link in blog.findAll('img', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
-            link['src'] = link['src'].replace(our_url, blog_url)
-        for link in blog.findAll('script', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
-            link['src'] = link['src'].replace(our_url, blog_url)
-
-    if blog.body:
+        #for link in blog.findAll('link', attrs={'href':re.compile('.*' + re.escape(our_url) + '.*')}):
+        #    link['href'] = link['href'].replace(our_url, blog_url)
+        #for link in blog.findAll('img', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
+        #    link['src'] = link['src'].replace(our_url, blog_url)
+        #for link in blog.findAll('script', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
+        #    link['src'] = link['src'].replace(our_url, blog_url)
+    if hasattr(blog,'body') and blog.body:
+        #import pdb; pdb.set_trace()
         for header in blog.body.findAll('div', attrs={'id':'header'}):
-             header.extract()
+            header.extract()
         for css in blog.head.findAll('link', attrs={'href':re.compile('.*standalone\.css')}):
             css.extract()
+        #for script in blog.findAll('script',attrs={'src':re.compile('.*' + re.escape(blog_url) + '.*jquery\.js.*')}):
+        #    script.extract()
+        
+        for script in blog.findAll('script',attrs={'src':re.compile('jquery\.js')}):
+            script.extract()
+            
+        for script in blog.findAll('script',attrs={'src':re.compile('functions\.js')}):
+            script.extract()
+
+        for script in blog.findAll('script',attrs={'src':re.compile('jquery\.validate\.js')}):
+            script.extract()
+
+
+
+        sidebartext=''        
+        #the sidebar get injected via deliverance
+        for sidebar in blog.findAll('div',id='sidebar'):
+            sidebartext = sidebar.renderContents().replace('text_small','text_real_small')
+            sidebar.extract()
+        
+        for wphead in blog.findAll('div',id='wphead'):
+            wphead.extract()
+            pass
+
         blog_head = blog.head.renderContents()
-        blog_body = blog.body.renderContents()
-
-        for header in forwarded_response_headers:
-            if blog_handle.headers.get(header, 0):
-                cherrypy.response.headers[header] = blog_handle.headers[header]
+        found =  blog.findAll(id='content')
+        
+        #if possible grep the content div
+        if blog.findAll('div',id='content') and iswpadminurl(url):
+            blog_body = blog.findAll('div',id='content')[0].renderContents()
+        else: 
+            blog_body = blog.body.renderContents()
+        
+        #for header in forwarded_response_headers:
+        #    if blog_handle.headers.get(header, 0):
+        #        cherrypy.response.headers[header] = blog_handle.headers[header]
     else:
-           raise AjaxContent(blog.renderContents())
+        raise AjaxContent(blog.renderContents())
+           
+    #blog_body = ''
+    #blog_head = ''
+    return {'blog': blog_body, 'blog_head': blog_head,'sidebartext':sidebartext}
 
-    return {'blog': blog_body, 'blog_head': blog_head}
+
+def sitesearch(*args,**kwargs):
+        #title, description, url
+        s = str(kwargs.get('s',''))
+        s = s.lower().strip()
+        page = kwargs['page']        
+        location = page.location
+        searchresults = []
+        if s:
+            access_tuple = patches.utils.parseDBAccessDirective()
+            con = patches.utils.getPostgreSQLConnection(*access_tuple)
+            cur = con.cursor()
+            sql = """select distinct page.id from page left join object_reference on  page.id=object_reference.object_id left join meta_data on object_reference.id=meta_data.object_ref_id where page.location_id=%s and object_reference.object_type='Page' and (lower(page.content) like '%%' || %s || '%%' or lower(meta_data.attr_value) like '%%' || %s || '%%')"""
+            #XXX no sql injections please!!!!
+            id = str(page.location.id)
+            cur.execute(sql,(id,s,s,))
+            result = [r[0] for r in cur.fetchall()]            
+            for id in result:
+                page=Page.get(id)
+                title = page.name and page.name or page.title
+                url = cherrypy.request.base + '/public/' + page.path_name 
+                description = re.sub(r'<[^>]*>','',page.content)[:100]
+                searchresults.append(dict(url=url,title=title,description=description))
+            blogs = Page.selectBy(location=page.location.id,page_type='blog2').orderBy('id')
+            if blogs.count() > 0:
+                blog = blogs[0]
+                blog = MetaWrapper(blog)
+                search_url = blog.blog_url.strip()
+                if not search_url.endswith('/'):
+                    search_url += '/'
+                search_url += "?s=%s" % s
+                blogresult = urlopen(search_url).read()
+                blogsoup = BeautifulSoup(blogresult)
+                for d in blogsoup.findAll("div", { "class" : re.compile('hentry') }):
+                    title = d.h3.a.string
+                    url = d.h3.a['href']
+                    parts = urlparse.urlsplit(url)
+                    url = cherrypy.request.base + '/public/' + blog.path_name + parts[2]
+                    description = re.sub(r'<[^>]*>','',d.find('div', { "class" : "entry-content" }).p.string)
+                    searchresults.append(dict(url=url,title=title,description=description))
+        return dict(searchresults=searchresults,
+                    s=s)
+ 
+
+
+def iswpadminurl(url):
+    if 'wp-admin'  in url or 'wp-login' in url:
+        return True
+    else: 
+        return False
 
 def get_event(*args):
     return {'event': RUsage.get(args[0])}
@@ -496,8 +582,10 @@ microsite_page_types =  {
     'requestPassword':request_password_type,
     'resetPassword':reset_password_type,
     'standard': PageType('standard', 'hubspace.templates.microSiteStandard', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
-    'blog2': PageType('blog2', 'hubspace.templates.microSiteBlog2', static=False),
-}
+    'blog2': PageType('blog2', 'hubspace.templates.microSiteBlog2', get_blog, static=False),
+    'plain': PageType('plain', 'hubspace.templates.microSitePlain', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
+    'search': PageType('search', 'hubspace.templates.microSiteSearch', sitesearch, static=False),
+    }
 
 
 #these are added to the database when a microsite is created
@@ -1020,18 +1108,60 @@ class MicroSite(controllers.Controller):
         template_args.update(args_dict)
         location = MetaWrapper(Location.get(self.location))
         template_args.update({'page':page, 'location':location, 'site_url': self.site_url})
+
         return template_args
+
+    def get_sidebar(self,location,page):
+        blogs = Page.selectBy(location=location,page_type='blog2').orderBy('id')
+        if blogs.count() > 0:
+            sidebarblog = blogs[0]
+            sidebarblog = MetaWrapper(sidebarblog)
+            parts =  get_blog(location=location,page=sidebarblog,microsite=self)
+            out = dict(blog_head=parts['blog_head'],blog=parts['sidebartext'])
+        else:
+            out = dict(blog_head='',blog='')
+        return out            
+
 
     @expose()
     def jhb(self, *args, **kwargs):
         raise 'foo2'
         return 'foo bar'
 
+        
+  
+    @expose()
+    def icalfeed_ics(self,eventid=None,*args,**kwargs):
+        #import pdb; pdb.set_trace()
+        location = Location.get(self.location)
+        if eventid:
+            events = [RUsage.get(eventid)]
+        else:            
+            events = get_local_future_events(location=self.location, no_of_events=1000)['future_events']
+        cal = vobject.iCalendar()
+        cal.add('X-WR-CALNAME').value = "%s (%s) events" % (location.name,location.city)
+        cal.add('X-WR-TIMEZONE').value = location.timezone
+        length = 0
+        for event in events:
+            length += 1
+            ve = cal.add('vevent')
+            ve.add('summary').value = event.meeting_name
+            ve.add('description').value = event.meeting_description
+            ve.add('dtstart').value = event.start
+            ve.add('dtend').value = event.end_time
+            url = cherrypy.request.base + '/public/events/' + str(event.id)
+            ve.add('uid').value = url
+            ve.add('url').value = url
+
+        cherrypy.response.headers['Content-Type'] = 'text/calendar'
+        cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="icalfeed.ics"'
+        
+        return cal.serialize()            
+
     @expose()
     def default(self, *args, **kwargs):
         """This needs securing a little bit
         """
-        #import pdb; pdb.set_trace()
         if kwargs.get('tg_errors', None):
              return str(kwargs['tg_errors'])
 
@@ -1048,7 +1178,15 @@ class MicroSite(controllers.Controller):
             self.regenerate_all()
             self.initialized = True
         try:
-            return self.render_page(path_name, *args, **kwargs)
+            html =  self.render_page(path_name, *args, **kwargs)
+            
+            #page = Page.select(AND(Page.q.location==self.location, 
+            #                       Page.q.path_name==path_name))[0]
+            #sidebar_content = self.get_sidebar(location=self.location, page=page)
+            #html = html.replace('<!-- sidebar headers -->',sidebar_content['blog_head'])
+            #html = html.replace('<!-- sidebar content -->',sidebar_content['blog'])
+            return html
+
         except MediaContent, e:
             cherrypy.response.headers['Content-Type'] = e.response.headers['Content-Type']
             cherrypy.response.headers['Content-Length'] = e.response.headers['Content-Length']
@@ -1076,6 +1214,7 @@ class MicroSite(controllers.Controller):
             
 
     def render_page(self, path_name, *args, **kwargs):
+        #import pdb; pdb.set_trace()
         path_name = path_name.split('#')[0]
         template_args = self.construct_args(path_name, *args, **kwargs)
         loc_id = template_args['location'].id
@@ -1088,8 +1227,8 @@ class MicroSite(controllers.Controller):
     	try:
             page = Page.select(AND(Page.q.location==self.location, 
                                    Page.q.path_name==path_name))[0]       
-	    template = self.site_types[page.page_type].template
-	except IndexError:
+            template = self.site_types[page.page_type].template
+        except IndexError:
             try:
                 page = Page.select(AND(Page.q.location==self.location, 
                                        Page.q.path_name==path_name + '.html'))[0]
@@ -1097,6 +1236,8 @@ class MicroSite(controllers.Controller):
             except:
                 template = 'hubspace.templates.microSiteHome'
                 page = None
+        
+         
         out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
         #write the output to the static page
         if self.site_types[Page.select(AND(IN(Page.q.path_name, [path_name, path_name + '.html']),
