@@ -178,20 +178,21 @@ def addUser2Group(user=None, group=None, book=True):
 
 def get_editable_roles(user):
     """
-    -> {location1: [level1, level2,..], location2: ...}
+    -> {location1: set([level1, level2,..]), location2: ...}
     """
     c_user = identity.current.user
     is_superuser = Group.by_group_name('superuser') and Group.by_group_name('superuser') in c_user.groups
     if is_superuser:
-        editable_roles = dict([(location, add_role_perms) for location in Location.select()])
+        editable_roles = dict([(location, set(roles)) for location in Location.select() if location.name != 'hubPlus'])
     else:
         editable_roles = collections.defaultdict(list)
         for g in c_user.groups:
             if g.place:
                 for g in c_user.groups:
-                    editable_roles[g.place].extend( [p.permission_name for p in g.permissions if p.permission_name in add_role_perms] )
+                    editable_roles[g.place].extend( [p.permission_name[4:-1] for p in g.permissions if p.permission_name in add_role_perms] )
         for k,v in editable_roles.items():
             editable_roles[k] = set(v)
+        editable_roles.setdefault(user.homeplace, set())
     return editable_roles
 
 def get_current_roles(user):

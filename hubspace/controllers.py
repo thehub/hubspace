@@ -3103,24 +3103,26 @@ Exception:
         editable_roles = get_editable_roles(user)
         current_roles = get_current_roles(user)
 
-        for location, roles in editable_roles.items():
+        for location, loc_editable_roles in editable_roles.items():
             loc_current_roles = set(current_roles.get(location, []))
-            new_roles = str(location.id) in groups and set(role for role in groups[str(location.id)]) or set()
-            if not set(new_roles) == set(roles): # somehing chnaged
-                roles_2_grant = new_roles.difference(loc_current_roles)
-                roles_2_revoke = loc_current_roles.difference(new_roles)
+            loc_new_roles = str(location.id) in groups and set(role for role in groups[str(location.id)]) or set()
+            if not set(loc_new_roles) == set(loc_current_roles): # somehing changed
+                roles_2_grant = loc_editable_roles.intersection(loc_new_roles.difference(loc_current_roles))
+                roles_2_revoke = loc_editable_roles.intersection(loc_current_roles.difference(loc_new_roles))
                 for role in roles_2_grant:
                     group = Group.selectBy(level=role, place=location)[0]
                     self.addUser2Group(user, group)
                 if roles_2_grant:
-                    applogger.info("Roles: Granted roles %s to %s by (%s)" % (roles_2_grant, user.username, identity.current.user.username))
+                    applogger.info("Roles: Granted roles %s: %s to %s by (%s)" % \
+                        (location.name, tuple(roles_2_grant), user.username, identity.current.user.username))
                 for role in roles_2_revoke:
                     group = Group.selectBy(level=role, place=location)[0]
                     user_group = UserGroup.select(AND(UserGroup.q.userID==user.id, UserGroup.q.groupID==group.id))
                     for membership in user_group:
                         membership.destroySelf()
                 if roles_2_revoke:
-                    applogger.info("Roles: Revoked roles %s to %s by %s" % (roles_2_revoke, user.username, identity.current.user.username))
+                    applogger.info("Roles: Revoked roles %s:%s to %s by %s" % \
+                        (location.name, tuple(roles_2_revoke), user.username, identity.current.user.username))
 
         if home_group and 'homeplace' in changed_attrs:
             self.addUser2Group(user, home_group)

@@ -84,9 +84,7 @@ def role_selected(user, location, level):
 
 
 def can_edit(editable_roles, location, role):
-    if location in editable_roles:
-        return ('add_' + role + 's') in editable_roles[location]
-    return False
+    return location in editable_roles and role in editable_roles[location]
 
 def current_role(current_roles, location, role):
     if location in current_roles:
