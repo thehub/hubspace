@@ -3016,10 +3016,8 @@ Exception:
     @expose(template="hubspace.templates.memberProfile")
     @identity.require(not_anonymous())
     @validate(validators=ProfileSchema())
-    def save_memberProfileEdit(self, id=None, tg_errors=None, **kwargs): 
+    def save_memberProfileEdit(self, id=None, tg_errors=None, **kwargs):
         user = User.get(id)
-        if "username" in kwargs: kwargs["username"] = user.username # quick n dirty hack to prevent username
-        # modification, if we can handle corresponding ldap uid change then ^ line is not reqd
         if permission_or_owner(user.homeplace, None, 'manage_users') and 'active' not in kwargs:
             kwargs['active'] = 0
         elif not permission_or_owner(user.homeplace, None, 'manage_users'):
@@ -3114,11 +3112,15 @@ Exception:
                 for role in roles_2_grant:
                     group = Group.selectBy(level=role, place=location)[0]
                     self.addUser2Group(user, group)
+                if roles_2_grant:
+                    applogger.info("Roles: Granted roles %s to %s by (%s)" % (roles_2_grant, user.username, identity.current.user.username))
                 for role in roles_2_revoke:
                     group = Group.selectBy(level=role, place=location)[0]
                     user_group = UserGroup.select(AND(UserGroup.q.userID==user.id, UserGroup.q.groupID==group.id))
                     for membership in user_group:
                         membership.destroySelf()
+                if roles_2_revoke:
+                    applogger.info("Roles: Revoked roles %s to %s by %s" % (roles_2_revoke, user.username, identity.current.user.username))
 
         if home_group and 'homeplace' in changed_attrs:
             self.addUser2Group(user, home_group)
@@ -4062,8 +4064,8 @@ The Hub Team
                    4000,
                    1,
                    invoice.sent.strftime('%d/%m/%Y'),
-                   'H'+str(invoice.id),
-                   'Invoice with id %s for period %s to %s' %(invoice.id, invoice.start.strftime('%d/%m/%Y'), invoice.end_time.strftime('%d/%m/%Y')),
+                   invoice.number,
+                   'Invoice %s for period %s to %s' %(invoice.number, invoice.start.strftime('%d/%m/%Y'), invoice.end_time.strftime('%d/%m/%Y')),
                    str(abs(excluding_vat)), #net amount
                    "T1",
                    str(abs(invoice.total_tax)), #tax amount
@@ -4258,7 +4260,7 @@ The Hub Team
         if not kwargs.get('send_it'):
             return "Invoice not sent by email not sent!"
         host_mail = invoice.user.homeplace.name.lower().replace(' ', '') + '.hosts@the-hub.net'
-        value = send_mail(to=to, sender=host_mail, subject=subject, body=body, attachment=pdf, cc=host_mail, attachment_name="Invoice%s.pdf"%invoice.id)
+        value = send_mail(to=to, sender=host_mail, subject=subject, body=body, attachment=pdf, cc=host_mail, attachment_name="Invoice%s.pdf"%invoice.number)
         if value:
             if not invoice.sent:
                 invoice.sent = now(invoice.location)

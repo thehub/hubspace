@@ -203,7 +203,7 @@ if SYNC_ENABLED:
     @checkSyncerResults
     @checkReqHeaders
     def group_leave_listener(instance, post_funcs):
-        return tls.syncerclient.onGroupJoin(instance.user.id, instance.group.id)
+        return tls.syncerclient.onGroupLeave(instance.user.id, instance.group.id)
 
     def setupSync():
         # in some situations it's not desired to have sync on right from the server boot. Like in new setups we may want
