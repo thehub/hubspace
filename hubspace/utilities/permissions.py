@@ -192,7 +192,8 @@ def get_editable_roles(user):
                     editable_roles[g.place].extend( [p.permission_name[4:-1] for p in g.permissions if p.permission_name in add_role_perms] )
         for k,v in editable_roles.items():
             editable_roles[k] = set(v)
-        editable_roles.setdefault(user.homeplace, set())
+        if user.homeplace: # user object may not have homeplace if it's getting created #588
+            editable_roles.setdefault(user.homeplace, set())
     return editable_roles
 
 def get_current_roles(user):
