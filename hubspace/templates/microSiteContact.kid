@@ -11,6 +11,8 @@
           <p>Email<br /><strong><a href="contact.html">kingscross.hosts@the-hub.net</a></strong></p>
       </div>
     </div>
-    <div id="geo_address" class="span-16 gmap">${location.geo_address and location.geo_address or '34b York Way, London N1 9AB, UK'}</div>	
+    <div id="geo_address" class="span-16 gmap">${location.geo_address and location.geo_address or '34b York Way, London N1 9AB, UK'}
+    <!-- nosidebarplease -->
+    </div>	
 </body>
 </html>

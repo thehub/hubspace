@@ -11,6 +11,8 @@ from hubspace.model import Location, Page
 from sqlobject import AND
 from hubspace.active import location_links
 from hubspace.file_store import get_filepath
+from hubspace.model import Page
+
 
 def pn(thepage):
     if thepage.page_type=='blog2':
@@ -128,17 +130,32 @@ def pn(thepage):
   <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_list_right"><a href="#">Edit Right Navigation</a></div>
     <?python
         subpageid = (page.subpage_of=='' or page.subpage==None) and 'subpages_%s' % page.id or 'subpages_%s' % page.subpage_of
+        subpages = [p for p in lists(subpageid)]
+        subpageclass = len(subpages) and 'hassubpages' or 'nosubpages'
     ?>
-  <ul py:if="not page.page_type.startswith('blog')" >
-    <ul id='subpages_foo' style='clear:both' py:attrs="{'id':subpageid}">
-        <li py:for="subpage in lists(subpageid)" py:if="subpage.active" py:attrs="subpage.object.id==page.id and {'class':'selected'} or {}"><a href="${relative_path}${pn(subpage.object)}" id="Page-${subpage.object.id}-name">${subpage.object.name}</a></li>
+    <ul id='subpages_foo' style='clear:both' py:attrs="{'id':subpageid,'class':subpageclass}">
+        <li py:for="subpage in subpages" py:if="subpage.active" py:attrs="subpage.object.id==page.id and {'class':'selected'} or {}"><a href="${relative_path}${pn(subpage.object)}" id="Page-${subpage.object.id}-name">${subpage.object.name}</a></li>
     </ul>
-    <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_subpages"><a href="#">Edit Subpages</a></div>
-  </ul>
+    <div py:if="is_host(identity.current.user, location, render_static) and not page.page_type.startswith('blog2x')" class="edit_list" id="edit_subpages"><a href="#">Edit Subpages</a></div>
 
 </div>
 </div>
+
+<?python
+    searchpages = Page.selectBy(page_type='search', location=location)
+    if searchpages.count():
+        searchpage = searchpages[0]
+    else:
+        searchpage = None
+?>
 <div id="hscontent">
+    <div id="hssearch" py:if="searchpage">
+        <form action="${relative_path}${searchpage.path_name}">
+            <input name="s" type="text" value="Search this site..." onclick="this.value='';" onfocus="this.value='';" class="searchinput input" id="searchpage-searchbox"/>
+            <input type="submit" value="Search" class="button simple-btn" />
+        </form> 
+    </div>
+
     <div id="content-highlight" class="container">
         <img py:if="not image_source_list" id="Page-${page.id}-image" src="${top_image_src}" alt="${page.image_name}" />   
         <img py:if="image_source_list" py:for="image_source in image_source_list" class="slideshow_image" id="${page.name}" src="${image_source}" />
@@ -152,13 +169,13 @@ def pn(thepage):
 </div>
 <div id="hsfooter">
 <div class="container" id="footer">
-    <div py:for="menu_item in list(lists('left_tabs'))[1:]" py:if="menu_item.active" class="span-3"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
-    <div py:for="menu_item in lists('right_tabs')" py:if="menu_item.active" class="span-3"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
-  <div class="span-3 last">
+    <div py:for="menu_item in list(lists('left_tabs'))[1:]" py:if="menu_item.active" class="span-3" py:attrs="{'class':'span-3 footer-%s' % menu_item.object.name}"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
+    <div py:for="menu_item in lists('right_tabs')" py:if="menu_item.active" class="span-3" py:attrs="{'class':'span-3 footer-%s' % menu_item.object.name}"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
+  <div id="spreadthehub" class="span-3 last">
     <span class="footer-menu-desc">Spread the Hub!</span>
     <div id="add-this-widget">
     <!-- AddThis Button BEGIN -->
-    <!--<a href="http://www.addthis.com/bookmark.php" onmouseover="return addthis_open(this, '', '[URL]', '[TITLE]')" onmouseout="addthis_close()" onclick="return addthis_sendto()"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>-->
+    <a href="http://www.addthis.com/bookmark.php" onmouseover="return addthis_open(this, '', '[URL]', '[TITLE]')" onmouseout="addthis_close()" onclick="return addthis_sendto()"><img src="http://s7.addthis.com/static/btn/sm-share-en.gif" width="83" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
     <!-- AddThis Button END -->
     </div>
   </div>

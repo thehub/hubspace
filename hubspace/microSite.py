@@ -138,9 +138,94 @@ class AjaxContent(Exception):
         self.html = html
 
 
-
-
 def get_blog(*args, **kwargs):
+    blog_url = kwargs['page'].blog_url.strip()
+    args = list(args)
+    args.insert(0, blog_url)
+    url = '/'.join(args)
+    url += '/'
+    kw_args = dict((key.replace('+', '-'), val) for key, val in kwargs.iteritems() if key not in standard_kw)
+    post_data = None
+    if kw_args:
+        if cherrypy.request.method == 'GET':
+            url += '?' + urlencode(kw_args)
+        if cherrypy.request.method == 'POST':
+            post_data = urlencode(kw_args)
+   
+    if cherrypy.session.has_key('cj'):
+        cj = cherrypy.session['cj']
+    else:
+        cj = cherrypy.session['cj'] = cookielib.CookieJar() 
+
+    opener = build_opener(HTTPCookieProcessor(cj), HTTPRedirectClient)
+    install_opener(opener)   
+    headers = {}
+    for header in forwarded_request_headers:
+        if cherrypy.request.headers.get(header, 0):
+            headers[header] = cherrypy.request.headers[header]
+    try:
+        if post_data:
+            blog = Request(url, post_data, headers)
+        else:
+            blog = Request(url, headers=headers)
+        blog_handle = urlopen(blog)
+    except RedirectToClient, e:
+        redirect(e.url.replace(blog_url, cherrypy.request.base + '/public/' + kwargs['page'].path_name))
+    except IOError, e:
+        if hasattr(e, 'reason'):
+            blog_body = "Could not get blog from: " +  url + " because " + e.reason
+            blog_head = ""
+        elif hasattr(e, 'code'):
+            cherrypy.response.headers['status'] = e.code
+            blog_body = "Could not get blog from: " +  url + " because " + str(e.code)
+            blog_head = ""
+    except ValueError:
+	blog_body = ""
+	blog_head = ""
+        return {'blog': blog_body, 'blog_head': blog_head}
+
+    else:
+        content_type = blog_handle.headers.type
+        if content_type not in ['text/html', 'text/xhtml']:
+            raise redirect(url)
+        blog = blog_handle.read()
+
+        #replace any links to the blog_url current address
+        our_url = cherrypy.request.base + '/public/' + kwargs['page'].path_name
+        blog = blog.replace(blog_url, our_url)
+        
+        blog = BeautifulSoup(blog)
+        #blog = bs_preprocess(blog)
+        for input in blog.body.findAll('input', attrs={'name':re.compile('.*\-.*')}):
+            input['name'] = input['name'].replace('-', '+') #hack around the awkwardness of submitting names with '-' from FormEncode
+
+        #change back anything ending in .js .css .png .gif, .jpg .swf
+        for link in blog.findAll('link', attrs={'href':re.compile('.*' + re.escape(our_url) + '.*')}):
+            link['href'] = link['href'].replace(our_url, blog_url)
+        for link in blog.findAll('img', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
+            link['src'] = link['src'].replace(our_url, blog_url)
+        for link in blog.findAll('script', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
+            link['src'] = link['src'].replace(our_url, blog_url)
+
+	for header in blog.body.findAll('div', attrs={'id':'header'}):
+	     header.extract()
+        for css in blog.head.findAll('link', attrs={'href':re.compile('.*standalone\.css')}):
+             css.extract()
+        blog_head = blog.head.renderContents()
+        blog_body = blog.body.renderContents()
+
+        for header in forwarded_response_headers:
+            if blog_handle.headers.get(header, 0):
+                cherrypy.response.headers[header] = blog_handle.headers[header]
+    
+
+    return {'blog': blog_body, 'blog_head': blog_head}
+
+
+
+
+
+def get_blog2(*args, **kwargs):
     #import pdb; pdb.set_trace()
     thispage = kwargs['page']
     blog_url = thispage.blog_url.strip()
@@ -582,7 +667,7 @@ microsite_page_types =  {
     'requestPassword':request_password_type,
     'resetPassword':reset_password_type,
     'standard': PageType('standard', 'hubspace.templates.microSiteStandard', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
-    'blog2': PageType('blog2', 'hubspace.templates.microSiteBlog2', get_blog, static=False),
+    'blog2': PageType('blog2', 'hubspace.templates.microSiteBlog2', get_blog2, static=False),
     'plain': PageType('plain', 'hubspace.templates.microSitePlain', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
     'search': PageType('search', 'hubspace.templates.microSiteSearch', sitesearch, static=False),
     }
