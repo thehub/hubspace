@@ -375,7 +375,9 @@ class MemberServiceSchema(v.Schema):
     extra_notes = no_ws
 
 class BillingDetailsSchema(v.Schema):
-    billto = v.Int(if_empty=None)
+    id = real_int
+    billing_mode = real_int, v.OneOf([0, 1, 2])
+    billto = real_int
     bill_to_profile = v.Int()
     bill_to_company = no_ws
     billingaddress = no_ws

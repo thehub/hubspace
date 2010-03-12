@@ -3199,15 +3199,12 @@ Exception:
     @expose(template="hubspace.templates.billingDetails")
     @identity.require(not_anonymous())
     @validate(validators=BillingDetailsSchema())
-    def save_billingDetailsEdit(self, id, tg_errors=None, **kwargs):
+    def save_billingDetailsEdit(self, id, billing_mode, tg_errors=None, **kwargs):
+        billing_mode = int(billing_mode)
 	user = User.get(id)
 	if not permission_or_owner(user.homeplace, user,'manage_invoices'):
-		raise IdentityFailure('what about not hacking the system')
+            raise IdentityFailure('what about not hacking the system')
 
-        if kwargs['billto'] and not permission_or_owner(user.homeplace, None,'manage_invoices'):
-		raise IdentityFailure('what about not hacking the system')
-        
-        
         if tg_errors:
             obj = AttrDict(id=id, **kwargs)
             attrs =  get_attribute_names(User)
@@ -3218,18 +3215,27 @@ Exception:
             cherrypy.response.headers['X-JSON'] = 'error'
             return self.error_template('billingDetailsEdit', {'object':obj, 'tg_errors':tg_errors})
 
+        if billing_mode == 0 or (billing_mode == 2 and kwargs['billto'] == user.id):
+            user.billto = user
+            user.bill_to_profile = 1
 
-        user = User.get(id)
-        for kwarg in kwargs:
-            #if kwargs[kwarg] or kwarg in ['billto', 'bill_to_profile']:
-                modify_attribute(user, kwarg, kwargs[kwarg])
-            
+        elif billing_mode == 1:
+            user.bill_to_profile = 0
+            user.billto = user
+            for billing_attr in ('bill_company_no', 'bill_fax', 'bill_to_company', 'bill_vat_no', 'billingaddress',
+                'bill_email', 'bill_phone'):
+                if billing_attr in kwargs and kwargs[billing_attr] != getattr(user, billing_attr):
+                    setattr(user, billing_attr, kwargs[billing_attr])
+
+        elif billing_mode == 2:
+            user.bill_to_profile = 0
+            if kwargs['billto'] and not permission_or_owner(user.homeplace, None,'manage_invoices'):
+		raise IdentityFailure('what about not hacking the system')
+            user.billto = User.get(kwargs['billto'])
+
         cherrypy.response.headers['X-JSON'] = 'success'
         return {'object':user}
 
-
-
-        
 
     @expose(template="hubspace.templates.notes")
     @identity.require(not_anonymous())

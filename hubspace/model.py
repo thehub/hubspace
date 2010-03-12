@@ -203,6 +203,12 @@ class User(SQLObject):
     bill_email = UnicodeCol(default="")
     bill_company_no = UnicodeCol(default="")
     bill_vat_no = UnicodeCol(default="")
+
+    def _get_billing_mode(self):
+        if self.bill_to_profile: return 0
+        elif self.billto != self: return 2
+        return 1
+
     # groups this user belongs to
     groups = RelatedJoin("Group",
                          intermediateTable="user_group",
@@ -404,6 +410,17 @@ Page objects have a foreignkey into the location, which may be equal to None (as
          else:
              return ""
 
+    def _get_active(self):
+        try:                                                                                                                                                         
+            obj_ref = ObjectReference.select(AND(ObjectReference.q.object_type=='Page', ObjectReference.q.object_id==self.id))[0]
+        except IndexError:                                                                                                                                           
+            return 0
+	try:
+            if ListItem.select(AND(obj_ref.id==ListItem.q.object_refID))[0].active:
+                return 1
+            return 0
+        except IndexError:
+            return 0
 
 
 listen(create_object_reference, Page, RowCreatedSignal)
@@ -747,6 +764,9 @@ class Location(SQLObject):
         return self.name.lower().replace(' ', '') + ".hosts@the-hub.net"
 
     hosts_email = property(getHostsEmail)
+
+    def __str__(self): return "<Location: %d>" % self.id 
+    def __repr__(self): return "<Location: %d>" % self.id 
 
 
 listen(create_object_reference, Location, RowCreatedSignal)
