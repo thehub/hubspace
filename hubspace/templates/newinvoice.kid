@@ -74,7 +74,6 @@ def lang():
 }
 .freetext {
     font-family: Helvetica; 
-    white-space: pre;
     border:.1px solid black;
     padding: 1;
     }
@@ -118,8 +117,8 @@ def lang():
         <strong>Invoice details</strong>
         <table cellpadding="2">
         <tr>
-            <td width="20%">Number</td>
-            <td width="80%">${invoice.number}</td>
+            <td width="20%">Number </td>
+            <td width="80%"> ${invoice.number}</td>
         </tr>
         <tr>
             <td>Date</td>
@@ -138,9 +137,9 @@ def lang():
 </tr>
 </table>
 
-<pre class="freetext" py:if="freetext1">
-${freetext1}
-</pre>
+<p class="freetext" py:if="freetext1">
+${XML(nl2br(freetext1))}
+</p>
 
 <h2>Summary of usage</h2>
 
@@ -286,9 +285,10 @@ rusages = sorted(invoice.rusages, key=sorter)
 
 <table>
 <tr py:if="freetext2">
-<td border="1" class="freetext">
-${freetext2}
-<br/>
+<td>
+<p class="freetext">
+${XML(nl2br(freetext2))}
+</p>
 </td>
 </tr>
 <tr><td></td></tr>
