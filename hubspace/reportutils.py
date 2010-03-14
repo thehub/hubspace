@@ -104,10 +104,12 @@ class Report(object):
     def save(self):
         pass
 
+ru_attrs2store = ('id', 'effectivecost', 'start', 'duration_or_quantity', 'resourceID', 'invoiceID', 'userID', 'tariffID')
+
 class RUsageCache(object):
+    __slots__ = ru_attrs2store
     def __init__(self, ru):
-        attrs2store = ('id', 'effectivecost', 'start', 'duration_or_quantity', 'resourceID', 'invoiceID', 'userID', 'tariffID')
-        for attr in attrs2store:
+        for attr in ru_attrs2store:
             setattr(self, attr, getattr(ru, attr))
     def _get_resource(self):
         return Resource.get(self.resourceID)
@@ -160,7 +162,7 @@ class AllUsages(object):
         thread.start_new(self.update, (wait_secs,))
 
 get_all_usages = AllUsages()
-get_all_usages.update_in_thread(5*60)
+#get_all_usages.update_in_thread(5*60)
 
 def get_usages_for_period(location, start, end):
     return (ru for ru in get_all_usages()[location] if end >= ru.start >= start)
