@@ -1997,37 +1997,25 @@ var set_billing_listeners = function () {
     set_inplace_edit(user, 'User', 'billingDetails_' + user, 'billingDetailsEdit', null, null, null, reload_billing, null, edit_billing);
 };
 var edit_billing = function () {
-    var options = jq('#billto .bill_options');
-    var form = jq("#billingDetails_{user}-inplaceeditor".supplant({user: navigation.current_profile_id()}));
-    var disable = function () {
-        var select = jq(this);
-        var to_profile = jq('#bill_to_profile');
-        var option = select.find(':selected');
-        if (option.attr('id') != 'self') {
-            disable_other_form_fields(form, select);
-        } else if (to_profile.attr('checked') == 'true') {
-            to_profile.parent().parent().show();
-            to_profile.attr('disabled', 'false');
-        } else {
-             enable_form_fields(form);
-        }
-    };
-    jq('#billto').change(disable);
-    var disable_address = function () {
-        var checkbox = jq(this);
-        if (checkbox.attr('checked')) {
-            // disable_other_form_fields(form, checkbox); // commented to solve #493 #490 need a close look later
-        } else {
-            enable_form_fields(form);
-        }
-    };
-    jq('#bill_to_profile').click(disable_address);
+    jq("#for_billto").autocomplete("/filter_book_for", {width: 260,
+                                                         selectFirst: true,
+                                                         matchSubset: false});
+    jq("#for_billto").result(function (event, data, formatted) {
+        jq('#billto_id').val(data[1]);
+    });
+    set_billing_details();
+    jq("input[name='billing_mode']").click( function () {
+        set_billing_details();
+    });
 };
-var disable_other_form_fields = function (form, current_field) {
-    jq('#' + form.attr('id') + ' :input:not(:image):not(select)[@id!=' + current_field.attr('id') + ']').attr('disabled', 'disabled').parent().parent().hide();
-};
-var enable_form_fields = function (form) {
-    jq('#' + form.attr('id') + ' :input:disabled').removeAttr('disabled').parent().parent().show();
+
+var set_billing_details = function () {
+    var billing_mode = jq("input[name='billing_mode']:checked").val();
+    if (billing_mode != 1) {
+        jq('.billing_details').attr('disabled', 'disabled');
+    } else {
+        jq('.billing_details').removeAttr('disabled');
+    };
 };
 var listen_custom_costs = function (element) {
     set_inplace_edit(element.id.split('-')[1], 'RUsage', element.id, 'costEdit', '/save_costEdit', null, null, reload_billing);
