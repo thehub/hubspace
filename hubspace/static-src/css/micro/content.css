@@ -101,3 +101,20 @@ ul#members-profiles li.member {width:130px; height:130px; float:left; margin-lef
 .document p {color:#000;}
 
 #rss {float:right;}
+
+
+div#hssearch {
+    -moz-background-clip:border;
+    -moz-background-inline-policy:continuous;
+    -moz-background-origin:padding;
+    background:transparent url(http://the-hub.net/static/images/micro/menu-background.gif) repeat-x scroll left bottom;
+    border-color:-moz-use-text-color #DDDDDD #DDDDDD -moz-use-text-color;
+    border-style:none solid solid none;
+    border-width:medium 1px 1px medium;
+    margin:0;
+    padding:0;
+    position:absolute;
+    right:0;
+    top:0;
+    z-index:50;
+}

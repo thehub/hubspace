@@ -7,7 +7,7 @@ from hubspace.utilities.login import login_args, requestPassword, resetPassword
 from hubspace.utilities.dicts import AttrDict
 from hubspace.utilities.permissions import is_host, addUser2Group
 from hubspace.utilities.object import modify_attribute, obj_of_type
-from hubspace.model import Location, LocationMetaData, User, RUsage, Group, MicroSiteSpace, ObjectReference, ListItem, Page, MetaWrapper, PublicPlace
+from hubspace.model import Location, LocationMetaData, User, RUsage, Group, MicroSiteSpace, ObjectReference, ListItem, Page, MetaWrapper, PublicPlace, List
 from sqlobject import AND, SQLObjectNotFound, IN, LIKE, func
 import os, re, unicodedata, md5, random, sys, datetime, traceback, hmac as create_hmac
 from hashlib import sha1
@@ -22,10 +22,16 @@ model = hubspace.model
 from hubspace.utilities.cache import strongly_expire
 import hubspace.sync.core as sync
 
-
+from turbogears import database
+import urlparse
 from urllib import quote, urlencode
 from urllib2 import urlopen, Request, build_opener, install_opener, HTTPCookieProcessor, HTTPRedirectHandler
 import cookielib
+
+import vobject
+import patches
+import logging
+applogger = logging.getLogger("hubspace") 
 
 def place(obj):
     if isinstance(obj, Location):
@@ -85,6 +91,14 @@ def get_events(*args, **kwargs):
         events.update(get_event(*args))
     return events
 
+def parseSubpageId(list_name):
+    if list_name.startswith('subpage'):
+        list_name,pageid=list_name.split('_')
+    else:
+        pageid = None
+    return (list_name,pageid)        
+
+
 
 standard_kw = ['microsite', 'page', 'location']
 
@@ -114,6 +128,15 @@ class HTTPRedirectClient(HTTPRedirectHandler):
 
 forwarded_request_headers = ['If-None-Match']
 forwarded_response_headers = ['Etag', 'Last-Modified', 'X-Pingback', 'Cache-Control', 'Pragma', 'Expires']
+
+class MediaContent(Exception):
+    def __init__(self, response):
+        self.response = response
+
+class AjaxContent(Exception):
+    def __init__(self, html):
+        self.html = html
+
 
 def get_blog(*args, **kwargs):
     blog_url = kwargs['page'].blog_url.strip()
@@ -197,6 +220,188 @@ def get_blog(*args, **kwargs):
     
 
     return {'blog': blog_body, 'blog_head': blog_head}
+
+
+
+
+
+def get_blog2(*args, **kwargs):
+    #import pdb; pdb.set_trace()
+    thispage = kwargs['page']
+    blog_url = thispage.blog_url.strip()
+    args = list(args)
+    args.insert(0, blog_url)
+    url = '/'.join(args)
+    #add a / if its not a .jpg or if its just the domain name
+    if not url.endswith('/') and (not '.' in args[-1] or url.count('/') <3):
+        url += '/'
+    kw_args = dict((key.replace('+', '-'), val) for key, val in kwargs.iteritems() if key not in standard_kw)
+    post_data = None
+    if kw_args:
+        if cherrypy.request.method == 'GET':
+            url += '?' + urlencode(kw_args)
+        if cherrypy.request.method == 'POST':
+            post_data = urlencode(kw_args)
+   
+    if cherrypy.session.has_key('cj'):
+        cj = cherrypy.session['cj']
+    else:
+        cj = cherrypy.session['cj'] = cookielib.CookieJar() 
+
+    opener = build_opener(HTTPCookieProcessor(cj), HTTPRedirectClient)
+    install_opener(opener)   
+    headers = {}
+    for header in forwarded_request_headers:
+        if cherrypy.request.headers.get(header, 0):
+            headers[header] = cherrypy.request.headers[header]
+    try:
+        if post_data:
+            blog = Request(url, data=post_data, headers=headers)
+        else:
+            blog = Request(url, headers=headers)
+        blog_handle = urlopen(blog)
+    except RedirectToClient, e:
+        redirect(e.url.replace(blog_url, cherrypy.request.base + '/public/' + kwargs['page'].path_name))
+    except IOError, e:
+        errorbody = e.read()
+        if '<body id="error-page">' in errorbody:
+            blog_body = "There was an error with wp"
+            blog_head = ""
+        elif hasattr(e, 'reason'):
+            blog_body = "Could not get blog from: " +  url + " because " + e.reason
+            blog_head = ""
+        elif hasattr(e, 'code'):
+            cherrypy.response.headers['status'] = e.code
+            blog_body = "Could not get blog from: " +  url + " because " + str(e.code)
+            blog_head = ""
+    except ValueError:
+	blog_body = ""
+	blog_head = ""
+        return {'blog': blog_body, 'blog_head': blog_head}
+    else:
+        content_type = blog_handle.headers.type
+        if content_type not in ['text/html', 'text/xhtml']:
+            raise MediaContent(blog_handle)
+
+        #import pdb; pdb.set_trace()
+        blog = blog_handle.read()
+
+        #replace any links to the blog_url current address
+        our_url = cherrypy.request.base + '/public/' + kwargs['page'].path_name
+        blog = blog.replace(blog_url, our_url)
+        
+        blog = BeautifulSoup(blog)
+        #blog = bs_preprocess(blog)
+        #for input in blog.body.findAll('input', attrs={'name':re.compile('.*\-.*')}):
+        for input in blog.findAll('input', attrs={'name':re.compile('.*\-.*')}):
+            input['name'] = input['name'].replace('-', '+') #hack around the awkwardness of submitting names with '-' from FormEncode
+
+        #change back anything ending in .js .css .png .gif, .jpg .swf
+        #for link in blog.findAll('link', attrs={'href':re.compile('.*' + re.escape(our_url) + '.*')}):
+        #    link['href'] = link['href'].replace(our_url, blog_url)
+        #for link in blog.findAll('img', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
+        #    link['src'] = link['src'].replace(our_url, blog_url)
+        #for link in blog.findAll('script', attrs={'src':re.compile('.*' + re.escape(our_url) + '.*')}):
+        #    link['src'] = link['src'].replace(our_url, blog_url)
+    if hasattr(blog,'body') and blog.body:
+        #import pdb; pdb.set_trace()
+        for header in blog.body.findAll('div', attrs={'id':'header'}):
+            header.extract()
+        for css in blog.head.findAll('link', attrs={'href':re.compile('.*standalone\.css')}):
+            css.extract()
+        #for script in blog.findAll('script',attrs={'src':re.compile('.*' + re.escape(blog_url) + '.*jquery\.js.*')}):
+        #    script.extract()
+        
+        for script in blog.findAll('script',attrs={'src':re.compile('jquery\.js')}):
+            script.extract()
+            
+        for script in blog.findAll('script',attrs={'src':re.compile('functions\.js')}):
+            script.extract()
+
+        for script in blog.findAll('script',attrs={'src':re.compile('jquery\.validate\.js')}):
+            script.extract()
+
+
+
+        sidebartext=''        
+        #the sidebar get injected via deliverance
+        for sidebar in blog.findAll('div',id='sidebar'):
+            sidebartext = sidebar.renderContents().replace('text_small','text_real_small')
+            sidebar.extract()
+        
+        for wphead in blog.findAll('div',id='wphead'):
+            wphead.extract()
+            pass
+
+        blog_head = blog.head.renderContents()
+        found =  blog.findAll(id='content')
+        
+        #if possible grep the content div
+        if blog.findAll('div',id='content') and iswpadminurl(url):
+            blog_body = blog.findAll('div',id='content')[0].renderContents()
+        else: 
+            blog_body = blog.body.renderContents()
+        
+        #for header in forwarded_response_headers:
+        #    if blog_handle.headers.get(header, 0):
+        #        cherrypy.response.headers[header] = blog_handle.headers[header]
+    else:
+        raise AjaxContent(blog.renderContents())
+           
+    #blog_body = ''
+    #blog_head = ''
+    return {'blog': blog_body, 'blog_head': blog_head,'sidebartext':sidebartext}
+
+
+def sitesearch(*args,**kwargs):
+        #title, description, url
+        s = str(kwargs.get('s',''))
+        s = s.lower().strip()
+        page = kwargs['page']        
+        location = page.location
+        searchresults = []
+        if s:
+            access_tuple = patches.utils.parseDBAccessDirective()
+            con = patches.utils.getPostgreSQLConnection(*access_tuple)
+            cur = con.cursor()
+            sql = """select distinct page.id from page left join object_reference on  page.id=object_reference.object_id left join meta_data on object_reference.id=meta_data.object_ref_id where page.location_id=%s and object_reference.object_type='Page' and (lower(page.content) like '%%' || %s || '%%' or lower(meta_data.attr_value) like '%%' || %s || '%%')"""
+            #XXX no sql injections please!!!!
+            id = str(page.location.id)
+            cur.execute(sql,(id,s,s,))
+            result = [r[0] for r in cur.fetchall()]            
+            for id in result:
+                page=Page.get(id)
+                title = page.name and page.name or page.title
+                url = cherrypy.request.base + '/public/' + page.path_name 
+                description = re.sub(r'<[^>]*>','',page.content)[:100]
+                searchresults.append(dict(url=url,title=title,description=description))
+            blogs = Page.selectBy(location=page.location.id,page_type='blog2').orderBy('id')
+            if blogs.count() > 0:
+                blog = blogs[0]
+                blog = MetaWrapper(blog)
+                search_url = blog.blog_url.strip()
+                if not search_url.endswith('/'):
+                    search_url += '/'
+                search_url += "?s=%s" % s
+                blogresult = urlopen(search_url).read()
+                blogsoup = BeautifulSoup(blogresult)
+                for d in blogsoup.findAll("div", { "class" : re.compile('hentry') }):
+                    title = d.h3.a.string
+                    url = d.h3.a['href']
+                    parts = urlparse.urlsplit(url)
+                    url = cherrypy.request.base + '/public/' + blog.path_name + parts[2]
+                    description = re.sub(r'<[^>]*>','',d.find('div', { "class" : "entry-content" }).p.string)
+                    searchresults.append(dict(url=url,title=title,description=description))
+        return dict(searchresults=searchresults,
+                    s=s)
+ 
+
+
+def iswpadminurl(url):
+    if 'wp-admin'  in url or 'wp-login' in url:
+        return True
+    else: 
+        return False
 
 def get_event(*args):
     return {'event': RUsage.get(args[0])}
@@ -307,27 +512,66 @@ list_types = {'spaces_list': {'object_types':['PublicSpace'], 'mode':'add_new'},
               'people_list': {'object_types':['User'], 'mode':'add_existing'},
               'featured_list': {'object_types':['Location', 'User', 'Page'], 'mode':'add_existing'}
 }
+#jhb: idea could be to have the list_types in the database, (as per Tom), add a 'context' to them, eg. 
+#the page on which they should appear.
+
+
+def getList(list_name,location):
+    #list_name,pageid = parseSubpageId(list_name)
+    #if pageid:
+    #    lists = List.selectBy(list_name=list_name,location=location,page=pageid)
+    #else:        
+    #    lists = List.selectBy(list_name=list_name,location=location)
+    lists = List.selectBy(list_name=list_name,location=location)
+    if lists.count() == 1:
+        return lists[0]
+    else:
+        return None
 
 def last_item(list_name, location):
-    try:
-        return ListItem.select(AND(ListItem.q.nextID == None,
-                                   ListItem.q.list_name == list_name,
-                                   ListItem.q.locationID == location))[0]
-    except IndexError:
-        return None 
+    thelist = getList(list_name,location)
+    if thelist:
+        try:
+            return ListItem.select(AND(ListItem.q.nextID == None,
+                                   ListItem.q.listID == thelist))[0]
+        except IndexError:
+            return None
+    return None
+
+
+#    try:
+#        return ListItem.select(AND(ListItem.q.nextID == None,
+#                                   ListItem.q.list_name == list_name,
+#                                   ListItem.q.locationID == location))[0]
+#    except IndexError:
+#        return None 
 
 def append_existing_item(list_name, obj, **kwargs):
+    #import pdb; pdb.set_trace()
+    thelist = getList(list_name,kwargs['location'])
     old_last = last_item(list_name, kwargs['location'])
     object_ref = ObjectReference.select(AND(ObjectReference.q.object_type ==  obj.__class__.__name__, 
                                             ObjectReference.q.object_id == obj.id))[0]
-    new_last = ListItem(**{'list_name':list_name, 'location':kwargs['location'], 'active':kwargs['active'], 'object_ref':object_ref})
+    new_last = ListItem(**{'list_name':list_name, 'location':kwargs['location'], 'active':kwargs['active'], 'object_ref':object_ref,'list':thelist})
     if old_last:
         old_last.next = new_last
 
 def append_to_list(list_name, **kwargs):
+    #we could be adding to a subpages list. If foo.html gets a bar subpage, 
+    #the name needs to be foo__bar.html
+    #import pdb; pdb.set_trace()
+    
     if kwargs['object_type'] == Page.__name__:
+        path_name = kwargs['name']
+        subpage_of=None
+        if list_name.startswith('subpages_'):
+            thelist = getList(list_name,kwargs['location'])
+            page = thelist.page
+            pagenamebase = page.path_name.split('.html')[0]
+            path_name = pagenamebase+'__'+kwargs['name']
+            subpage_of = list_name.split('subpages_')[1]
         page_type = kwargs.get('page_type', 'standard')
-        new_obj = kwargs['site_types'][page_type].create_page(kwargs['name'], kwargs['location'])
+        new_obj = kwargs['site_types'][page_type].create_page(kwargs['name'], kwargs['location'],path_name=path_name,subpage_of=subpage_of)
     else:
         object_type = getattr(model, kwargs['object_type'])
         new_obj = object_type(**{'name': kwargs['name']})
@@ -346,11 +590,14 @@ class PageType(object):
         else:
             self.default_vals = {}
  
-    def create_page(self, page_name, location, initial_vals=None):
+    def create_page(self, page_name, location, initial_vals=None,path_name=None,subpage_of=None):
+        #import pdb; pdb.set_trace()
+        if not path_name:
+            path_name=page_name
+
         if self.static:
-            path_name = page_name + '.html'
-        else:
-            path_name = page_name
+            path_name = path_name + '.html'
+        
         attr_vals = dict(**self.default_vals)
         if initial_vals:
             attr_vals.update(initial_vals)
@@ -359,7 +606,17 @@ class PageType(object):
                        'name': page_name,
                        'path_name': path_name,
                        'location': location})
+        #pages can have subpages
+        List(list_name='subpages_%s' % page.id,
+             object_types='Page',
+             mode='add_new',
+             page=page,
+             location=page.location)
         page_wrapper = MetaWrapper(page)
+        
+        if subpage_of:
+            attr_vals['subpage_of'] = subpage_of
+
         for attr, val in attr_vals.items():
             if not getattr(page_wrapper, attr):
                 setattr(page_wrapper, attr, val)
@@ -410,7 +667,10 @@ microsite_page_types =  {
     'requestPassword':request_password_type,
     'resetPassword':reset_password_type,
     'standard': PageType('standard', 'hubspace.templates.microSiteStandard', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
-}
+    'blog2': PageType('blog2', 'hubspace.templates.microSiteBlog2', get_blog2, static=False),
+    'plain': PageType('plain', 'hubspace.templates.microSitePlain', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
+    'search': PageType('search', 'hubspace.templates.microSiteSearch', sitesearch, static=False),
+    }
 
 
 #these are added to the database when a microsite is created
@@ -531,18 +791,39 @@ class SiteList(controllers.Controller):
         super(SiteList, self).__init__()
         self.site = site
 
-    def get_list(self, list_name):
+    def get_list(self, list_name, page=None):
         """This should return a list of objects which can be rendered by the appropriate templates
         e.g. in the case of spaces this should return a list of objects with the attributes 'name', 'description' and 'image'
         e.g.2. in the case of the site tabs, this should return a list of site_page 'objects' with the relavant metadate fields as attributes
         """
-        return {'list_items':self.iterator(list_name), 'list_name':list_name, 'list_types':list_types[list_name]['object_types'], 'list_mode':list_types[list_name]['mode']}
+        #if page:
+        #    lists = List.selectBy(location=self.site.location,list_name=list_name,page=page)
+        #else:
+        #    lists = List.selectBy(location=self.site.location,list_name=list_name)
+        lists = List.selectBy(location=self.site.location,list_name=list_name)
+        if lists.count() == 1:
+            thelist = lists[0]
+            return {'list_items':self.iterator(list_name), 'list_name':list_name, 'list_types':thelist.object_types.split(','), 'list_mode':thelist.mode}
+        #return {'list_items':self.iterator(list_name), 'list_name':list_name, 'list_types':list_types[list_name]['object_types'], 'list_mode':list_types[list_name]['mode']}
 
     @expose(template='hubspace.templates.listEditor', fragment=True)
     def render_as_table(self, list_name):
+        relative_path = relative_folder(self.site.site_url)
+        #list_name,pageid = parseSubpageId(list_name)
+        #import pdb; pdb.set_trace()
+        #hack
+        #if pageid :
+        #    page = Page.get(pageid)
+        #    template_args = self.get_list(list_name,page)
+        #    #relative_path =  relative_path[3:] #remove the first ../           
+        #    template_args.update({'pageid':pageid})
+        #else:
+        #    template_args = self.get_list(list_name)
+        #    template_args.update({'pageid':None})
         template_args = self.get_list(list_name)
         template_args.update({'page_types':[type[0] for type in self.site.site_types.iteritems() if type[1].can_be_tab]})
-        template_args.update({'relative_path': relative_folder(self.site.site_url)})
+        template_args.update({'relative_path': relative_path})
+        #template_args.update({'orig_name':orig_name})
         return template_args
 
     @expose()
@@ -578,10 +859,12 @@ class SiteList(controllers.Controller):
         return last_item(list_name, self.site.location)
 
     def first(self, list_name):
-        for item in ListItem.select(AND(ListItem.q.locationID == self.site.location,
-                                        ListItem.q.list_name == list_name)):
-            if item.previous == None:
-               return item
+        lists = List.selectBy(list_name=list_name,location=self.site.location)
+        if lists.count() == 1:
+            thelist = lists[0]
+            for item in ListItem.selectBy(list=thelist):
+                if item.previous == None:
+                   return item
         #below doesn't work because .previous doesn't exist where it isn't referenced by another "Space" with .next()
         #try:
         #    return MicroSiteSpace.select(AND(MicroSiteSpace.q.previous == None,
@@ -599,9 +882,10 @@ class SiteList(controllers.Controller):
 
 
     @expose()
-    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'object_id':v.Int(), 'active':v.Int(if_empty=0)})
+    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'object_id':v.Int(), 'active':v.Int(if_empty=0),'pageid':v.Int(if_missing=1)})
     def append_existing(self, list_name, **kwargs):
-	if not is_host(identity.current.user, Location.get(self.site.location)):
+        #import pdb; pdb.set_trace()
+        if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
         kwargs['location'] = self.site.location
         kwargs['site_types'] = self.site.site_types
@@ -613,9 +897,10 @@ class SiteList(controllers.Controller):
         return self.render_as_table(list_name)
 
     @expose()
-    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'page_type':v.UnicodeString(), 'name':v.UnicodeString(), 'active':v.Int(if_empty=0)})
+    @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'page_type':v.UnicodeString(), 'name':v.UnicodeString(), 'active':v.Int(if_empty=0),'pageid':v.Int(if_missing=1)})
     def append(self, list_name, **kwargs):
-	if not is_host(identity.current.user, Location.get(self.site.location)):
+        #import pdb; pdb.set_trace()
+        if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
         kwargs['location'] = self.site.location
         kwargs['site_types'] = self.site.site_types
@@ -625,22 +910,34 @@ class SiteList(controllers.Controller):
     @expose()
     @validate(validators={'list_name':v.UnicodeString(), 'item_id':v.Int(if_empty=None)})
     def remove(self, list_name, item_id):
-	if not is_host(identity.current.user, Location.get(self.site.location)):
+        if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
+        
+        self._remove(list_name,item_id)
+        return self.render_as_table(list_name)           
+
+    def _remove(self,list_name,item_id): #XXX is this secured against web attacks?
         item = ListItem.get(item_id)
         if item.previous:
             if item.next:
                 item.previous.next = item.next
             else:
                 item.previous.next = None
+        #pages have subpages - lets destroy them first, which could have subpages...               
+        if item.object.__class__ == Page:
+            for sublist in item.object.lists:
+                for subitem in sublist.listitems:
+                    self._remove(sublist.list_name,subitem.id)
+                    #item.object.destroySelf()
+                    #item.destroySelf()
+                sublist.destroySelf()
         item.object.destroySelf()
         item.destroySelf()
-        return self.render_as_table(list_name)
 
     @expose()
     @validate(validators={'list_name':v.UnicodeString(), 'item_id':v.Int(if_empty=None)})
     def remove_existing(self, list_name, item_id):
-	if not is_host(identity.current.user, Location.get(self.site.location)):
+        if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
         item = ListItem.get(item_id)
         if item.previous:
@@ -655,7 +952,7 @@ class SiteList(controllers.Controller):
     @expose()
     @validate(validators={'list_name':v.UnicodeString(), 'object_id':v.UnicodeString(), 'active':v.Int(if_empty=0)})
     def toggle_active(self, list_name, object_id,  active=0):
-	if not is_host(identity.current.user, Location.get(self.site.location)):
+        if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
         item = ListItem.get(object_id)
         item.active = active
@@ -808,45 +1105,51 @@ class MicroSite(controllers.Controller):
     def _cpOnError(self):
         try:
             raise # http://www.cherrypy.org/wiki/ErrorsAndExceptions#a2.2
-        except Exception, err:
-            if isinstance(err, IndexError): # construct_args throws IndexError if the page requested does not exists
-                cherrypy.response.status = 404
-                cherrypy.response.body = "404"
+        #use this for getting 404s...
+        #except Exception, err:
+        #    if isinstance(err, IndexError):
+
+        #...or this for getting logging                
+        #except:
+        #    if 0: 
+        except IndexError,err:
+            cherrypy.response.status = 404
+            cherrypy.response.body = "404"
+        except Exception,err:
+            """log the error and give the user a trac page to submit the bug
+            We should give the error a UID so that we can find the error associated more easily
+            """
+            # If syncer transaction fails the syncer daemon takes care of rolling back the changes also
+            # syncerclient then raises SyncerError effectively stops TG transaction from commiting
+            # changes to native database.
+            # For all other errors we should call syncer rollback here.
+            # And finally if there is no error, we send transaction complete signal to syncer. Which is
+            # handled by TransactionCompleter filter.
+            if config.get('server.testing', False):
+                cherrypy.response.status = 500
             else:
-                """log the error and give the user a trac page to submit the bug
-                We should give the error a UID so that we can find the error associated more easily
-                """
-                # If syncer transaction fails the syncer daemon takes care of rolling back the changes also
-                # syncerclient then raises SyncerError effectively stops TG transaction from commiting
-                # changes to native database.
-                # For all other errors we should call syncer rollback here.
-                # And finally if there is no error, we send transaction complete signal to syncer. Which is
-                # handled by TransactionCompleter filter.
-                if config.get('server.testing', False):
-                    cherrypy.response.status = 500
-                else:
-                    cherrypy.response.status = 200
-                e_info = sys.exc_info()
-                e_id = str(datetime.now())
-                e_path = cherrypy.request.path
-                _v = lambda v: str(v)[:20]
-                e_params = dict([(k, _v(v)) for (k, v) in cherrypy.request.paramMap.items()])
-                e_hdr = cherrypy.request.headerMap
-                applogger.error("%(e_id)s: Path:%(e_path)s" % locals())
-                applogger.error("%(e_id)s: Params:%(e_params)s" % locals())
-                applogger.exception("%(e_id)s:" % locals())
-                if isinstance(e_info[1], sync.SyncerError):
-                    applogger.error("%(e_id)s: LDAP sync error" % locals())
-                else:
-                    sync.sendRollbackSignal()
-                tb = sys.exc_info()[2]
-                e_str = traceback.format_exc(tb)
-                if isinstance(e_info[1], hubspace.errors.ErrorWithHint):
-                    e_hint = e_info[1].hint
-                else:
-                    e_hint = ""
-                d = dict(e_id=e_id, e_path=e_path, e_str=e_str, e_hint=e_hint)
-                cherrypy.response.body = try_render(d, template='hubspace.templates.issue', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
+                cherrypy.response.status = 200
+            e_info = sys.exc_info()
+            e_id = str(datetime.datetime.now())
+            e_path = cherrypy.request.path
+            _v = lambda v: str(v)[:20]
+            e_params = dict([(k, _v(v)) for (k, v) in cherrypy.request.paramMap.items()])
+            e_hdr = cherrypy.request.headerMap
+            applogger.error("%(e_id)s: Path:%(e_path)s" % locals())
+            applogger.error("%(e_id)s: Params:%(e_params)s" % locals())
+            applogger.exception("%(e_id)s:" % locals())
+            if isinstance(e_info[1], sync.SyncerError):
+                applogger.error("%(e_id)s: LDAP sync error" % locals())
+            else:
+                sync.sendRollbackSignal()
+            tb = sys.exc_info()[2]
+            e_str = traceback.format_exc(tb)
+            if isinstance(e_info[1], hubspace.errors.ErrorWithHint):
+                e_hint = e_info[1].hint
+            else:
+                e_hint = ""
+            d = dict(e_id=e_id, e_path=e_path, e_str=e_str, e_hint=e_hint)
+            cherrypy.response.body = try_render(d, template='hubspace.templates.issue', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
     def attr_changed(self, property, page_name):
         if property in ('name', 'subtitle'):
@@ -890,7 +1193,55 @@ class MicroSite(controllers.Controller):
         template_args.update(args_dict)
         location = MetaWrapper(Location.get(self.location))
         template_args.update({'page':page, 'location':location, 'site_url': self.site_url})
+
         return template_args
+
+    def get_sidebar(self,location,page):
+        blogs = Page.selectBy(location=location,page_type='blog2').orderBy('id')
+        if blogs.count() > 0:
+            sidebarblog = blogs[0]
+            sidebarblog = MetaWrapper(sidebarblog)
+            parts =  get_blog(location=location,page=sidebarblog,microsite=self)
+            out = dict(blog_head=parts['blog_head'],blog=parts['sidebartext'])
+        else:
+            out = dict(blog_head='',blog='')
+        return out            
+
+
+    @expose()
+    def jhb(self, *args, **kwargs):
+        raise 'foo2'
+        return 'foo bar'
+
+        
+  
+    @expose()
+    def icalfeed_ics(self,eventid=None,*args,**kwargs):
+        #import pdb; pdb.set_trace()
+        location = Location.get(self.location)
+        if eventid:
+            events = [RUsage.get(eventid)]
+        else:            
+            events = get_local_future_events(location=self.location, no_of_events=1000)['future_events']
+        cal = vobject.iCalendar()
+        cal.add('X-WR-CALNAME').value = "%s (%s) events" % (location.name,location.city)
+        cal.add('X-WR-TIMEZONE').value = location.timezone
+        length = 0
+        for event in events:
+            length += 1
+            ve = cal.add('vevent')
+            ve.add('summary').value = event.meeting_name
+            ve.add('description').value = event.meeting_description
+            ve.add('dtstart').value = event.start
+            ve.add('dtend').value = event.end_time
+            url = cherrypy.request.base + '/public/events/' + str(event.id)
+            ve.add('uid').value = url
+            ve.add('url').value = url
+
+        cherrypy.response.headers['Content-Type'] = 'text/calendar'
+        cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="icalfeed.ics"'
+        
+        return cal.serialize()            
 
     @expose()
     def default(self, *args, **kwargs):
@@ -898,8 +1249,9 @@ class MicroSite(controllers.Controller):
         """
         if kwargs.get('tg_errors', None):
              return str(kwargs['tg_errors'])
+
         if cherrypy.request.path.split('/')[-1] == self.site_dir.split('/')[-1]:
-	    redirect(cherrypy.request.path + '/')
+             redirect(cherrypy.request.path + '/')
 
         if not args or args[0]=='':
             path_name = 'index.html'
@@ -910,10 +1262,44 @@ class MicroSite(controllers.Controller):
         if not self.initialized:
             self.regenerate_all()
             self.initialized = True
+        try:
+            html =  self.render_page(path_name, *args, **kwargs)
+            
+            #page = Page.select(AND(Page.q.location==self.location, 
+            #                       Page.q.path_name==path_name))[0]
+            #sidebar_content = self.get_sidebar(location=self.location, page=page)
+            #html = html.replace('<!-- sidebar headers -->',sidebar_content['blog_head'])
+            #html = html.replace('<!-- sidebar content -->',sidebar_content['blog'])
+            return html
+
+        except MediaContent, e:
+            cherrypy.response.headers['Content-Type'] = e.response.headers['Content-Type']
+            cherrypy.response.headers['Content-Length'] = e.response.headers['Content-Length']
+            return e.response.read()
+        except AjaxContent, e:
+            return e.html
+
+    @expose()
+    def blog_media_content(*args,**kwargs):
+        path_name = args[0]
+        subpath = '/'.join(args[1:])
+
+        try:
+            page = MetaWrapper(Page.select(AND(Page.q.location==self.location, Page.q.path_name==page_name))[0])
+        except (KeyError, IndexError):
+            page = MetaWrapper(Page.select(AND(Page.q.location==self.location, Page.q.path_name==page_name + '.html'))[0])
         
-        return self.render_page(path_name, *args, **kwargs)
+        if not page.page_type == 'blog': #should always be the case (in normal use)
+            raise 'shit'
+        if subpath.endswith('/'):
+            subpath = subpath[:-1]
+            
+                
+
+            
 
     def render_page(self, path_name, *args, **kwargs):
+        #import pdb; pdb.set_trace()
         path_name = path_name.split('#')[0]
         template_args = self.construct_args(path_name, *args, **kwargs)
         loc_id = template_args['location'].id
@@ -926,8 +1312,8 @@ class MicroSite(controllers.Controller):
     	try:
             page = Page.select(AND(Page.q.location==self.location, 
                                    Page.q.path_name==path_name))[0]       
-	    template = self.site_types[page.page_type].template
-	except IndexError:
+            template = self.site_types[page.page_type].template
+        except IndexError:
             try:
                 page = Page.select(AND(Page.q.location==self.location, 
                                        Page.q.path_name==path_name + '.html'))[0]
@@ -935,6 +1321,8 @@ class MicroSite(controllers.Controller):
             except:
                 template = 'hubspace.templates.microSiteHome'
                 page = None
+        
+         
         out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
         #write the output to the static page
         if self.site_types[Page.select(AND(IN(Page.q.path_name, [path_name, path_name + '.html']),

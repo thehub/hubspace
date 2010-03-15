@@ -33,6 +33,7 @@ event = None
 				   </div>
 				   <div py:if="event.meeting_description" class="property"><div class="propertyTitle">Description:</div><div class="propertyValue description">${event.meeting_description}</div>
 				   </div>
+                    <div><a href="${relative_path}icalfeed.ics/${event.id}">iCal</a></div>
 				   <div><div><p class="backLink"><a href="../events.html">back to Events Page</a></p></div></div>
 				</div>
 			</div>
@@ -49,6 +50,7 @@ event = None
               <p class="event-desc">${ev.meeting_description.split('.')[0] + '.'}</p>
             </li>
           </ul>
+          <div><a href="${relative_path}icalfeed.ics">all events in iCal format</a></div>
       </div>
       <div class="span-6 last content-sub" id="past-events">
           <h3 id="past_events" class="text_small">${page.past_events and page.past_events or "Past Events"}</h3>

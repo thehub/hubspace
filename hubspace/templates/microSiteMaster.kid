@@ -11,9 +11,20 @@ from hubspace.model import Location, Page
 from sqlobject import AND
 from hubspace.active import location_links
 from hubspace.file_store import get_filepath
+from hubspace.model import Page
+
+
+def pn(thepage):
+    if thepage.page_type=='blog2':
+        return thepage.path_name+'/'
+    else:
+        return thepage.path_name
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">
+    
+    <!-- sidebar headers -->
+
     <?python
     title = Page.select(AND(Page.q.path_name=='index.html', Page.q.locationID==location.id))[0].title
     ?>
@@ -71,8 +82,10 @@ from hubspace.file_store import get_filepath
     </c>
     <script src="/static/javascript/thehub.js" type="text/javascript" charset="utf-8"></script>
     <link href="/static/images/favicon.ico" type="image/x-icon" rel="Shortcut icon"/>
+
 </head>
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()"  class="yui-skin-sam">
+<div id="hsheader">
 <div style="visibility:hidden;" id="location_id" class="${location.id}"></div>
 <div style="visibility:hidden;" id="page_id" class="${page.id}"></div>
 <div style="visibility:hidden;" id="page_path_name" class="${page.path_name}"></div>
@@ -103,7 +116,8 @@ from hubspace.file_store import get_filepath
 	</ul>
 </div>
   <ul id="left_tabs">
-    <li py:attrs="page.id==menu_item.object.id and {'class':'selected'} or {}" py:for="menu_item in lists('left_tabs')" py:if="menu_item.active"><a href="${relative_path}${menu_item.object.path_name}" id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a></li>
+    <li py:attrs="(page.id==menu_item.object.id or str(page.subpage_of)==str(menu_item.object.id)) and {'class':'selected'} or {}" py:for="menu_item in lists('left_tabs')" py:if="menu_item.active"><a href="${relative_path}${pn(menu_item.object)}" id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}
+    </a></li>
   </ul>
     <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_list_left"><a href="#">Edit Left Navigation</a></div>
     <?python
@@ -111,22 +125,53 @@ from hubspace.file_store import get_filepath
        right_tabs.reverse()
     ?>
   <ul id="right_tabs">
-    <li py:attrs="page.id==menu_item.object.id and {'class':'selected right'} or {'class': 'right'}" py:for="menu_item in right_tabs" py:if="menu_item.active"><a href="${relative_path}${menu_item.object.path_name}"  id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a></li>
+    <li py:attrs="page.id==menu_item.object.id and {'class':'selected right'} or {'class': 'right'}" py:for="menu_item in right_tabs" py:if="menu_item.active"><a href="${relative_path}${pn(menu_item.object)}"  id="Page-${menu_item.object.id}-name">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a></li>
   </ul>
   <div py:if="is_host(identity.current.user, location, render_static)" class="edit_list" id="edit_list_right"><a href="#">Edit Right Navigation</a></div>
+    <?python
+        subpageid = (page.subpage_of=='' or page.subpage==None) and 'subpages_%s' % page.id or 'subpages_%s' % page.subpage_of
+        subpages = [p for p in lists(subpageid)]
+        subpageclass = len(subpages) and 'hassubpages' or 'nosubpages'
+    ?>
+    <ul id='subpages_foo' style='clear:both' py:attrs="{'id':subpageid,'class':subpageclass}">
+        <li py:for="subpage in subpages" py:if="subpage.active" py:attrs="subpage.object.id==page.id and {'class':'selected'} or {}"><a href="${relative_path}${pn(subpage.object)}" id="Page-${subpage.object.id}-name">${subpage.object.name}</a></li>
+    </ul>
+    <div py:if="is_host(identity.current.user, location, render_static) and not page.page_type.startswith('blog2x')" class="edit_list" id="edit_subpages"><a href="#">Edit Subpages</a></div>
+
 </div>
+</div>
+
+<?python
+    searchpages = Page.selectBy(page_type='search', location=location)
+    if searchpages.count():
+        searchpage = searchpages[0]
+    else:
+        searchpage = None
+?>
+<div id="hscontent">
+    <div id="hssearch" py:if="searchpage">
+        <form action="${relative_path}${searchpage.path_name}">
+            <input name="s" type="text" value="Search this site..." onclick="this.value='';" onfocus="this.value='';" class="searchinput input" id="searchpage-searchbox"/>
+            <input type="submit" value="Search" class="button simple-btn" />
+        </form> 
+    </div>
+
     <div id="content-highlight" class="container">
         <img py:if="not image_source_list" id="Page-${page.id}-image" src="${top_image_src}" alt="${page.image_name}" />   
         <img py:if="image_source_list" py:for="image_source in image_source_list" class="slideshow_image" id="${page.name}" src="${image_source}" />
     </div>
     <div id="content-main" class="container">
          <div py:replace="item[:]"/>
+         <div id='sidebar'>
+         <!-- sidebar content -->
+         </div>
     </div>
- 
+</div>
+<div id="hsfooter">
 <div class="container" id="footer">
-    <div py:for="menu_item in list(lists('left_tabs'))[1:]" py:if="menu_item.active" class="span-3"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
-    <div py:for="menu_item in lists('right_tabs')" py:if="menu_item.active" class="span-3"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
-  <div class="span-3 last">
+    <div py:for="menu_item in list(lists('left_tabs'))[1:]" py:if="menu_item.active" class="span-3" py:attrs="{'class':'span-3 footer-%s' % menu_item.object.name}"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
+    <div py:for="menu_item in lists('right_tabs')" py:if="menu_item.active" class="span-3" py:attrs="{'class':'span-3 footer-%s' % menu_item.object.name}"><a href="${relative_path}${menu_item.object.path_name}">${menu_item.object.name and menu_item.object.name or "King's Cross"}</a>  <br /><span class="footer-menu-desc" id="Page-${menu_item.object.id}-subtitle">${menu_item.object.subtitle and menu_item.object.subtitle or "King's Cross"}</span></div>
+  <div id="spreadthehub" class="span-3 last">
     <span class="footer-menu-desc">Spread the Hub!</span>
     <div id="add-this-widget">
     <!-- AddThis Button BEGIN -->
@@ -135,6 +180,7 @@ from hubspace.file_store import get_filepath
     </div>
   </div>
 </div>
+<!--
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -144,7 +190,8 @@ try {
 var pageTracker = _gat._getTracker("UA-9039567-1");
 pageTracker._setDomainName(".the-hub.net");
 pageTracker._trackPageview();
-} catch(err) {}</script>
+} catch(err) {}</script>-->
 <script py:if="page.page_type in ['home', 'contact']" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAiA7tLHdzZr8yhGAEbo5FGxS_srkAJTD0j5T3EF3o06M_52NTAhQM2w0ugG9dZdoyPl3s9RqydGrzpQ" type="text/javascript"></script>
+</div>
 </body>
 </html>
