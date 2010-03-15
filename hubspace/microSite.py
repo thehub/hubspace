@@ -668,7 +668,7 @@ microsite_page_types =  {
     'resetPassword':reset_password_type,
     'standard': PageType('standard', 'hubspace.templates.microSiteStandard', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
     'blog2': PageType('blog2', 'hubspace.templates.microSiteBlog2', get_blog2, static=False),
-    'plain': PageType('plain', 'hubspace.templates.microSitePlain', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
+    'plain': PageType('html', 'hubspace.templates.microSitePlain', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
     'search': PageType('search', 'hubspace.templates.microSiteSearch', sitesearch, static=False),
     }
 
