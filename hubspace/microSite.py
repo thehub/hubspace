@@ -203,7 +203,7 @@ def get_event(*args):
 
 def experience_slideshow(*args, **kwargs):
     return {'image_source_list': [top_image_src(page, kwargs['microsite']) for page in Page.select(AND(Page.q.locationID == kwargs['location'],
-                                                                                                       Page.q.image != None))]}
+                                                                                                       Page.q.image != None)) if page.active]}
 
 
 def image_source(image_name, microsite, default=""):
