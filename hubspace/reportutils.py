@@ -33,7 +33,7 @@ def do_report_maintainance():
             applogger.warn("reportutils: Error removing file: %s" % f)
     global get_all_usages
     get_all_usages = AllUsages()
-    #get_all_usages.update()
+    get_all_usages.update()
 
 class Report(object):
     """
@@ -162,7 +162,7 @@ class AllUsages(object):
         thread.start_new(self.update, (wait_secs,))
 
 get_all_usages = AllUsages()
-#get_all_usages.update_in_thread(5*60)
+get_all_usages.update_in_thread(5*60)
 
 def get_usages_for_period(location, start, end):
     return (ru for ru in get_all_usages()[location] if end >= ru.start >= start)
