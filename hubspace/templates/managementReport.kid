@@ -32,6 +32,8 @@
 <body style="width:${len(stats) * 550}px">  
 <?python
 locs = sorted(stats)
+switch_graph_label = "Switch to Graph view"
+switch_table_label = "Switch to Table view"
 ?>
 <table border="1">
 <tr>
@@ -82,7 +84,7 @@ report_type = 'revenue_stats'
         <div py:if="not nodata">
 
         <div class="dontprint">
-        <a id="toggle-${report_type}-${loc_id}" class="toggle-${report_type} clicker ">Switch to Table view</a>
+        <a id="toggle-${report_type}-${loc_id}" class="toggle-${report_type} clicker">${switch_table_label}</a>
         </div>
 
         <table id="table-${report_type}-${loc_id}" class="table-${report_type}">
@@ -98,26 +100,31 @@ report_type = 'revenue_stats'
         </table>
         <img class="canvas-${report_type}" id="canvas-${report_type}-${loc_id}" src="/report_image/${report.draw_vbars_chart()}"/>
 
-        ${script_toggle_switch(report_type, loc_id)}
-
         </div>
 
-    </td></tr>
+        </td>
+        ${script_toggle_switch(report_type)}
+        </tr>
 </div>
 
-<div py:def="script_toggle_switch(report_type, loc_id)">
+<div py:def="script_toggle_switch(report_type)">
+<?python
+switch_graph_label = '"Switch to Graph view"'
+switch_table_label = '"Switch to Table view"'
+?>
     <script>
     $('.table-${report_type}').hide();
     $('.canvas-${report_type}').show();
     $('.toggle-${report_type}').click( function () {
-        if ($(this).text() == 'Switch to Graph view') {
+        // alert($(this).text());
+        if ($(this).text() == ${switch_graph_label}) {
             $('.table-${report_type}').hide();
             $('.canvas-${report_type}').show();
-            $('.toggle-${report_type}').text('Switch to Table view'); }
+            $('.toggle-${report_type}').text(${switch_table_label}); }
         else {
             $('.table-${report_type}').show();
             $('.canvas-${report_type}').hide();
-            $('.toggle-${report_type}').text('Switch to Graph view'); }
+            $('.toggle-${report_type}').text(${switch_graph_label}); }
         });
     </script>
 </div>
@@ -137,7 +144,7 @@ report_type = 'revenue_stats'
         <div py:if="not nodata">
 
         <div class="dontprint">
-        <a id="toggle-${report_type}-${loc_id}" class="toggle-${report_type} clicker ">Switch to Table view</a>
+        <a id="toggle-${report_type}-${loc_id}" class="toggle-${report_type} clicker ">${switch_table_label}</a>
         </div>
 
         <br/>
@@ -151,11 +158,12 @@ report_type = 'revenue_stats'
 
         <img class="canvas-${report_type}" id="canvas-${report_type}-${loc_id}" src="/report_image/${report.draw_pie_chart()}"/>
 
-        ${script_toggle_switch(report_type, loc_id)}
-
         </div>
 
-    </td></tr>
+        </td>
+        ${script_toggle_switch(report_type)}
+        </tr>
+
 </div>
 </div>
 
@@ -179,7 +187,7 @@ report_type = 'churn_stats'
         <div py:if="not nodata">
 
         <div class="dontprint">
-        <a id="toggle-${report_type}-${loc_id}" class="toggle-${report_type} clicker ">Switch to Table view</a>
+        <a id="toggle-${report_type}-${loc_id}" class="toggle-${report_type} clicker ">${switch_table_label}</a>
         </div>
 
         <br/>
@@ -197,12 +205,10 @@ report_type = 'churn_stats'
         </tr>
         </table>
         <img class="canvas-${report_type}" id="canvas-${report_type}-${loc_id}" src="/report_image/${report.draw_multiline_chart()}"/>
-
-        ${script_toggle_switch(report_type, loc_id)}
-
         </div>
-
-    </td></tr>
+        </td>
+    ${script_toggle_switch(report_type)}
+    </tr>
 </div>
 
 ${draw_pies(stats, "members_by_tariff")}
@@ -235,7 +241,7 @@ report_type = 'usage_by_tariff'
         <div py:if="not nodata">
 
         <div class="dontprint">
-        <a id="${toggle_id}" class="${toggle_cls} clicker ">Switch to Table view</a>
+        <a id="${toggle_id}" class="${toggle_cls} clicker ">${switch_table_label}</a>
         </div>
 
         <table id="${table_id}" class="${table_cls}">
@@ -252,10 +258,10 @@ report_type = 'usage_by_tariff'
 
         <img class="${canvas_cls}" id="${canvas_id}" src="/report_image/${report.draw_hsbars_chart()}" />
 
-        ${script_toggle_switch(report_type + '-' + resource_type, loc_id)}
-
         </div>
         </td>
+        ${script_toggle_switch(report_type + '-' + resource_type)}
+
     </tr>
     </table>
     </td>

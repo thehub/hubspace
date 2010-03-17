@@ -304,8 +304,8 @@ class LocationStats(object):
         return ((Resource.get(t_id).name, float(sum(ru.effectivecost for ru in usages))) for t_id, usages in grouped)
 
     def get_revenue_stats(self):
-        grouped = sortAndGrpby(self.usages, lambda x: "%s %s" % (calendar.month_abbr[x.start.month], x.start.year))
-        return tuple((month, float(sum(ru.effectivecost for ru in usages))) for month, usages in grouped)
+        grouped = sortAndGrpby(self.usages, lambda x: (x.start.year, x.start.month))
+        return tuple(("%s %s" % (calendar.month_abbr[month[1]], month[0]), float(sum(ru.effectivecost for ru in usages))) for month, usages in grouped)
 
     @save_result
     def get_revenue_by_resource(self):
