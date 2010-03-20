@@ -281,7 +281,11 @@ class LocationStats(object):
         for ru in relevant_usages:
             quantity = isinstance(ru.duration_or_quantity, datetime.timedelta) and \
                 (((ru.duration_or_quantity.days * 24 * 60 * 60) + ru.duration_or_quantity.seconds) / 60 *60) or ru.duration_or_quantity
-            result[ru.resource.type][ru.resource.name][ru.tariffID] += quantity
+            try:
+                result[ru.resource.type][ru.resource.name][ru.tariffID] += quantity
+            except KeyError:
+                applogger.warn("get_usage_by_tariff: %s not found in %s" % (ru.resource.name, str(result[ru.resource.type].keys())))
+
         return result
 
     def get_summary(self):
@@ -297,7 +301,9 @@ class LocationStats(object):
 
     def get_members_by_tariff(self):
         tariff_usages = (ru for ru in self.get_usages_for_period(*get_this_months_limits()) if ru.resource.type == 'tariff')
-        return ((name, len(tuple(usages))) for name, usages in sortAndGrpby(tariff_usages, lambda ru: ru.resource.name))
+        stats = tuple((name, len(tuple(usages))) for name, usages in sortAndGrpby(tariff_usages, lambda ru: ru.resource.name))
+        applogger.info("reportutils:get_members_by_tariff -> %s" % str(stats))
+        return stats
 
     def get_revenue_by_tariff(self):
         grouped = sortAndGrpby(self.usages, lambda x: x.tariffID)
@@ -306,6 +312,7 @@ class LocationStats(object):
     def get_revenue_stats(self):
         grouped = sortAndGrpby(self.usages, lambda x: (x.start.year, x.start.month))
         return tuple(("%s %s" % (calendar.month_abbr[month[1]], month[0]), float(sum(ru.effectivecost for ru in usages))) for month, usages in grouped)
+
 
     @save_result
     def get_revenue_by_resource(self):

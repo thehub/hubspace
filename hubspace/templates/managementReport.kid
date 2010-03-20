@@ -137,6 +137,8 @@ switch_table_label = '"Switch to Table view"'
         loc_id = loc.replace(' ','_')
         report = stats[loc][report_type]
         nodata = not bool(report.data and any(x[1][0][1] for x in report.data))
+        switch_graph_label = "Switch to Graph view"
+        switch_table_label = "Switch to Table view"
         ?>
         <h3>${title}</h3>
 

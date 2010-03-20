@@ -336,7 +336,12 @@ class User(SQLObject):
         self._SO_set_outstanding(amount) 
 
     def _get_tariff_name(self):
+        import hubspace.tariff
         return hubspace.tariff.get_tariff(self.homeplace.id, self.id, datetime.now(), True).name
+
+    def _get_tariff(self):
+        import hubspace.tariff
+        return hubspace.tariff.get_tariff(self.homeplace.id, self.id, datetime.now(), True)
 
     def _get_homeplace_name(self):
         return self.homeplace and self.homeplace.name or ""
