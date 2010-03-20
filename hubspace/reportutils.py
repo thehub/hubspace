@@ -332,7 +332,7 @@ class LocationStats(object):
 
     def get_usages_for_period(self, start, end):
         rusages = get_all_usages()[self.location.id]
-        return list(ru for ru in rusages if self.end >= ru.start >= self.start)
+        return list(ru for ru in rusages if end >= ru.start >= start)
 
     def __getattr__(self, attrname):
         if attrname == "usages":
