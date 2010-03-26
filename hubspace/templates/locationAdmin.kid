@@ -1,6 +1,6 @@
 <?python
 from hubspace.utilities.uiutils import oddOrEven, c2s, now
-from hubspace.utilities.permissions import locations
+from hubspace.utilities.permissions import locations, is_host
 odd_or_even = oddOrEven().odd_or_even
 from turbogears import identity
 from hubspace.controllers import permission_or_owner, get_place, listSavedReports
@@ -129,7 +129,7 @@ def makeOptDict(r, typ):
      </div>
 
 
-  	<div class="dataBox" py:if='permission_or_owner(location, location, "manage_locations")'>
+  	<div class="dataBox" py:if='is_host(location, identity.current.user)'>
 	    <div class="dataBoxHeader"> <a class="title" id="link_adminStuff0"><h2>Messages</h2></a> </div>
 	    <div class="dataBoxContent">
             <h1>Translation</h1>
