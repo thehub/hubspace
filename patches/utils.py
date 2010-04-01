@@ -18,5 +18,10 @@ def parseDBAccessDirective():
 
 def getPostgreSQLConnection(user, password, host, dbname):
     """ Create a connection to the PostgreSQL database """
-    return psycopg2.connect("host=%(host)s user=%(user)s password=%(password)s dbname=%(dbname)s" % locals())
+    if ':' in host:
+        host, port = host.split(':')
+    connection_str = "host=%(host)s user=%(user)s password=%(password)s dbname=%(dbname)s" % locals()
+    if 'port' in locals():
+        connection_str += ' port=%(port)s' %locals()
+    return psycopg2.connect(connection_str)
 

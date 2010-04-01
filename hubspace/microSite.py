@@ -1370,16 +1370,27 @@ class Sites(controllers.Controller):
         try:
             Page.select(AND(Page.q.location==loc))[0]
         except IndexError:
-            self.create_pages(loc, site_types, site_pages)
-            self.create_page_lists(loc, site_left_tabs, site_right_tabs)
+            index_pages = self.create_pages(loc, site_types, site_pages)
+            self.create_page_lists(loc, site_left_tabs, site_right_tabs, index_pages[loc])
 
         setattr(self.__class__, site_path, MicroSite(loc, site_dir, site_url, static_url, site_types))
 
     def create_pages(self, loc, site_types, site_pages):
+        index_pages = {}
         for page, type in site_pages.items():
-            site_types[type].create_page(page, loc, {})
-   
-    def create_page_lists(self, loc, left_tabs, right_tabs):
+            p = site_types[type].create_page(page, loc, {})
+            if page == 'index':
+                index_pages[loc] = p
+        return index_pages
+
+    def create_page_lists(self, loc, left_tabs, right_tabs, index_page):
+        for list_name, data in list_types.items():
+            object_types = ','.join(data['object_types'])
+            List(list_name=list_name,
+                 object_types=object_types,
+                 mode=data['mode'],
+                 page=index_page,
+                 location=loc,)
         kwargs = {'location':loc, 'object_type': Page, 'active': 1}
         for page in left_tabs:
             kwargs.update({'name':page})

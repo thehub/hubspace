@@ -11,6 +11,7 @@ class Patch(patches.base.Patch):
         access_tuple = patches.utils.parseDBAccessDirective()
         con = patches.utils.getPostgreSQLConnection(*access_tuple)
         dburi = patches.utils.parseDBURI('dev.cfg').split('=')[1][1:-1]
+
         database.set_db_uri(dburi)
        
         database.run_with_transaction(setup_listtable)
@@ -37,7 +38,7 @@ def migrate_lists():
     from hubspace.microSite import list_types
     
     for location in Location.select():
-        results = Page.selectBy(location=location,path_name='index.html')
+        results = Page.selectBy(location=location, path_name='index.html')
         if results.count() == 0:
             continue;
         else:            

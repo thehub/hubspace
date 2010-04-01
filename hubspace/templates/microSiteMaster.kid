@@ -180,7 +180,7 @@ def pn(thepage):
     </div>
   </div>
 </div>
-<!--
+
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -190,7 +190,7 @@ try {
 var pageTracker = _gat._getTracker("UA-9039567-1");
 pageTracker._setDomainName(".the-hub.net");
 pageTracker._trackPageview();
-} catch(err) {}</script>-->
+} catch(err) {}</script>
 <script py:if="page.page_type in ['home', 'contact']" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAiA7tLHdzZr8yhGAEbo5FGxS_srkAJTD0j5T3EF3o06M_52NTAhQM2w0ugG9dZdoyPl3s9RqydGrzpQ" type="text/javascript"></script>
 </div>
 </body>
