@@ -129,7 +129,7 @@ def makeOptDict(r, typ):
      </div>
 
 
-  	<div class="dataBox" py:if='is_host(location, identity.current.user)'>
+  	<div class="dataBox" py:if='location in locations()'>
 	    <div class="dataBoxHeader"> <a class="title" id="link_adminStuff0"><h2>Messages</h2></a> </div>
 	    <div class="dataBoxContent">
             <h1>Translation</h1>
