@@ -47,6 +47,8 @@ if SYNC_ENABLED:
     sessiongetter = lambda: _sessions
     syncerclient = syncer.client.SyncerClient("hubspace", sessiongetter)
 
+    fail_on_syncerror = False
+
     class LazyCall(object):
         def __init__(self, f):
             self.f = f
@@ -165,7 +167,8 @@ if SYNC_ENABLED:
             if ret:
                 t_id, res = ret
                 if res and not syncerclient.isSuccessful(res):
-                    raise SyncerError("syncer backend error")
+                    if fail_on_syncerror:
+                        raise SyncerError("syncer backend error")
                     return
                 if t_id > 0:
                     tls.syncer_trs.append(t_id)
@@ -192,6 +195,10 @@ if SYNC_ENABLED:
     @checkSyncerResults
     @checkReqHeaders
     def usr_updt_listener(instance, kwargs):
+        if instance.user_name == turbogears.config.config.configs['syncer']['hubspaceadminuid']:
+            return
+        #if 'password' in kwargs and kwargs.get('password') != instance.password:
+        #    return tls.syncer.onUserPasswordMod(kw['password'])
         return tls.syncerclient.onUserMod(instance.id)
 
     @checkSyncerResults
