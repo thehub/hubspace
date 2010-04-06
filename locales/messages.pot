@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2009-11-25 09:54\n"
+"POT-Creation-Date: 2010-04-01 09:44\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,38 +19,50 @@ msgstr ""
 msgid "Also booked: "
 msgstr ""
 
-#: hubspace/controllers.py:2442 hubspace/controllers.py:2567
+#: hubspace/controllers.py:1732
+msgid "No"
+msgstr ""
+
+#: hubspace/controllers.py:1732
+msgid "Yes"
+msgstr ""
+
+#: hubspace/controllers.py:2541 hubspace/controllers.py:2666
 msgid " (Hint: You should not include currency signs)"
 msgstr ""
 
-#: hubspace/controllers.py:3335 hubspace/utilities/login.py:16
+#: hubspace/controllers.py:3456 hubspace/utilities/login.py:16
 msgid "Your username or password were incorrect. Please try again."
 msgstr ""
 
-#: hubspace/controllers.py:3338 hubspace/controllers.py:3340
+#: hubspace/controllers.py:3459 hubspace/controllers.py:3461
 #: hubspace/utilities/login.py:19 hubspace/utilities/login.py:21
 msgid "Please log in."
 msgstr ""
 
-#: hubspace/controllers.py:3367 hubspace/utilities/login.py:46
+#: hubspace/controllers.py:3488 hubspace/utilities/login.py:46
 msgid "Please enter the email address associated with your account"
 msgstr ""
 
-#: hubspace/controllers.py:3377 hubspace/controllers.py:3386
+#: hubspace/controllers.py:3498 hubspace/controllers.py:3507
 #: hubspace/utilities/login.py:56 hubspace/utilities/login.py:65
 msgid "A confirmation email was sent to you. "
 msgstr ""
 
-#: hubspace/controllers.py:3389 hubspace/utilities/login.py:68
+#: hubspace/controllers.py:3510 hubspace/utilities/login.py:68
 msgid "The email was not correct"
 msgstr ""
 
-#: hubspace/controllers.py:3397 hubspace/utilities/login.py:76
+#: hubspace/controllers.py:3518 hubspace/utilities/login.py:76
 msgid "The confirmation key is wrong - maybe you need to check your email?"
 msgstr ""
 
-#: hubspace/controllers.py:3418 hubspace/utilities/login.py:95
+#: hubspace/controllers.py:3539 hubspace/utilities/login.py:95
 msgid "The new password was sent to you."
+msgstr ""
+
+#: hubspace/controllers.py:4268
+msgid "Problem sending the invoice: Member's billing preferences are set to not to use profile details and billing preferences has no email address specified. You may want visit member's 'Billing Details' section."
 msgstr ""
 
 #: hubspace/invoice.py:69
@@ -69,15 +81,15 @@ msgid ""
 "The Hosting Team\n"
 msgstr ""
 
-#: hubspace/validators.py:540
+#: hubspace/validators.py:542
 msgid "The booking must end later than it starts!"
 msgstr ""
 
-#: hubspace/validators.py:541
+#: hubspace/validators.py:543
 msgid "The booking must start before ending!"
 msgstr ""
 
-#: hubspace/validators.py:572
+#: hubspace/validators.py:574
 msgid "A tentative booking should be made at least %s hours in advance!"
 msgstr ""
 
@@ -411,10 +423,6 @@ msgstr ""
 
 #: hubspace/templates/addResourceGroup.kid:input
 msgid "cancel"
-msgstr ""
-
-#: hubspace/templates/host.kid:a
-msgid "Todos"
 msgstr ""
 
 #: hubspace/templates/host.kid:a
@@ -781,12 +789,16 @@ msgstr ""
 msgid "Featured Events: Hub Lectures"
 msgstr ""
 
-#: hubspace/templates/billingDetailsEdit.kid:option
-msgid "Self"
+#: hubspace/templates/billingDetailsEdit.kid:input
+msgid "Use main profile details"
 msgstr ""
 
-#: hubspace/templates/billingDetailsEdit.kid:td
-msgid "Use profile details"
+#: hubspace/templates/billingDetailsEdit.kid:input
+msgid "Bill to:"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:input
+msgid "Use billing details below"
 msgstr ""
 
 #: hubspace/templates/memberRFID.kid:a
@@ -937,6 +949,14 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
+#: hubspace/templates/microSitePlain.kid:div
+msgid "edit content"
+msgstr ""
+
+#: hubspace/templates/microSitePlain.kid:p
+msgid "Your content here"
+msgstr ""
+
 #: hubspace/templates/uploadImage.kid:div
 msgid "Images will be cropped to"
 msgstr ""
@@ -971,6 +991,10 @@ msgstr ""
 
 #: hubspace/templates/microSiteMaster.kid:div
 msgid "Admin Mode"
+msgstr ""
+
+#: hubspace/templates/microSiteMaster.kid:a
+msgid "Edit Subpages"
 msgstr ""
 
 #: hubspace/templates/microSiteMaster.kid:span
@@ -1341,6 +1365,10 @@ msgstr ""
 msgid "Add new Todo list"
 msgstr ""
 
+#: hubspace/templates/newinvoice.kid:c
+msgid "VAT"
+msgstr ""
+
 #: hubspace/templates/newinvoice.kid:strong
 msgid "Invoice details"
 msgstr ""
@@ -1383,10 +1411,6 @@ msgstr ""
 
 #: hubspace/templates/newinvoice.kid:td
 msgid "Excluding VAT"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "VAT"
 msgstr ""
 
 #: hubspace/templates/newinvoice.kid:strong
@@ -1477,10 +1501,6 @@ msgstr ""
 msgid "Invoiced"
 msgstr ""
 
-#: hubspace/templates/managementdata.kid:a
-msgid "Download spreadsheet"
-msgstr ""
-
 #: hubspace/templates/managementdata.kid:h2
 msgid "Export User Data"
 msgstr ""
@@ -1495,6 +1515,86 @@ msgstr ""
 
 #: hubspace/templates/managementdata.kid:td
 msgid "Select column to sort by"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:h2
+msgid "Reports"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:span
+msgid "1. Select Location"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:span
+msgid "2. Select options to be included in the report"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Summary"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Revenue Performance"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Churn Rate"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "% Revenue by Resource type"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "% Revenue by Resource"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Resource usage by Tariff"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "% Revenue by Tariff"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "% Members on Tariff"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "3. Select date range"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "This Month"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "Last Month"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "This and Last Months"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "Last 12 Months"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:em
+msgid "OR"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:a
+msgid "Start"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:a
+msgid "End"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:a
+msgid "View >>"
 msgstr ""
 
 #: hubspace/templates/bristolDataEdit.kid:option
@@ -1725,6 +1825,10 @@ msgstr ""
 msgid "Under Construction"
 msgstr ""
 
+#: hubspace/templates/microSiteSearch.kid:form
+msgid "Search for"
+msgstr ""
+
 #: hubspace/templates/manageResources.kid:a
 msgid "Add Resource"
 msgstr ""
@@ -1920,7 +2024,31 @@ msgid "| End date:"
 msgstr ""
 
 #: hubspace/templates/locationAdmin.kid:h2
-msgid "Message Customization"
+msgid "Messages"
+msgstr ""
+
+#: hubspace/templates/locationAdmin.kid:h1
+msgid "Translation"
+msgstr ""
+
+#: hubspace/templates/locationAdmin.kid:td
+msgid "Message catalogue file (.po)"
+msgstr ""
+
+#: hubspace/templates/locationAdmin.kid:a
+msgid "Download"
+msgstr ""
+
+#: hubspace/templates/locationAdmin.kid:a
+msgid "Send updated translation file"
+msgstr ""
+
+#: hubspace/templates/locationAdmin.kid:a
+msgid "Help"
+msgstr ""
+
+#: hubspace/templates/locationAdmin.kid:h1
+msgid "Customization"
 msgstr ""
 
 #: hubspace/templates/locationAdmin.kid:p
@@ -1973,10 +2101,6 @@ msgstr ""
 
 #: hubspace/templates/locationAdmin.kid:td
 msgid "Date range"
-msgstr ""
-
-#: hubspace/templates/locationAdmin.kid:td
-msgid "Start"
 msgstr ""
 
 #: hubspace/templates/locationAdmin.kid:a
@@ -2063,6 +2187,78 @@ msgstr ""
 
 #: hubspace/templates/locationAdmin.kid:a
 msgid "Download CSV"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:caption
+msgid "Member Summary"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:td
+msgid "Active members:"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:td
+msgid "Not Active members:"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:td
+msgid "New members:"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:caption
+msgid "Revenue Summary ("
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:em
+msgid ")"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:td
+msgid "Invoiced:"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:td
+msgid "Not Invoiced:"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:td
+msgid "Total:"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:h3
+msgid "Revenue Report"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:h3
+msgid "Revenue by Resource types"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:h3
+msgid "Revenue by Resource"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:label
+msgid "Visualize"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:th
+msgid "Members left"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:th
+msgid "Members came back"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:h3
+msgid "Members on Tariffs"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:h3
+msgid "Revenue by Tariffs"
+msgstr ""
+
+#: hubspace/templates/managementReport2.kid:h3
+msgid "Usage by Tariffs"
 msgstr ""
 
 #: hubspace/templates/meetingBookingEdit.kid:td
@@ -2239,6 +2435,50 @@ msgstr ""
 msgid "Sort Code (if applicable)"
 msgstr ""
 
+#: hubspace/templates/managementReport.kid:STYLE
+msgid ""
+".dontprint {\n"
+"            display: none;\n"
+"        }"
+msgstr ""
+
+#: hubspace/templates/managementReport.kid:STYLE
+msgid ""
+".clicker {\n"
+"\t    font-size:95%;\n"
+"\t    padding:1px;\n"
+"\t    font-family:helvetica, arial, verdana, sans-serif;\n"
+"\t    margin:1;\n"
+"\t    border: 1px solid #3F3F3F;\n"
+"            cursor:pointer;\n"
+"            text-decoration: none;\n"
+"        }"
+msgstr ""
+
+#: hubspace/templates/managementReport.kid:caption
+msgid "Dashboard"
+msgstr ""
+
+#: hubspace/templates/managementReport.kid:td
+msgid "Revenue:"
+msgstr ""
+
+#: hubspace/templates/managementReport.kid:td
+msgid "Currency:"
+msgstr ""
+
+#: hubspace/templates/managementReport.kid:div
+msgid "No Data"
+msgstr ""
+
+#: hubspace/templates/managementReport.kid:th
+msgid "Month"
+msgstr ""
+
+#: hubspace/templates/managementReport.kid:th
+msgid "Revenue"
+msgstr ""
+
 #: hubspace/templates/resourcetable.kid:td
 msgid "Start date"
 msgstr ""
@@ -2277,10 +2517,6 @@ msgstr ""
 
 #: hubspace/templates/resourcetable.kid:td
 msgid "No Resource Usages"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kid:td
-msgid "End"
 msgstr ""
 
 #: hubspace/templates/resourcetable.kid:td
@@ -2325,6 +2561,10 @@ msgstr ""
 
 #: hubspace/templates/memberProfileEdit.kid:td
 msgid "Email 1"
+msgstr ""
+
+#: hubspace/templates/memberProfileEdit.kid:big
+msgid "+"
 msgstr ""
 
 #: hubspace/templates/memberProfileEdit.kid:th
@@ -2420,11 +2660,15 @@ msgid "Description:"
 msgstr ""
 
 #: hubspace/templates/microSiteEvents.kid:a
+msgid "iCal"
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:a
 msgid "back to Events Page"
 msgstr ""
 
-#: hubspace/templates/microSiteStandard.kid:p
-msgid "Your content here"
+#: hubspace/templates/microSiteEvents.kid:a
+msgid "all events in iCal format"
 msgstr ""
 
 #: hubspace/templates/microSiteExperience.kid:p
