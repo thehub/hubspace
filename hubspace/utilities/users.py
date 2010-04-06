@@ -71,7 +71,7 @@ def filter_members(location, text_filter, type, active_only, start, end, overrid
 
     if type == "member_search":
 
-        text_filter = u"%" + u" ".join(text_filter.split()).replace("'","\\'") + u"%"
+        text_filter = "%" + " ".join(text_filter.split()).replace("'","\\'") + "%"
 
         if override_user:
             user_locs = Location.select()
@@ -86,7 +86,7 @@ def filter_members(location, text_filter, type, active_only, start, end, overrid
                 if location not in user_locs:
                     users = [user for user in users if user.active]
         else:
-            users = list(User.select("display_name ilike '%s' order by display_name" % text_filter))
+            users = list(User.select("display_name ilike '%s' order by display_name" % str(text_filter)))
             if active_only:
                 users = [user for user in users if user.active or user.homeplace in user_locs]
             else:
