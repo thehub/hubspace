@@ -5,13 +5,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-06-02 23:57\n"
-"PO-Revision-Date: 2009-06-02 17:01+0100\n"
-"Last-Translator: Thomas Vaassen <thomas.vaassen@gmail.com>\n"
+"POT-Creation-Date: 2010-04-01 09:44\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: utf-8\n"
 "Generated-By: pygettext.py 1.5\n"
 
 
@@ -78,19 +78,6 @@ msgid ""
 "\n"
 "The Hosting Team\n"
 msgstr ""
-"\n"
-"Dear %(first_name)s,\n"
-"\n"
-"Please find your Hub invoice attached.\n"
-"\n"
-"The Hub makes use of direct debits (auto incasso) as the default mode of payment. In that case, consider this invoice for administrative purposes only. In any other case, please transfer the total amount of the invoice (including VAT) within 14 days from the invoice date.\n"
-"If you have any questions, please don't hesitate to contact The Hub's hosting team on %(location_name)s.hosts@the-hub.net or %(telephone)s.\n"
-"\n"
-"We would always welcome your feedback and ideas on how we can improve your experience here.\n"
-"\n"
-"Thank you for being part of The Hub.\n"
-"\n"
-"The Hosting Team\n"
 
 #: hubspace/validators.py:542
 msgid "The booking must end later than it starts!"
@@ -770,7 +757,7 @@ msgstr ""
 
 #: hubspace/templates/billingDetails.kid:td
 msgid "VAT Number"
-msgstr "BTW no."
+msgstr ""
 
 #: hubspace/templates/webSiteStandard.kid:blockquote
 msgid "\"Probably the most gutsy and dynamic event I have ever been to.\""
@@ -1378,7 +1365,7 @@ msgstr ""
 
 #: hubspace/templates/newinvoice.kid:c
 msgid "VAT"
-msgstr "BTW"
+msgstr ""
 
 #: hubspace/templates/newinvoice.kid:strong
 msgid "Invoice details"
