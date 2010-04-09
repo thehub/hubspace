@@ -1430,6 +1430,19 @@ var Tabs = function () {
             if (prof_trigger.length && prof_img.length) {
                 var up = new Upload(current_profile_id, 'User', 'image', prof_img.get(0), prof_trigger.get(0), {'edit_event':'click'});
             }
+            jq('.change_avatar').click( function () {
+                var html = '<iframe src="http://plus.the-hub.net/avatar/change/" width="700" height="700"/>';
+                var dialog = jq('<div></div>').html(html).dialog({
+                    autoOpen: false,
+                    title: 'Change Avatar',
+                    height: 700,
+                    width: 700,
+                    position: 'top',
+                    resizable: true,
+                    });
+                dialog.dialog('open');
+                });
+           
         },
 	switch_tab: function (new_section_no, new_subsection_no) {
             section_no = new_section_no;

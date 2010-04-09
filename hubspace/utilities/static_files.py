@@ -13,7 +13,7 @@ js_files = ['prototype-1.6.0.3.js', 'scroll.js', 'browserdetect.js', 'jquery.min
 'jquery.confirm.js', 'jquery.confirm-1.1.js',  'effects.core.js', 'effects.blind.js', 'effects.highlight.js',
 'jquery.flot.js', 'hubcms.js', 'json2.js', 'hub.js']
 
-admin_js_files = ['ui.core.js', 'ui.sortable.js', 'jquery.tablednd.js', 'my.sortable.js']
+admin_js_files = ['ui.sortable.js', 'jquery.tablednd.js', 'my.sortable.js']
 
 def minify(input_path):
    """return a minified version of a file as a python string
