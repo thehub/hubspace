@@ -1535,7 +1535,7 @@ class Members(controllers.Controller):
 
 
 from hubspace.utilities.booking import booking_offset_plus_height, default_booking_params
-from hubspace.utilities.i18n import get_hubspace_locale, get_location_from_base_url, get_po_path
+from hubspace.utilities.i18n import get_hubspace_locale, get_location_from_base_url, get_po_path, install_new_locale
 from hubspace.microSite import Sites
 ##################  Root  ####################
 
@@ -1698,6 +1698,11 @@ class Root(controllers.RootController):
     @expose()
     def download_messages_po(self, *args, **kw):
         po_path = get_po_path()
+        applogger.debug("download request: %s" % po_path)
+        if not os.path.exists(po_path):
+            applogger.warn("po not found: %s" % po_path)
+            locale = get_hubspace_user_locale()
+            install_new_locale(locale)
         out = file(po_path).read()
         cherrypy.response.headerMap["Content-Type"] = "application/x-gettext"
         cherrypy.response.headerMap["Content-Length"] = len(out)

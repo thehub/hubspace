@@ -93,7 +93,7 @@ class Group(SQLObject):
                         otherColumn='user_id')
 
     # collection of all permissions for this group
-    permissions = RelatedJoin("Permission", joinColumn="group_id", 
+    permissions = SQLRelatedJoin("Permission", joinColumn="group_id", 
                               intermediateTable="group_permission",
                               otherColumn="permission_id")
     access_policies = MultipleJoin('AccessPolicy', joinColumn="group_id")    
@@ -210,7 +210,7 @@ class User(SQLObject):
         return 1
 
     # groups this user belongs to
-    groups = RelatedJoin("Group",
+    groups = SQLRelatedJoin("Group",
                          intermediateTable="user_group",
                          createRelatedTable=False,
                          joinColumn="user_id",

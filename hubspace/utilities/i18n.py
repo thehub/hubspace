@@ -2,6 +2,7 @@ from turbogears.i18n.utils import _get_locale
 from turbogears.toolbox.admi18n.catalog import parse, merging
 from turbogears.toolbox.admi18n.pygettext import pot_header
 import time
+import logging
 
 from turbogears import identity
 import formencode
@@ -17,6 +18,8 @@ languages_list = languages_dict.items()
 languages_list.sort(lambda a, b: a[1] > b[1])
 
 from hubspace.model import Location
+
+applogger = logging.getLogger("hubspace")
 
 def get_location_from_base_url():
     try:
@@ -41,6 +44,14 @@ def get_hubspace_user_locale():
         lang_code = site_default_lang[cherrypy.request.base]
     return  lang_code + '_'+ identity.current.user.homeplace.name.lower().replace(' ', '')
 
+def install_new_locale(locale):
+    applogger.info("installing new locale: %s" % locale)
+    tool = tool_instance()
+    tool.add_languages([locale])
+    tool.compile_message_catalogs(locale)
+    applogger.info("installed new locale: %s" % locale)
+    return True
+
 def get_hubspace_locale():
     """get the locale based on the home hub of the user or the base_url and the name of the hub
     """
@@ -61,15 +72,14 @@ def get_hubspace_locale():
 
     if os.path.exists(tool.get_locale_catalog(locale, "messages")):
         if not os.path.exists(tool.get_locale_mo(locale, "messages")):
-            tool.compile_message_catalogs(locale)            
+            tool.compile_message_catalogs(locale)
         #should maybe test for each domain separately?
         return cherrypy.session.get('locale')
 
-    tool.add_languages([locale])
-    tool.compile_message_catalogs(locale)
+    install_new_locale(locale)
     return cherrypy.session.get('locale')
 
-get_po_path = lambda: tool_instance().get_locale_catalog(cherrypy.session['locale'], "messages")
+get_po_path = lambda: tool_instance().get_locale_catalog(get_hubspace_user_locale(), "messages")
 
 ################## I18N #########################
 from turbogears.command.i18n import InternationalizationTool, copy_file

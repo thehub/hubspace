@@ -12,7 +12,7 @@
       </div>
     </div>
     <div id="geo_address" class="span-16 gmap">${location.geo_address and location.geo_address or '34b York Way, London N1 9AB, UK'}
-    <!-- nosidebarplease -->
     </div>	
+    <!-- nosidebarplease -->
 </body>
 </html>
