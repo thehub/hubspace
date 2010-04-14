@@ -1,0 +1,103 @@
+#throbtext {
+	position:relative;
+        bottom:5px;
+        color: #808080;
+}
+#throbber {
+        position:relative;
+        height:26px;
+        display:none;
+}
+
+#admin_view_indicator {
+    background-color:#560005;
+    color: #ffffff;
+    width: 80px;
+}
+#content-main #meeting-rooms p.description {
+    color:#560005; 
+    font-weight:bold;
+}
+#content-main #meeting-rooms .space_description {
+    padding: 10px 10px 0;
+}
+#content-main #meeting-rooms .space_description p {
+    margin: 0 0 10px;
+}
+#content-main #meeting-rooms p {
+    color:#444;
+}
+.edit_list {
+    cursor: pointer;
+}
+#content-highlight img {
+    height: 250px;
+    width: 950px;
+}
+#content-highlight img.slideshow_image {
+    display: none;
+}
+#meeting-rooms ul li {
+    float:left; 
+    padding:5px 10px; 
+    background-color:#fff; 
+    border:1px solid #560005; 
+    margin-right:5px;
+}
+#meeting-rooms ul li a { 
+    text-decoration:none; 
+}
+#meeting-rooms ul li.selected {
+    background-color:#560005;
+}
+#meeting-rooms ul li.selected a {
+    color:#fff; 
+    font-weight:bold;
+}
+.meeting-room-info { 
+    clear:left;
+}
+.meeting-room-info img {
+    margin:10px;
+}
+#meeting-room-help {
+    clear:left;
+}
+/* experince page list styling */
+#content-main .content-sub ul#experience {
+   margin-left: 30px; 
+   list-style: circle inside none;
+}
+
+/* events page list images */
+#upcoming-events li.event {background-image:url(/static/images/micro/page/upcoming-events.gif); background-repeat:no-repeat; padding-left:40px; padding-bottom:10px;}
+#past-events li.event {background-image:url(/static/images/micro/page/past-events.gif); background-repeat:no-repeat; padding-left:40px; padding-bottom:10px;}
+
+/* members page list */
+ul#members-profiles {margin:0; padding:0px; list-style:none;}
+ul#members-profiles li.member {width:130px; height:130px; float:left; margin-left:15px; position:relative; background-color:#fff;}
+#members-profiles a.member-bio {display:none; position:absolute; top:15px; left:15px; width:100px; height:100px; background-color:#fff; text-decoration:none; color:#560005; width:100px; overflow:hidden;}
+#members-profiles li.member span.smallpic {font-size:11px; line-height:10px; padding-top:2px; clear:both;}
+#members-profiles li .bigpic {margin:15px 0 0 15px;}
+#members-profiles li.member span {font-family: 'Lucida Grande'; padding:0; margin:0; display:block; width:100px;}
+#members-profiles li.member span.member-name {font-size:12px; line-height:12px; font-weight:bold; display:block; padding-top:2px;}
+#members-profiles li.member span.member-company {font-size:11px; line-height:10px; padding-top:3px; word-wrap:break-word;}
+#members-profiles li.member span  {padding:0; margin:0; width:90px;}
+#members-profiles li.member img {border:0;}
+
+/* members list and events listings */
+#pub_profile h3.text_small, #pub_event h3.text_small {background-color:#ccc; color:#560005;}
+.profileimg {float:left; padding-left:10px; padding-right:10px;}
+#hubHomeContent {background-color:#F4F4F4; color:#560003;}
+.profileDetails {height:100px;  margin-bottom:0px; width:auto;}
+.profileDetails  td {padding-left:10px;}
+.propertyTitle {font-weight:bold; font-size:13px; color:#000;}
+.propertyValue {font-weight:bold; font-size:16px; color:#560003;}
+.description {font-size:12px; font-weight:normal; color:#000;}
+.property {padding-bottom:10px; padding-left:10px; padding-right:10px;}
+.backLink {float:right; margin-bottom:10px; margin-right:10px;}
+.biglink {font-size:14px;}
+.pdflink {background-image:url(/static/images/micro/pdf.gif); background-repeat:no-repeat; background-position:left; padding-left:20px;}
+.document p {color:#000;}
+
+#rss {float:right;}
