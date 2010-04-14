@@ -13,12 +13,12 @@ def main():
         print "static sync: begin"
         cmd = "/bin/cp -auv %s/* %s" % ("hubspace/static-src", staic_target)
         print "static sync: ", cmd
-    os.system(cmd)
-    print "static sync: done"
+	os.system(cmd)
+        print "static sync: done"
     
-    if not os.stat(deliverance_dir.endswith('deliverance-src')):
+    if not deliverance_dir.endswith('deliverance-src'):
         print "update deliverance: begin"
         cmd = "/bin/cp -auv %s/* %s" % ("deliverance-src", deliverance_dir)
         print "deliverance sync: ", cmd
-    os.system(cmd)
-    print "deliverance sync: done"
+        os.system(cmd)
+        print "deliverance sync: done"
