@@ -1,0 +1,126 @@
+<ruleset>
+
+    <server-settings>
+        <server>0.0.0.0:8001</server>
+        <execute-pyref>true</execute-pyref>
+        <!-- set your public ip here, and connect to http://spacedev.the-hub.net:8001/.deliverance/login,
+         enter admin/admin. Then you are logged in. This allows to append ?deliv_log to every url to get
+         a rather nice debug output of the deliverance actions -->
+
+        <dev-allow>188.220.60.64</dev-allow>
+        <dev-allow>85.176.77.183</dev-allow>
+        <dev-allow>85.176.74.79</dev-allow>
+        <dev-allow>baach.dyndns.org</dev-allow>
+        <dev-htpasswd>deliv-users.htpasswd</dev-htpasswd>
+    </server-settings>
+
+    <!-- the proxy directives are in order. The myrefs: in the pyref attributes referes to the
+         myrefs.py file in the bin directory of the deliverance directory -->
+
+
+    <!-- our static files -->
+    <proxy path="/_theme">
+        <dest href="{here}/../theme" />
+    </proxy>
+   
+    <!-- make this the main theme -->
+    <theme href="/_theme/theme.html" />    
+    
+    <!-- this is used to get the wordpress stuff -->
+    <proxy path="/rightcolumn" class="rightcolumn">
+        <dest pyref="myrefs:get_wp_destination" />
+        <response rewrite-links="1" />
+        <response pyref="myrefs:modify_blog_response" />
+    </proxy>
+
+    <!-- the admin of the lists needs an extra proxy directive, in order to avoid modifying the ajax response too much -->
+    <proxy path="/admin/lists" class="lists">
+        <dest pyref="myrefs:get_ajax_destination" />
+        <response rewrite-links="1" />
+    </proxy>
+ 
+    <!-- the main content. -->
+    <proxy path="/" class='main'>
+        <dest pyref="myrefs:get_main_destination" />
+        <response rewrite-links="1" />
+        <response pyref="myrefs:modify_main_response" />
+    </proxy>
+
+    <!-- never style ajaxy content -->
+    <match path="/admin/lists" abort="1" />
+    <match path="/admin/edit" abort="1" />
+
+    <!-- what other stuff don't we want to style -->
+    <match pyref='myrefs:match_notheme' abort="1" />
+
+
+    
+    <!--if we have a rightcolum / sidebar, inject all but the first child element from the 
+        wordpress, e.g. don't insert the social links, they get treated seperately, and don't
+        do the standard actions (see end of deliverance configuration documentation-->
+
+    <match pyref='myrefs:match_hasrightcolumn' class="hasrightcolumn" />
+    <rule class='hasrightcolumn' supress-standard="1">
+    <append content="//div[@id='sidebar']/*[position() &gt; 1]" theme="children:#sidebar" href="/rightcolumn" />
+    </rule>
+    
+    <!-- not sure if this is still needed -->
+    <rule class='boolean:not hasrightcolumn' supress-standard="1">    
+    </rule>   
+    
+    <!-- most pages need the headers from wordpress (styles, js etc.). insert that, but not the 
+         jquery stuff from there, it would conflict -->
+    <match pyref='myrefs:match_needswpheaders' class="wpheaders" />
+    <rule class='wpheaders' supress-standard="1">
+    <drop content="script[src *= 'jquery.js']" />
+    <prepend content="children:head" theme="children:head" href="/rightcolumn" />
+    </rule>
+
+    <!-- the main content insertion. Content is inserted into our static theme file. The top-social are the social
+         links coming from wordpress -->
+    <match pyref='myrefs:match_hasbanner' class='hasbanner'/>
+    <rule class='hasbanner' supress-standard='1'>
+        <replace content="#content-highlight" theme="#content-highlight" />
+    </rule>
+    
+    <match pyref='myrefs:match_dropbanner' class='dropbanner'/>
+    <rule class='dropbanner' supress-standard='1'>
+        <drop theme="#content-highlight" />
+        <drop theme="#main-logo" />
+    </rule>
+
+
+    <rule class="main" suppress-standard="1">
+        <drop content="#wphead" />
+        <replace content="#hsheader" theme="#hsheader" />
+        <append content="children:head" theme="children:head" />
+        <drop content="#spreadthehub" />
+        <drop content="#past-events" />
+        <drop content="#upcoming-events" />
+        <prepend content="#hssearch" theme="children:body" />
+		<prepend content="#top-social" theme="children:body" href="/rightcolumn" />
+        <prepend content="children:#content-intro" theme="children:#content-intro" />
+        <append content="children:#span-12-last" theme="children:#content-intro" />-->
+        <append content="//div[@id='content-main']/div" theme="children:#content-intro" />
+        <append content="children:#hsfooter" theme="children:#hsfooter" />
+        <prepend content="#blogedit" theme="children:#content-main" />
+        <append content="attributes:body" theme="attributes:body" />
+    </rule>
+
+    <!-- ajax stuff gets put into a pretty empty file -->    
+    <rule class="lists">
+        <theme href="/_theme/lists.html" />
+        <replace content='//div[1]' theme='//div[1]' move="0" />
+    </rule>
+
+    
+    <!-- wordpress stuff gets put into a pretty empty file, before then picked and placed into
+         the main theme-->    
+    <rule class="rightcolumn">
+        <theme href="/_theme/lists.html" />
+        <!--<drop content="#fsForm856330" />-->
+        <drop content="script" />
+        <drop content="#top-social" />
+        <replace content='#sidebar' theme='//div[1]' move="0" />
+    </rule>
+</ruleset>
