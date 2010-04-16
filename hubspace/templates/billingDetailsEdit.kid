@@ -23,7 +23,7 @@ if 'tg_errors' not in locals():
                                     Use main profile details<br/>
                                 <input type="radio" name="billing_mode" value="2" py:attrs="billing_mode_default(user, 2)"/>Bill to: 
                                     <input type="text" id="for_billto" value="${user.billto and user.billto.display_name or ''}" />
-                                    <input type="hidden" id="billto_id" name="billto" value="${user.billto.id}" /> <br/>
+                                    <input type="hidden" id="billto_id" name="billto" value="${user.billto and user.billto.id or user.id}" /> <br/>
                                 <input type="radio" name="billing_mode" value="1" py:attrs="billing_mode_default(user, 1)"/>
                                     Use billing details below<br/>
                                 <div class="errorMessage" py:if="tg_errors">${print_error('billing_mode', tg_errors)}</div>
