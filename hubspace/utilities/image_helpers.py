@@ -1,21 +1,41 @@
+import turbogears
+import turbogears.config
 import cherrypy
+import urllib2
+
+AVATAR_INTEGRATION_ENABLED = turbogears.config.config.configs['avatar']['enable_integration']
 
 def get_mimetype(object, attr_name):
    try:
       return getattr(object, attr_name+"_mimetype")
    except:
       return 'image/png'
-         
 
-def image_src(object, attr_name, default_image_location):
-   if isinstance(getattr(object, attr_name), basestring) and isinstance(get_mimetype(object, attr_name), basestring):
-       count = cherrypy.session.setdefault('count', 1000)
-       cherrypy.session['count'] +=1 
-       obj_type = object.__class__.__name__
-       return "/display_image/"+ obj_type +"/" + str(object.id) + "/" + attr_name
-   return default_image_location
-   # hub+ avatar integration code
-   #     if not obj_type == 'User':
-   #         return "/display_image/"+ obj_type +"/" + str(object.id) + "/" + attr_name
-   # return "http://plus.the-hub.net/site_media/avatars/%(user_name)s/resized/180/avatars/%(user_name)s/%(user_name)s" % \
-   #        dict(user_name = object.user_name)
+if AVATAR_INTEGRATION_ENABLED:
+
+    def image_src(object, attr_name, default_image_location):
+        if isinstance(getattr(object, attr_name), basestring) and isinstance(get_mimetype(object, attr_name), basestring):
+            count = cherrypy.session.setdefault('count', 1000)
+            cherrypy.session['count'] +=1 
+            obj_type = object.__class__.__name__
+            if obj_type == 'User':
+                base_url = "http://plus.the-hub.net"
+                get_avatar_path = "/avatar/%(user_name)s/avatar_url/" % dict(user_name = object.user_name)
+                # code below from f = urlopen(.. to f.close() can be just one line pythonic code however explicit close is required due to a python bug http://bugs.python.org/issue1208304
+                f = urllib2.urlopen (base_url + get_avatar_path)
+                avatar_path = f.read()
+                avatar_path = avatar_path.strip()
+                f.close()
+                return base_url + avatar_path
+            return "/display_image/"+ obj_type +"/" + str(object.id) + "/" + attr_name
+        return default_image_location
+else:
+
+    def image_src(object, attr_name, default_image_location):
+       if isinstance(getattr(object, attr_name), basestring) and isinstance(get_mimetype(object, attr_name), basestring):
+           count = cherrypy.session.setdefault('count', 1000)
+           cherrypy.session['count'] +=1
+           return "/display_image/"+ object.__class__.__name__ +"/" + str(object.id) + "/" + attr_name
+       return default_image_location
+
+

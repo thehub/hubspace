@@ -1431,7 +1431,9 @@ var Tabs = function () {
                 var up = new Upload(current_profile_id, 'User', 'image', prof_img.get(0), prof_trigger.get(0), {'edit_event':'click'});
             }
             jq('.change_avatar').click( function () {
-                var html = '<iframe src="http://plus.the-hub.net/avatar/change/" width="700" height="700"/>';
+                // http://plus.the-hub.net/avatar/shon/change/
+                var url = 'http://plus.the-hub.net/avatar/' + jq(this).attr('id').split('-')[1] + '/change/';
+                var html = '<iframe src="' + url + '" width="700" height="700"/>';
                 var dialog = jq('<div></div>').html(html).dialog({
                     autoOpen: false,
                     title: 'Change Avatar',

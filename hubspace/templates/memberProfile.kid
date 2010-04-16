@@ -4,7 +4,7 @@ oddness = oddOrEven()
 from hubspace.controllers import gip, is_owner, permission_or_owner, get_place
 from hubspace.validators import dateconverter
 
-from hubspace.utilities.image_helpers import image_src
+from hubspace.utilities.image_helpers import image_src, AVATAR_INTEGRATION_ENABLED
 
 def locations(object):
     locations = []
@@ -35,7 +35,8 @@ def locations_string(object):
                               <img id="profile_image${object.id}" src="${image_src(object, 'image', '/static/images/shadow.png')}" /> 
                           </div>
                       </div>
-                      <a href="#" py:if='permission_or_owner(object.homeplace,object,"manage_users")' id="avatar-${object.username}" class="change_avatar">replace images</a>
+                      <div py:if='not AVATAR_INTEGRATION_ENABLED and permission_or_owner(object.homeplace,object,"manage_users")' id="upload_image${object.id}" class="replace_image">replace image</div>
+                      <a href="#" py:if='AVATAR_INTEGRATION_ENABLED and permission_or_owner(object.homeplace,object,"manage_users")' id="avatar-${object.username}" class="change_avatar">replace images</a>
                       <div id="iframe_area${object.id}"></div>
                 </td>
 	        <td>
