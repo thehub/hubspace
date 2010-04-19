@@ -1,0 +1,39 @@
+/**
+ * Page
+ */
+body{background:url('/static/images/micro/bg.gif') no-repeat top center #fff}
+
+
+/**
+ * Navigation
+ */
+div#menu-top { border-bottom:5px solid #560005; }
+div#menu-top ul li { background: #fff url('/static/images/micro/menu-background.gif') repeat-x bottom left; border:1px solid #eee }
+div#menu-top ul li a { color:#560005; }
+div#menu-top ul li a:hover { color:#000 }
+div#menu-top ul li.selected { background: #560005;  }
+div#menu-top ul li.selected a { color:#fff; }
+
+/**
+ * Footer
+ */
+#footer a{ color:#560005; }
+#footer  {background-color:#f4f4f4; background-image: url(/static/images/micro/footer-bg.gif); background-repeat:repeat-x;}
+/* #footer .span-3:hover {background-image: url(/static/images/micro/footer-bg-over.gif);} */
+/**
+ * Footer
+ */
+#footer .last span{ color: #560005; }
+
+/**
+ * Sub-content boxes
+ */
+#content-main .content-sub{ background-color:#f4f4f4; }
+#content-main .content-sub h3{background-color:#560005; color:#fff; }
+
+
+/**
+ * Forms
+ */
+form{border:none}
+fieldset{border:none}
