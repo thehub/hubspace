@@ -1,7 +1,7 @@
 import re,lxml
 from lxml import etree,objectify
 import re
-
+import os
 from deliverance.util.proxyrequest import Request, Response
 from deliverance.exceptions import AbortProxy
 
@@ -32,6 +32,9 @@ def get_ajax_destination(request,log):
 
 def get_wp_destination(request,log):
     return config['wp_url']
+
+def get_theme_url(request, log):
+    return os.path.join(config['hubspace_url'], 'static/deliverance')
 
 #never theme ajax,css or images
 def match_notheme(req, resp, headers, *args):
