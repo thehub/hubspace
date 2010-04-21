@@ -15,10 +15,18 @@ def main():
         print "static sync: ", cmd
 	os.system(cmd)
         print "static sync: done"
-    
+    """
     if not deliverance_dir.endswith('deliverance-src'):
         print "update deliverance: begin"
         cmd = "/bin/cp -auv %s/* %s" % ("deliverance-src", deliverance_dir)
         print "deliverance sync: ", cmd
         os.system(cmd)
+        deliv_packages = os.path.join(deliverance_dir, 'Deliverance/lib/python2.5/site-packages/')
+        try:
+            os.stat(deliv_packages)
+            cmd = "/bin/cp deliverance-src/myrefs.py %s\n /bin/cp deliverance-src/hubconfig.py %s" %(deliv_packages, deliv_packages)
+            os.system(cmd)
+        except os.error:
+            print "%s does not exist" %(deliv_packages)
         print "deliverance sync: done"
+        """

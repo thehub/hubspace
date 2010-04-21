@@ -135,12 +135,12 @@ if SYNC_ENABLED:
     def signon():
         u = turbogears.config.config.configs['syncer']['hubspaceadminuid']
         p = turbogears.config.config.configs['syncer']['hubspaceadminpass']
+        applogger.info("syncer: signon begin: %s" % u)
         ret = syncerclient.onSignon(u, p)
         tr_id, res = ret
         if syncerclient.isSuccessful(res):
             syncerclient.setSyncerToken(res['sessionkeeper']['result'])
-            msg = "Syncer signon successful"
-            applogger.info(msg)
+            applogger.info("syncer: signon successful: %s" % u)
             print msg
             return True
         msg = "Syncer signon failed: %s" % res

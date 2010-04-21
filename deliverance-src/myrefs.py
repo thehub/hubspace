@@ -11,10 +11,10 @@ from deliverance.exceptions import AbortProxy
 #lighty: http://bay.the-hub.net/public/(.*) -> http://spacedev.the-hub.net:8001/$1
 #
 
-deliverance_base = 'http://spacedev.the-hub.net:8001' #where are we
+deliverance_base = "http://space-hub.the-hub.net:8021" #'http://spacedev.the-hub.net:8001' #where are we
 config = {}
 config['wp_url'] = 'http://bayarea.wordpressdev.the-hub.net' #which blog to proxy
-config['hubspace_url'] = 'http://hubspacedev.the-hub.net' # which microsite to proxy
+config['hubspace_url'] = 'http://bayarea.the-hub.net'   # 'http://hubspacedev.the-hub.net' # which microsite to proxy
 config['events_hubspace'] = 'http://bayarea.the-hub.net/events' #which are the links that need rewriting
 config['events_microsite'] = deliverance_base+'/public/events' #which events entry to use in the microsite 
 config['calendarurl'] = deliverance_base+'/public/events__calendar.html' #where is the calendar to point the event widget links to

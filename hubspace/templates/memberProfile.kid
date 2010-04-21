@@ -32,7 +32,7 @@ def locations_string(object):
                       <div class="innerPhoto">
                           <p> ${object.display_name}</p>
                           <div class="imgwrap">                      
-                              <img id="profile_image${object.id}" src="${image_src(object, 'image', '/static/images/shadow.png')}" /> 
+                              <img id="profile_image${object.id}" src="${image_src(object, 'image', '/static/images/shadow.png')}" width="100" height="100"/> 
                           </div>
                       </div>
                       <div py:if='not AVATAR_INTEGRATION_ENABLED and permission_or_owner(object.homeplace,object,"manage_users")' id="upload_image${object.id}" class="replace_image">replace image</div>

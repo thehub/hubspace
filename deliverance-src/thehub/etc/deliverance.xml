@@ -1,26 +1,21 @@
 <ruleset>
 
     <server-settings>
-        <server>0.0.0.0:8001</server>
+        <server>0.0.0.0:8021</server>
         <execute-pyref>true</execute-pyref>
         <!-- set your public ip here, and connect to http://spacedev.the-hub.net:8001/.deliverance/login,
          enter admin/admin. Then you are logged in. This allows to append ?deliv_log to every url to get
          a rather nice debug output of the deliverance actions -->
-
         <dev-allow>188.220.60.64</dev-allow>
-        <dev-allow>85.176.77.183</dev-allow>
-        <dev-allow>85.176.74.79</dev-allow>
-        <dev-allow>baach.dyndns.org</dev-allow>
         <dev-htpasswd>deliv-users.htpasswd</dev-htpasswd>
     </server-settings>
 
     <!-- the proxy directives are in order. The myrefs: in the pyref attributes referes to the
          myrefs.py file in the bin directory of the deliverance directory -->
 
-
     <!-- our static files -->
     <proxy path="/_theme">
-        <dest href="{here}/../theme" />
+        <dest pyref="myrefs:get_theme_url" />
     </proxy>
    
     <!-- make this the main theme -->

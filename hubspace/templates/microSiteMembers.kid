@@ -52,7 +52,7 @@ user = None
 				<ul id="members-profiles">
 				  <li class="member" py:for="member in profiles">
                                       <a href="${relative_path}members/${member.user_name}" title="Click for full bio">
-				      <span><img src="${image_src(member, 'image', '/static/images/shadow.png')}"/></span>
+				      <span><img class="profileimg" src="${image_src(member, 'image', '/static/images/shadow.png')}"/></span>
 				      <span class="member-name">${member.display_name}</span>
 				      <span class="member-company">${member.organisation}</span>
 					</a>

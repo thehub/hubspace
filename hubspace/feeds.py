@@ -77,7 +77,7 @@ def get_local_profiles(*args, **kwargs):
     location = Location.get(kwargs['location'])
     profiles = get_updates_data(location)['local_profiles']
     if kwargs.get('only_with_images', False) == True:
-        profiles = [profile for profile in profiles if profile.image]
+        profiles = [profile for profile in profiles if profile.has_avatar]
     if kwargs.get('no_of_images', None):
         profiles = profiles[:kwargs['no_of_images']]
     profiles = [profile for profile in profiles if profile.active and profile.public_field]

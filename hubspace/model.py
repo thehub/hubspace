@@ -30,6 +30,16 @@ initial_cops = [('Designing places and spaces', 0),
                 ('Rethinking international development', 0),
                 ('Promoting health and wellbeing', 0)]
 
+def sql_execute(sql):
+    import patches
+    import patches.utils
+    access_tuple = patches.utils.parseDBAccessDirective()
+    con = patches.utils.getPostgreSQLConnection(*access_tuple)
+    cur = con.cursor()
+    cur.execute(sql)
+    ret = cur.fetchall()
+    cur.close()
+    return ret
 
 
 def create_object_reference(kwargs, post_funcs):
@@ -268,6 +278,8 @@ class User(SQLObject):
     #password reminder
     reminderkey = UnicodeCol(length=50,default=None)
 
+    has_avatar = BoolCol(default=False)
+
     def imageFilename(self):
         #server_path = config.get('server.path')
         #return os.path.join(server_path, 'binaries/user-%s' % (self.id))
@@ -313,6 +325,9 @@ class User(SQLObject):
         return v
 
     def _get_permissions(self):
+        q = 'SELECT permission_id from group_permission where group_id in (SELECT group_id from user_group where user_id = %s)' % self.id
+        perm_ids = [x[0] for x in sql_execute(q)]
+        return perm_ids and set(Permission.select(IN(Permission.q.id, perm_ids))) or set()
         perms = set()
         for g in self.groups:
             perms = perms | set(g.permissions)

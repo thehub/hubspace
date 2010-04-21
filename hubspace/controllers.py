@@ -3853,10 +3853,6 @@ The Hub Team
             #try:
             save = getattr(obj, "save_" + attr)
             save(attr, image.file.read(), 'image/png')
-            if isinstance(obj, User) and obj.public_field == 1:
-                clear_cache('profiles', obj.homeplace)
-            #except:
-            #    raise "error during upload"
         else:
             raise "unexpected content type" + `image.type`
 

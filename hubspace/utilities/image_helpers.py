@@ -14,19 +14,12 @@ def get_mimetype(object, attr_name):
 if AVATAR_INTEGRATION_ENABLED:
 
     def image_src(object, attr_name, default_image_location):
-        if isinstance(getattr(object, attr_name), basestring) and isinstance(get_mimetype(object, attr_name), basestring):
+        obj_type = object.__class__.__name__
+        if obj_type == 'User':
+            return "http://plus.the-hub.net/avatar/current/%s/100/" % object.user_name
+        elif isinstance(getattr(object, attr_name), basestring) and isinstance(get_mimetype(object, attr_name), basestring):
             count = cherrypy.session.setdefault('count', 1000)
             cherrypy.session['count'] +=1 
-            obj_type = object.__class__.__name__
-            if obj_type == 'User':
-                base_url = "http://plus.the-hub.net"
-                get_avatar_path = "/avatar/%(user_name)s/avatar_url/" % dict(user_name = object.user_name)
-                # code below from f = urlopen(.. to f.close() can be just one line pythonic code however explicit close is required due to a python bug http://bugs.python.org/issue1208304
-                f = urllib2.urlopen (base_url + get_avatar_path)
-                avatar_path = f.read()
-                avatar_path = avatar_path.strip()
-                f.close()
-                return base_url + avatar_path
             return "/display_image/"+ obj_type +"/" + str(object.id) + "/" + attr_name
         return default_image_location
 else:
