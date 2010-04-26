@@ -2,6 +2,7 @@
 
     <server-settings>
         <server>0.0.0.0:8021</server>
+        <!-- <server>172.24.2.78:8021</server> -->
         <execute-pyref>true</execute-pyref>
         <!-- set your public ip here, and connect to http://spacedev.the-hub.net:8001/.deliverance/login,
          enter admin/admin. Then you are logged in. This allows to append ?deliv_log to every url to get
@@ -28,22 +29,17 @@
         <response pyref="myrefs:modify_blog_response" />
     </proxy>
 
-    <!-- the admin of the lists needs an extra proxy directive, in order to avoid modifying the ajax response too much -->
-    <proxy path="/admin/lists" class="lists">
-        <dest pyref="myrefs:get_ajax_destination" />
-        <response rewrite-links="1" />
-    </proxy>
- 
     <!-- the main content. -->
     <proxy path="/" class='main'>
+        <!--<transform rewrite-links="1" keep-host="1" />-->
         <dest pyref="myrefs:get_main_destination" />
-        <response rewrite-links="1" />
         <response pyref="myrefs:modify_main_response" />
+        <response rewrite-links="1" />
     </proxy>
 
     <!-- never style ajaxy content -->
-    <match path="/admin/lists" abort="1" />
-    <match path="/admin/edit" abort="1" />
+    <match path="/sites/bayarea_the_hub_net/lists" abort="1" />
+    <match path="/sites/bayarea_the_hub_net/edit" abort="1" />
 
     <!-- what other stuff don't we want to style -->
     <match pyref='myrefs:match_notheme' abort="1" />
@@ -87,13 +83,13 @@
 
     <rule class="main" suppress-standard="1">
         <drop content="#wphead" />
-        <replace content="#hsheader" theme="#hsheader" />
+        <replace content="children:#hsheader" theme="children:#hsheader" />
+	<prepend content="#top-social" theme="children:#menu-top" href="/rightcolumn" />
+	<prepend content="#hssearch" theme="children:#menu-top" />
         <append content="children:head" theme="children:head" />
         <drop content="#spreadthehub" />
         <drop content="#past-events" />
         <drop content="#upcoming-events" />
-        <prepend content="#hssearch" theme="children:body" />
-		<prepend content="#top-social" theme="children:body" href="/rightcolumn" />
         <prepend content="children:#content-intro" theme="children:#content-intro" />
         <append content="children:#span-12-last" theme="children:#content-intro" />-->
         <append content="//div[@id='content-main']/div" theme="children:#content-intro" />

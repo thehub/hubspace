@@ -1072,7 +1072,9 @@ class MicroSiteEdit(controllers.Controller):
         """
         if tg_errors:
             cherrypy.response.headers['X-JSON'] = 'error'
-            return str(tg_errors[0])
+            for tg_error in tg_errors:
+                error = `tg_error` + " " + str(tg_errors[tg_error])
+            return error
 
         page_name = page_name.split('#')[0]
         value = html2xhtml(value)

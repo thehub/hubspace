@@ -11,16 +11,17 @@ from deliverance.exceptions import AbortProxy
 #lighty: http://bay.the-hub.net/public/(.*) -> http://spacedev.the-hub.net:8001/$1
 #
 
-deliverance_base = "http://space-hub.the-hub.net:8021" #'http://spacedev.the-hub.net:8001' #where are we
+deliverance_base = "http://bayarea2.the-hub.net"  #"http://space-hub.the-hub.net:8021" #'http://spacedev.the-hub.net:8001' #where are we
 config = {}
-config['wp_url'] = 'http://bayarea.wordpressdev.the-hub.net' #which blog to proxy
-config['hubspace_url'] = 'http://bayarea.the-hub.net'   # 'http://hubspacedev.the-hub.net' # which microsite to proxy
-config['events_hubspace'] = 'http://bayarea.the-hub.net/events' #which are the links that need rewriting
-config['events_microsite'] = deliverance_base+'/public/events' #which events entry to use in the microsite 
-config['calendarurl'] = deliverance_base+'/public/events__calendar.html' #where is the calendar to point the event widget links to
-config['microsite_blog']=deliverance_base + '/public/theblog' #and where is the blog page for the blog based links in the sidebar
+config['wp_url'] = 'http://bayarea.wordpress.the-hub.net' #which blog to proxy
+config['hubspace_url'] =  'http://172.24.2.78:8001' # 'http://bayarea.the-hub.net' (requires lightty to catch static requests)   
+# 'http://hubspacedev.the-hub.net' # which microsite to proxy
+config['events_hubspace'] = deliverance_base + '/events' #which are the links that need rewriting
+config['events_microsite'] = deliverance_base+'/sites/bayarea_the_hub_net/events' #which events entry to use in the microsite 
+config['calendarurl'] = deliverance_base+'/sites/bayarea_the_hub_net/events__calendar.html' #where is the calendar to point the event widget links to
+config['microsite_blog']=deliverance_base + '/sites/bayarea_the_hub_net/Blog2' #and where is the blog page for the blog based links in the sidebar
 
-config['ajax_url'] = config['hubspace_url']+'/admin/lists'
+config['ajax_url'] = config['hubspace_url']+'/sites/bayarea_the_hub_net/lists'
 
 def get_main_destination(request,log):
     if request.script_name:

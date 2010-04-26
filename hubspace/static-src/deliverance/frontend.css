@@ -68,7 +68,7 @@ div#join a{text-decoration:none}
 	font-weight: bold; 
 	color: #fff;
 	line-height: 1; 
-	background:#333 url(img/btn-sprite.png) repeat-x 0 0;
+	background:#333; /* url(img/btn-sprite.png) repeat-x 0 0; */
 	
 
 	
