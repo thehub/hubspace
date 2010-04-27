@@ -77,7 +77,7 @@
     <match pyref='myrefs:match_dropbanner' class='dropbanner'/>
     <rule class='dropbanner' supress-standard='1'>
         <drop theme="#content-highlight" />
-        <drop theme="#main-logo" />
+        <drop content="#main-logo" />
     </rule>
 
 
@@ -91,7 +91,7 @@
         <drop content="#past-events" />
         <drop content="#upcoming-events" />
         <prepend content="children:#content-intro" theme="children:#content-intro" />
-        <append content="children:#span-12-last" theme="children:#content-intro" />-->
+        <append content="children:#span-12-last" theme="children:#content-intro" />
         <append content="//div[@id='content-main']/div" theme="children:#content-intro" />
         <append content="children:#hsfooter" theme="children:#hsfooter" />
         <prepend content="#blogedit" theme="children:#content-main" />
