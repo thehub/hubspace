@@ -12,17 +12,20 @@ add_role_perms = ['add_' + role + 's' for role in roles]
 
 def new_group(**kwargs):
     group = create_object('Group', **kwargs)
-    perms = []
     group_name = group.group_name
     print 'Created ', group_name
+    create_permissions_for_group(group)
+    return group
+
+def create_permissions_for_group(group):
+    perms = []
     if group.level=='director' or group.level=='host':
         perms = ['manage_users','manage_todos','manage_notes', 'manage_resources', 'manage_pricings', 'manage_invoices', 'add_members', 'manage_rusages']
     if group.level == 'director':
         perms.extend(['add_hosts','add_directors', 'manage_groups', 'manage_locations'])
     for perm in perms:
         add_perm_to_group(group, perm)
-                 
-    return group
+    return perms
 
 def add_perm_to_group(group, perm_name):
     p = Permission.selectBy(permission_name=perm_name)[0]
@@ -176,11 +179,11 @@ def addUser2Group(user=None, group=None, book=True):
         create_object('UserGroup', **kwargs)
     return 'ok'
 
-def get_editable_roles(user):
+def get_editable_roles(user, current_user=None):
     """
     -> {location1: set([level1, level2,..]), location2: ...}
     """
-    c_user = identity.current.user
+    c_user = current_user or identity.current.user
     is_superuser = Group.by_group_name('superuser') and Group.by_group_name('superuser') in c_user.groups
     if is_superuser:
         editable_roles = dict([(location, set(roles)) for location in Location.select() if location.name != 'hubPlus'])
@@ -188,8 +191,8 @@ def get_editable_roles(user):
         editable_roles = collections.defaultdict(list)
         for g in c_user.groups:
             if g.place:
-                for g in c_user.groups:
-                    editable_roles[g.place].extend( [p.permission_name[4:-1] for p in g.permissions if p.permission_name in add_role_perms] )
+                #for g in c_user.groups:
+                editable_roles[g.place].extend( [p.permission_name[4:-1] for p in g.permissions if p.permission_name in add_role_perms] )
         for k,v in editable_roles.items():
             editable_roles[k] = set(v)
         if user.homeplace: # user object may not have homeplace if it's getting created #588

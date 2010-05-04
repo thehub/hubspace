@@ -46,8 +46,7 @@ from hubspace.utilities.dicts import AttrDict
 from hubspace.utilities.image_preview import create_image_preview
 from hubspace.utilities.static_files import hubspace_compile
 from hubspace.utilities.uiutils import c2s, inv_currency, unsent_for_user, get_multiselected, set_multiselected, set_freetext_metadata, get_freetext_metadata, set_singleselected, get_singleselected, now
-from hubspace.utilities.permissions import user_locations, addUser2Group, get_current_roles, get_editable_roles
-from hubspace.utilities.permissions import user_locations, addUser2Group
+from hubspace.utilities.permissions import user_locations, addUser2Group, get_current_roles, get_editable_roles, create_permissions_for_group
 from hubspace.utilities.users import filter_members
 from hubspace.tariff import get_tariff
 
@@ -566,9 +565,9 @@ def user_stats(users):
     for user in users:
         if user.description:
             totals['profiles'] += 1
-        if user.image:
+        if user.has_avatar:
             totals['profile_images'] += 1
-        if user.image and user.description:
+        if user.has_avatar and user.description:
             totals['profile_and_image'] += 1
     return totals
 
@@ -3781,6 +3780,8 @@ The Hub Team
             if group.level in ['member', 'host', 'director']:
                 access_policy = add_accessPolicy2Proxy(cal, group.id, 'Group', 5, None, None)
                 create_default_open_times(access_policy)
+                if not list(group.permissions):
+                    create_permissions_for_group(group)
         return True
 
     @syncer_expose
