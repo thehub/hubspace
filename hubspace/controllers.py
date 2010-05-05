@@ -1621,8 +1621,14 @@ class Root(controllers.RootController):
     rpc = RPC()
 
     @expose()
-    def test123(self):
-        return pp
+    def fastlogin(self, username=1, password=1):
+        import turbogears.visit as visit
+        iden = identity.current_provider.validate_identity(username, password, visit.current().key)
+        if iden:
+            identity.set_current_identity(iden)
+            return "success"
+        else:
+            return "failure"
 
     @expose("hubspace.templates.managementReport")
     def generate_report(self, locations, report_types, period=None, start=None, end=None,format="web"):
@@ -2931,8 +2937,47 @@ Exception:
         theclass = getattr(hubspace.model, object_type)
         obj = theclass.get(object_id)
         return try_render({'object':obj, 'ajax':'1', 'tg_css':[], 'tg_js_head':[], 'tg_js_bodytop':[], 'tg_js_bodybottom':[]}, template='hubspace.templates.' + str(section), format='xhtml', headers={'content-type':'text/html'}, fragment=True)
+
+    #### HubPlus Integration API ####
+
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusSpace')
+    def plus_booking(self, location_id=None):
+        user = identity.current.user
+        location = Location.get(location_id) if location_id else user.homeplace or Location.get(1)
+        return dict(object = user, location = location)
         
-  
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusBilling')
+    def plus_billing(self, user_id=None):
+        user = User.get(user_id) if user_id else identity.current.user
+        return {'object':user}
+ 
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusReports')
+    def plus_reports(self, location_id=None):
+        location = Location.get(location_id) if location_id else identity.current.user.homeplace
+        return {'object':location}
+
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusLocationAdmin')
+    def plus_admin(self, location_id=None):
+        location = Location.get(location_id) if location_id else identity.current.user.homeplace
+        return {'object':location}
+
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusInvoicing')
+    def plus_invoicing(self, location_id=None):
+        location = Location.get(location_id) if location_id else identity.current.user.homeplace
+        return {'object':location}
+
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusResources')
+    def plus_resources(self, user_id=None, location_id=None):
+        user = User.get(user_id) if user_id else identity.current.user
+        location = Location.get(location_id) if location_id else identity.current.user.homeplace
+        return dict(object = user, location = location)
+
     @expose(template="hubspace.templates.memberCommunitiesEdit")
     @identity.require(not_anonymous())
     def error_memberCommunitiesEdit(self, id, tg_errors=None, **kwargs):
