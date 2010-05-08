@@ -434,7 +434,7 @@ var inplace_editor = function (element_id, url, special_options) {
         return false;
     };
     var onComplete = function (data, xhr) {
-	editField = null;
+	// editField = null; #645
         if (xhr.status === 200 && xhr.getResponseHeader('X-Json') !== 'error') {
             if (options.ui_type === 'gmap') {
                 element.html(data);
@@ -464,7 +464,7 @@ var inplace_editor = function (element_id, url, special_options) {
             value = editField.val();
         } else {
             value = editField.val();
-        }
+        };
         var parameters = options.callback(form, value);
         onLoading();
         var xhr = jq.ajax({type: 'post',
@@ -509,7 +509,7 @@ var inplace_editor = function (element_id, url, special_options) {
     };
     var leaveEditMode = function () {
         removeForm();
-	editField = null;
+	// editField = null; #645
         leaveHover();
         element.removeClass(options.savingClassName).show();
         trigger.show();

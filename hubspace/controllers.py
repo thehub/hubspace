@@ -1620,8 +1620,14 @@ class Root(controllers.RootController):
     rpc = RPC()
 
     @expose()
-    def test123(self):
-        return pp
+    def fastlogin(self, username=1, password=1):
+        import turbogears.visit as visit
+        iden = identity.current_provider.validate_identity(username, password, visit.current().key)
+        if iden:
+            identity.set_current_identity(iden)
+            return "success"
+        else:
+            return "failure"
 
     @expose("hubspace.templates.managementReport")
     def generate_report(self, locations, report_types, period=None, start=None, end=None,format="web"):
@@ -3208,14 +3214,14 @@ Exception:
     @expose(template="hubspace.templates.billingDetails")
     @identity.require(not_anonymous())
     @validate(validators=BillingDetailsSchema())
-    def save_billingDetailsEdit(self, id, billing_mode, tg_errors=None, **kwargs):
+    def save_billingDetailsEdit(self, id, billing_mode, tg_errors=None, billto=None, **kwargs):
         billing_mode = int(billing_mode)
 	user = User.get(id)
 	if not permission_or_owner(user.homeplace, user,'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
 
         if tg_errors:
-            obj = AttrDict(id=id, **kwargs)
+            obj = AttrDict(id=id, billing_mode=billing_mode, **kwargs)
             attrs =  get_attribute_names(User)
             for attr in attrs:
                 if attr not in obj:
@@ -3224,7 +3230,7 @@ Exception:
             cherrypy.response.headers['X-JSON'] = 'error'
             return self.error_template('billingDetailsEdit', {'object':obj, 'tg_errors':tg_errors})
 
-        if billing_mode == 0 or (billing_mode == 2 and kwargs['billto'] == user.id):
+        if billing_mode == 0 or (billing_mode == 2 and billto == user.id):
             user.billto = user
             user.bill_to_profile = 1
 
@@ -3237,10 +3243,10 @@ Exception:
                     setattr(user, billing_attr, kwargs[billing_attr])
 
         elif billing_mode == 2:
-            user.bill_to_profile = 0
-            if kwargs['billto'] and not permission_or_owner(user.homeplace, None,'manage_invoices'):
+            if billto and not permission_or_owner(user.homeplace, None,'manage_invoices'):
 		raise IdentityFailure('what about not hacking the system')
-            user.billto = User.get(kwargs['billto'])
+            user.bill_to_profile = 0
+            user.billto = User.get(billto)
 
         cherrypy.response.headers['X-JSON'] = 'success'
         return {'object':user}

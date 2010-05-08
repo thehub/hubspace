@@ -361,6 +361,20 @@ class User(SQLObject):
     def _get_homeplace_name(self):
         return self.homeplace and self.homeplace.name or ""
 
+    def _get_billing_mode(self):
+        """
+        0: Bill to self and use the profile details 
+        1: Bill to self but user different billing details
+        2: Bill to some other member
+        """
+        billing_mode = 0
+        if not self.bill_to_profile:
+            if self.billto == self:
+                billing_mode = 1
+            else:
+                billing_mode = 2
+        return billing_mode
+
 
 listen(create_object_reference, User, RowCreatedSignal)
 listen(delete_object_reference, User, RowDestroySignal)
