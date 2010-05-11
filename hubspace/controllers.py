@@ -1746,9 +1746,11 @@ class Root(controllers.RootController):
     @expose_as_csv
     @validate(validators=ExportUsersCSVSchema)
     @identity.require(not_anonymous())
-    def export_users_csv(self, location, sortname, usercols_selction, sortorder="asc"):
-        start, end = 0, -1
-        total, rows = self._export_users(location, sortname, sortorder, usercols_selction, start, end)
+    def export_users_csv(self, location=0, sortname="display_name", usercols_selection=["display_name"], sortorder="asc"):
+        if not location:
+            location = identity.current.user.homeplaceID
+        start, end = 0, None
+        total, rows = self._export_users(location, sortname, sortorder, usercols_selection, start, end)
         return rows
 
     @expose(format="json")
