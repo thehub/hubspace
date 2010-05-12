@@ -71,7 +71,7 @@ user_columns = user_fields.values()
           <table border="0">
           <tr>
           <td> Select columns to include</td>
-          <td> <input type="checkbox" py:for="attr_d in user_columns" name="usercols_selction" py:attrs="attr_d" >${attr_d["label"]}</input> </td>
+          <td> <input type="checkbox" py:for="attr_d in user_columns" name="usercols_selection" py:attrs="attr_d" >${attr_d["label"]}</input> </td>
           </tr>
           <tr>
           <td> Select column to sort by</td>
