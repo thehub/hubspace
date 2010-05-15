@@ -3,17 +3,26 @@ import StringIO
 from os import path, unlink
 import md5
 
-css_files = ['main.css', 'newcalendar.css', 'ui.datepicker.css', 'jquery.autocomplete.css', 'feeds.css']
+css_files = ['main.css', 'newcalendar.css', 'jquery.autocomplete.css', 'feeds.css', 'flexigrid/flexigrid.css', 'jquery-ui/pepper-grinder/jquery-ui-1.7.2.custom.css']
 
-js_files = ['prototype-1.6.0.3.js', 'scroll.js', 'browserdetect.js', 'jquery.min.js',
+common_js_files = ['prototype-1.6.0.3.js', 'scroll.js', 'browserdetect.js', 'jquery.min.js',
 'flexigrid/flexigrid.js',
 'jq.noconflict.js',
-'ui.datepicker.js',  'jquery.timepicker.js', 'overlib/overlib.js', 'jquery.bgiframe.min.js', 'jquery.dimensions.js',
+'jquery-ui-1.7.2.custom.min.js',
+'overlib/overlib.js', 'jquery.bgiframe.min.js', 'jquery.dimensions.js',
 'jquery.autocomplete.min.js', 'delayed-observer-0.4b.js', 'jquery.ajaxQueue.js', 'jquery.timers.js',
-'jquery.confirm.js', 'jquery.confirm-1.1.js',  'effects.core.js', 'effects.blind.js', 'effects.highlight.js',
-'jquery.flot.js', 'hubcms.js', 'json2.js', 'hub.js']
+'jquery.confirm.js', 'jquery.confirm-1.1.js',
+'hubcms.js', 'json2.js',]
 
-admin_js_files = ['ui.sortable.js', 'jquery.tablednd.js', 'my.sortable.js']
+js_files = common_js_files + ['hub.js']
+js_files2 = common_js_files + ['hub_pluspace.js']
+
+# Notes
+# bgiframe: Helps ease the pain when having to deal with IE z-index issues.
+# dimensions: Extends jQuery to provide dimension-centric methods for getting widths, heights, offsets and more.
+# jQuery-ui: 1.7.2 custom build: core, Draggable, Droppable, Dialog, Datepicker, Effects Core, Effect Blind, Effect Highlight, Theme flick 
+
+admin_js_files = ['jquery.tablednd.js', 'my.sortable.js']
 
 def minify(input_path):
    """return a minified version of a file as a python string
@@ -110,5 +119,6 @@ def css_concat(path_or_filename_list, default_path="static/css", output_filename
 
 def hubspace_compile():
    js_compile(js_files, 'hubspace/static/javascript', 'hubspace.js')
+   js_compile(js_files2, 'hubspace/static/javascript', 'pluspace.js')
    js_compile(admin_js_files, 'hubspace/static/javascript', 'admin.js')
    css_concat(css_files, 'hubspace/static/css', 'hubspace.css')

@@ -62,7 +62,7 @@ def namespace():
                             <div class="update_text">
                             <h1>${update_item.meeting_name}</h1>
                             <p>${datetimeconverter2.from_python(update_item.start)} - ${timeconverter.from_python(update_item.end_time)}</p>
-                            <h2>${update_item.resource.place.name} - ${update_item.resource.name}</h2>
+                            <h2>${update_item.location_name} - ${update_item.resource_name}</h2>
                             </div>
                         </a>
 		</div>
@@ -83,7 +83,7 @@ def namespace():
                         <div class="update_text">
                             <h1>${update_item.meeting_name}</h1>
                             <p>${datetimeconverter2.from_python(update_item.start)} - ${timeconverter.from_python(update_item.end_time)}</p>
-                            <h2>${update_item.resource.place.name} - ${update_item.resource.name}</h2>
+                            <h2>${update_item.location_name} - ${update_item.resource_name}</h2>
                         </div>
                     </a>
 		</div> 

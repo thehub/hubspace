@@ -219,6 +219,7 @@ class DontDeactivateSelf(v.FormValidator):
     
 datetimeconverter = v.DateTimeConverter("%a, %d %B %Y %H:%M:%S")
 datetimeconverter2 = v.DateTimeConverter("%a, %d %B %Y %H:%M")
+daterange_item = v.DateTimeConverter("%a %b %d %Y")
 dateconverter = v.DateTimeConverter("%a, %d %B %Y")
 timeconverter = v.DateTimeConverter("%H:%M")
 timeconverterAMPM = v.DateTimeConverter("%I:%M%p")
@@ -227,12 +228,21 @@ class DateRange(TgFancyValidator):
     date_separator = ' - '
     def _to_python(self, value, state):
         value = value.split(' - ')
+        converter = dateconverter
+        # with new jquery ui based calendar date range sent back for week booking view to backend is in different format than one in day format.
+        # This wasn't case earlier.
+        # I could not spend too long on javascript debugging so resorting to modifying DateRange convertor to also accept new format.
+        if ':' in value[0]:
+            fix_dt_str = lambda s: ':' in s and ' '.join(s.split(' ', 4)[:-1]) or s
+            value = [fix_dt_str(v) for v in value]
+            converter = daterange_item
         try:
-            value = (dateconverter.to_python(value[0]), dateconverter.to_python(value[1]))
+            value = (converter.to_python(value[0]), converter.to_python(value[1]))
             return value
-        except:
+        except Exception, err:
             raise Invalid(`value` + ' is not a date range', value, state)
-        
+
+       
 real_int = v.Int(not_empty=True)
 checkbox = v.Int(if_empty=0)
 
