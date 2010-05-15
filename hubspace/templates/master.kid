@@ -41,12 +41,10 @@ def host_in_rfid_location():
     </style>
     <link rel="Shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/static/javascript/flexigrid/css/flexigrid/flexigrid.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/base/jquery-ui.css"/>
     <c py:if="mode=='dev'" py:strip="True">
     <script py:for="filename in js_files" src='/static/javascript/${filename}' ></script>
     </c>
-    <script py:if="mode=='prod'" src="/static/javascript/hubspace${js_version_no}.js" />
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>
+    <script py:if="mode=='prod'" src="/static/javascript/hubspace${js_version_no}.js"></script>
 </head>
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >
         <input id="admin_js_no" value="${admin_js_version_no}" type="hidden" />

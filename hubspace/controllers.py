@@ -1422,16 +1422,17 @@ class Feed(FeedController):
     @validate(validators={'type':v.UnicodeString(), 'location':v.Int()})    
     def get_feed_data(self, type="profiles", location=0):
         if location == 0:
-            data = cached_updates[type]['global']
+            data = cached_updates['global'][type]
         else:
-            data = cached_updates[type][location]
+            data = cached_updates[location][type]
         try:
             location = Location.get(location)
         except:
             location = None
+        print data
         title = "Empty feed from The Hub"
-        if len(list(data)):
-            if isinstance(data[0], User):
+        if data:
+            if type == "profiles":
                 data = [{'title':entry.display_name,
                          'author': dict(name = entry.display_name),
                          'summary': entry.description,
@@ -1444,9 +1445,9 @@ class Feed(FeedController):
                     title = "%s Profile Updates" %(location.name)
                 else:
                     title = "Hub Network Profile Updates"
-            if isinstance(data[0], RUsage):
-                data = [{'title':"%s  Location: %s - %s"%(entry.meeting_name,  entry.resource.place.name, entry.resource.name),
-                         'author': dict(name = entry.user.display_name),
+            else:
+                data = [{'title':"%s  Location: %s - %s"%(entry.meeting_name,  entry.location_name, entry.resource_name),
+                         'author': dict(name = entry.user_display_name),
                          'summary': "%s" %(entry.meeting_description),
                          'published': entry.date_booked,
                          'link': '%s/events/%s' %(cherrypy.request.base, entry.id)} for entry in data]
@@ -2938,8 +2939,47 @@ Exception:
         theclass = getattr(hubspace.model, object_type)
         obj = theclass.get(object_id)
         return try_render({'object':obj, 'ajax':'1', 'tg_css':[], 'tg_js_head':[], 'tg_js_bodytop':[], 'tg_js_bodybottom':[]}, template='hubspace.templates.' + str(section), format='xhtml', headers={'content-type':'text/html'}, fragment=True)
+
+    #### HubPlus Integration API ####
+
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusSpace')
+    def plus_booking(self, location_id=None):
+        user = identity.current.user
+        location = Location.get(location_id) if location_id else user.homeplace or Location.get(1)
+        return dict(object = user, location = location)
         
-  
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusBilling')
+    def plus_billing(self, user_id=None):
+        user = User.get(user_id) if user_id else identity.current.user
+        return {'object':user}
+ 
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusReports')
+    def plus_reports(self, location_id=None):
+        location = Location.get(location_id) if location_id else identity.current.user.homeplace
+        return {'object':location}
+
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusLocationAdmin')
+    def plus_admin(self, location_id=None):
+        location = Location.get(location_id) if location_id else identity.current.user.homeplace
+        return {'object':location}
+
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusInvoicing')
+    def plus_invoicing(self, location_id=None):
+        location = Location.get(location_id) if location_id else identity.current.user.homeplace
+        return {'object':location}
+
+    @identity.require(not_anonymous())
+    @expose(template='hubspace.templates.plusResources')
+    def plus_resources(self, user_id=None, location_id=None):
+        user = User.get(user_id) if user_id else identity.current.user
+        location = Location.get(location_id) if location_id else identity.current.user.homeplace
+        return dict(object = user, location = location)
+
     @expose(template="hubspace.templates.memberCommunitiesEdit")
     @identity.require(not_anonymous())
     def error_memberCommunitiesEdit(self, id, tg_errors=None, **kwargs):
