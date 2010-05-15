@@ -4,6 +4,8 @@ var subsection_name = 'booking';
 var subsection_no = 0;
 
 var set_space_listeners = function (response) {
+    jq.datepicker.setDefaults({firstDay: 1, dateFormat: 'D, dd MM yy'});
+    // jq.datepicker.setDefaults({firstDay: 1, dateFormat: 'D, dd MM yy', showButtonPanel: true});
     jq('.view_switch').click(function () {
         update_space_display(null, null, jq(this).attr('name'));
     });
@@ -11,7 +13,8 @@ var set_space_listeners = function (response) {
         //pass 'location' or 'res_group' depending on what we are switching
         update_space_display(null, null, jq(this).attr('name'));
     });
-    jq('#bookingDateRange #space_date_field').datepicker({rangeSelect: true, onSelect: select_week, changeFirstDay: false});
+    // jq('#bookingDateRange #space_date_field').datepicker({rangeSelect: true, onSelect: select_week, changeFirstDay: false});
+    jq('#bookingDateRange #space_date_field').datepicker({onSelect: select_week});
     jq('#bookingDate #space_date').click(function () {
         jq('#space_date_range_field').datepicker('show');
     });
@@ -88,10 +91,10 @@ var select_week = function (date, inst) {
     jq('#space_date_field').datepicker('setDate', start_week, end_week);
     var range = jq('#space_date_field').datepicker('getDate');
     range = jq.datepicker.formatDate('D, dd MM yy', range[0]) + ' - ' + jq.datepicker.formatDate('D, dd MM yy', range[1]);
+    range = start_week + ' - ' + end_week;
     jq('#space_date_field').val(range);
     jq("#space_date").html(range + '<img src="/static/images/booking_down.png" />');
     var params = jq("#space_loc_time").serializeArray();
-
     jq('#space-bookingContent').load('/load_make_booking', params, set_space_listeners);
 };
 jq.fn.check = function () {
@@ -105,61 +108,6 @@ var select_room = function (room_id, room_no) {
     jq('#bookspacedate .day_group .' + room_no).addClass('room_selected');
     jq('#bookspacedate .day_group div:not(.' + room_no + ')').removeClass('room_selected');
     jq('#room_selected').val(room_id);
-};
-var set_space_listeners = function (response) {
-    jq('.view_switch').click(function () {
-        update_space_display(null, null, jq(this).attr('name'));
-    });
-    jq('.space_switch').change(function () {
-        //pass 'location' or 'res_group' depending on what we are switching
-        update_space_display(null, null, jq(this).attr('name'));
-    });
-    jq('#bookingDateRange #space_date_field').datepicker({rangeSelect: true, onSelect: select_week, changeFirstDay: false});
-    jq('#bookingDate #space_date').click(function () {
-        jq('#space_date_range_field').datepicker('show');
-    });
-    jq('#space_date_field').datepicker({onSelect: function () {
-        update_space_display(null);
-    }
-    });
-    jq('#space_date').click(function () {
-        jq('#space_date_field').datepicker('show');
-    });
-    jq('#rightArrow').click(date_left_right);
-    jq('#leftArrow').click(date_left_right);
-    jq('.day_group .day_marker').click(goto_day);
-    jq('.day_group .event, .day_group .unavailable').click(function () {
-        var room_no = jq(this).attr('id').split("-");
-        room_no = room_no[room_no.length - 1];
-        jq('#room_selector_group div.' + room_no + ' a.label').click();
-    });
-    jq('#room_selector_group a.label').click(function () {
-        var room_no = jq(this).parent().attr('class').split(" ")[1];
-        select_room(jq(this).parent().attr('id').split("-")[1], room_no);
-    });
-    jq('#room_selector_group input').click(function () {
-        var room = jq(this).parent().parent().attr('class').split(" ")[1];
-        if (this.checked) {
-            jq('#bookspacedate .day_group .' + room).removeClass('resource_off').addClass('resource_on');
-        } else {
-            jq('#bookspacedate .day_group .' + room).removeClass('resource_on').addClass('resource_off');
-        }
-    });
-    jq('#only_my_bookings').click(function () {
-        if (this.checked) {
-            jq('.event:not(.mybooking), .unavailable').removeClass('other_booking').addClass('other_booking_off');
-        } else {
-            jq('.event:not(.mybooking), .unavailable').removeClass('other_booking_off').addClass('other_booking');
-        }
-    });
-    jq('.bigcal_day').click(function (e) {
-        try_day_book(e, jq(this));
-    });
-    jq('.bigcal_week').click(function (e) {
-        try_week_book(e, jq(this));
-    });
-    set_space_expanders(response);
-
 };
 var try_day_book = function (event, listener) {
     var hit = jq(event.target);
