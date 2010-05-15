@@ -14,18 +14,6 @@ from hubspace.configuration import new_or_old
 def namespace():
     return {'xmlns':"http://www.w3.org/1999/xhtml"}
 
-def profile_domain(user):
-    domain = user.homeplace.url and user.homeplace.url or 'http://members.the-hub.net'    
-    if new_or_old.get(user.homeplace.url, 'old') == 'new':
-        domain += '/public'
-    return domain
-
-def event_domain(rusage):
-    domain = rusage.resource.place.url and rusage.resource.place.url or 'http://members.the-hub.net'    
-    if new_or_old.get(rusage.resource.place.url, 'old') == 'new':
-        domain += '/public'
-    return domain
-
 ?>
 <html xmlns:py="http://purl.org/kid/ns#" py:attrs="namespace()"  lang="en" xml:lang="en">
 
@@ -72,11 +60,11 @@ def event_domain(rusage):
 			<h1>Upcoming Events in ${location.name}</h1>
 		</div>	
 		<div class="update" py:for="update_item in local">
-			<a  href="${event_domain(update_item)}/events/${update_item.id}" target="_blank">
+			<a  href="${update_item.url}" target="_blank">
                             <div class="update_text">
                             <h1>${update_item.meeting_name}</h1>
                             <p>${datetimeconverter2.from_python(update_item.start)} - ${timeconverter.from_python(update_item.end_time)}</p>
-                            <h2>${update_item.resource.place.name} - ${update_item.resource.name}</h2>
+                            <h2>${update_item.location_name} - ${update_item.resource_name}</h2>
                             </div>
                         </a>
 		</div>
@@ -98,7 +86,7 @@ def event_domain(rusage):
                         <div class="update_text">
                             <h1>${update_item.meeting_name}</h1>
                             <p>${datetimeconverter2.from_python(update_item.start)} - ${timeconverter.from_python(update_item.end_time)}</p>
-                            <h2>${update_item.resource.place.name} - ${update_item.resource.name}</h2>
+                            <h2>${update_item.location_name} - ${update_item.resource_name}</h2>
                         </div>
                     </a>
 		</div> 
@@ -117,7 +105,7 @@ def event_domain(rusage):
 			<h1>Recently Updated Profiles in ${location.name}</h1>
 		</div>	
 		<div class="update" py:for="update_item in local">
-			<a href="${profile_domain(update_item)}/members/${update_item.user_name}" target="_blank"><img height="40px" width="40px" src="${image_src(update_item, 'thumbnail', '/static/images/shadow.png')}" /><div class="update_text"><h1>${update_item.display_name}</h1><h2>${update_item.organisation}</h2></div></a>
+			<a href="${update_item.url}" target="_blank"><img height="40px" width="40px" src="${image_src(update_item, 'thumbnail', '/static/images/shadow.png')}" /><div class="update_text"><h1>${update_item.display_name}</h1><h2>${update_item.organisation}</h2></div></a>
 		</div>
 		<div class="feedLink">
 			<a href="/feed/rss2_0/profiles/${location.id}"><h1>Feed</h1></a>
@@ -132,7 +120,7 @@ def event_domain(rusage):
 			<h1>Recently Updated Profiles in The Hub Network</h1>
 		</div>	
 		<div class="update" py:for="update_item in glob">
-			<a href="${profile_domain(update_item)}/members/${update_item.user_name}" target="_blank"><img height="40px" width="40px" src="${image_src(update_item, 'thumbnail', '/static/images/shadow.png')}" /><div class="update_text"><h1>${update_item.display_name}</h1><h2>${update_item.organisation}</h2></div></a>
+			<a href="${update_item.url}" target="_blank"><img height="40px" width="40px" src="${image_src(update_item, 'thumbnail', '/static/images/shadow.png')}" /><div class="update_text"><h1>${update_item.display_name}</h1><h2>${update_item.organisation}</h2></div></a>
 		</div>
 		<div class="feedLink">
 			<a href="/feed/rss2_0/profiles/0"><h1>Feed</h1></a>

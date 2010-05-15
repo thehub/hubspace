@@ -61,9 +61,10 @@ def html2xhtml(value):
     return value
 
 def get_profiles(*args, **kwargs):
-    kwargs['no_of_images'] = 9
-    kwargs['only_with_images'] = True
-    profiles = get_local_profiles(*args, **kwargs)
+    location = kwargs.get('location')
+    no_of_images = 9
+    only_with_images = True
+    profiles = get_local_profiles(location, only_with_images, no_of_images)
     if len(args) >=1:
         profiles.update(get_user(*args))
     return profiles
@@ -84,9 +85,10 @@ def get_public_place(*args, **kwargs):
     
 
 def get_events(*args, **kwargs):
-    kwargs['no_of_events'] = 5
-    events = get_local_future_events(*args, **kwargs)
-    events.update(get_local_past_events(*args, **kwargs))
+    no_of_events = 5
+    location = kwargs.get('location')
+    events = get_local_future_events(location, no_of_events)
+    events.update(get_local_past_events(location, no_of_events))
     if len(args) >=1:
         events.update(get_event(*args))
     return events

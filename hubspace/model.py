@@ -5,6 +5,7 @@ from turbogears.database import PackageHub
 from turbogears import config
 
 from hubspace.utilities.image_preview import create_image_preview
+from hubspace.configuration import new_or_old
 import hubspace.errors
 import StringIO
 from turbogears import identity 
@@ -203,6 +204,11 @@ class User(SQLObject):
     storage_loc = UnicodeCol(default="")
     
     description = UnicodeCol(default="")
+    def _get_url(self):
+        domain = self.homeplace.url and self.homeplace.url or 'http://members.the-hub.net'    
+        if new_or_old.get(self.homeplace.url, 'old') == 'new':
+            domain += '/public'
+        return domain + "/members/" + self.user_name
 
     billto = ForeignKey("User", default=None)
     bill_to_profile = IntCol(default=1)
@@ -984,6 +990,11 @@ def _set_%(name)s(self, val):
         exec(x)
     del _codetmpl
 
+    def _get_url(self):
+        domain = self.resource.place.url and self.resource.place.url or 'http://members.the-hub.net'    
+        if new_or_old.get(self.resource.place.url, 'old') == 'new':
+            domain += '/public'
+        return domain + "/events/" + str(self.id)
     def __str__(self):
         return "RUsage: %s, user: %s Resource:%s (%s-%s)" % (self.id, self.user.user_name, self.resource.name, self.start, self.end_time)
 

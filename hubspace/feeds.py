@@ -71,7 +71,7 @@ class ObjectCacheContainer(list):
         raise NotImplemented
 
 class EventCache (ObjectCache):
-    attrs_to_remember = ('id', 'start', 'end_time', 'resource_name', 'meeting_name', 'meeting_description', 'date_booked')
+    attrs_to_remember = ('id', 'start', 'end_time', 'resource_name', 'meeting_name', 'meeting_description', 'date_booked', 'url')
     def inithook(self, rusage):
         self.resourceID = rusage.resource.id
         self.locationID = rusage.resource.place.id
@@ -80,7 +80,7 @@ class EventCache (ObjectCache):
     def is_future(self):
         return self.start > datetime.datetime.now()
     def __cmp__(self, other):
-        return self.start < other.start
+        return cmp(self.start, other.start)
     def __repr__(self):
         return "<Event: %s on %s at %s>" % (self.id, self.start, self.location_name)
 
@@ -99,7 +99,6 @@ class EventCacheContainer(ObjectCacheContainer):
         else:
             events_select = RUsage.select \
                 (AND(RUsage.q.resourceID==Resource.q.id, Resource.q.placeID==self.location, RUsage.q.public_field == 1, RUsage.q.start >= till_dt)).orderBy('start').reversed()
-            print events_select
         no_past_events = 0
         for event in events_select:
             cache_obj = self.objectcache_factory(event)
@@ -115,14 +114,14 @@ class EventCacheContainer(ObjectCacheContainer):
             for event in past_events[PAST_EVENTS_MAX:]:
                 self.remove(event)
     def get_past_events(self, n=None):
-        return sorted([event for event in self if not event.is_future()][:n])
+        return sorted([event for event in self if not event.is_future()], reverse=True)[:n]
     def get_future_events(self, n=None):
-        return sorted([event for event in self if event.is_future()][:n])
+        return sorted([event for event in self if event.is_future()])[:n]
 
 class ProfileCache(ObjectCache):
-    attrs_to_remember = ('id', 'user_name', 'display_name', 'has_avatar', 'description', 'modified', 'homeplaceID', 'active', 'public_field', 'created', 'organisation')
+    attrs_to_remember = ('id', 'user_name', 'display_name', 'has_avatar', 'description', 'modified', 'homeplaceID', 'active', 'public_field', 'created', 'organisation', 'url')
     def __cmp__(self, other):
-        return self.modified < other.modified
+        return cmp(self.modified, other.modified)
     def __repr__(self):
         return "<Profile: %s @ location %s>" % (self.user_name, self.homeplaceID)
 
@@ -239,13 +238,13 @@ def get_updates_data(location):
     updates['global_events'] = cached_updates['global']['events']
     return updates
 
-def get_local_future_events(location, no_of_events=None):
+def get_local_future_events(location, no_of_events=None, *args, **kw):
     return dict(future_events = cached_updates[location]['events'].get_future_events(no_of_events))
 
-def get_local_past_events(location, no_of_events=None):
-    return dict(future_events = cached_updates[location]['events'].get_past_events(no_of_events))
+def get_local_past_events(location, no_of_events=None, *args, **kw):
+    return dict(past_events = cached_updates[location]['events'].get_past_events(no_of_events))
 
-def get_local_profiles(location, only_with_images=False, no_of_images=None):
+def get_local_profiles(location, only_with_images=False, no_of_images=None, *args, **kw):
     profiles = cached_updates[location]['profiles']
     if only_with_images:
         profiles = [profile for profile in profiles if profile.has_avatar][:no_of_images]
