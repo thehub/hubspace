@@ -3,15 +3,15 @@ from hubspace.utilities.users import fields as user_fields
 
 def_col_width = 120
 
-def getGridParams(location, usercols_selction=[]):
-    if usercols_selction:
-        colModel = [dict(display=str(v['label']),name=str(k),sortable="true",width=def_col_width) for (k,v) in user_fields.items() if k in usercols_selction]
+def getGridParams(location, usercols_selection=[]):
+    if usercols_selection:
+        colModel = [dict(display=str(v['label']),name=str(k),sortable="true",width=def_col_width) for (k,v) in user_fields.items() if k in usercols_selection]
     else:
         colModel = [dict(display=v['label'],name=k,sortable="true",width=150) for (k,v) in user_fields.items()]
     colModel = str(colModel)
 
-    url = "/export_users_json?" + "location=%s&" % location +  "&".join(["%s=%s" % (c,c) for c in usercols_selction])
-    width = (len(usercols_selction) * def_col_width) + 50
+    url = "/export_users_json?" + "location=%s&" % location +  "&".join(["%s=%s" % (c,c) for c in usercols_selection])
+    width = (len(usercols_selection) * def_col_width) + 50
     height = 500
 
     return colModel, url, height, width
@@ -25,7 +25,7 @@ def getGridParams(location, usercols_selction=[]):
 
 <body>
 <?python
-    colModel, url, height, width = getGridParams(location, usercols_selction)
+    colModel, url, height, width = getGridParams(location, usercols_selection)
 ?>
 
 <script type="text/javascript">
