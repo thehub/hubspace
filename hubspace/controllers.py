@@ -1423,16 +1423,17 @@ class Feed(FeedController):
     @validate(validators={'type':v.UnicodeString(), 'location':v.Int()})    
     def get_feed_data(self, type="profiles", location=0):
         if location == 0:
-            data = cached_updates[type]['global']
+            data = cached_updates['global'][type]
         else:
-            data = cached_updates[type][location]
+            data = cached_updates[location][type]
         try:
             location = Location.get(location)
         except:
             location = None
+        print data
         title = "Empty feed from The Hub"
-        if len(list(data)):
-            if isinstance(data[0], User):
+        if data:
+            if type == "profiles":
                 data = [{'title':entry.display_name,
                          'author': dict(name = entry.display_name),
                          'summary': entry.description,
@@ -1445,9 +1446,9 @@ class Feed(FeedController):
                     title = "%s Profile Updates" %(location.name)
                 else:
                     title = "Hub Network Profile Updates"
-            if isinstance(data[0], RUsage):
-                data = [{'title':"%s  Location: %s - %s"%(entry.meeting_name,  entry.resource.place.name, entry.resource.name),
-                         'author': dict(name = entry.user.display_name),
+            else:
+                data = [{'title':"%s  Location: %s - %s"%(entry.meeting_name,  entry.location_name, entry.resource_name),
+                         'author': dict(name = entry.user_display_name),
                          'summary': "%s" %(entry.meeting_description),
                          'published': entry.date_booked,
                          'link': '%s/events/%s' %(cherrypy.request.base, entry.id)} for entry in data]
@@ -1747,9 +1748,11 @@ class Root(controllers.RootController):
     @expose_as_csv
     @validate(validators=ExportUsersCSVSchema)
     @identity.require(not_anonymous())
-    def export_users_csv(self, location, sortname, usercols_selction, sortorder="asc"):
-        start, end = 0, -1
-        total, rows = self._export_users(location, sortname, sortorder, usercols_selction, start, end)
+    def export_users_csv(self, location=0, sortname="display_name", usercols_selection=["display_name"], sortorder="asc"):
+        if not location:
+            location = identity.current.user.homeplaceID
+        start, end = 0, None
+        total, rows = self._export_users(location, sortname, sortorder, usercols_selection, start, end)
         return rows
 
     @expose(format="json")
@@ -3254,14 +3257,14 @@ Exception:
     @expose(template="hubspace.templates.billingDetails")
     @identity.require(not_anonymous())
     @validate(validators=BillingDetailsSchema())
-    def save_billingDetailsEdit(self, id, billing_mode, tg_errors=None, **kwargs):
+    def save_billingDetailsEdit(self, id, billing_mode, tg_errors=None, billto=None, **kwargs):
         billing_mode = int(billing_mode)
 	user = User.get(id)
 	if not permission_or_owner(user.homeplace, user,'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
 
         if tg_errors:
-            obj = AttrDict(id=id, **kwargs)
+            obj = AttrDict(id=id, billing_mode=billing_mode, **kwargs)
             attrs =  get_attribute_names(User)
             for attr in attrs:
                 if attr not in obj:
@@ -3270,7 +3273,7 @@ Exception:
             cherrypy.response.headers['X-JSON'] = 'error'
             return self.error_template('billingDetailsEdit', {'object':obj, 'tg_errors':tg_errors})
 
-        if billing_mode == 0 or (billing_mode == 2 and kwargs['billto'] == user.id):
+        if billing_mode == 0 or (billing_mode == 2 and billto == user.id):
             user.billto = user
             user.bill_to_profile = 1
 
@@ -3283,10 +3286,10 @@ Exception:
                     setattr(user, billing_attr, kwargs[billing_attr])
 
         elif billing_mode == 2:
-            user.bill_to_profile = 0
-            if kwargs['billto'] and not permission_or_owner(user.homeplace, None,'manage_invoices'):
+            if billto and not permission_or_owner(user.homeplace, None,'manage_invoices'):
 		raise IdentityFailure('what about not hacking the system')
-            user.billto = User.get(kwargs['billto'])
+            user.bill_to_profile = 0
+            user.billto = User.get(billto)
 
         cherrypy.response.headers['X-JSON'] = 'success'
         return {'object':user}

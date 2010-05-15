@@ -15,7 +15,7 @@ if AVATAR_INTEGRATION_ENABLED:
 
     def image_src(object, attr_name, default_image_location):
         obj_type = object.__class__.__name__
-        if obj_type == 'User':
+        if obj_type in ('User', 'ProfileCache'):
             return "http://plus.the-hub.net/avatar/current/%s/100/" % object.user_name
         elif isinstance(getattr(object, attr_name), basestring) and isinstance(get_mimetype(object, attr_name), basestring):
             count = cherrypy.session.setdefault('count', 1000)
