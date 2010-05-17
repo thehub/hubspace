@@ -100,6 +100,7 @@ def filter_members(location, text_filter, type, active_only, start, end, overrid
                 users = User.select(AND(user_id_clause, display_name_clause, user_active_clause))
             else:
                 users = User.select(AND(user_id_clause, display_name_clause))
+            users = users.orderBy('display_name')
 
     elif type == 'rfid_member_search':
             users = User.select(AND(User.q.rfid == text_filter))
