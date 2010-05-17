@@ -202,7 +202,7 @@ def on_del_rusage(rusage, post_funcs):
 def on_add_user(kwargs, post_funcs):
     user = kwargs['class'].get(kwargs['id'])
     location = user.homeplaceID
-    cached_updates[location]['profile'].add(user)
+    cached_updates[location]['profiles'].add(user)
     mark_pages_for_regen(location, "members.html")
 
 def on_updt_user(user, kwargs):
@@ -225,17 +225,22 @@ listen(on_updt_user, User, RowUpdateSignal)
 
 
 # FACADE
+def clear_cache(section, location):
+    page_needs_regenerating.setdefault(location.id, {'members.html': False, 'events.html': False})
+    if section == 'profiles':
+        page_needs_regenerating[location.id]['members.html'] = True
+    if section == 'events':
+        page_needs_regenerating[location.id]['events.html'] = True
+
 def clear_cache(*args, **kw): pass
 
 def get_updates_data(location):
     local_updates = cached_updates[location.id]
     updates = {}
     updates['local_profiles'] = local_updates['profiles']
-    updates['local_events'] = local_updates['events']
-    updates['local_future_events'] = local_updates['events'].get_future_events()
-    updates['local_past_events'] = local_updates['events'].get_past_events()
+    updates['local_events'] = local_updates['events'].get_future_events()
     updates['global_profiles'] = cached_updates['global']['profiles']
-    updates['global_events'] = cached_updates['global']['events']
+    updates['global_events'] = cached_updates['global']['events'].get_future_events()
     return updates
 
 def get_local_future_events(location, no_of_events=None, *args, **kw):

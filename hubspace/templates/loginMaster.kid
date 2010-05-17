@@ -81,7 +81,7 @@ def namespace():
 			<h1>Upcoming Events in The Hub Network</h1>
 		</div>	
 		<div class="update" py:for="update_item in glob">
-                    <a href="${event_domain(update_item)}/events/${update_item.id}" target="_blank">
+                    <a href="${update_item.url}" target="_blank">
               
                         <div class="update_text">
                             <h1>${update_item.meeting_name}</h1>
