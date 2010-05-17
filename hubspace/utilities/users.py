@@ -1,11 +1,14 @@
 import hubspace.search
-from hubspace.model import User, Location
+from hubspace.model import User, Location, UserGroup, Group
 from hubspace.utilities.permissions import user_locations
 from turbogears import identity
-from sqlobject import AND
+from sqlobject import AND, LIKE, IN, OR
 from hubspace.utilities.dicts import ODict
 import hubspace.tariff
 from hubspace.utilities.uiutils import now
+
+class iLIKE(LIKE):
+    op = 'ilike'
 ###################  Members  ###################
 
 fields = ODict()
@@ -87,12 +90,17 @@ def filter_members(location, text_filter, type, active_only, start, end, overrid
                 if location not in user_locs:
                     users = [user for user in users if user.active]
         else:
-            users = list(User.select("display_name ilike '%s' order by display_name" % str(text_filter)))
+            relevant_groups = Group.select(AND(Group.q.level=='member', IN(Group.q.place, user_locs)))
+            relevant_user_ids = tuple((ug.userID for ug in UserGroup.select(IN(UserGroup.q.group, tuple(relevant_groups)))))
+            display_name_clause = iLIKE(User.q.display_name, text_filter)
+            user_id_clause = IN(User.q.id, relevant_user_ids)
             if active_only:
-                users = [user for user in users if user.active or user.homeplace in user_locs]
+                myloc_ids = [loc.id for loc in user_locs]
+                user_active_clause = OR((User.q.active == 1), IN(User.q.homeplaceID, myloc_ids))
+                users = User.select(AND(user_id_clause, display_name_clause, user_active_clause))
             else:
-                users = [user for user in users if user.homeplace in user_locs]
-        
+                users = User.select(AND(user_id_clause, display_name_clause))
+
     elif type == 'rfid_member_search':
             users = User.select(AND(User.q.rfid == text_filter))
 
