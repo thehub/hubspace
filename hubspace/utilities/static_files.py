@@ -3,7 +3,7 @@ import StringIO
 from os import path, unlink
 import md5
 
-css_files = ['main.css', 'newcalendar.css', 'jquery.autocomplete.css', 'feeds.css', 'flexigrid/flexigrid.css', 'jquery-ui/pepper-grinder/jquery-ui-1.7.2.custom.css']
+css_files = ['main.css', 'newcalendar.css', 'jquery.autocomplete.css', 'feeds.css', 'flexigrid/flexigrid.css', 'jquery-ui-1.7.2.custom.css', 'custom.css']
 
 common_js_files = ['prototype-1.6.0.3.js', 'scroll.js', 'browserdetect.js', 'jquery.min.js',
 'flexigrid/flexigrid.js',
