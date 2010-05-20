@@ -1535,7 +1535,7 @@ class Members(controllers.Controller):
 
 
 from hubspace.utilities.booking import booking_offset_plus_height, default_booking_params
-from hubspace.utilities.i18n import get_hubspace_locale, get_location_from_base_url, get_po_path, install_new_locale
+from hubspace.utilities.i18n import get_hubspace_locale, get_location_from_base_url, get_po_path, install_new_locale, get_hubspace_user_locale
 from hubspace.microSite import Sites
 ##################  Root  ####################
 
