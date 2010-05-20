@@ -1440,7 +1440,7 @@ var Tabs = function () {
                     height: 700,
                     width: 700,
                     position: 'top',
-                    resizable: true,
+                    resizable: true
                     });
                 dialog.dialog('open');
                 });
@@ -1596,9 +1596,9 @@ var select_week = function (date, inst) {
     inst._rangeStart = start_week;
     var end_week = new Date(selected_date.getTime() + (((7 - selected_date.getDay()) % 7) * 1000 * 60 * 60 * 24));
     jq('#space_date_field').datepicker('setDate', start_week, end_week);
-    var range = jq('#space_date_field').datepicker('getDate');
+    //var range = jq('#space_date_field').datepicker('getDate');
     // range = jq.datepicker.formatDate('D, dd MM yy', range[0]) + ' - ' + jq.datepicker.formatDate('D, dd MM yy', range[1]);
-    range = start_week + ' - ' + end_week;
+    var range = start_week + ' - ' + end_week;
     jq('#space_date_field').val(range);
     jq("#space_date").html(range + '<img src="/static/images/booking_down.png" />');
     var params = jq("#space_loc_time").serializeArray();
