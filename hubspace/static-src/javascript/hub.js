@@ -1625,11 +1625,11 @@ var set_space_listeners = function (response) {
         //pass 'location' or 'res_group' depending on what we are switching
         update_space_display(null, null, jq(this).attr('name'));
     });
-    jq('#bookingDateRange #space_date_field').datepicker({rangeSelect: true, onSelect: select_week, changeFirstDay: false});
+    jq('#bookingDateRange #space_date_field').datepicker({changeMonth: true, changeYear: true, onSelect: select_week, changeFirstDay: false});
     jq('#bookingDate #space_date').click(function () {
         jq('#space_date_range_field').datepicker('show');
     });
-    jq('#space_date_field').datepicker({onSelect: function () {
+    jq('#space_date_field').datepicker({changeMonth: true, changeYear: true, onSelect: function () {
         update_space_display(null);
     }
     });
