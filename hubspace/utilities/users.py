@@ -80,7 +80,7 @@ def filter_members(location, text_filter, type, active_only, start, end, overrid
         if override_user:
             user_locs = Location.select()
         else:
-            user_locs = user_locations(identity.current.user)
+            user_locs = user_locations(identity.current.user, ['member', 'host'])
 
         if user_locs:
             if location:
@@ -95,7 +95,7 @@ def filter_members(location, text_filter, type, active_only, start, end, overrid
                     users = User.select(AND(display_name_clause, user_id_clause))
 
             else:
-                myloc_ids = [loc.id for loc in user_locs]
+                myloc_ids = [loc.id for loc in user_locs if loc.name != 'hubPlus']
                 relevant_groups = Group.select(AND(Group.q.level=='member', IN(Group.q.placeID, myloc_ids)))
                 relevant_user_ids = tuple((ug.userID for ug in UserGroup.select(IN(UserGroup.q.group, tuple(relevant_groups)))))
                 display_name_clause = iLIKE(User.q.display_name, text_filter)
