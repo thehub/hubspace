@@ -101,7 +101,7 @@ def filter_members(location, text_filter, type, active_only, start, end, overrid
                 display_name_clause = iLIKE(User.q.display_name, text_filter)
                 user_id_clause = IN(User.q.id, relevant_user_ids)
                 if active_only:
-                    user_active_clause = OR((User.q.active == 1), location_clause)
+                    user_active_clause = (User.q.active == 1)
                     users = User.select(AND(display_name_clause, user_active_clause, user_id_clause))
                 else:
                     users = User.select(AND(display_name_clause, user_id_clause))
