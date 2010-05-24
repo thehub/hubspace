@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from hubspace.model import RUsage, Resourcegroup, ResourceQueue
 from sqlobject import AND, IN
 from hubspace.utilities.dicts import AttrDict
+from hubspace.utilities.permissions import permission_or_owner
 
 def selected_room(room, room_selected):
     if int(room)==int(room_selected):
@@ -13,6 +14,8 @@ def default_booking_params(location, resgroup=None):
     resgroup_order = location.resourcegroup_order
     if not resgroup_order:
         resgroup_order = []
+    if resgroup_order and not permission_or_owner(location, None, 'manage_resources'):
+        resgroup_order = [grp for grp in resgroup_order if grp and not Resourcegroup.get(grp).group_type == 'host_calendar']
     if not resgroup:
         try:
             resgroup = Resourcegroup.get(resgroup_order[0]) 
