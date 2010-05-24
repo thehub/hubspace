@@ -51,6 +51,8 @@ def display_room(room, rooms_displayed):
                resgroup_order = location.resourcegroup_order
                rooms_displayed, room_selected, resgroup = default_booking_params(location, resgroup)
                print rooms_displayed, resgroup
+           if not permission_or_owner(location, None, 'manage_resources'):
+               resgroup_order = [grp for grp in resgroup_order if not Resourcegroup.get(grp).group_type == 'host_calendar']
        ?>
       <form id="space_loc_time">
        <div class="bookingHub">Select Hub <select class="space_switch" name="location">
