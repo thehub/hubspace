@@ -66,7 +66,7 @@ class ObjectCacheContainer(list):
         instance_id = instance.id
         instance_cache = self.get(instance_id)
         if instance_cache:
-            instance_cache.__init__(instace)
+            instance_cache.__init__(instance)
     def cleanup(self):
         raise NotImplemented
 
@@ -231,8 +231,6 @@ def clear_cache(section, location):
         page_needs_regenerating[location.id]['members.html'] = True
     if section == 'events':
         page_needs_regenerating[location.id]['events.html'] = True
-
-def clear_cache(*args, **kw): pass
 
 def get_updates_data(location):
     local_updates = cached_updates[location.id]
