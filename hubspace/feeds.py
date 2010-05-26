@@ -38,9 +38,12 @@ class ObjectCache(object):
         pass
     def __repr__(self):
         return "<Event: %s>" % self.id
+    def update(self, attrs_dict):
+        for k, v in attrs_dict.items():
+            if k in self.attrs_to_remember:
+                setattr(self, k, v)
 
 class ObjectCacheContainer(list):
-    attrs_to_remember = []
     objectcache_factory = ObjectCache
     def __init__(self, location, *args, **kw):
         self.location = location
@@ -62,11 +65,6 @@ class ObjectCacheContainer(list):
         for instance in self:
             if instance.id == instance_id:
                 return instance
-    def update(self, instance):
-        instance_id = instance.id
-        instance_cache = self.get(instance_id)
-        if instance_cache:
-            instance_cache.__init__(instance)
     def cleanup(self):
         raise NotImplemented
 
@@ -173,28 +171,13 @@ def on_add_rusage(kwargs, post_funcs):
     rusage = kwargs['class'].get(kwargs['id'])
     if rusage.public_field:
         location = rusage.resource.place.id
-        print cached_updates[location]['events']
-        print page_needs_regenerating
         cached_updates[location]['events'].add(rusage)
         mark_pages_for_regen(location, "events.html")
-        print cached_updates[location]['events']
-        print page_needs_regenerating
         applogger.info("feeds.on_add_rusage: added %(id)s" % kwargs)
 
-def on_updt_rusage(rusage, kwargs):
-    print kwargs
-    applogger.info("feeds.on_updt_rusage: updating %s" % rusage.id)
-    location = rusage.resource.place.id
-    for attr in EventCache.attrs_to_remember:
-        if attr in kwargs and kwargs[attr] != getattr(rusage, attr):
-            cached_updates[location]['events'].update(rusage)
-            mark_pages_for_regen(location, "events.html")
-            break
-    print cached_updates[location]['events']
-
 def on_del_rusage(rusage, post_funcs):
-    applogger.info("feeds.on_updt_rusage: removing %s" % rusage.id)
-    location = rusage.resource.place.id
+    applogger.info("feeds.on_del_rusage: removing %s" % rusage.id)
+    location = rusage.resource.placeID
     if cached_updates[location]['events'].has_object(rusage.id):
         cached_updates[location]['events'].remove(rusage.id)
         mark_pages_for_regen(location, "events.html")
@@ -205,13 +188,19 @@ def on_add_user(kwargs, post_funcs):
     cached_updates[location]['profiles'].add(user)
     mark_pages_for_regen(location, "members.html")
 
-def on_updt_user(user, kwargs):
-    location = user.homeplace.id
-    for attr in EventCache.attrs_to_remember:
-        if attr in kwargs and kwargs[attr] != getattr(user, attr):
-            cached_updates[location]['profiles'].update(user)
-            mark_pages_for_regen(location, "members.html")
-            break
+def on_updt_rusage(instance, kwargs):
+    applogger.info("feeds.on_updt_rusage: updating %s" % instance.id)
+    location = instance.resource.placeID
+    instance_cache = cached_updates[location]['events'].get(instance.id)
+    instance_cache.update(kwargs)
+    mark_pages_for_regen(location, "events.html")
+
+def on_updt_user(instance, kwargs):
+    applogger.info("feeds.on_updt_user: updating %s" % instance.id)
+    location = instance.homeplaceID
+    instance_cache = cached_updates[location]['profiles'].get(instance.id)
+    instance_cache.update(kwargs)
+    mark_pages_for_regen(location, "members.html")
 
 cache_factories = dict (events=EventCacheContainer, profiles=ProfileCacheContainer)
 cached_updates = Cache()
@@ -219,7 +208,6 @@ cached_updates = Cache()
 listen(on_add_rusage, RUsage, RowCreatedSignal)
 listen(on_updt_rusage, RUsage, RowUpdateSignal)
 listen(on_del_rusage, RUsage, RowDestroySignal)
-
 listen(on_add_user, User, RowCreatedSignal)
 listen(on_updt_user, User, RowUpdateSignal)
 
