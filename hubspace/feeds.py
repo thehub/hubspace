@@ -192,15 +192,17 @@ def on_updt_rusage(instance, kwargs):
     applogger.info("feeds.on_updt_rusage: updating %s" % instance.id)
     location = instance.resource.placeID
     instance_cache = cached_updates[location]['events'].get(instance.id)
-    instance_cache.update(kwargs)
-    mark_pages_for_regen(location, "events.html")
+    if instance_cache:
+        instance_cache.update(kwargs)
+        mark_pages_for_regen(location, "events.html")
 
 def on_updt_user(instance, kwargs):
     applogger.info("feeds.on_updt_user: updating %s" % instance.id)
     location = instance.homeplaceID
     instance_cache = cached_updates[location]['profiles'].get(instance.id)
-    instance_cache.update(kwargs)
-    mark_pages_for_regen(location, "members.html")
+    if instance_cache:
+        instance_cache.update(kwargs)
+        mark_pages_for_regen(location, "members.html")
 
 cache_factories = dict (events=EventCacheContainer, profiles=ProfileCacheContainer)
 cached_updates = Cache()
