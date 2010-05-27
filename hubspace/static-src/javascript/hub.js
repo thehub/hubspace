@@ -1155,7 +1155,7 @@ var search_invoices = function (evt) {
 };
 var get_report = function (evt) {
     var form = jq('#report_conf').serializeArray();
-    var params = jQuery.param(form);
+    var params = jq.param(form);
     window.open('/generate_report?' + params, "_blank");
 };
 var show_users_grid = function (evt) {
@@ -1554,7 +1554,7 @@ var addCardForm = function () {
 var loc = {};
 var navigation = {};
 loc.init = function (event) {
-    jq.datepicker.setDefaults({firstDay: 1, dateFormat: 'D, dd MM yy'});
+    jq.datepicker.setDefaults({firstDay: 1, dateFormat: 'D, dd MM yy'}); // , showButtonPanel: true});
     this.img = new Image();
     this.img.src = "/display_image/Location/0/logo";
     jq('#header').css('backgroundImage', "url(" + this.img.src + ")").css('backgroundPosition', 'top left');
@@ -1589,18 +1589,18 @@ var date_left_right = function (evt) {
     jq('#space_date_field').val(date);
     update_space_display(null);
 };
-var select_week = function (date, inst) {
-    var selected_date = jq.datepicker.parseDate('D, dd MM yy', date);
-    var start_week = new Date(selected_date.getTime() - (((selected_date.getDay() + 6) % 7) * 1000 * 60 * 60 * 24));
-    jq.datepicker._stayOpen = false;
-    inst._rangeStart = start_week;
-    var end_week = new Date(selected_date.getTime() + (((7 - selected_date.getDay()) % 7) * 1000 * 60 * 60 * 24));
-    jq('#space_date_field').datepicker('setDate', start_week, end_week);
-    //var range = jq('#space_date_field').datepicker('getDate');
-    // range = jq.datepicker.formatDate('D, dd MM yy', range[0]) + ' - ' + jq.datepicker.formatDate('D, dd MM yy', range[1]);
-    var range = start_week + ' - ' + end_week;
-    jq('#space_date_field').val(range);
-    jq("#space_date").html(range + '<img src="/static/images/booking_down.png" />');
+var select_week = function (dateText, inst) {
+    // var selected_date = jq.datepicker.parseDate('D, dd MM yy', date);
+    // var start_week = new Date(selected_date.getTime() - (((selected_date.getDay() + 6) % 7) * 1000 * 60 * 60 * 24));
+    // jq.datepicker._stayOpen = false;
+    // inst._rangeStart = start_week;
+    // var end_week = new Date(selected_date.getTime() + (((7 - selected_date.getDay()) % 7) * 1000 * 60 * 60 * 24));
+    // jq('#space_date_field').datepicker('setDate', start_week, end_week);
+    // //var range = jq('#space_date_field').datepicker('getDate');
+    // // range = jq.datepicker.formatDate('D, dd MM yy', range[0]) + ' - ' + jq.datepicker.formatDate('D, dd MM yy', range[1]);
+    // var range = start_week + ' - ' + end_week;
+    // jq('#space_date_field').val(range);
+    // jq("#space_date").html(range + '<img src="/static/images/booking_down.png" />');
     var params = jq("#space_loc_time").serializeArray();
 
     jq('#space-bookingContent').load('/load_make_booking', params, set_space_listeners);
@@ -1625,7 +1625,7 @@ var set_space_listeners = function (response) {
         //pass 'location' or 'res_group' depending on what we are switching
         update_space_display(null, null, jq(this).attr('name'));
     });
-    jq('#bookingDateRange #space_date_field').datepicker({changeMonth: true, changeYear: true, onSelect: select_week, changeFirstDay: false});
+    jq('#bookingDateRange #space_date_field').datepicker({changeMonth: true, changeYear: true, onSelect: select_week});
     jq('#bookingDate #space_date').click(function () {
         jq('#space_date_range_field').datepicker('show');
     });
@@ -2163,7 +2163,7 @@ var pdf_invoice = function () {
     var invoice_id = jq(this).attr('id').split('_')[1];
     var invoice_name = escape(jq(this).attr('id').split('_')[2]);
 
-    invoice_url = '/pdf_invoice/' + invoice_id + '/' + invoice_name + '.pdf'
+    invoice_url = '/pdf_invoice/' + invoice_id + '/' + invoice_name + '.pdf';
     window.open(invoice_url, "_blank");
 
 };
