@@ -33,16 +33,16 @@ def get_location_from_base_url():
             pass
     return Location.get(1)
 
+hubspace_lang_code = lambda location: location.locale + '_'+ location.name.lower().replace(' ', '')
 
 def get_hubspace_user_locale():
     if identity.not_anonymous():
         if identity.current.user.homeplace:
-            lang_code = identity.current.user.homeplace.locale
+            return hubspace_lang_code(identity.current.user.homeplace)
         else:
             return 'en' # user doesn't have a home location
     else:
-        lang_code = site_default_lang[cherrypy.request.base]
-    return  lang_code + '_'+ identity.current.user.homeplace.name.lower().replace(' ', '')
+        return hubspace_lang_code(get_location_from_base_url())
 
 def install_new_locale(locale):
     applogger.info("installing new locale: %s" % locale)
@@ -79,7 +79,13 @@ def get_hubspace_locale():
     install_new_locale(locale)
     return cherrypy.session.get('locale')
 
-get_po_path = lambda: tool_instance().get_locale_catalog(get_hubspace_user_locale(), "messages")
+def get_po_path(location=None):
+    if location:
+        locale = hubspace_lang_code(location)
+    else:
+        locale = get_hubspace_user_locale()
+    return tool_instance().get_locale_catalog(locale, "messages")
+    
 
 ################## I18N #########################
 from turbogears.command.i18n import InternationalizationTool, copy_file

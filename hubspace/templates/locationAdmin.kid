@@ -136,7 +136,7 @@ def makeOptDict(r, typ):
 	    <table class="detailTable data">
             <tr>
                 <td> Message catalogue file (.po) </td>
-                <td><a href="/download_messages.po">Download</a> | <a href="mailto:world.tech.space@the-hub.net"> Send updated translation file </a></td>
+                <td><a href="/download_messages/${location.id}/${location.name}.po">Download</a> | <a href="mailto:world.tech.space@the-hub.net"> Send updated translation file </a></td>
                 <td align="left"><a target="_blank" href="http://the-hub.pbworks.com/HubSpace%3A-Working-with-message-catalogues">Help</a></td>
             </tr>
             </table>

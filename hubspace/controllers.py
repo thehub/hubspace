@@ -1702,8 +1702,8 @@ class Root(controllers.RootController):
    
     @identity.require(not_anonymous())
     @expose()
-    def download_messages_po(self, *args, **kw):
-        po_path = get_po_path()
+    def download_messages(self, location_id, filename, *args, **kw):
+        po_path = get_po_path(Location.get(location_id))
         applogger.debug("download request: %s" % po_path)
         if not os.path.exists(po_path):
             applogger.warn("po not found: %s" % po_path)
