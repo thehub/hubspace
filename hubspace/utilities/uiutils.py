@@ -4,6 +4,7 @@ from hubspace.model import Invoice, Selection, UserMetaData, Location
 from pytz import common_timezones, timezone
 from datetime import datetime, timedelta
 from sqlobject import AND
+from html5lib import sanitizer, serializer, treebuilders, treewalkers, HTMLParser
 
 def select_home_hub(location, attrname="selected"):
     if identity.current.user.homeplace == location:
@@ -204,3 +205,19 @@ def set_freetext_metadata(obj, attr, val):
         metadata[0].attr_value = val
     except:
         UserMetaData(user=obj.id, attr_name=attr, attr_value=val)
+
+def sanitize_input(chars):
+    """
+    html1 = "<b>shon</b>"
+    html1 = "<b>shon</b><script>zzz</script>"
+    print sanitize_input(html1)
+    """
+    p = HTMLParser(tokenizer=sanitizer.HTMLSanitizer, tree=treebuilders.getTreeBuilder("dom")) # could use Beautiful Soup here instead
+    s = serializer.htmlserializer.HTMLSerializer(omit_optional_tags=False, quote_attr_values=True)
+    dom_tree = p.parseFragment(chars)
+    walker = treewalkers.getTreeWalker("dom")
+    stream = walker(dom_tree)
+    gen = s.serialize(stream)
+    out = ''.join(i for i in gen)
+    return out
+
