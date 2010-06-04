@@ -47,7 +47,7 @@ if 'tg_errors' not in locals():
 		</tr>
 		<tr class="${odd_or_even()}">
 			<td class="line">Email contact</td>
-			<td><input type="text" class="text billing_details"  name="bill_email" id="bill_email" value="${user.bill_email}" /><div class="errorMessage" py:if="tg_errors">${print_error('bill_email', tg_errors)}</div></td>
+			<td><input type="text" class="text billing_details"  name="bill_email" id="bill_email" value="${user.bill_email or user.email_address}" /><div class="errorMessage" py:if="tg_errors">${print_error('bill_email', tg_errors)}</div></td>
 		</tr>
 		<tr class="${odd_or_even()}">
 			<td class="line">Company Number</td>
