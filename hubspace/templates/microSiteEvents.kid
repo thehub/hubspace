@@ -6,6 +6,9 @@ event = None
 <head>
 </head>
 <body id="events">
+    <?python
+    events_dir = page.path_name.replace('.html', '')
+    ?>
     <div class="span-12" id="content-intro" py:if="not event">
       <h1 id="title" class="text_small">${page.title and page.title or "The Events"}</h1>
       <div py:if="page.content" class="text_wysiwyg" id="content">${XML(page.content)}</div>
@@ -34,7 +37,7 @@ event = None
 				   <div py:if="event.meeting_description" class="property"><div class="propertyTitle">Description:</div><div class="propertyValue description">${event.meeting_description}</div>
 				   </div>
                     <div><a href="${relative_path}icalfeed.ics/${event.id}">iCal</a></div>
-				   <div><div><p class="backLink"><a href="../events.html">back to Events Page</a></p></div></div>
+				   <div><div><p class="backLink"><a href="../${page.path_name}">back to Events Page</a></p></div></div>
 				</div>
 			</div>
 		</div>
@@ -45,7 +48,7 @@ event = None
           <h3 id="upcoming_events" class="text_small">${page.upcoming_events and page.upcoming_events or "Upcoming Events"}</h3>
           <ul>
             <li py:for="ev in future_events" class="event">
-              <h4><a href="${relative_path}events/${ev.id}">${ev.meeting_name}</a></h4>
+              <h4><a href="${relative_path}${events_dir}/${ev.id}">${ev.meeting_name}</a></h4>
               <p class="event-date">${dt.from_python(ev.start)}</p>
               <p class="event-desc">${ev.meeting_description.split('.')[0] + '.'}</p>
             </li>
@@ -56,7 +59,7 @@ event = None
           <h3 id="past_events" class="text_small">${page.past_events and page.past_events or "Past Events"}</h3>
           <ul>
             <li py:for="ev in past_events" class="event">
-              <h4><a href="${relative_path}events/${ev.id}">${ev.meeting_name}</a></h4>
+              <h4><a href="${relative_path}${events_dir}/${ev.id}">${ev.meeting_name}</a></h4>
               <p class="event-date">${dt.from_python(ev.start)}</p>
               <p class="event-desc">${ev.meeting_description.split('.')[0] + '.'}</p>
             </li>
