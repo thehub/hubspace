@@ -64,21 +64,3 @@ def calc_tax(resource_total, percentage_tax, vat_included):
     rounded = unrounded.quantize(TWOPLACES)
     return rounded
 
-
-def invoice_email(invoice):
-    return _("""
-Dear %(first_name)s,
-
-Please find your Hub invoice attached.
-
-If you have any questions, please don't hesitate to contact The Hub's hosting team on %(location_name)s.hosts@the-hub.net or %(telephone)s.
-
-We would always welcome your feedback and ideas on how we can improve your experience here.
-
-Thank you for being part of The Hub.
-
-The Hosting Team
-""") % (dict(first_name=invoice.user.first_name,
-             last_name=invoice.user.last_name,
-             location_name=invoice.location.name.lower().replace(' ', ''),
-             telephone=invoice.location.telephone))

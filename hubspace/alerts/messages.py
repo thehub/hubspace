@@ -1,7 +1,6 @@
 import os
 from sqlobject import AND
 import hubspace.model as model
-import string
 import compiler
 import logging
 import macros
@@ -120,5 +119,11 @@ invoice_freetext_1.can_be_customized = True
 invoice_freetext_2 = Message("invoice_freetext_2")
 invoice_freetext_2.label = "Invoice Free Text (Last Page)"
 invoice_freetext_2.can_be_customized = True
+
+invoice_mail = Message("invoice_mail")
+invoice_mail.label = "Invoice Mail"
+invoice_mail.can_be_customized = True
+invoice_mail.available_macros = [macros.Location_Phone(), macros.Location(), macros.Member_First_Name(), macros.Member_Email(), macros.Member_Last_Name(),
+    macros.Hosts_Email(), macros.Location_URL()]
 
 bag = dict ([(k,v) for (k,v) in locals().items() if isinstance(v, Message)])

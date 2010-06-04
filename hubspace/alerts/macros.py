@@ -45,7 +45,7 @@ class Member_Name(Macro):
     def getValue(self, data):
         return data['user'].display_name
 
-class Member_Honme(Macro):
+class Member_Home(Macro):
     def getValue(self, data):
         return data['user'].homeplace.name
 

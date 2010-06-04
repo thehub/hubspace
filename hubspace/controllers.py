@@ -4322,7 +4322,7 @@ The Hub Team
 
         if not kwargs.get('send_it'):
             return "Invoice not sent by email not sent!"
-        host_mail = invoice.user.homeplace.name.lower().replace(' ', '') + '.hosts@the-hub.net'
+        host_mail = invoice.user.homeplace.hosts_email
         value = send_mail(to=to, sender=host_mail, subject=subject, body=body, attachment=pdf, cc=host_mail, attachment_name="Invoice%s.pdf"%invoice.number)
         if value:
             if not invoice.sent:

@@ -1119,6 +1119,7 @@ class MicroSite(controllers.Controller):
         except IndexError,err:
             cherrypy.response.status = 404
             cherrypy.response.body = "404"
+            applogger.exception("microsite 404:")
         except Exception,err:
             """log the error and give the user a trac page to submit the bug
             We should give the error a UID so that we can find the error associated more easily
@@ -1313,14 +1314,12 @@ class MicroSite(controllers.Controller):
                     self.render_page(page, relative_path='./')
                     page_needs_regenerating[loc_id][page] = False
 
-    	try:
-            page = Page.select(AND(Page.q.location==self.location, 
-                                   Page.q.path_name==path_name))[0]       
+        try:
+            page = Page.select(AND(Page.q.location==self.location, Page.q.path_name==path_name))[0]
             template = self.site_types[page.page_type].template
         except IndexError:
             try:
-                page = Page.select(AND(Page.q.location==self.location, 
-                                       Page.q.path_name==path_name + '.html'))[0]
+                page = Page.select(AND(Page.q.location==self.location, Page.q.path_name==path_name + '.html'))[0]
                 template = self.site_types[page.page_type].template
             except:
                 template = 'hubspace.templates.microSiteHome'
