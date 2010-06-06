@@ -1,0 +1,15 @@
+#subject = _("The Hub | invoice")
+subject = "The Hub | invoice"
+body = """
+Dear ${MEMBER_FIRST_NAME},
+
+Please find your Hub invoice attached.
+
+If you have any questions, please don't hesitate to contact The Hub's hosting team on ${HOSTS_EMAIL} or ${LOCATION_PHONE}.
+
+We would always welcome your feedback and ideas on how we can improve your experience here.
+
+Thank you for being part of The Hub.
+
+The Hosting Team
+"""
