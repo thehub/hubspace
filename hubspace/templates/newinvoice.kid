@@ -92,7 +92,7 @@ def lang():
         <br/>
         <p>
         <strong> ${invoice.user.display_name}<br/> </strong>
-        Membership No. ${invoice.user.id} <br/>
+        <c>Membership No.</c> ${invoice.user.id} <br/>
         </p>
         <p>
         <?python
@@ -156,7 +156,7 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
     <thead style="background: #C0C0C0;">
     <tr>
         <td>Description</td>
-        <td align="right">Amount ${invoice.location.currency}</td>
+        <td align="right"><c>Amount</c> ${invoice.location.currency}</td>
     </tr>
     </thead>
     <div py:for="resource, rusages in ivd[0].items()">
@@ -241,7 +241,7 @@ c = itertools.count(1)
     <td>Description</td>
     <td width="10%">Quantity</td>
     <td>Time</td>
-    <td align="right">Amount ${invoice.location.currency}</td>
+    <td align="right"><c>Amount</c> ${invoice.location.currency}</td>
 </tr>
 </thead>
 
@@ -301,7 +301,7 @@ ${XML(nl2br(freetext2))}
   <c py:if="invoice.location.swift_no" py:strip="True">Swift Code ${invoice.location.swift_no} <br/></c>
   <c py:if="invoice.location.iban_no" py:strip="True">IBAN ${invoice.location.iban_no} <br/></c>
   <c py:if="invoice.location.vat_no" py:strip="True">VAT Number ${invoice.location.vat_no} <br/></c>
-  <c py:if="invoice.location.payment_terms" py:strip="True">Payment Terms: ${invoice.location.payment_terms}</c>
+  <c py:if="invoice.location.payment_terms" py:strip="True"><c>Payment Terms</c>: ${invoice.location.payment_terms}</c>
 </td>
 </tr>
 </table>
