@@ -5,6 +5,7 @@ from pytz import common_timezones, timezone
 from datetime import datetime, timedelta
 from sqlobject import AND
 from html5lib import sanitizer, serializer, treebuilders, treewalkers, HTMLParser
+from BeautifulSoup import BeautifulSoup
 
 def select_home_hub(location, attrname="selected"):
     if identity.current.user.homeplace == location:
@@ -219,5 +220,4 @@ def sanitize_input(chars):
     stream = walker(dom_tree)
     gen = s.serialize(stream)
     out = ''.join(i for i in gen)
-    return out
-
+    return BeautifulSoup(out) # BeautifulSoup is to convert <br> to <br />
