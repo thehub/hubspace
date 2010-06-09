@@ -10,12 +10,20 @@ render_static = False
 
 </head>
 <body id="${page.name}">
-        <div class="span-24" id="content-intro">
+        <div class="span-12" id="content-intro">
             <h1 id="title" class="text_small">${page.title and page.title or "Your Header"}</h1>
             <div py:if="page.content" class="text_large" id="content">
             <div py:if="is_host(identity.current.user, location, render_static)">edit content</div>
             ${XML(page.content)}</div>
             <div py:if="not page.content" class="text_large" id="content"><p>Your content here</p> 
+            </div>
+        </div>
+        <div class="span-12 last">
+            <h1 id="right_header" class="text_small">${page.right_header and page.right_header or "Your Header"}</h1>
+            <div py:if="page.right_content" class="text_large" id="right_content">
+            <div py:if="is_host(identity.current.user, location, render_static)">edit content</div>
+            ${XML(page.right_content)}</div>
+            <div py:if="not page.right_content" class="text_large" id="right_content"><p>Your content here</p> 
             </div>
         </div>
 </body>
