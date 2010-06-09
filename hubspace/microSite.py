@@ -572,6 +572,7 @@ def append_to_list(list_name, **kwargs):
             pagenamebase = page.path_name.split('.html')[0]
             path_name = pagenamebase+'__'+kwargs['name']
             subpage_of = list_name.split('subpages_')[1]
+
         page_type = kwargs.get('page_type', 'standard')
         new_obj = kwargs['site_types'][page_type].create_page(kwargs['name'], kwargs['location'],path_name=path_name,subpage_of=subpage_of)
     else:
@@ -671,6 +672,7 @@ microsite_page_types =  {
     'standard': PageType('standard', 'hubspace.templates.microSiteStandard', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
     'blog2': PageType('blog2', 'hubspace.templates.microSiteBlog2', get_blog2, static=False),
     'plain': PageType('plain', 'hubspace.templates.microSitePlain', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
+    'plain2Column': PageType('plain2Column', 'hubspace.templates.microSitePlain2Col', standard_page, default_vals={'name':"pagex", 'subtitle':"the Hub"}),
     'search': PageType('search', 'hubspace.templates.microSiteSearch', sitesearch, static=False),
     }
 
@@ -823,6 +825,7 @@ class SiteList(controllers.Controller):
         #    template_args = self.get_list(list_name)
         #    template_args.update({'pageid':None})
         template_args = self.get_list(list_name)
+	template_args.update({'page_types_dict':self.site.site_types})
         template_args.update({'page_types':[type[0] for type in self.site.site_types.iteritems() if type[1].can_be_tab]})
         template_args.update({'relative_path': relative_path})
         #template_args.update({'orig_name':orig_name})
@@ -901,7 +904,6 @@ class SiteList(controllers.Controller):
     @expose()
     @validate(validators={'list_name':v.UnicodeString(), 'object_type':v.UnicodeString(), 'page_type':v.UnicodeString(), 'name':v.UnicodeString(), 'active':v.Int(if_empty=0),'pageid':v.Int(if_missing=1)})
     def append(self, list_name, **kwargs):
-        #import pdb; pdb.set_trace()
         if not is_host(identity.current.user, Location.get(self.site.location)):
             raise IdentityFailure('what about not hacking the system')
         kwargs['location'] = self.site.location
