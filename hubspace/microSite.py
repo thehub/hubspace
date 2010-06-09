@@ -27,6 +27,7 @@ import urlparse
 from urllib import quote, urlencode
 from urllib2 import urlopen, Request, build_opener, install_opener, HTTPCookieProcessor, HTTPRedirectHandler
 import cookielib
+from hubspace import configuration
 
 import vobject
 import patches
@@ -1117,9 +1118,9 @@ class MicroSite(controllers.Controller):
         #except:
         #    if 0: 
         except IndexError,err:
+            applogger.exception("microsite request %s 404:" % cherrypy.request.path)
             cherrypy.response.status = 404
             cherrypy.response.body = "404"
-            applogger.exception("microsite 404:")
         except Exception,err:
             """log the error and give the user a trac page to submit the bug
             We should give the error a UID so that we can find the error associated more easily
@@ -1177,7 +1178,12 @@ class MicroSite(controllers.Controller):
         try:
             page = MetaWrapper(Page.select(AND(Page.q.location==self.location, Page.q.path_name==page_name))[0])
         except (KeyError, IndexError):
-            page = MetaWrapper(Page.select(AND(Page.q.location==self.location, Page.q.path_name==page_name + '.html'))[0])
+            try:
+                page = MetaWrapper(Page.select(AND(Page.q.location==self.location, Page.q.path_name==page_name + '.html'))[0])
+            except:
+                applogger.error("microsite: not found page for with location [%s] and page_name [%s]" % (self.location, page_name))
+                applogger.debug("debug info: args [%s] kwargs [%s]" % (str(args), str(kwargs)))
+                raise
 
         func = self.site_types[page.page_type].view_func
         if func:
@@ -1210,7 +1216,7 @@ class MicroSite(controllers.Controller):
             out = dict(blog_head=parts['blog_head'],blog=parts['sidebartext'])
         else:
             out = dict(blog_head='',blog='')
-        return out            
+        return out
 
 
     @expose()
@@ -1226,7 +1232,7 @@ class MicroSite(controllers.Controller):
         location = Location.get(self.location)
         if eventid:
             events = [RUsage.get(eventid)]
-        else:            
+        else:
             events = get_local_future_events(location=self.location, no_of_events=1000)['future_events']
         cal = vobject.iCalendar()
         cal.add('X-WR-CALNAME').value = "%s (%s) events" % (location.name,location.city)
@@ -1246,7 +1252,7 @@ class MicroSite(controllers.Controller):
         cherrypy.response.headers['Content-Type'] = 'text/calendar'
         cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="icalfeed.ics"'
         
-        return cal.serialize()            
+        return cal.serialize()
 
     @expose()
     def default(self, *args, **kwargs):
@@ -1259,7 +1265,7 @@ class MicroSite(controllers.Controller):
              redirect(cherrypy.request.path + '/')
 
         if not args or args[0]=='':
-            path_name = 'index.html'
+            path_name = configuration.site_index_page[Location.get(self.location).url]
         else:
             path_name = args[0]
             args = args[1:]
@@ -1306,7 +1312,11 @@ class MicroSite(controllers.Controller):
     def render_page(self, path_name, *args, **kwargs):
         #import pdb; pdb.set_trace()
         path_name = path_name.split('#')[0]
-        template_args = self.construct_args(path_name, *args, **kwargs)
+        try:
+            template_args = self.construct_args(path_name, *args, **kwargs)
+        except Exception, err:
+            applogger.error("render_page: failed for path_name [%s], args [%s], kwargs [%s]" % (path_name, str(args), str(kwargs)))
+            raise
         loc_id = template_args['location'].id
         if page_needs_regenerating.get(loc_id, False) and not path_name.endswith('.html'): #this is for feed pages members.html and events.html
             for page, bool in page_needs_regenerating[loc_id].items():
