@@ -220,4 +220,4 @@ def sanitize_input(chars):
     stream = walker(dom_tree)
     gen = s.serialize(stream)
     out = ''.join(i for i in gen)
-    return BeautifulSoup(out) # BeautifulSoup is to convert <br> to <br />
+    return str(BeautifulSoup(out)) # BeautifulSoup is to convert <br> to <br />
