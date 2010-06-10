@@ -747,6 +747,7 @@ class EditLocationSchema(v.Schema):
     tentative_booking_enabled = checkbox
     invoice_newscheme = v.Int(if_empty=False)
     invoice_duedate = v.Int(min=0, if_empty=0)
+    invoice_bcc = v.Email(if_empty=None)
     vat_no =  All(no_ws, v.MaxLength(40))
     vat_default = FloatInRange(min=0, max=100)
     billing_address = no_ws

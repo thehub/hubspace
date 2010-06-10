@@ -47,6 +47,10 @@ from hubspace.utilities.i18n import languages_dict
 							<td class="line">Payment_Terms</td>
 							<td>${location.payment_terms}</td>
 						</tr>
+                                                <tr py:if="attr_not_none(location, 'invoice_bcc')" >
+							<td class="line">Bcc Invoice</td>
+							<td>${location.invoice_bcc}</td>
+						</tr>
                                                 <tr>
 							<td class="line">New Invoice numbering scheme </td>
 							<td>${location.invoice_newscheme and 'yes' or 'no'}</td>

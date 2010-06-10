@@ -59,6 +59,11 @@ def lang_selected(location, lang):
 	            <td><input name="invoice_duedate" type="text" value="${location.invoice_duedate or 0}" cols="2"/><em>0 to disable due date calculation</em>
                     <div class="errorMessage" py:if="tg_errors">${print_error('invoice_duedate', tg_errors)}</div></td>
 	        </tr>
+                <tr>
+                    <td class="line">Bcc Invoice</td>
+                    <td><input name="invoice_bcc" id="invoice_bcc" type="text" class="text" value="${location.invoice_bcc or ''}" /><em>Invoice will be Bcced to this Email id</em>
+                    <div class="errorMessage" py:if="tg_errors">${print_error('invoice_bcc', tg_errors)}</div></td>
+                </tr>
 		<tr>
                      <td class="line">Payment Terms</td>
 		     <td><input name="payment_terms" type="text" value="${location.payment_terms or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('payment_terms', tg_errors)}</div></td>

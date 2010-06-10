@@ -11,7 +11,7 @@ from email.Generator import Generator
 import sys
 from turbogears import config
 
-def sendmail(to,sender,subject,body,attachments=None, cc=None):
+def sendmail(to,sender,subject,body,attachments=None, cc=None,bcc=None):
     '''Sends away a mail with optional attachments using smtplib. This should be fired off in a new process / thread to avoid waiting for mail server
        attachments: [('filename','content of first attachment','mime/type'),...]'''
     if not attachments:
@@ -22,9 +22,12 @@ def sendmail(to,sender,subject,body,attachments=None, cc=None):
 
     if cc is None:
         cc = ''
+    if bcc is None:
+        bcc = ''
     outer['To'] = to
-    outer['From'] = sender    
+    outer['From'] = sender
     outer['Cc'] = cc
+    outer['Bcc'] = bcc
     outer['Subject'] = subject.encode('utf-8')
     outer.preamble = 'the holy preamble'
     attachments.insert(0,['',body,'text/plain'])
@@ -33,7 +36,7 @@ def sendmail(to,sender,subject,body,attachments=None, cc=None):
         if maintype == 'text':
             # Note: we should handle calculating the charset
             try:
-	        content = content.encode('utf-8')
+                content = content.encode('utf-8')
             except UnicodeDecodeError:
                 #the incoming content might already encoded at utf-8
                 pass
@@ -50,7 +53,7 @@ def sendmail(to,sender,subject,body,attachments=None, cc=None):
             Encoders.encode_base64(msg)
         # Set the filename parameter
         if filename:
-	    msg.add_header('Content-Disposition', 'attachment', filename=filename)
+            msg.add_header('Content-Disposition', 'attachment', filename=filename)
         outer.attach(msg)
     mail_server = config.get('hubspace.mail')
     if mail_server:
@@ -65,8 +68,19 @@ def sendmail(to,sender,subject,body,attachments=None, cc=None):
     to = [to]
     if cc:
 	to.append(cc)
+    if bcc:
+	to.append(bcc)
     try:
         server.sendmail(sender, to, final)
     except smtplib.SMTPRecipientsRefused:
         print "SMTP RECIPIENT REFUSED"
     server.quit()
+
+if __name__ == '__main__':
+    to = ''
+    sender = ''
+    cc = ''
+    bcc = ''
+    subject = 'this is test email'
+    body = 'this\nis\na\ntest\nmessage.'
+    sendmail(to,sender,subject,body, cc=cc, bcc=bcc)

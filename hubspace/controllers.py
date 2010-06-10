@@ -839,12 +839,12 @@ def send_welcome_mail(user, password):
     user.welcome_sent = 1
     
 
-def send_mail(to=None,sender='hubspace@members.the-hub.net',subject="",body="", attachment=None, attachment_name="attachment", attachment_content_type='application/pdf', cc=None):
+def send_mail(to=None,sender='hubspace@members.the-hub.net',subject="",body="", attachment=None, attachment_name="attachment", attachment_content_type='application/pdf', cc=None, bcc=None):
     if attachment:
-        sendmail.sendmail(to,sender,subject,body,[[attachment_name, attachment, attachment_content_type]], cc=cc)
+        sendmail.sendmail(to,sender,subject,body,[[attachment_name, attachment, attachment_content_type]], cc=cc, bcc=bcc)
         return True
     else:
-        sendmail.sendmail(to,sender,subject,body, cc=cc)
+        sendmail.sendmail(to,sender,subject,body, cc=cc, bcc=bcc)
         return True
 
 
@@ -4307,7 +4307,7 @@ The Hub Team
             return "problem sending invoice"
  
         if not permission_or_owner(invoice.user.homeplace, None, 'manage_invoices'):
-            raise IdentityFailure('what about not hacking the system')          
+            raise IdentityFailure('what about not hacking the system')
 
         if not invoice.sent:
             self.update_invoice_amount(invoiceid)
@@ -4318,12 +4318,14 @@ The Hub Team
                 return _("Problem sending the invoice: Member's billing preferences are set to not to use profile details and billing preferences has no email address specified. You may want visit member's 'Billing Details' section.")
             return "user has no email address"
 
+        bcc = invoice.location.invoice_bcc
+
         pdf = self.create_pdf_invoice(invoiceid=invoiceid)
 
         if not kwargs.get('send_it'):
             return "Invoice not sent by email not sent!"
         host_mail = invoice.user.homeplace.hosts_email
-        value = send_mail(to=to, sender=host_mail, subject=subject, body=body, attachment=pdf, cc=host_mail, attachment_name="Invoice%s.pdf"%invoice.number)
+        value = send_mail(to=to, sender=host_mail, subject=subject, body=body, attachment=pdf, cc=host_mail, attachment_name="Invoice%s.pdf"%invoice.number,bcc=bcc)
         if value:
             if not invoice.sent:
                 invoice.sent = now(invoice.location)

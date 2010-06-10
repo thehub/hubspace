@@ -722,6 +722,7 @@ class Location(SQLObject):
     swift_no = UnicodeCol(default=None)
     payment_terms = UnicodeCol(default=None)
     invoice_duedate = IntCol(default=0)
+    invoice_bcc = UnicodeCol(length=255, default=None)
     defaulttariff = ForeignKey("Resource", default=None)
     groups = MultipleJoin("Group",joinColumn='place_id')
     resources = MultipleJoin("Resource",joinColumn='place_id')
@@ -828,8 +829,8 @@ class Location(SQLObject):
 
     hosts_email = property(getHostsEmail)
 
-    def __str__(self): return "<Location: %d>" % self.id 
-    def __repr__(self): return "<Location: %d>" % self.id 
+    def __str__(self): return "<Location: %d (%s)>" % (self.id, self.name)
+    def __repr__(self): return "<Location: %d (%s)>" % (self.id, self.name)
 
 
 listen(create_object_reference, Location, RowCreatedSignal)
