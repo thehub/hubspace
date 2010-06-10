@@ -1,7 +1,6 @@
 <?python
 from hubspace.validators import dateconverter
 date = dateconverter.from_python 
-from hubspace.invoice import invoice_email
 message_name = "invoice_mail"
 ?>
 <div xmlns:py="http://purl.org/kid/ns#"  py:strip="True">

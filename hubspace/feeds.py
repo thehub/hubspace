@@ -12,10 +12,10 @@ FUTURE_EVENTS_MAX = 30
 
 applogger = logging.getLogger("hubspace")
 
-page_needs_regenerating = collections.defaultdict(lambda: {'members.html': True, 'events.html': True})
+page_needs_regenerating = collections.defaultdict(lambda: {'members': True, 'events': True})
 
-def mark_pages_for_regen(location, page_name):
-    page_needs_regenerating[location][page_name] = True
+def mark_pages_for_regen(location, page_type):
+    page_needs_regenerating[location][page_type] = True
 
 def on_exception(dont_fail=True, log=True):
     def deco(f):
@@ -59,8 +59,9 @@ class ObjectCacheContainer(list):
         return False
     def remove(self, instance_id):
         for instance in self:
-            if instance.id == instance_id: return True
-            list.remove(self, instance)
+            if instance.id == instance_id:
+                list.remove(self, instance)
+                return True
     def get(self, instance_id):
         for instance in self:
             if instance.id == instance_id:
@@ -172,7 +173,7 @@ def on_add_rusage(kwargs, post_funcs):
     if rusage.public_field:
         location = rusage.resource.place.id
         cached_updates[location]['events'].add(rusage)
-        mark_pages_for_regen(location, "events.html")
+        mark_pages_for_regen(location, "events")
         applogger.info("feeds.on_add_rusage: added %(id)s" % kwargs)
 
 def on_del_rusage(rusage, post_funcs):
@@ -180,13 +181,13 @@ def on_del_rusage(rusage, post_funcs):
     location = rusage.resource.placeID
     if cached_updates[location]['events'].has_object(rusage.id):
         cached_updates[location]['events'].remove(rusage.id)
-        mark_pages_for_regen(location, "events.html")
+        mark_pages_for_regen(location, "events")
 
 def on_add_user(kwargs, post_funcs):
     user = kwargs['class'].get(kwargs['id'])
     location = user.homeplaceID
     cached_updates[location]['profiles'].add(user)
-    mark_pages_for_regen(location, "members.html")
+    mark_pages_for_regen(location, "members")
 
 def on_updt_rusage(instance, kwargs):
     applogger.info("feeds.on_updt_rusage: updating %s" % instance.id)
@@ -194,7 +195,7 @@ def on_updt_rusage(instance, kwargs):
     instance_cache = cached_updates[location]['events'].get(instance.id)
     if instance_cache:
         instance_cache.update(kwargs)
-        mark_pages_for_regen(location, "events.html")
+        mark_pages_for_regen(location, "events")
 
 def on_updt_user(instance, kwargs):
     applogger.info("feeds.on_updt_user: updating %s" % instance.id)
@@ -202,7 +203,8 @@ def on_updt_user(instance, kwargs):
     instance_cache = cached_updates[location]['profiles'].get(instance.id)
     if instance_cache:
         instance_cache.update(kwargs)
-        mark_pages_for_regen(location, "members.html")
+        mark_pages_for_regen(location, "members")
+    cached_updates[location]['profiles'].sort()
 
 cache_factories = dict (events=EventCacheContainer, profiles=ProfileCacheContainer)
 cached_updates = Cache()
@@ -216,11 +218,11 @@ listen(on_updt_user, User, RowUpdateSignal)
 
 # FACADE
 def clear_cache(section, location):
-    page_needs_regenerating.setdefault(location.id, {'members.html': False, 'events.html': False})
+    page_needs_regenerating.setdefault(location.id, {'members': False, 'events': False})
     if section == 'profiles':
-        page_needs_regenerating[location.id]['members.html'] = True
+        page_needs_regenerating[location.id]['members'] = True
     if section == 'events':
-        page_needs_regenerating[location.id]['events.html'] = True
+        page_needs_regenerating[location.id]['events'] = True
 
 def get_updates_data(location):
     local_updates = cached_updates[location.id]
