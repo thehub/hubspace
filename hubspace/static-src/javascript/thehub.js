@@ -185,9 +185,9 @@ jq(document).ready(function () {
                 return;
             }
             var page_name = jq('#page_path_name').attr('class');
-            var default = jq(this).html()
-            if (default.length > 2000) {
-                default = "";
+            var default_val = jq(this).html();
+            if (default_val.length > 2000) {
+                default_val = "";
             }
             inplace_editor(element_id, relative_url + 'edit/attribute_edit', 
                            {callback: function (form, val) {
@@ -206,7 +206,7 @@ jq(document).ready(function () {
                             widget_name: element_id,
                             property: object_prop,
                             value: jq('#' + element_id).html(),
-                            loadTextURL: relative_url + 'edit/attribute_load?object_type=' + object_type +'&object_id=' + object_id + '&property=' + object_prop + '&default=' + encodeURIComponent(default)} );
+                            loadTextURL: relative_url + 'edit/attribute_load?object_type=' + object_type +'&object_id=' + object_id + '&property=' + object_prop + '&default=' + encodeURIComponent(default_val)} );
         });
 
        //old approach
@@ -231,9 +231,9 @@ jq(document).ready(function () {
             }
                        
             var page_name = jq('#page_path_name').attr('class');
-            var default = jq(this).html()
-            if (default.length > 2000) {
-                default = "";
+            var default_val = jq(this).html();
+            if (default_val.length > 2000) {
+                default_val = "";
             }
             inplace_editor(element_id, relative_url + 'edit/attribute_edit', {
                            callback: function (form, val) {
@@ -252,7 +252,7 @@ jq(document).ready(function () {
                             widget_name: element_id,
                             property: element_id,
                             value: jq('#' + element_id).html(),
-                            loadTextURL: relative_url + 'edit/attribute_load?object_type=' + object_type + '&object_id=' + object_id + '&property=' + element_id + '&default=' + encodeURIComponent(default)
+                            loadTextURL: relative_url + 'edit/attribute_load?object_type=' + object_type + '&object_id=' + object_id + '&property=' + element_id + '&default=' + encodeURIComponent(default_val)
 
             });
         });
