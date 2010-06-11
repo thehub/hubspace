@@ -2,6 +2,7 @@
 from hubspace.utilities.image_helpers import image_src
 from docutils.core import publish_parts
 from hubspace.utilities.uiutils import get_freetext_metadata
+from hubspace.utilities.uiutils import sanitize_input
 user = None
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" py:extends="'microSiteMaster.kid'">
@@ -40,7 +41,14 @@ user = None
                                </div>
                           </div>
                         </div>
-		    	${XML(publish_parts(user.description, writer_name="html")["html_body"])}
+                            <?python
+                                description = user.description
+                                if '<br>' in description or '<br >' in description or '</b>' in description or '</div>' in description or '</p>' in description:
+                                    content = sanitize_input(description)
+                                else:
+                                    content = publish_parts(description, writer_name="html")["html_body"]
+                            ?>
+                            ${XML(content)}
 				<a class="backLink" href="../members.html">back to Members Page</a><br clear="all" />
                      </div>
 		</div>
