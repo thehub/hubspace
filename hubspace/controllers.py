@@ -8,6 +8,7 @@ import cStringIO
 import ho.pisa as pisa
 
 import cherrypy
+import httpagentparser
 from cgi import FieldStorage, escape
 import turbogears, sendmail
 from hubspace import inplace_i18n
@@ -1792,11 +1793,14 @@ class Root(controllers.RootController):
         e_info = sys.exc_info()
         e_id = str(datetime.now())
         e_path = cherrypy.request.path
+        environment_line = cherrypy.request.headers['User-Agent']
+        e_environment = "'%s' on '%s'" % httpagentparser.simple_detect(environment_line)[::-1]
         _v = lambda v: str(v)[:20]
         e_params = dict([(k, _v(v)) for (k, v) in cherrypy.request.paramMap.items()])
         e_hdr = cherrypy.request.headerMap
         applogger.error("%(e_id)s: Path:%(e_path)s" % locals())
         applogger.error("%(e_id)s: Params:%(e_params)s" % locals())
+        applogger.error("%(e_id)s: Environment:%(e_environment)s" % locals())
         applogger.exception("%(e_id)s:" % locals())
         if isinstance(e_info[1], sync.SyncerError):
             applogger.error("%(e_id)s: LDAP sync error" % locals())
@@ -1808,7 +1812,7 @@ class Root(controllers.RootController):
             e_hint = e_info[1].hint
         else:
             e_hint = ""
-        d = dict(e_id=e_id, e_path=e_path, e_str=e_str, e_hint=e_hint)
+        d = dict(e_id=e_id, e_path=e_path, e_environment=e_environment, e_str=e_str, e_hint=e_hint)
         cherrypy.response.body = try_render(d, template='hubspace.templates.issue', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
 
     @expose_as_csv
@@ -1821,13 +1825,15 @@ class Root(controllers.RootController):
 
     @expose()
     @identity.require(not_anonymous())
-    def submitTicket(self, e_id, e_path, e_str, u_summary, u_desc=""):
+    def submitTicket(self, e_id, e_path, e_environment, e_str, u_summary, u_desc=""):
         homeplace = identity.current.user.homeplace.name
         reporter = identity.current.user.display_name
         email = identity.current.user.email_address
         summary = u_summary.encode('utf-8')
         description = """
 Location: %(homeplace)s
+
+Environment: %(e_environment)s
 
 Error ID: %(e_id)s
 
@@ -1881,7 +1887,7 @@ Exception:
         except Exception, err:
             applogger.exception("Trac submission error:")
             data = dict ( user=identity.current.user, tb=sys.exc_info()[2] )
-            extra_data = dict ( e_id=e_id, summary=summary, description=description, url=newticketurl )
+            extra_data = dict ( e_id=e_id, summary=summary, description=description, url=newticketurl, environment=e_environment )
             hubspace.alerts.sendTextEmail("trac_submission_failed", data=data, extra_data=extra_data)
         return "Thank you, %s!" % reporter
 

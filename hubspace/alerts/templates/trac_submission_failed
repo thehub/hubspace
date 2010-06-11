@@ -19,7 +19,7 @@ Error ID:  ${e_id}
 Ticket reporter    : ${USERNAME}
 Ticket summary     : ${summary}
 Ticket description : ${description}
-   
+Ticket environment : ${environment}   
 
 This is an automated alert. Do not reply.
 
