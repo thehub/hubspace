@@ -57,6 +57,34 @@ def lang():
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" xml:lang="${lang()}" lang="${lang()}">
 
 <style>
+/* Normal */
+@font-face {
+   font-family: Deja;
+   src: url(hubspace/static/fonts/dejavu-fonts-ttf-2.31/ttf/DejaVuSans.ttf);
+}
+
+/* Bold */
+@font-face {
+   font-family: Deja;
+   src: url(hubspace/static/fonts/dejavu-fonts-ttf-2.31/ttf/DejaVuSans-Bold.ttf);
+   font-weight: bold;
+}
+
+/* Italic */
+@font-face {
+   font-family: Deja;
+   src: url(hubspace/static/fonts/dejavu-fonts-ttf-2.31/ttf/DejaVuSans-Oblique.ttf);
+   font-style: italic;
+}
+
+/* Bold and italic */
+@font-face {
+   font-family: Deja;
+   src: url(hubspace/static/fonts/dejavu-fonts-ttf-2.31/ttf/DejaVuSans-BoldOblique.ttf);
+   font-weight: bold;
+   font-style: italic;
+}
+
 @page {
   size: a4;
   margin: 1cm;
@@ -73,10 +101,11 @@ def lang():
   }
 }
 .freetext {
-    font-family: Helvetica; 
+    font-family: Deja; 
     border:.1px solid black;
     padding: 1;
     }
+body { font-family: Deja; }
 </style>
 
 <body>
@@ -117,8 +146,8 @@ def lang():
         <strong>Invoice details</strong>
         <table cellpadding="2">
         <tr>
-            <td width="20%">Number </td>
-            <td width="80%"> ${invoice.number}</td>
+            <td width="30%">Number </td>
+            <td width="70%"> ${invoice.number}</td>
         </tr>
         <tr>
             <td>Date</td>
