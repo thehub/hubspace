@@ -1321,10 +1321,14 @@ class MicroSite(controllers.Controller):
             raise
         loc_id = template_args['location'].id
         if page_needs_regenerating.get(loc_id, False) and not path_name.endswith('.html'): #this is for feed pages members.html and events.html
-            for page, bool in page_needs_regenerating[loc_id].items():
+                                                              #surely this should be if path_name doesn't end in .html
+            for page_type, bool in page_needs_regenerating[loc_id].items():
                 if bool == True:
-                    self.render_page(page, relative_path='./')
-                    page_needs_regenerating[loc_id][page] = False
+                    pages = Page.select(AND(Page.q.location==self.location, Page.q.page_type==page_type)) #there should usually only be 1 such page i.e. members page or events page but that is not guaranteed
+                    applogger.debug("regenerating %s pages of type %s for location %s" %(str(pages.count()), page_type, str(self.location)))
+                    for page in pages:
+                        self.render_page(page.path_name, relative_path='./')
+                    page_needs_regenerating[loc_id][page_type] = False
 
         try:
             page = Page.select(AND(Page.q.location==self.location, Page.q.path_name==path_name))[0]
