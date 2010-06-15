@@ -32,6 +32,7 @@ occurred. This will help us recreate what happened on our machines.</strong><br 
   <input type="hidden" name="e_id" value="${e_id}"/>
   <input type="hidden" name="e_path" value="${e_path}"/>
   <input type="hidden" name="e_str" value="${e_str}"/>
+  <input type="hidden" name="e_environment" value="${e_environment}"/>
 
   <p>
   <input type="submit" value="Submit ticket" />
