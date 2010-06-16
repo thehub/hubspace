@@ -143,8 +143,9 @@ class User(SQLObject):
     user_name = UnicodeCol(length=40, 
                            alternateID=True,
                            alternateMethodName="by_user_name")
-    def _get_username(self):
-        return self.user_name
+    username = UnicodeCol(length=40, 
+                           alternateID=True,
+                           alternateMethodName="by_username")
     email_address = UnicodeCol(length=255, 
                               alternateID=True,
                               alternateMethodName="by_email_address")
@@ -381,7 +382,13 @@ class User(SQLObject):
                 billing_mode = 2
         return billing_mode
 
+def usr_updt_listener(instance, kwargs):
+    if 'user_name' in kwargs.keys():
+        kwargs['username'] = kwargs['user_name']
+    if 'username' in kwargs.keys():
+        kwargs['user_name'] = kwargs['username']
 
+listen(usr_updt_listener, User, RowUpdateSignal)
 listen(create_object_reference, User, RowCreatedSignal)
 listen(delete_object_reference, User, RowDestroySignal)
 
@@ -418,8 +425,6 @@ class ObjectReference(SQLObject):
         except IndexError:
             print "object_tuple" + ` obj_tuple`
             self.object_type, self.object_id  = obj_tuple
-
-
 
 def create_object_reference(kwargs, post_funcs):
     print "object ref created" + kwargs['class'].__name__ +  `kwargs['id']`
@@ -1146,6 +1151,11 @@ class ResourceQueue(SQLObject):
     foruser = ForeignKey("User")
     rusage = ForeignKey("RUsage")
 
+#class APIKey(SQLObject):
+#    key = StringCol(unique=True)
+#    user = ForeignKey("User", cascade=True)
+#    apis = PickleCol(default=[])
+
 # Create missing tables
-for sobj in [MessageCustomization]:
-    sobj.createTable(ifNotExists=True)
+#for sobj in [MessageCustomization, APIKey]:
+#    sobj.createTable(ifNotExists=True)
