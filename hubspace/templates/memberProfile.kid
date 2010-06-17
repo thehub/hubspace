@@ -107,11 +107,11 @@ def locations_string(object):
 						     <td class="line">Skype name</td>
 						     <td>${object.skype_id}</td>
 						</tr>
-			                        <tr py:if="attr_not_none(object, 'address')" class="${oddness.odd_or_even()}">
+			                        <tr py:if="attr_not_none(object, 'address') and permission_or_owner(object.homeplace,object,'manage_users')" class="${oddness.odd_or_even()}">
 							<td class="line">Address</td>
 							<td>${object.address}</td>
 						</tr>
-			                        <tr py:if="get_freetext_metadata(object, 'postcode')" class="${oddness.odd_or_even()}">
+			                        <tr py:if="get_freetext_metadata(object, 'postcode') and permission_or_owner(object.homeplace,object,'manage_users')" class="${oddness.odd_or_even()}">
 							<td class="line">Postcode</td>
 							<td>${get_freetext_metadata(object, 'postcode')}</td>
 						</tr>
