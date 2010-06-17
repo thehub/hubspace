@@ -3774,6 +3774,7 @@ The Hub Team
         if 'password' in kwargs and kwargs['password'] in ["", None]:
             del kwargs['password']
 
+        kwargs['username'] = kwargs['user_name']
         user = create_object('User',**kwargs)
         for alias in aliases:
             create_object('Alias', user=user.id, alias_name=alias.strip())
