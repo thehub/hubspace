@@ -129,6 +129,7 @@ site_default_lang = URLMappings({'http://localhost:8080':'en',
                                  'http://saopaulo.the-hub.net':'pt',
                                  'http://stockholm.the-hub.net':'sv',
                                  'http://tampere.the-hub.net':'fi',
+                                 'http://vienna.the-hub.net':'en',
                                  'http://zurich.the-hub.net':'de',})
                                  #'http://bergen.the-hub.net':'no',
                                  #'http://kyiv.the-hub.net':'uk',
