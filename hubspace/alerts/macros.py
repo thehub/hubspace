@@ -132,3 +132,8 @@ class Traceback(Macro):
     def getValue(self, data):
         tb = sys.exc_info()[2]
         return traceback.format_exc(tb)
+
+class Trac_URL(Macro):
+    def getValue(self, data):
+        return turbogears.config.config.configs['trac']['baseurl']
+

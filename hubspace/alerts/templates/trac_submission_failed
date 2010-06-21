@@ -8,7 +8,7 @@ The hubspace application encountered following error while submitting new ticket
 
 Trac Error
 ==========
-Trac URL  :  ${tracurl}
+Trac URL  : ${TRAC_URL}
 Exception : ${TRACEBACK}
 
 
