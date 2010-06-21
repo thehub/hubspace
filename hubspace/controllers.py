@@ -1622,6 +1622,17 @@ class Root(controllers.RootController):
     rpc = RPC()
 
     @expose()
+    def langtest(self):
+        hub_locale = get_hubspace_locale()
+        locale = get_hubspace_user_locale()
+        session_locale = cherrypy.session.get('locale')
+        vat = _("VAT")
+        date = _("Date")
+        description = _("Description")
+        out = '<br/>'.join([hub_locale, locale, session_locale, vat, date, description])
+        return out
+
+    @expose()
     def fastlogin(self, username=1, password=1):
         import turbogears.visit as visit
         iden = identity.current_provider.validate_identity(username, password, visit.current().key)

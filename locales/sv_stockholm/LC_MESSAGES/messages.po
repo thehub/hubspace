@@ -19,19 +19,31 @@ msgstr ""
 msgid "Also booked: "
 msgstr ""
 
-#: hubspace/controllers.py:1732
+#: hubspace/controllers.py:1627
+msgid "VAT"
+msgstr "Moms (25%)"
+
+#: hubspace/controllers.py:1628
+msgid "Date"
+msgstr "Datum"
+
+#: hubspace/controllers.py:1629
+msgid "Description"
+msgstr "Beskrivning"
+
+#: hubspace/controllers.py:1753
 msgid "No"
 msgstr ""
 
-#: hubspace/controllers.py:1732
+#: hubspace/controllers.py:1753
 msgid "Yes"
 msgstr "Ja"
 
-#: hubspace/controllers.py:2541 hubspace/controllers.py:2666
+#: hubspace/controllers.py:2569 hubspace/controllers.py:2694
 msgid " (Hint: You should not include currency signs)"
 msgstr ""
 
-#: hubspace/controllers.py:3456 hubspace/utilities/login.py:16
+#: hubspace/controllers.py:3523 hubspace/utilities/login.py:16
 msgid "Your username or password were incorrect. Please try again."
 msgstr "Felaktigt användarnamn eller lösenord. Var vänlig försök igen."
 
@@ -39,7 +51,7 @@ msgstr "Felaktigt användarnamn eller lösenord. Var vänlig försök igen."
 msgid "Please log in."
 msgstr "Vänligen logga in."
 
-#: hubspace/controllers.py:3488 hubspace/utilities/login.py:46
+#: hubspace/controllers.py:3555 hubspace/utilities/login.py:46
 msgid "Please enter the email address associated with your account"
 msgstr "Skriv in den mailadress som är knutet till ditt användarkonto"
 
@@ -47,137 +59,183 @@ msgstr "Skriv in den mailadress som är knutet till ditt användarkonto"
 msgid "A confirmation email was sent to you. "
 msgstr "Ett bekräftelsemail har skickats till dig."
 
-#: hubspace/controllers.py:3510 hubspace/utilities/login.py:68
+#: hubspace/controllers.py:3577 hubspace/utilities/login.py:68
 msgid "The email was not correct"
 msgstr "Mailet var inte korrekt"
 
-#: hubspace/controllers.py:3518 hubspace/utilities/login.py:76
+#: hubspace/controllers.py:3585 hubspace/utilities/login.py:76
 msgid "The confirmation key is wrong - maybe you need to check your email?"
 msgstr "Bekräftelsnyckeln är fel. Du måste kanske dubbelkolla i ditt mail?"
 
-#: hubspace/controllers.py:3539 hubspace/utilities/login.py:95
+#: hubspace/controllers.py:3606 hubspace/utilities/login.py:95
 msgid "The new password was sent to you."
 msgstr "Det nya lösenordet har skickats till dig."
 
-#: hubspace/controllers.py:4268
+#: hubspace/controllers.py:4334
 msgid "Problem sending the invoice: Member's billing preferences are set to not to use profile details and billing preferences has no email address specified. You may want visit member's 'Billing Details' section."
 msgstr ""
 
-#: hubspace/invoice.py:69
-msgid ""
-"\n"
-"Dear %(first_name)s,\n"
-"\n"
-"Please find your Hub invoice attached.\n"
-"\n"
-"If you have any questions, please don't hesitate to contact The Hub's hosting team on %(location_name)s.hosts@the-hub.net or %(telephone)s.\n"
-"\n"
-"We would always welcome your feedback and ideas on how we can improve your experience here.\n"
-"\n"
-"Thank you for being part of The Hub.\n"
-"\n"
-"The Hosting Team\n"
-msgstr ""
-"\n"
-"%(first_name)s,\n"
-"\n"
-"Bifogad hittar du din Hub-faktura.\n"
-"\n"
-"Hör av dig till din host på %(location_name)s.hosts@the-hub.net eller %(telephone)s om du har några frågor eller funderingar över fakturan.\n"
-"\n"
-"VI tar gärna emot tankar och synpunkter från dig på hur din tillvaro här på Hubben kan fungera bättre.\n"
-"\n"
-"Tack för att du är en del av The Hub.\n"
-"\n"
-"Ditt Host team\n"
-
-#: hubspace/validators.py:542
+#: hubspace/validators.py:552
 msgid "The booking must end later than it starts!"
 msgstr "Bokningen måste sluta senare än den börjar!"
 
-#: hubspace/validators.py:543
+#: hubspace/validators.py:553
 msgid "The booking must start before ending!"
 msgstr "Bokningen måste börja tidigare än den slutar!"
 
-#: hubspace/validators.py:574
+#: hubspace/validators.py:584
 msgid "A tentative booking should be made at least %s hours in advance!"
 msgstr "En preliminär bokning bör skapas senast %s hours i förväg!"
 
-#: hubspace/templates/space2.kid:a
-msgid "Make Booking"
-msgstr "Skapa bokning"
+#: hubspace/templates/tariffHistory.kid:strong
+msgid ""
+"Warning: While changing Tariffs below usages are detected for which invoices are already sent. You may want to note\n"
+"these and refund as per your policies."
+msgstr ""
 
-#: hubspace/templates/space2.kid:a
-msgid "My Bookings"
-msgstr "Mina bokningar"
+#: hubspace/templates/tariffHistory.kid:td
+msgid "Member"
+msgstr ""
 
-#: hubspace/templates/space2.kid:h1
-msgid "Space and Resource Booking"
-msgstr "Resursbokning"
+#: hubspace/templates/tariffHistory.kid:td
+msgid "Invoice Number"
+msgstr ""
 
-#: hubspace/templates/space2.kid:h2
-msgid "Need Help with Booking?"
-msgstr "Hjälp med bokning?"
+#: hubspace/templates/tariffHistory.kid:td
+msgid "Resource"
+msgstr "Resurs"
 
-#: hubspace/templates/space2.kid:div
-msgid "To make a booking, or modify an existing one:"
-msgstr "För att skapa en bokning eller ändra en befintlig:"
+#: hubspace/templates/tariffHistory.kid:td
+msgid "Booking time"
+msgstr ""
 
-#: hubspace/templates/space2.kid:li
-msgid "Select the date you are looking for."
-msgstr "Välj önskat datum."
+#: hubspace/templates/tariffHistory.kid:td
+msgid "Tariff"
+msgstr "Tariff"
 
-#: hubspace/templates/space2.kid:li
-msgid "Click on the space and the time you would like."
-msgstr "Klicka på resursen och den tid du vill boka."
+#: hubspace/templates/relationshipStatus.kid:td
+msgid "Introduced By"
+msgstr "Introducerad av"
 
-#: hubspace/templates/space2.kid:li
-msgid "Provide us with the booking details required."
-msgstr "Mata in nödvändiga detaljer för bokningen."
+#: hubspace/templates/relationshipStatus.kid:td
+msgid "Unknown"
+msgstr "Okänd"
 
-#: hubspace/templates/space2.kid:p
-msgid "In the event of a cancellation, the individual or organization booking the space will be charged 50% of the total cost, unless it is cancelled more than two weeks prior to the event."
-msgstr "Vid en eventuell avbokning kommer 50% av kostnaden att faktureras om avbokningen ej skett tidigare än två veckor innan den bokade tiden."
+#: hubspace/templates/relationshipStatus.kid:td
+msgid "Signed Up By"
+msgstr "Kontrakterad av"
 
-#: hubspace/templates/space2.kid:p
-msgid "A confirmation will be emailed to you as soon as the booking is made. For further information or to cancel a booking (starting in the next two weeks) please email"
-msgstr "En bekräftelse mailas till dig så snart bokningen är genomförd. För vidare information eller avbokning av en tid de närmaste två veckor maila"
+#: hubspace/templates/relationshipStatus.kid:td
+msgid "Host Contact"
+msgstr "Host-kontakt"
 
-#: hubspace/templates/space2.kid:a
-msgid "."
-msgstr "."
+#: hubspace/templates/plusInvoicing.kid:h1
+msgid "Invoicing Search"
+msgstr "Fakturasökning"
 
-#: hubspace/templates/space2.kid:div
-msgid "Select Hub"
-msgstr "Välj Hub"
+#: hubspace/templates/plusInvoicing.kid:span
+msgid "Search in Location"
+msgstr "Sök på placering"
 
-#: hubspace/templates/addBooking.kid:a
+#: hubspace/templates/plusInvoicing.kid:span
+msgid "for users with non-invoiced items"
+msgstr "för användare med ofakturerade saker"
+
+#: hubspace/templates/plusInvoicing.kid:input
+msgid "Tariffs"
+msgstr "Tariffer"
+
+#: hubspace/templates/plusInvoicing.kid:input
+msgid "Other Resources Usages"
+msgstr "Användning andra resurser"
+
+#: hubspace/templates/plusInvoicing.kid:span
+msgid "which finished on or before"
+msgstr "som slutade på eller före"
+
+#: hubspace/templates/microSitePlain.kid:div
+msgid "edit content"
+msgstr ""
+
+#: hubspace/templates/microSitePlain.kid:p
+msgid "Your content here"
+msgstr ""
+
+#: hubspace/templates/moreResDetails.kid:h2
+msgid "Containment"
+msgstr "Koppling"
+
+#: hubspace/templates/moreResDetails.kid:p
+msgid "Add resources which are contained by this one. In this case, if the container is booked the other will be unavailable. Also if the contained resource is booked the container will be unavailable. This also works for multiple levels of containment"
+msgstr "Lägg till en resurs som ingår i den här resursgruppen. I det här faller gäller att om resursgruppen är bokad är den inte tillgänglig. Dessutom är resursgruppen ej tillgänglig om den inlkluderade resursen är bokad. Detta gäller även resursgrupper som ingår i andra resursgrupper."
+
+#: hubspace/templates/moreResDetails.kid:li
+msgid "Nothing Contained"
+msgstr "Inget kopplat"
+
+#: hubspace/templates/moreResDetails.kid:a
+msgid "Remove"
+msgstr "Ta bort"
+
+#: hubspace/templates/moreResDetails.kid:a
+msgid "Add Contained Resource"
+msgstr "Lägg till kopplad resurs"
+
+#: hubspace/templates/moreResDetails.kid:h2
+msgid "Suggestions"
+msgstr "Förslag"
+
+#: hubspace/templates/moreResDetails.kid:p
+msgid "Add suggestions so that when a user books a resource they are prompted to book associated extras. e.g. when booking a meeting room people might often also require a projector, tea, coffee, or lunch"
+msgstr "Lägg till förslag så att när någon bokar en resurs så får de förslag på extra saker . T ex kan de som bokar ett konferensrum kanske vara intresserade av kaffe, lunch eller annat."
+
+#: hubspace/templates/moreResDetails.kid:li
+msgid "No Suggestions"
+msgstr "Inga förslag"
+
+#: hubspace/templates/moreResDetails.kid:a
+msgid "Add Suggestion"
+msgstr "Lägg till förslag"
+
+#: hubspace/templates/moreResDetails.kid:a
 msgid "X"
 msgstr "X"
 
-#: hubspace/templates/addBooking.kid:input
-msgid "Add Booking"
+#: hubspace/templates/moreResDetails.kid:h2
+msgid "Resource Image"
+msgstr "Bild på resurs"
+
+#: hubspace/templates/moreResDetails.kid:p
+msgid "Optionally, an image will appear when a user tries to book a resource. If you want that to happen for this resource, replace the image below. Images will be scaled to 150px by 230px, please upload images of equivalent proportions."
+msgstr "Det finns möjlighet att visa en bild när en användare försöker boka en resurs. Om du vill att det ska ske för den här resursen så ersätt bilden nedan. Bilder kommer att skalas till storleken 150px * 230px så bäst är att ladda upp bilder med sammam proportioner."
+
+#: hubspace/templates/moreResDetails.kid:span
+msgid "replace image"
+msgstr "ersätt bild"
+
+#: hubspace/templates/webSitePlaces.kid:a
+msgid "Edit Places"
 msgstr ""
 
-#: hubspace/templates/addBooking.kid:td
-msgid "Message"
-msgstr "Meddelande"
+#: hubspace/templates/webSitePlaces.kid:h4
+msgid "Visit"
+msgstr ""
 
-#: hubspace/templates/dayBooking.kid:span
-msgid "-"
-msgstr "-"
+#: hubspace/templates/webSitePlaces.kid:a
+msgid "Hub Berlin"
+msgstr ""
 
-#: hubspace/templates/dayBooking.kid:span
-msgid "My bookings"
-msgstr "Mina bokningar"
+#: hubspace/templates/webSitePlaces.kid:p
+msgid "Erkelenzdamm 59-61, Portal 1, 3. OG"
+msgstr ""
 
-#: hubspace/templates/dayBooking.kid:span
-msgid "Unavailable for booking"
-msgstr "Ej möjlig att boka"
+#: hubspace/templates/webSitePlaces.kid:br
+msgid "10999 Berlin - Kreuzberg, Germany"
+msgstr ""
 
-#: hubspace/templates/dayBooking.kid:span
-msgid "Watching for availability"
-msgstr "Bevakas"
+#: hubspace/templates/webSitePlaces.kid:br
+msgid "Telephone:+49 30 707 1950"
+msgstr ""
 
 #: hubspace/templates/webSiteMaster.kid:span
 msgid "loading..."
@@ -194,6 +252,186 @@ msgstr ""
 #: hubspace/templates/webSiteMaster.kid:a
 msgid "Edit Right Navigation"
 msgstr ""
+
+#: hubspace/templates/createSuperUser.kid:h1
+msgid "Create Super User"
+msgstr ""
+
+#: hubspace/templates/createSuperUser.kid:div
+msgid "Username"
+msgstr "Användarnamn"
+
+#: hubspace/templates/createSuperUser.kid:div
+msgid "Password"
+msgstr "Lösenord"
+
+#: hubspace/templates/createSuperUser.kid:div
+msgid "First Name"
+msgstr ""
+
+#: hubspace/templates/createSuperUser.kid:div
+msgid "Last Name"
+msgstr ""
+
+#: hubspace/templates/createSuperUser.kid:div
+msgid "Email"
+msgstr ""
+
+#: hubspace/templates/createSuperUser.kid:div
+msgid "Submit"
+msgstr ""
+
+#: hubspace/templates/memberProfile.kid:a
+msgid "replace images"
+msgstr ""
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Organisation"
+msgstr "Organisation"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Role"
+msgstr "Roll"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Active?"
+msgstr "Aktiv?"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Home Hub"
+msgstr "Hemmahub"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Type of Business"
+msgstr "Typ av verksamhet"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Mobile"
+msgstr "Mobil"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Work Phone"
+msgstr "Telefon, jobb"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Home Phone"
+msgstr "Telefon, hemma"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Fax"
+msgstr "Fax"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Default Email"
+msgstr "Förvald email"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Email 2"
+msgstr "Email 2"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Email 3"
+msgstr "Email 3"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Website"
+msgstr "Website"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Internet Phone (SIP id)"
+msgstr "Internet-telefon (SIP id)"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Skype name"
+msgstr "Skype-ID"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Address"
+msgstr "Adress"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Postcode"
+msgstr "Postnummer"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Membership number"
+msgstr "Medlemsnummer"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "User created"
+msgstr "Användare skapad"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Aliases"
+msgstr "Alias"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Member of The Hub in"
+msgstr "Medlem av Hubben i"
+
+#: hubspace/templates/memberProfile.kid:td
+msgid "Outstanding Balance"
+msgstr "Utestående att betala"
+
+#: hubspace/templates/billing.kid:h1
+msgid "Billing and Invoicing for name"
+msgstr "Kostnader och fakturering för namn"
+
+#: hubspace/templates/billing.kid:a
+msgid "edit"
+msgstr "ändra"
+
+#: hubspace/templates/billing.kid:h2
+msgid "Billing Details"
+msgstr "Fakturadetaljer"
+
+#: hubspace/templates/billing.kid:h2
+msgid "Invoice History"
+msgstr "Fakturahistorik"
+
+#: hubspace/templates/billing.kid:td
+msgid "Invoice Ref"
+msgstr "Fakturareferens"
+
+#: hubspace/templates/billing.kid:td
+msgid "Date sent"
+msgstr "Skickat datum"
+
+#: hubspace/templates/billing.kid:td
+msgid "Amount"
+msgstr "Summa"
+
+#: hubspace/templates/billing.kid:em
+msgid "(Including VAT)"
+msgstr "(inkl. moms)"
+
+#: hubspace/templates/billing.kid:td
+msgid "View"
+msgstr "Vy"
+
+#: hubspace/templates/billing.kid:a
+msgid "re-send invoice"
+msgstr "skicka om faktura"
+
+#: hubspace/templates/billing.kid:c
+msgid "unsent"
+msgstr "osänd"
+
+#: hubspace/templates/billing.kid:a
+msgid "send invoice"
+msgstr "skicka faktura"
+
+#: hubspace/templates/billing.kid:a
+msgid "As HTML"
+msgstr "Som HTML"
+
+#: hubspace/templates/billing.kid:a
+msgid "Modify"
+msgstr "Ändra"
+
+#: hubspace/templates/billing.kid:a
+msgid "As PDF"
+msgstr "Som PDF"
 
 #: hubspace/templates/microSiteSpaces.kid:p
 msgid "The Hub Kings Cross is an inspiring contemporary environment to work, meet or host your event. Designed and built with sustainability principles in mind, our space is completely unique and encourages a creative working atmosphere."
@@ -219,365 +457,625 @@ msgstr ""
 msgid "Please click a meeting room above to view details."
 msgstr ""
 
-#: hubspace/templates/addResources.kid:h1
-msgid "Resources and Tariffs"
-msgstr "Resurser och tariffer"
+#: hubspace/templates/microSiteMaster.kid:div
+msgid "Admin Mode"
+msgstr ""
 
-#: hubspace/templates/addResources.kid:a
-msgid "Add new resource"
-msgstr "Lägg till ny resurs"
+#: hubspace/templates/microSiteMaster.kid:a
+msgid "Edit Subpages"
+msgstr ""
 
-#: hubspace/templates/addResources.kid:h2
+#: hubspace/templates/microSiteMaster.kid:span
+msgid "Spread the Hub!"
+msgstr ""
+
+#: hubspace/templates/manageResources.kid:a
+msgid "Add Resource"
+msgstr "Lägg till resurs"
+
+#: hubspace/templates/manageResources.kid:a
+msgid "Add Resource Group"
+msgstr "Lägg till resursgrupp"
+
+#: hubspace/templates/manageResources.kid:h2
 msgid "Resources"
 msgstr "Resurser"
 
-#: hubspace/templates/addResources.kid:td
-msgid "Resource 1"
-msgstr "Resurs 1"
+#: hubspace/templates/manageResources.kid:p
+msgid "Order the \"resource groups\" listed below using the arrows.  The order determines the resource group order in the booking interface. You can also drag and drop resource between groups and reorder resources within groups"
+msgstr "Sortera  \"resource groups\" nedan med hjälp av pilarna. Ordningen du ser här blir den samma som medlemmarna ser i resursbokningen. Resurser kan även dras mellan resursgrupper och sorteras inom grupperna."
 
-#: hubspace/templates/addResources.kid:td
-msgid "Description goes here"
-msgstr "Beskrivning här"
-
-#: hubspace/templates/addResources.kid:a
-msgid "edit"
-msgstr "ändra"
-
-#: hubspace/templates/addResources.kid:td
-msgid "Resource 2"
-msgstr "Resurs 2"
-
-#: hubspace/templates/addResources.kid:td
-msgid "Resource 3"
-msgstr "Resurs 3"
-
-#: hubspace/templates/addResources.kid:td
-msgid "Resource 4"
-msgstr "Resurs 4"
-
-#: hubspace/templates/addResources.kid:a
-msgid "Add new tariff"
-msgstr "Lägg till ny tariff"
-
-#: hubspace/templates/addResources.kid:h2
-msgid "Tariffs"
-msgstr "Tariffer"
-
-#: hubspace/templates/addResources.kid:td
-msgid "Tariff 1"
-msgstr "Tariff 1"
-
-#: hubspace/templates/addResources.kid:td
-msgid "Tariff 2"
-msgstr "Tariff 2"
-
-#: hubspace/templates/addResources.kid:td
-msgid "Tariff 3"
-msgstr "Tariff 3"
-
-#: hubspace/templates/addResources.kid:td
-msgid "Tariff 4"
-msgstr "Tariff 4"
-
-#: hubspace/templates/addResources.kid:h1
-msgid "Add a resource"
-msgstr "Lägg till resurs"
-
-#: hubspace/templates/addResources.kid:h2
-msgid "Resource details"
-msgstr "Resursdetaljer"
-
-#: hubspace/templates/addResources.kid:td
+#: hubspace/templates/manageResources.kid:div
 msgid "Name"
 msgstr "Namn"
 
-#: hubspace/templates/addResources.kid:td
-msgid "Location"
-msgstr "Placering"
-
-#: hubspace/templates/addResources.kid:option
-msgid "London"
-msgstr "London"
-
-#: hubspace/templates/addResources.kid:option
-msgid "Bristol"
-msgstr "Bristol"
-
-#: hubspace/templates/addResources.kid:td
-msgid "Type"
-msgstr "Typ"
-
-#: hubspace/templates/addResources.kid:option
-msgid "hotdesk"
-msgstr "hotdesk"
-
-#: hubspace/templates/addResources.kid:option
-msgid "room"
-msgstr "rum"
-
-#: hubspace/templates/addResources.kid:option
-msgid "phone"
-msgstr "telefon"
-
-#: hubspace/templates/addResources.kid:option
-msgid "printer"
-msgstr "skrivare"
-
-#: hubspace/templates/addResources.kid:option
-msgid "tariff"
-msgstr "tariff"
-
-#: hubspace/templates/addResources.kid:option
-msgid "other"
-msgstr "annat"
-
-#: hubspace/templates/addResources.kid:td
+#: hubspace/templates/manageResources.kid:div
 msgid "Description"
 msgstr "Beskrivning"
 
-#: hubspace/templates/addResources.kid:h2
-msgid "Tariff costs"
-msgstr "Tariff"
+#: hubspace/templates/manageResources.kid:div
+msgid "Type"
+msgstr "Typ"
 
-#: hubspace/templates/addResources.kid:td
-msgid "Tariff"
-msgstr "Tariff"
+#: hubspace/templates/manageResources.kid:div
+msgid "Time Based"
+msgstr "Tidsbaserad"
 
-#: hubspace/templates/addResources.kid:td
-msgid "Cost"
-msgstr "Kostnad"
+#: hubspace/templates/manageResources.kid:div
+msgid "Percentage VAT (0-100)"
+msgstr "Moms (0% - 100%)"
 
-#: hubspace/templates/addResources.kid:h1
-msgid "Add a Tariff"
-msgstr "Lägg till tariff"
+#: hubspace/templates/manageResources.kid:div
+msgid "Active"
+msgstr "Aktiv"
 
-#: hubspace/templates/addResources.kid:h2
-msgid "Tariff details"
-msgstr "Tariffdetaljer"
+#: hubspace/templates/manageResources.kid:a
+msgid "Delete resource group"
+msgstr "Ta bort resursgrupp"
 
-#: hubspace/templates/addResources.kid:h2
-msgid "Resource costs"
-msgstr "Resurskostnader"
+#: hubspace/templates/manageResources.kid:div
+msgid "See resources in this group"
+msgstr "Se resurser i den här gruppen"
 
-#: hubspace/templates/addResources.kid:td
-msgid "Resource"
-msgstr "Resurs"
+#: hubspace/templates/manageResources.kid:div
+msgid "Inactive"
+msgstr "Inaktiv"
 
-#: hubspace/templates/bristolData.kid:td
-msgid "Your organisation"
-msgstr "Din organisation"
+#: hubspace/templates/manageResources.kid:a
+msgid "activate"
+msgstr "aktivera"
 
-#: hubspace/templates/bristolData.kid:td
-msgid "Organisation type"
-msgstr "Typ av organisation"
+#: hubspace/templates/manageResources.kid:a
+msgid "de-activate"
+msgstr "avaktivera"
 
-#: hubspace/templates/bristolData.kid:td
-msgid "Number of employees"
-msgstr "Antal anställda"
+#: hubspace/templates/manageResources.kid:a
+msgid "more..."
+msgstr "mer..."
 
-#: hubspace/templates/bristolData.kid:td
-msgid "Areas of interest"
-msgstr "Intressen"
+#: hubspace/templates/booking.kid:div
+msgid "Select Hub"
+msgstr "Välj Hub"
 
-#: hubspace/templates/bristolData.kid:td
-msgid "Organisational Responsibilities"
-msgstr "Organisatoriskt ansvar"
+#: hubspace/templates/booking.kid:h2
+msgid "Need Help with Booking?"
+msgstr "Hjälp med bokning?"
 
-#: hubspace/templates/bristolData.kid:td
-msgid "Social and environmental responsibility"
-msgstr "Socialt och mijömässigt ansvarigt"
+#: hubspace/templates/booking.kid:div
+msgid "To make a booking, or modify an existing one:"
+msgstr "För att skapa en bokning eller ändra en befintlig:"
 
-#: hubspace/templates/bristolData.kid:td
-msgid "Progressive organisational practices"
-msgstr "Framåtskridande organisatoriska aktiviteter"
+#: hubspace/templates/booking.kid:li
+msgid "Select the date you are looking for."
+msgstr "Välj önskat datum."
 
-#: hubspace/templates/bristolData.kid:td
-msgid "Your Membership"
-msgstr "Ditt medlemskap"
+#: hubspace/templates/booking.kid:li
+msgid "Click on the space and the time you would like."
+msgstr "Klicka på resursen och den tid du vill boka."
 
-#: hubspace/templates/bristolData.kid:td
-msgid "How did you hear about SVN?"
-msgstr "Hur/var hörde du om SVN?"
+#: hubspace/templates/booking.kid:li
+msgid "Provide us with the booking details required."
+msgstr "Mata in nödvändiga detaljer för bokningen."
 
-#: hubspace/templates/bristolData.kid:td
-msgid "What benefits would membership of SVN bring you?"
-msgstr "Vilka fördelar skulle ett medlemskap i SVN ge dig/er?"
+#: hubspace/templates/booking.kid:p
+msgid "In the event of a cancellation, the individual or organization booking the space will be charged 50% of the total cost, unless it is cancelled more than two weeks prior to the event."
+msgstr "Vid en eventuell avbokning kommer 50% av kostnaden att faktureras om avbokningen ej skett tidigare än två veckor innan den bokade tiden."
 
-#: hubspace/templates/bristolData.kid:td
-msgid "What contribution do you think you can make to SVN?"
-msgstr "Vilket bidrag skulle du/ni kunna ge till SVN?"
+#: hubspace/templates/booking.kid:p
+msgid "A confirmation will be emailed to you as soon as the booking is made. For further information or to cancel a booking (starting in the next two weeks) please email"
+msgstr "En bekräftelse mailas till dig så snart bokningen är genomförd. För vidare information eller avbokning av en tid de närmaste två veckor maila"
 
-#: hubspace/templates/bristolData.kid:td
-msgid "Additional Information"
-msgstr "Övrig information"
+#: hubspace/templates/booking.kid:a
+msgid "."
+msgstr "."
 
-#: hubspace/templates/bristolData.kid:td
-msgid "Any additional information you would like to provide:"
-msgstr "Någon mer information du vill lägga till:"
+#: hubspace/templates/booking.kid:div
+msgid "What do you to want book?"
+msgstr "Vad vill du boka?"
 
-#: hubspace/templates/addResourceGroup.kid:h1
-msgid "Add a resource group"
+#: hubspace/templates/booking.kid:input
+msgid "Day View"
+msgstr "Dagvy"
+
+#: hubspace/templates/booking.kid:input
+msgid "Week View"
+msgstr "Veckovy"
+
+#: hubspace/templates/booking.kid:input
+msgid "Only show my bookings"
+msgstr "Visa bara mina bokningar"
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Billed User"
+msgstr "Fakturerad användare"
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Date:"
+msgstr "Datum:"
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Start time:"
+msgstr "Starttid:"
+
+#: hubspace/templates/addRusage.kid:option
+msgid ":"
+msgstr ":"
+
+#: hubspace/templates/addRusage.kid:option
+msgid "00"
+msgstr "00"
+
+#: hubspace/templates/addRusage.kid:option
+msgid "15"
+msgstr "15"
+
+#: hubspace/templates/addRusage.kid:option
+msgid "30"
+msgstr "30"
+
+#: hubspace/templates/addRusage.kid:option
+msgid "45"
+msgstr "45"
+
+#: hubspace/templates/addRusage.kid:td
+msgid "End time:"
+msgstr "Sluttid:"
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Time of Usage:"
+msgstr "Använd tid:"
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Quantity:"
+msgstr "Antal:"
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Custom billing name:"
+msgstr "Annat faktureringsnamn:"
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Cost (leave blank for automatic cost):"
+msgstr "Kostnad (lämna tomt för automatisk kostnad)"
+
+#: hubspace/templates/addRusage.kid:input
+msgid "submit"
 msgstr ""
 
-#: hubspace/templates/addResourceGroup.kid:h2
-msgid "Resource Group"
-msgstr ""
-
-#: hubspace/templates/addResourceGroup.kid:td
-msgid "Group Type"
-msgstr ""
-
-#: hubspace/templates/addResourceGroup.kid:input
-msgid "save"
-msgstr ""
-
-#: hubspace/templates/addResourceGroup.kid:input
+#: hubspace/templates/addRusage.kid:input
 msgid "cancel"
 msgstr ""
 
-#: hubspace/templates/host.kid:a
-msgid "Invoicing"
-msgstr "Fakturering"
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Membership history"
+msgstr "Medlemshistoria"
 
-#: hubspace/templates/host.kid:a
-msgid "Times"
-msgstr "Tider"
+#: hubspace/templates/mainProfile.kid:h2
+msgid "About me"
+msgstr "Om mig"
 
-#: hubspace/templates/host.kid:a
-msgid "Administration"
-msgstr "Administration"
+#: hubspace/templates/mainProfile.kid:a
+msgid "add card"
+msgstr "lägg till kort"
 
-#: hubspace/templates/host.kid:a
-msgid "Management Data"
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Card Registration"
+msgstr "Kortregistrering"
+
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Relationship Details"
+msgstr "Relationsdetaljer"
+
+#: hubspace/templates/mainProfile.kid:a
+msgid "add new note"
+msgstr "lägg till ny anteckning"
+
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Relationship History"
+msgstr "Relationshistoria"
+
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Member services"
+msgstr "Medlemstjänster"
+
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Additional information for SVN"
+msgstr "Övrig info för SVN"
+
+#: hubspace/templates/memberCommunitiesEdit.kid:p
+msgid "Knowledge clusters are communities of people who share similiar interests, practices and questions. Which of these email groups would you like to participate in?"
+msgstr "Kunskapsgrupper är sammanslutningar av individer med liknande intressen, verksamheter och frågeställningar. I vilka av dessa emailgrupper skulle du vilja delta?"
+
+#: hubspace/templates/listEditor.kid:a
+msgid "close"
 msgstr ""
 
-#: hubspace/templates/host.kid:div
-msgid "abcf"
+#: hubspace/templates/listEditor.kid:th
+msgid "Page Type"
 msgstr ""
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Location Name"
-msgstr "Plats"
+#: hubspace/templates/listEditor.kid:th
+msgid "Delete"
+msgstr "Ta bort"
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Local Currency"
-msgstr "Lokal valuta"
-
-#: hubspace/templates/locationProfile.kid:td
-msgid "Local Time Zone"
-msgstr "Lokal tidszon"
-
-#: hubspace/templates/locationProfile.kid:td
-msgid "Language"
-msgstr "Språk"
-
-#: hubspace/templates/locationProfile.kid:td
-msgid "Tentative booking available"
+#: hubspace/templates/listEditor.kid:td
+msgid "N/A"
 msgstr ""
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "RFID Enabled"
-msgstr "RFID-aktiverad"
-
-#: hubspace/templates/locationProfile.kid:td
-msgid "MicroSite Active"
+#: hubspace/templates/addMember.kid:input
+msgid "Add Member"
 msgstr ""
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Invoice dute date (days after sending invoice)"
+#: hubspace/templates/webSitePeople.kid:br
+msgid "{member.object.organisation}"
 msgstr ""
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Payment_Terms"
-msgstr "Betalningsvillkor"
-
-#: hubspace/templates/locationProfile.kid:td
-msgid "New Invoice numbering scheme"
+#: hubspace/templates/webSitePeople.kid:a
+msgid "Edit People"
 msgstr ""
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Vat Included"
-msgstr "Moms inkluderad"
+#: hubspace/templates/weekBooking.kid:span
+msgid "-"
+msgstr "-"
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Vat Number"
-msgstr "Momsregnummer"
+#: hubspace/templates/weekBooking.kid:span
+msgid "My bookings"
+msgstr "Mina bokningar"
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Default Level of Vat Charged (0%-100%)"
-msgstr "Förvald momssats (0%-100%)"
+#: hubspace/templates/weekBooking.kid:span
+msgid "Unavailable for booking"
+msgstr "Ej möjlig att boka"
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Billing Address"
-msgstr "Faktureringsadress"
+#: hubspace/templates/weekBooking.kid:span
+msgid "Watching for availability"
+msgstr "Bevakas"
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Company No."
-msgstr "Organisationsnummer"
+#: hubspace/templates/microSiteContact.kid:strong
+msgid "Hub Kings Cross,"
+msgstr ""
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Bank"
-msgstr "Bank"
+#: hubspace/templates/microSiteContact.kid:br
+msgid "34b York Way,"
+msgstr ""
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Bank Account No."
-msgstr "Bankkonto"
+#: hubspace/templates/microSiteContact.kid:br
+msgid "London N1 9AB,"
+msgstr ""
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Sort Code"
-msgstr "Sorteringsbegrepp"
+#: hubspace/templates/microSiteContact.kid:br
+msgid "UK"
+msgstr ""
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "IBAN No."
-msgstr "IBAN-nummer"
+#: hubspace/templates/microSiteContact.kid:a
+msgid "Map"
+msgstr ""
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Swift No."
-msgstr "Swift-nummer"
-
-#: hubspace/templates/locationProfile.kid:td
-msgid "Domain Name"
-msgstr "Domännamn"
-
-#: hubspace/templates/locationProfile.kid:td
+#: hubspace/templates/microSiteContact.kid:p
 msgid "Telephone"
 msgstr "Telefon"
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Homepage Title"
-msgstr "Hemsida, titel"
+#: hubspace/templates/microSiteContact.kid:strong
+msgid "+44 (0)20 7841 3450"
+msgstr ""
 
-#: hubspace/templates/locationProfile.kid:td
-msgid "Homepage Description"
-msgstr "Hemsida, beskrivning"
+#: hubspace/templates/microSiteContact.kid:a
+msgid "kingscross.hosts@the-hub.net"
+msgstr ""
+
+#: hubspace/templates/webSiteStandard.kid:blockquote
+msgid "\"Probably the most gutsy and dynamic event I have ever been to.\""
+msgstr ""
+
+#: hubspace/templates/webSiteStandard.kid:em
+msgid "Dame Anita Roddick, founder of The Body Shop"
+msgstr ""
+
+#: hubspace/templates/webSiteStandard.kid:blockquote
+msgid "\"This place that has become known world-wide is proving what is possible.\""
+msgstr ""
+
+#: hubspace/templates/webSiteStandard.kid:em
+msgid "Kofi Annan speaking on the Soweto Mountain of Hope, a Hub collaboration"
+msgstr ""
+
+#: hubspace/templates/webSiteStandard.kid:p
+msgid "This is the amazing thing. We all have ideas. But where to go to make them happen? We've learnt that people and institutions working at the frontier of new innovations need access to the all the experience, resources, connections and investment they can muster. So we're dedicating ourselves to designing and hosting events and experiences that create access to the resources, connections, experience, knowledge and capital to support the journey path of ideas into action."
+msgstr ""
+
+#: hubspace/templates/webSiteStandard.kid:p
+msgid "Our events range from high-profile Hub Lectures, Thought Dinners and inter-disciplinary Innovation Labs to open-source Hub Lunches that foster peer-based learning and collaboration amongst our membership."
+msgstr ""
+
+#: hubspace/templates/webSiteStandard.kid:strong
+msgid "Featured Events: Hub Lectures"
+msgstr ""
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Unavailable"
+msgstr "Ej tillgänglig"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Meeting name"
+msgstr "Rubrik för möte"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Meeting Description"
+msgstr "Beskrivning av möte"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Date"
+msgstr "Datum"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Time"
+msgstr "Tid"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Number of people"
+msgstr "Antal personer"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Extras"
+msgstr "Extra"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Cost"
+msgstr "Kostnad"
+
+#: hubspace/templates/meetingBooking.kid:c
+msgid "(including VAT)"
+msgstr "(inklusive moms)"
+
+#: hubspace/templates/meetingBooking.kid:c
+msgid "(excluding VAT)"
+msgstr "(exklusive moms)"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Booked For"
+msgstr "Bokad för"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Booked By"
+msgstr "Bokad av"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Additional Information"
+msgstr "Övrig information"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Cancel Booking"
+msgstr "Avbryt bokning"
+
+#: hubspace/templates/meetingBooking.kid:a
+msgid "Cancel this Booking"
+msgstr "Ta bort den här bokningen"
+
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Tentative"
+msgstr "Preliminär"
+
+#: hubspace/templates/meetingBooking.kid:br
+msgid "(You will be notified if this booking expires/confirmed)"
+msgstr "(Du för ett meddelande om den här bokningen löper ut eller bekräfstas)"
+
+#: hubspace/templates/memberRFID.kid:a
+msgid "Remove Card"
+msgstr "Ta bort kort"
+
+#: hubspace/templates/memberRFID.kid:p
+msgid "No Card Issued"
+msgstr "Inget kort utdelat"
+
+#: hubspace/templates/todos.kid:span
+msgid "/"
+msgstr "/"
+
+#: hubspace/templates/todos.kid:a
+msgid "Ignore"
+msgstr "Ignorera"
+
+#: hubspace/templates/todos.kid:strong
+msgid "This todo is closed!"
+msgstr "Den här Att-göra är stängd"
+
+#: hubspace/templates/todos.kid:a
+msgid "Add Todo"
+msgstr "Lägg till Att-göra"
+
+#: hubspace/templates/todos.kid:a
+msgid "Show Closed"
+msgstr "Visa stängda"
+
+#: hubspace/templates/todos.kid:a
+msgid "Delete List"
+msgstr "Ta bort lista"
+
+#: hubspace/templates/todos.kid:div
+msgid "Select host:"
+msgstr "Välj host:"
+
+#: hubspace/templates/todos.kid:a
+msgid "Add new Todo list"
+msgstr "Lägg till Att-göralista"
+
+#: hubspace/templates/notes.kid:label
+msgid "Details"
+msgstr "Detaljer"
+
+#: hubspace/templates/notes.kid:label
+msgid "Date to Follow Up"
+msgstr "Datum för uppföljning"
+
+#: hubspace/templates/notes.kid:label
+msgid "For User"
+msgstr "För användare"
+
+#: hubspace/templates/notes.kid:td
+msgid "Follow-up Date"
+msgstr "Datum för uppföljning"
+
+#: hubspace/templates/notes.kid:td
+msgid "Action Assigned To"
+msgstr "Aktivitet delegerad till"
+
+#: hubspace/templates/notes.kid:td
+msgid "Action Closed"
+msgstr "Aktivitet avslutat"
+
+#: hubspace/templates/notes.kid:td
+msgid "Closed"
+msgstr "Avslutad"
+
+#: hubspace/templates/notes.kid:div
+msgid "Name of note:"
+msgstr "Benämning på anteckning:"
+
+#: hubspace/templates/notes.kid:span
+msgid "delete"
+msgstr "ta bort"
+
+#: hubspace/templates/microSiteMembers.kid:strong
+msgid "Social Innovators from within and beyond the public, private and third sectors are establishing a new form of commerce for the 21st Century. The Hub Kings Cross is becoming the place they call home."
+msgstr ""
+
+#: hubspace/templates/microSiteMembers.kid:p
+msgid "Our members are what make the Hub. So we take care to ensure that we have a diverse membership mix representing an array of sectors, industries and professions. What unites our membership is a passion to make a positive difference, with a strong motivation to deliver enterprising solutions that provide social and environmental as well as economic value."
+msgstr ""
+
+#: hubspace/templates/microSiteMembers.kid:p
+msgid "If you were to drop into a Hub today, these are some of the people you might bump into:"
+msgstr ""
+
+#: hubspace/templates/microSiteMembers.kid:li
+msgid "John Bird - Founder of the Big Issus"
+msgstr ""
+
+#: hubspace/templates/microSiteMembers.kid:li
+msgid "Liam Black - Co-founder of Fifteen"
+msgstr ""
+
+#: hubspace/templates/microSiteMembers.kid:li
+msgid "Lisa Stockton - Co-founder Happy Kitchen"
+msgstr ""
+
+#: hubspace/templates/microSiteMembers.kid:li
+msgid "Dominic Campbell - Co-founder Enabled by Design"
+msgstr ""
+
+#: hubspace/templates/microSiteMembers.kid:li
+msgid "Lawrence Corbett - CEO Virgin Unite"
+msgstr ""
+
+#: hubspace/templates/microSiteMembers.kid:li
+msgid "Justin Dekoszmovszky - SC Johnson"
+msgstr ""
+
+#: hubspace/templates/microSiteMembers.kid:li
+msgid "Grant Lang - Founder, Mozzo coffee"
+msgstr ""
+
+#: hubspace/templates/microSiteMembers.kid:div
+msgid "Organisation:"
+msgstr "Organisation:"
+
+#: hubspace/templates/microSiteMembers.kid:div
+msgid "Type of Business:"
+msgstr ""
+
+#: hubspace/templates/microSiteMembers.kid:a
+msgid "back to Members Page"
+msgstr ""
+
+#: hubspace/templates/meetingBookingEdit.kid:td
+msgid "Select Resource"
+msgstr "Välj resurs"
+
+#: hubspace/templates/meetingBookingEdit.kid:td
+msgid "Meeting Name"
+msgstr "Rubrik för möte"
+
+#: hubspace/templates/meetingBookingEdit.kid:label
+msgid "Publicise event to The Hub's website"
+msgstr "Publicera detta event på The Hubs hemsida"
+
+#: hubspace/templates/meetingBookingEdit.kid:option
+msgid "to"
+msgstr "till"
+
+#: hubspace/templates/meetingBookingEdit.kid:td
+msgid "Number of People"
+msgstr "Antal personer"
+
+#: hubspace/templates/meetingBookingEdit.kid:td
+msgid "Price"
+msgstr "Pris"
+
+#: hubspace/templates/meetingBookingEdit.kid:div
+msgid "Special price for this booking"
+msgstr "Anpassat pris för den här bokningen"
+
+#: hubspace/templates/meetingBookingEdit.kid:td
+msgid "VAT"
+msgstr "Moms (25%)"
+
+#: hubspace/templates/meetingBookingEdit.kid:em
+msgid "All prices include VAT"
+msgstr "Alla priser är inklusive moms"
+
+#: hubspace/templates/meetingBookingEdit.kid:em
+msgid "All prices exclude VAT"
+msgstr "Alla priser är exklusive moms"
+
+#: hubspace/templates/loginMaster.kid:h1
+msgid "Feed"
+msgstr "Feed"
+
+#: hubspace/templates/loginMaster.kid:h1
+msgid "Upcoming Events in The Hub Network"
+msgstr "Kommande event i Hub-nätverket"
+
+#: hubspace/templates/loginMaster.kid:h1
+msgid "Recently Updated Profiles in The Hub Network"
+msgstr "Senaste uppdaterade profiler i Hub-nätverket"
+
+#: hubspace/templates/loginMaster.kid:label
+msgid "User Name"
+msgstr ""
+
+#: hubspace/templates/loginMaster.kid:a
+msgid "Forgot your password?"
+msgstr "Glömt ditt lösenord?"
+
+#: hubspace/templates/memberServicesEdit.kid:td
+msgid "Phone handset number"
+msgstr "Passerkortsnummer"
+
+#: hubspace/templates/memberServicesEdit.kid:td
+msgid "Extension number"
+msgstr "Anknytningsnummer"
+
+#: hubspace/templates/memberServicesEdit.kid:td
+msgid "Franking machine pin"
+msgstr "Kod för kopieringsmaskin"
+
+#: hubspace/templates/memberServicesEdit.kid:td
+msgid "Storage allocation on hub server (GB)"
+msgstr "Allokerat utrymme på Hub-servern (GB)"
+
+#: hubspace/templates/memberServicesEdit.kid:td
+msgid "Type of computer"
+msgstr "Typ av dator"
+
+#: hubspace/templates/memberServicesEdit.kid:td
+msgid "Location of storage"
+msgstr "Förvaring"
 
 #: hubspace/templates/manageTariffs.kid:a
 msgid "Add Tariff"
 msgstr "Lägg till tariff"
 
 #: hubspace/templates/manageTariffs.kid:td
-msgid "Percentage VAT (0-100)"
-msgstr "Moms (0% - 100%)"
-
-#: hubspace/templates/manageTariffs.kid:td
-msgid "Active"
-msgstr "Aktiv"
-
-#: hubspace/templates/manageTariffs.kid:td
 msgid "Default"
 msgstr "Förvalt"
-
-#: hubspace/templates/manageTariffs.kid:td
-msgid "Inactive"
-msgstr "Inaktiv"
-
-#: hubspace/templates/manageTariffs.kid:a
-msgid "activate"
-msgstr "aktivera"
-
-#: hubspace/templates/manageTariffs.kid:a
-msgid "de-activate"
-msgstr "avaktivera"
 
 #: hubspace/templates/manageTariffs.kid:td
 msgid "True"
@@ -679,813 +1177,105 @@ msgstr ""
 msgid "for private event hire and member events."
 msgstr ""
 
-#: hubspace/templates/listEditor.kid:a
-msgid "close"
-msgstr ""
+#: hubspace/templates/network.kid:a
+msgid "Add new member"
+msgstr "Ny medlem"
 
-#: hubspace/templates/listEditor.kid:th
-msgid "Page Type"
-msgstr ""
-
-#: hubspace/templates/listEditor.kid:th
-msgid "Delete"
-msgstr "Ta bort"
-
-#: hubspace/templates/listEditor.kid:td
-msgid "N/A"
-msgstr ""
-
-#: hubspace/templates/managePricing.kid:td
-msgid "Price per hour/"
-msgstr "Pris per timme/"
-
-#: hubspace/templates/managePricing.kid:br
-msgid "Price per unit (Current)"
-msgstr "Pris per enhet (nuvarande)"
-
-#: hubspace/templates/managePricing.kid:td
-msgid "Pricing Schedule"
-msgstr "Prisnivå"
-
-#: hubspace/templates/managePricing.kid:a
-msgid "Schedule"
-msgstr "Medlemskapsnivå"
-
-#: hubspace/templates/send_invoice.kid:td
-msgid "Attachment:"
-msgstr "Bilaga:"
-
-#: hubspace/templates/send_invoice.kid:input
-msgid "Send invoice by email"
-msgstr "Skicka faktura via email"
-
-#: hubspace/templates/send_invoice.kid:td
-msgid "Subject:"
-msgstr "Ämne:"
-
-#: hubspace/templates/send_invoice.kid:td
-msgid "Message:"
-msgstr "Meddelande:"
-
-#: hubspace/templates/profile.kid:a
+#: hubspace/templates/network.kid:a
 msgid "Profile"
 msgstr "Profil"
 
-#: hubspace/templates/profile.kid:a
+#: hubspace/templates/network.kid:a
 msgid "Billing"
 msgstr "Fakturering"
 
-#: hubspace/templates/billingDetails.kid:td
-msgid "Member to bill"
-msgstr "Medlem att fakturera"
-
-#: hubspace/templates/billingDetails.kid:td
-msgid "Use my normal profile address"
-msgstr "Använd min vanliga adress"
-
-#: hubspace/templates/billingDetails.kid:td
-msgid "Company name"
-msgstr "Företagsnamn"
-
-#: hubspace/templates/billingDetails.kid:td
-msgid "Billing address"
-msgstr "Faktureringsadress"
-
-#: hubspace/templates/billingDetails.kid:td
-msgid "Phone number"
-msgstr "Telefonnummer"
-
-#: hubspace/templates/billingDetails.kid:td
-msgid "Fax number"
-msgstr "Faxnummer"
-
-#: hubspace/templates/billingDetails.kid:td
-msgid "Email contact"
-msgstr "Mailkontakt"
-
-#: hubspace/templates/billingDetails.kid:td
-msgid "Company Number"
-msgstr "Organisationsnummer"
-
-#: hubspace/templates/billingDetails.kid:td
-msgid "VAT Number"
-msgstr "Momsregistreringsnummer"
-
-#: hubspace/templates/webSiteStandard.kid:blockquote
-msgid "\"Probably the most gutsy and dynamic event I have ever been to.\""
-msgstr ""
-
-#: hubspace/templates/webSiteStandard.kid:em
-msgid "Dame Anita Roddick, founder of The Body Shop"
-msgstr ""
-
-#: hubspace/templates/webSiteStandard.kid:blockquote
-msgid "\"This place that has become known world-wide is proving what is possible.\""
-msgstr ""
-
-#: hubspace/templates/webSiteStandard.kid:em
-msgid "Kofi Annan speaking on the Soweto Mountain of Hope, a Hub collaboration"
-msgstr ""
-
-#: hubspace/templates/webSiteStandard.kid:p
-msgid "This is the amazing thing. We all have ideas. But where to go to make them happen? We've learnt that people and institutions working at the frontier of new innovations need access to the all the experience, resources, connections and investment they can muster. So we're dedicating ourselves to designing and hosting events and experiences that create access to the resources, connections, experience, knowledge and capital to support the journey path of ideas into action."
-msgstr ""
-
-#: hubspace/templates/webSiteStandard.kid:p
-msgid "Our events range from high-profile Hub Lectures, Thought Dinners and inter-disciplinary Innovation Labs to open-source Hub Lunches that foster peer-based learning and collaboration amongst our membership."
-msgstr ""
-
-#: hubspace/templates/webSiteStandard.kid:strong
-msgid "Featured Events: Hub Lectures"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kid:input
-msgid "Use main profile details"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kid:input
-msgid "Bill to:"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kid:input
-msgid "Use billing details below"
-msgstr ""
-
-#: hubspace/templates/memberRFID.kid:a
-msgid "Remove Card"
-msgstr "Ta bort kort"
-
-#: hubspace/templates/memberRFID.kid:p
-msgid "No Card Issued"
-msgstr "Inget kort utdelat"
-
-#: hubspace/templates/microSiteJoinus.kid:h3
-msgid "Tariffs*"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:strong
-msgid "Standard"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:strong
-msgid "- 20 hours use of the space per month - £40 p/m (£30)"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:strong
-msgid "Worklite"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:strong
-msgid "- 45 hours use of the space per month, registered post box, complimentary tea and coffee - £120 p/m (£100)"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:strong
-msgid "Work +"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:strong
-msgid "- 60 hours use of the space, registered post box, complimentary tea and coffee - £170 p/m (£150)"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:strong
-msgid "Unlimited"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:strong
-msgid "-  Unlimited hours, registered post box, personal storage, optional phone-line, complimentary tea and coffee - £480 p/m (£400)"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:p
-msgid "* Prices include VAT, there is no joining fee, prices in grey are available for individuals working for 'start-up' organisations (non-VAT registered)"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:p
-msgid "Thank you for your interest in membership of the Hub Kings Cross. Please download our"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:a
-msgid "brochure"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:a
-msgid "for more information on the prices and benefits of membership. One of our hosting team will be in touch shortly to help you answer any queries you may have and to talk you through some of the membership options in more detail. We look forward to you  visiting our space and hope to welcome you as a member of the Hub Kings Cross in the not too distant future."
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:p
-msgid "If you are interested in joining, please fill in this form. You will automatically be emailed a brochure and we will contact you to discuss your needs in more detail."
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:label
-msgid "First Name"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:label
-msgid "Last Name"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:label
-msgid "Organisation"
-msgstr "Organisation"
-
-#: hubspace/templates/microSiteJoinus.kid:label
-msgid "Phone"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kid:label
-msgid "Email"
-msgstr ""
-
-#: hubspace/templates/microSiteContact.kid:p
-msgid "Address"
-msgstr "Adress"
-
-#: hubspace/templates/microSiteContact.kid:strong
-msgid "Hub Kings Cross,"
-msgstr ""
-
-#: hubspace/templates/microSiteContact.kid:br
-msgid "34b York Way,"
-msgstr ""
-
-#: hubspace/templates/microSiteContact.kid:br
-msgid "London N1 9AB,"
-msgstr ""
-
-#: hubspace/templates/microSiteContact.kid:br
-msgid "UK"
-msgstr ""
-
-#: hubspace/templates/microSiteContact.kid:a
-msgid "Map"
-msgstr ""
-
-#: hubspace/templates/microSiteContact.kid:strong
-msgid "+44 (0)20 7841 3450"
-msgstr ""
-
-#: hubspace/templates/microSiteContact.kid:a
-msgid "kingscross.hosts@the-hub.net"
-msgstr ""
-
-#: hubspace/templates/memberServicesEdit.kid:td
-msgid "Phone handset number"
-msgstr "Passerkortsnummer"
-
-#: hubspace/templates/memberServicesEdit.kid:td
-msgid "Extension number"
-msgstr "Anknytningsnummer"
-
-#: hubspace/templates/memberServicesEdit.kid:td
-msgid "Franking machine pin"
-msgstr "Kod för kopieringsmaskin"
-
-#: hubspace/templates/memberServicesEdit.kid:td
-msgid "Storage allocation on hub server (GB)"
-msgstr "Allokerat utrymme på Hub-servern (GB)"
-
-#: hubspace/templates/memberServicesEdit.kid:td
-msgid "Type of computer"
-msgstr "Typ av dator"
-
-#: hubspace/templates/memberServicesEdit.kid:td
-msgid "Location of storage"
-msgstr "Förvaring"
-
-#: hubspace/templates/microSiteLogin.kid:h3
-msgid "Member Login"
-msgstr ""
-
-#: hubspace/templates/microSiteLogin.kid:h3
-msgid "Login"
-msgstr "Logga in"
-
-#: hubspace/templates/microSitePlain.kid:div
-msgid "edit content"
-msgstr ""
-
-#: hubspace/templates/microSitePlain.kid:p
-msgid "Your content here"
-msgstr ""
-
-#: hubspace/templates/uploadImage.kid:div
-msgid "Images will be cropped to"
-msgstr ""
-
-#: hubspace/templates/uploadImage.kid:c
-msgid "and"
-msgstr ""
-
-#: hubspace/templates/subresourcetable.kid:a
-msgid "change"
-msgstr "ändra"
-
-#: hubspace/templates/subresourcetable.kid:a
-msgid "Add to Invoice"
-msgstr "Lägg till på faktura"
-
-#: hubspace/templates/subresourcetable.kid:a
-msgid "Remove from Invoice"
-msgstr "Ta bort från faktura"
-
-#: hubspace/templates/todoEdit.kid:td
-msgid "Due Date:"
-msgstr "Sluttid:"
-
-#: hubspace/templates/todoEdit.kid:td
-msgid "Body:"
-msgstr "Brödtext:"
-
-#: hubspace/templates/todoEdit.kid:td
-msgid "Close:"
-msgstr "Stäng:"
-
-#: hubspace/templates/microSiteMaster.kid:div
-msgid "Admin Mode"
-msgstr ""
-
-#: hubspace/templates/microSiteMaster.kid:a
-msgid "Edit Subpages"
-msgstr ""
-
-#: hubspace/templates/microSiteMaster.kid:span
-msgid "Spread the Hub!"
-msgstr ""
-
-#: hubspace/templates/resources.kid:h1
-msgid "Location:"
-msgstr "Plats:"
-
-#: hubspace/templates/resources.kid:option
-msgid "Manage Tariffs"
-msgstr "Hantera tariffer"
-
-#: hubspace/templates/resources.kid:option
-msgid "Manage Resources"
-msgstr "Hantera resurser"
-
-#: hubspace/templates/microSiteMembers.kid:strong
-msgid "Social Innovators from within and beyond the public, private and third sectors are establishing a new form of commerce for the 21st Century. The Hub Kings Cross is becoming the place they call home."
-msgstr ""
-
-#: hubspace/templates/microSiteMembers.kid:p
-msgid "Our members are what make the Hub. So we take care to ensure that we have a diverse membership mix representing an array of sectors, industries and professions. What unites our membership is a passion to make a positive difference, with a strong motivation to deliver enterprising solutions that provide social and environmental as well as economic value."
-msgstr ""
-
-#: hubspace/templates/microSiteMembers.kid:p
-msgid "If you were to drop into a Hub today, these are some of the people you might bump into:"
-msgstr ""
-
-#: hubspace/templates/microSiteMembers.kid:li
-msgid "John Bird - Founder of the Big Issus"
-msgstr ""
-
-#: hubspace/templates/microSiteMembers.kid:li
-msgid "Liam Black - Co-founder of Fifteen"
-msgstr ""
-
-#: hubspace/templates/microSiteMembers.kid:li
-msgid "Lisa Stockton - Co-founder Happy Kitchen"
-msgstr ""
-
-#: hubspace/templates/microSiteMembers.kid:li
-msgid "Dominic Campbell - Co-founder Enabled by Design"
-msgstr ""
-
-#: hubspace/templates/microSiteMembers.kid:li
-msgid "Lawrence Corbett - CEO Virgin Unite"
-msgstr ""
-
-#: hubspace/templates/microSiteMembers.kid:li
-msgid "Justin Dekoszmovszky - SC Johnson"
-msgstr ""
-
-#: hubspace/templates/microSiteMembers.kid:li
-msgid "Grant Lang - Founder, Mozzo coffee"
-msgstr ""
-
-#: hubspace/templates/microSiteMembers.kid:div
-msgid "Organisation:"
-msgstr "Organisation:"
-
-#: hubspace/templates/microSiteMembers.kid:div
-msgid "Type of Business:"
-msgstr ""
-
-#: hubspace/templates/microSiteMembers.kid:a
-msgid "back to Members Page"
-msgstr ""
-
-#: hubspace/templates/moreResDetails.kid:h2
-msgid "Containment"
-msgstr "Koppling"
-
-#: hubspace/templates/moreResDetails.kid:p
-msgid "Add resources which are contained by this one. In this case, if the container is booked the other will be unavailable. Also if the contained resource is booked the container will be unavailable. This also works for multiple levels of containment"
-msgstr "Lägg till en resurs som ingår i den här resursgruppen. I det här faller gäller att om resursgruppen är bokad är den inte tillgänglig. Dessutom är resursgruppen ej tillgänglig om den inlkluderade resursen är bokad. Detta gäller även resursgrupper som ingår i andra resursgrupper."
-
-#: hubspace/templates/moreResDetails.kid:li
-msgid "Nothing Contained"
-msgstr "Inget kopplat"
-
-#: hubspace/templates/moreResDetails.kid:a
-msgid "Remove"
-msgstr "Ta bort"
-
-#: hubspace/templates/moreResDetails.kid:a
-msgid "Add Contained Resource"
-msgstr "Lägg till kopplad resurs"
-
-#: hubspace/templates/moreResDetails.kid:h2
-msgid "Suggestions"
-msgstr "Förslag"
-
-#: hubspace/templates/moreResDetails.kid:p
-msgid "Add suggestions so that when a user books a resource they are prompted to book associated extras. e.g. when booking a meeting room people might often also require a projector, tea, coffee, or lunch"
-msgstr "Lägg till förslag så att när någon bokar en resurs så får de förslag på extra saker . T ex kan de som bokar ett konferensrum kanske vara intresserade av kaffe, lunch eller annat."
-
-#: hubspace/templates/moreResDetails.kid:li
-msgid "No Suggestions"
-msgstr "Inga förslag"
-
-#: hubspace/templates/moreResDetails.kid:a
-msgid "Add Suggestion"
-msgstr "Lägg till förslag"
-
-#: hubspace/templates/moreResDetails.kid:h2
-msgid "Resource Image"
-msgstr "Bild på resurs"
-
-#: hubspace/templates/moreResDetails.kid:p
-msgid "Optionally, an image will appear when a user tries to book a resource. If you want that to happen for this resource, replace the image below. Images will be scaled to 150px by 230px, please upload images of equivalent proportions."
-msgstr "Det finns möjlighet att visa en bild när en användare försöker boka en resurs. Om du vill att det ska ske för den här resursen så ersätt bilden nedan. Bilder kommer att skalas till storleken 150px * 230px så bäst är att ladda upp bilder med sammam proportioner."
-
-#: hubspace/templates/moreResDetails.kid:span
-msgid "replace image"
-msgstr "ersätt bild"
-
-#: hubspace/templates/webSiteHome.kid:em
-msgid "People"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:em
-msgid "who see and do things differently"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:em
-msgid "Places"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:em
-msgid "for working, meeting, innovating, learning and relaxing"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:em
-msgid "Ideas"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:em
-msgid "that might just change the world a little"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:a
-msgid "About"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:a
-msgid "|"
-msgstr "|"
-
-#: hubspace/templates/webSiteHome.kid:a
-msgid "Invitation"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:span
-msgid "Featured Member:"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:br
-msgid "Tamsin Lejeune"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:span
-msgid "Featured Hub:"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:br
-msgid "Kings Cross"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:span
-msgid "Featured Event:"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kid:br
-msgid "Hub Lectures"
-msgstr ""
-
-#: hubspace/templates/billing.kid:h1
-msgid "Billing and Invoicing for name"
-msgstr "Kostnader och fakturering för namn"
-
-#: hubspace/templates/billing.kid:h2
-msgid "Billing Details"
-msgstr "Fakturadetaljer"
-
-#: hubspace/templates/billing.kid:h2
-msgid "Invoice History"
-msgstr "Fakturahistorik"
-
-#: hubspace/templates/billing.kid:td
-msgid "Invoice Ref"
-msgstr "Fakturareferens"
-
-#: hubspace/templates/billing.kid:td
-msgid "Date sent"
-msgstr "Skickat datum"
-
-#: hubspace/templates/billing.kid:td
-msgid "Amount"
-msgstr "Summa"
-
-#: hubspace/templates/billing.kid:em
-msgid "(Including VAT)"
-msgstr "(inkl. moms)"
-
-#: hubspace/templates/billing.kid:td
-msgid "View"
-msgstr "Vy"
-
-#: hubspace/templates/billing.kid:a
-msgid "re-send invoice"
-msgstr "skicka om faktura"
-
-#: hubspace/templates/billing.kid:c
-msgid "unsent"
-msgstr "osänd"
-
-#: hubspace/templates/billing.kid:a
-msgid "send invoice"
-msgstr "skicka faktura"
-
-#: hubspace/templates/billing.kid:a
-msgid "As HTML"
-msgstr "Som HTML"
-
-#: hubspace/templates/billing.kid:a
-msgid "Modify"
-msgstr "Ändra"
-
-#: hubspace/templates/billing.kid:a
-msgid "As PDF"
-msgstr "Som PDF"
-
-#: hubspace/templates/webSitePeople.kid:br
-msgid "{member.object.organisation}"
-msgstr ""
-
-#: hubspace/templates/webSitePeople.kid:a
-msgid "Edit People"
-msgstr ""
-
-#: hubspace/templates/createSuperUser.kid:h1
-msgid "Create Super User"
-msgstr ""
-
-#: hubspace/templates/createSuperUser.kid:div
-msgid "Username"
+#: hubspace/templates/network.kid:a
+msgid "Search results"
+msgstr "Sökresultat"
+
+#: hubspace/templates/password.kid:label
+msgid "email:"
+msgstr "email:"
+
+#: hubspace/templates/oldLoginMaster.kid:label
+msgid "User Name:"
 msgstr "Användarnamn"
 
-#: hubspace/templates/createSuperUser.kid:div
-msgid "Password"
-msgstr "Lösenord"
+#: hubspace/templates/oldLoginMaster.kid:label
+msgid "Password:"
+msgstr "Lösenord:"
 
-#: hubspace/templates/createSuperUser.kid:div
-msgid "Submit"
-msgstr ""
+#: hubspace/templates/resourcetable.kid:td
+msgid "Start date"
+msgstr "Startdatum"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Role"
-msgstr "Roll"
+#: hubspace/templates/resourcetable.kid:td
+msgid "End date"
+msgstr "Slutdatum"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Active?"
-msgstr "Aktiv?"
+#: hubspace/templates/resourcetable.kid:td
+msgid "Quantity / Duration"
+msgstr "Antal / Varaktighet"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Home Hub"
-msgstr "Hemmahub"
+#: hubspace/templates/resourcetable.kid:td
+msgid "Place"
+msgstr "Plats"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Type of Business"
-msgstr "Typ av verksamhet"
+#: hubspace/templates/resourcetable.kid:em
+msgid "(Including VAT unless stated otherwise)"
+msgstr "(Inklusive moms om inget annat anges)"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Mobile"
-msgstr "Mobil"
+#: hubspace/templates/resourcetable.kid:em
+msgid "(Excluding VAT unless stated otherwise)"
+msgstr "(Exklusive moms om inget annat anges)"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Work Phone"
-msgstr "Telefon, jobb"
+#: hubspace/templates/resourcetable.kid:td
+msgid "Add To Open Invoice"
+msgstr "Lägg till på en öppen faktura"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Home Phone"
-msgstr "Telefon, hemma"
+#: hubspace/templates/resourcetable.kid:td
+msgid "Delete Resource Usage"
+msgstr "Ta bort resursanvändning"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Fax"
-msgstr "Fax"
+#: hubspace/templates/resourcetable.kid:td
+msgid "Remove from Open Invoice"
+msgstr "Ta bort från öppen faktura"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Default Email"
-msgstr "Förvald email"
+#: hubspace/templates/resourcetable.kid:td
+msgid "No Resource Usages"
+msgstr "Ingen resursanvändning"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Email 2"
-msgstr "Email 2"
+#: hubspace/templates/resourcetable.kid:td
+msgid "Start"
+msgstr "Start"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Email 3"
-msgstr "Email 3"
+#: hubspace/templates/resourcetable.kid:td
+msgid "End"
+msgstr "Slut"
 
-#: hubspace/templates/memberProfile.kid:td
-msgid "Website"
-msgstr "Website"
-
-#: hubspace/templates/memberProfile.kid:td
-msgid "Internet Phone (SIP id)"
-msgstr "Internet-telefon (SIP id)"
-
-#: hubspace/templates/memberProfile.kid:td
-msgid "Skype name"
-msgstr "Skype-ID"
-
-#: hubspace/templates/memberProfile.kid:td
-msgid "Postcode"
-msgstr "Postnummer"
-
-#: hubspace/templates/memberProfile.kid:td
-msgid "Membership number"
-msgstr "Medlemsnummer"
-
-#: hubspace/templates/memberProfile.kid:td
-msgid "User created"
-msgstr "Användare skapad"
-
-#: hubspace/templates/memberProfile.kid:td
-msgid "Aliases"
-msgstr "Alias"
-
-#: hubspace/templates/memberProfile.kid:td
-msgid "Member of The Hub in"
-msgstr "Medlem av Hubben i"
-
-#: hubspace/templates/memberProfile.kid:td
-msgid "Outstanding Balance"
-msgstr "Utestående att betala"
-
-#: hubspace/templates/todos.kid:span
-msgid "/"
-msgstr "/"
-
-#: hubspace/templates/todos.kid:a
-msgid "Ignore"
-msgstr "Ignorera"
-
-#: hubspace/templates/todos.kid:strong
-msgid "This todo is closed!"
-msgstr "Den här Att-göra är stängd"
-
-#: hubspace/templates/todos.kid:a
-msgid "Add Todo"
-msgstr "Lägg till Att-göra"
-
-#: hubspace/templates/todos.kid:a
-msgid "Show Closed"
-msgstr "Visa stängda"
-
-#: hubspace/templates/todos.kid:a
-msgid "Delete List"
-msgstr "Ta bort lista"
-
-#: hubspace/templates/todos.kid:div
-msgid "Select host:"
-msgstr "Välj host:"
-
-#: hubspace/templates/todos.kid:a
-msgid "Add new Todo list"
-msgstr "Lägg till Att-göralista"
-
-#: hubspace/templates/newinvoice.kid:c
-msgid "VAT"
-msgstr "Moms (25%)"
-
-#: hubspace/templates/newinvoice.kid:strong
-msgid "Invoice details"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Number"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Date"
-msgstr "Datum"
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Period"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Due Date"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:h2
-msgid "Summary of usage"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:em
-msgid "Inclusive of VAT"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:em
-msgid "Exclusive of VAT"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:strong
-msgid "Sub Total"
-msgstr "Delsumma"
-
-#: hubspace/templates/newinvoice.kid:h3
-msgid "Invoice Total"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Excluding VAT"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:strong
-msgid "Total"
-msgstr "ATT BETALA"
-
-#: hubspace/templates/newinvoice.kid:h2
-msgid "Usage details"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Sr. No."
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Member"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
+#: hubspace/templates/resourcetable.kid:td
 msgid "Quantity"
 msgstr "Antal"
 
-#: hubspace/templates/newinvoice.kid:td
-msgid "Time"
-msgstr "Tid"
+#: hubspace/templates/resourcetable.kid:a
+msgid "change"
+msgstr "ändra"
 
-#: hubspace/templates/newinvoice.kid:em
-msgid "(Cancelled)"
+#: hubspace/templates/resourcetable.kid:a
+msgid "Add to Invoice"
+msgstr "Lägg till på faktura"
+
+#: hubspace/templates/resourcetable.kid:a
+msgid "Remove from Invoice"
+msgstr "Ta bort från faktura"
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "a"
+msgstr "en"
+
+#: hubspace/templates/managementdata.kid:h1
+msgid "Management Data"
 msgstr ""
-
-#: hubspace/templates/newinvoice.kid:em
-msgid "(Refund)"
-msgstr ""
-
-#: hubspace/templates/microSiteBlog.kid:c
-msgid "Blog URL:"
-msgstr ""
-
-#: hubspace/templates/invoicing.kid:h1
-msgid "Invoicing Search"
-msgstr "Fakturasökning"
-
-#: hubspace/templates/invoicing.kid:span
-msgid "Search in Location"
-msgstr "Sök på placering"
-
-#: hubspace/templates/invoicing.kid:span
-msgid "for users with non-invoiced items"
-msgstr "för användare med ofakturerade saker"
-
-#: hubspace/templates/invoicing.kid:input
-msgid "Other Resources Usages"
-msgstr "Användning andra resurser"
-
-#: hubspace/templates/invoicing.kid:span
-msgid "which finished on or before"
-msgstr "som slutade på eller före"
-
-#: hubspace/templates/addTariff.kid:td
-msgid "Tariff Price"
-msgstr "Tariffpris"
-
-#: hubspace/templates/noteEdit.kid:div
-msgid "Name of note:"
-msgstr "Benämning på anteckning:"
 
 #: hubspace/templates/managementdata.kid:h2
 msgid "Download Usage summary"
@@ -1510,6 +1300,10 @@ msgstr ""
 #: hubspace/templates/managementdata.kid:input
 msgid "Invoiced"
 msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "Total"
+msgstr "ATT BETALA"
 
 #: hubspace/templates/managementdata.kid:h2
 msgid "Export User Data"
@@ -1596,16 +1390,428 @@ msgid "OR"
 msgstr ""
 
 #: hubspace/templates/managementdata.kid:a
-msgid "Start"
-msgstr "Start"
-
-#: hubspace/templates/managementdata.kid:a
-msgid "End"
-msgstr "Slut"
+msgid "|"
+msgstr "|"
 
 #: hubspace/templates/managementdata.kid:a
 msgid "View >>"
 msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:h1
+msgid "Invoice Image"
+msgstr "Fakturabild"
+
+#: hubspace/templates/plusLocationAdmin.kid:p
+msgid "Image of 690px by 130px or equivalent proportions"
+msgstr "En bild med dimensionen 690px * 130px eller med samma proportioner"
+
+#: hubspace/templates/plusLocationAdmin.kid:h1
+msgid "Top Bar Image"
+msgstr "Sidhuvudsbild"
+
+#: hubspace/templates/plusLocationAdmin.kid:p
+msgid "Image of 850px by 87px or equivalent proportions"
+msgstr "En bild med dimensionen 850px * 87px eller med samma proportioner"
+
+#: hubspace/templates/plusLocationAdmin.kid:h1
+msgid "Home Page Image"
+msgstr "Hemsidesbild"
+
+#: hubspace/templates/plusLocationAdmin.kid:p
+msgid "Image of 850px by 113px or equivalent proportions"
+msgstr "En bild med dimensionen 850px * 113px eller med samma proportioner"
+
+#: hubspace/templates/plusLocationAdmin.kid:h2
+msgid "Import / Export"
+msgstr "Importera / Exportera"
+
+#: hubspace/templates/plusLocationAdmin.kid:td
+msgid "Upload outstanding invoice data"
+msgstr "Ladda upp utestående fakturainformation"
+
+#: hubspace/templates/plusLocationAdmin.kid:td
+msgid "Download member list for Sage"
+msgstr "Ladda ner medlemslista för Sage"
+
+#: hubspace/templates/plusLocationAdmin.kid:td
+msgid "Download invoice list for Sage"
+msgstr "Ladda ner fakturalista för Sage"
+
+#: hubspace/templates/plusLocationAdmin.kid:div
+msgid "Start date:"
+msgstr "Startdatum:"
+
+#: hubspace/templates/plusLocationAdmin.kid:a
+msgid "| End date:"
+msgstr "| Slutdatum:"
+
+#: hubspace/templates/plusLocationAdmin.kid:h2
+msgid "Messages"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:h1
+msgid "Translation"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:td
+msgid "Message catalogue file (.po)"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:a
+msgid "Download"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:a
+msgid "Send updated translation file"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:a
+msgid "Help"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:h1
+msgid "Customization"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:p
+msgid "Your browser does not support iframes."
+msgstr ""
+
+#: hubspace/templates/addBooking.kid:input
+msgid "Add Booking"
+msgstr ""
+
+#: hubspace/templates/addBooking.kid:td
+msgid "Message"
+msgstr "Meddelande"
+
+#: hubspace/templates/plotGraph.kid:a
+msgid "Save parameters for future regeneration of this graph"
+msgstr "Spara parametrar för framtida bruk"
+
+#: hubspace/templates/mini_details.kid:a
+msgid "x"
+msgstr "x"
+
+#: hubspace/templates/send_invoice.kid:td
+msgid "Attachment:"
+msgstr "Bilaga:"
+
+#: hubspace/templates/send_invoice.kid:input
+msgid "Send invoice by email"
+msgstr "Skicka faktura via email"
+
+#: hubspace/templates/send_invoice.kid:td
+msgid "Subject:"
+msgstr "Ämne:"
+
+#: hubspace/templates/send_invoice.kid:td
+msgid "Message:"
+msgstr "Meddelande:"
+
+#: hubspace/templates/microSiteLogin.kid:h3
+msgid "Member Login"
+msgstr ""
+
+#: hubspace/templates/microSiteLogin.kid:h3
+msgid "Login"
+msgstr "Logga in"
+
+#: hubspace/templates/space2.kid:a
+msgid "Make Booking"
+msgstr "Skapa bokning"
+
+#: hubspace/templates/space2.kid:a
+msgid "My Bookings"
+msgstr "Mina bokningar"
+
+#: hubspace/templates/space2.kid:h1
+msgid "Space and Resource Booking"
+msgstr "Resursbokning"
+
+#: hubspace/templates/addTariff.kid:h1
+msgid "Add a Tariff"
+msgstr "Lägg till tariff"
+
+#: hubspace/templates/addTariff.kid:h2
+msgid "Tariff details"
+msgstr "Tariffdetaljer"
+
+#: hubspace/templates/addTariff.kid:td
+msgid "Tariff Price"
+msgstr "Tariffpris"
+
+#: hubspace/templates/addTariff.kid:h2
+msgid "Resource costs"
+msgstr "Resurskostnader"
+
+#: hubspace/templates/addTariff.kid:input
+msgid "save"
+msgstr ""
+
+#: hubspace/templates/master.kid:a
+msgid "Logout"
+msgstr "Logga ut"
+
+#: hubspace/templates/master.kid:a
+msgid "Network"
+msgstr "Network"
+
+#: hubspace/templates/master.kid:a
+msgid "My Profile"
+msgstr "Min profil"
+
+#: hubspace/templates/master.kid:a
+msgid "Space"
+msgstr "Space"
+
+#: hubspace/templates/master.kid:a
+msgid "Hosting"
+msgstr "Hosting"
+
+#: hubspace/templates/master.kid:a
+msgid "Manage Website"
+msgstr ""
+
+#: hubspace/templates/master.kid:label
+msgid "Search member names"
+msgstr "Sök på medlemsnamn"
+
+#: hubspace/templates/master.kid:label
+msgid "Search everything"
+msgstr "Sök allt"
+
+#: hubspace/templates/master.kid:label
+msgid "Search by membership card"
+msgstr "Sök på medlemskort"
+
+#: hubspace/templates/master.kid:option
+msgid "All Hubs"
+msgstr "Alla hubbar"
+
+#: hubspace/templates/admin.kid:h1
+msgid "Administration"
+msgstr "Administration"
+
+#: hubspace/templates/admin.kid:h1
+msgid "Location:"
+msgstr "Plats:"
+
+#: hubspace/templates/pricingSchedule.kid:td
+msgid "Period Starting"
+msgstr "Startar"
+
+#: hubspace/templates/pricingSchedule.kid:td
+msgid "Delete Pricing"
+msgstr "Ta bort pris"
+
+#: hubspace/templates/pricingSchedule.kid:a
+msgid "add pricing"
+msgstr "lägg till pris"
+
+#: hubspace/templates/pricingSchedule.kid:strong
+msgid "Starting Period:"
+msgstr "Startar:"
+
+#: hubspace/templates/pricingSchedule.kid:span
+msgid "month"
+msgstr "månad"
+
+#: hubspace/templates/pricingSchedule.kid:option
+msgid "year"
+msgstr "år"
+
+#: hubspace/templates/pricingSchedule.kid:strong
+msgid "Price:"
+msgstr "Pris:"
+
+#: hubspace/templates/invoicesnippet.kid:h2
+msgid "Uninvoiced"
+msgstr "Ofakturerat"
+
+#: hubspace/templates/invoicesnippet.kid:c
+msgid "From"
+msgstr "Från"
+
+#: hubspace/templates/invoicesnippet.kid:a
+msgid "Create Invoice"
+msgstr "Skapa faktura"
+
+#: hubspace/templates/invoicesnippet.kid:div
+msgid "You must send existing invoices before creating new ones"
+msgstr "Du måste skicka redan skapade fakturor innan nya kan skapas"
+
+#: hubspace/templates/invoicesnippet.kid:div
+msgid "Add Resource Usage:"
+msgstr "Lägg till resursanvändning:"
+
+#: hubspace/templates/invoicesnippet.kid:option
+msgid "choose a resource..."
+msgstr "välj en resurs..."
+
+#: hubspace/templates/microSiteJoinus.kid:h3
+msgid "Tariffs*"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "Standard"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "- 20 hours use of the space per month - £40 p/m (£30)"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "Worklite"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "- 45 hours use of the space per month, registered post box, complimentary tea and coffee - £120 p/m (£100)"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "Work +"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "- 60 hours use of the space, registered post box, complimentary tea and coffee - £170 p/m (£150)"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "Unlimited"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "-  Unlimited hours, registered post box, personal storage, optional phone-line, complimentary tea and coffee - £480 p/m (£400)"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:p
+msgid "* Prices include VAT, there is no joining fee, prices in grey are available for individuals working for 'start-up' organisations (non-VAT registered)"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:p
+msgid "Thank you for your interest in membership of the Hub Kings Cross. Please download our"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:a
+msgid "brochure"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:a
+msgid "for more information on the prices and benefits of membership. One of our hosting team will be in touch shortly to help you answer any queries you may have and to talk you through some of the membership options in more detail. We look forward to you  visiting our space and hope to welcome you as a member of the Hub Kings Cross in the not too distant future."
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:p
+msgid "If you are interested in joining, please fill in this form. You will automatically be emailed a brochure and we will contact you to discuss your needs in more detail."
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:label
+msgid "Phone"
+msgstr ""
+
+#: hubspace/templates/openTimes.kid:h1
+msgid "Under Construction"
+msgstr "Under Construction"
+
+#: hubspace/templates/addResource.kid:h1
+msgid "Add a resource"
+msgstr "Lägg till resurs"
+
+#: hubspace/templates/addResource.kid:h2
+msgid "Resource details"
+msgstr "Resursdetaljer"
+
+#: hubspace/templates/addResource.kid:td
+msgid "Time-Based"
+msgstr "Tids-baserad"
+
+#: hubspace/templates/addResource.kid:option
+msgid "Quantity-Based"
+msgstr "Antals-baserad"
+
+#: hubspace/templates/addResource.kid:h2
+msgid "Tariff costs"
+msgstr "Tariff"
+
+#: hubspace/templates/managePricing.kid:td
+msgid "Price per hour/"
+msgstr "Pris per timme/"
+
+#: hubspace/templates/managePricing.kid:br
+msgid "Price per unit (Current)"
+msgstr "Pris per enhet (nuvarande)"
+
+#: hubspace/templates/managePricing.kid:td
+msgid "Pricing Schedule"
+msgstr "Prisnivå"
+
+#: hubspace/templates/managePricing.kid:a
+msgid "Schedule"
+msgstr "Medlemskapsnivå"
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "People"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "who see and do things differently"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "Places"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "for working, meeting, innovating, learning and relaxing"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "Ideas"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "that might just change the world a little"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:a
+msgid "About"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:a
+msgid "Invitation"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:span
+msgid "Featured Member:"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:br
+msgid "Tamsin Lejeune"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:span
+msgid "Featured Hub:"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:br
+msgid "Kings Cross"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:span
+msgid "Featured Event:"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:br
+msgid "Hub Lectures"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Your organisation"
+msgstr "Din organisation"
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Organisation type"
+msgstr "Typ av organisation"
 
 #: hubspace/templates/bristolDataEdit.kid:option
 msgid "Private Sector"
@@ -1618,6 +1824,14 @@ msgstr "Public Sector"
 #: hubspace/templates/bristolDataEdit.kid:option
 msgid "Non-profit distributing"
 msgstr "Non-profit distributing"
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Number of employees"
+msgstr "Antal anställda"
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Areas of interest"
+msgstr "Intressen"
 
 #: hubspace/templates/bristolDataEdit.kid:option
 msgid "Academia"
@@ -1820,252 +2034,328 @@ msgid "Please briefly describe your responsibilities in your organisation"
 msgstr "Beskriv kortfattat dina uppgifter i organisationen"
 
 #: hubspace/templates/bristolDataEdit.kid:td
+msgid "Social and environmental responsibility"
+msgstr "Socialt och mijömässigt ansvarigt"
+
+#: hubspace/templates/bristolDataEdit.kid:td
 msgid "Please outline any of your organisations practices that could be described as progressive"
 msgstr "Beskriv övergripande de aktiviteter i er organisation som kan beskrivas som framåtskridande/socialt positiva"
 
-#: hubspace/templates/microSitePassword.kid:h3
-msgid "Request Username/Password"
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Your Membership"
+msgstr "Ditt medlemskap"
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "How did you hear about SVN?"
+msgstr "Hur/var hörde du om SVN?"
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "What benefits would membership of SVN bring you?"
+msgstr "Vilka fördelar skulle ett medlemskap i SVN ge dig/er?"
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "What contribution do you think you can make to SVN?"
+msgstr "Vilket bidrag skulle du/ni kunna ge till SVN?"
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Any additional information you would like to provide:"
+msgstr "Någon mer information du vill lägga till:"
+
+#: hubspace/templates/host.kid:a
+msgid "Invoicing"
+msgstr "Fakturering"
+
+#: hubspace/templates/host.kid:a
+msgid "Times"
+msgstr "Tider"
+
+#: hubspace/templates/host.kid:a
+msgid "Resources and Tariffs"
+msgstr "Resurser och tariffer"
+
+#: hubspace/templates/host.kid:div
+msgid "abcf"
 msgstr ""
 
-#: hubspace/templates/microSitePassword.kid:label
-msgid "email:"
-msgstr "email:"
+#: hubspace/templates/todoEdit.kid:td
+msgid "Due Date:"
+msgstr "Sluttid:"
 
-#: hubspace/templates/openTimes.kid:h1
-msgid "Under Construction"
-msgstr "Under Construction"
+#: hubspace/templates/todoEdit.kid:td
+msgid "Body:"
+msgstr "Brödtext:"
 
-#: hubspace/templates/microSiteSearch.kid:form
-msgid "Search for"
+#: hubspace/templates/todoEdit.kid:td
+msgid "Close:"
+msgstr "Stäng:"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Location Name"
+msgstr "Plats"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Local Currency"
+msgstr "Lokal valuta"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Local Time Zone"
+msgstr "Lokal tidszon"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Language"
+msgstr "Språk"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Tentative booking available"
 msgstr ""
 
-#: hubspace/templates/manageResources.kid:a
-msgid "Add Resource"
-msgstr "Lägg till resurs"
+#: hubspace/templates/locationProfile.kid:td
+msgid "RFID Enabled"
+msgstr "RFID-aktiverad"
 
-#: hubspace/templates/manageResources.kid:a
-msgid "Add Resource Group"
-msgstr "Lägg till resursgrupp"
-
-#: hubspace/templates/manageResources.kid:p
-msgid "Order the \"resource groups\" listed below using the arrows.  The order determines the resource group order in the booking interface. You can also drag and drop resource between groups and reorder resources within groups"
-msgstr "Sortera  \"resource groups\" nedan med hjälp av pilarna. Ordningen du ser här blir den samma som medlemmarna ser i resursbokningen. Resurser kan även dras mellan resursgrupper och sorteras inom grupperna."
-
-#: hubspace/templates/manageResources.kid:div
-msgid "Time Based"
-msgstr "Tidsbaserad"
-
-#: hubspace/templates/manageResources.kid:a
-msgid "Delete resource group"
-msgstr "Ta bort resursgrupp"
-
-#: hubspace/templates/manageResources.kid:div
-msgid "See resources in this group"
-msgstr "Se resurser i den här gruppen"
-
-#: hubspace/templates/manageResources.kid:a
-msgid "more..."
-msgstr "mer..."
-
-#: hubspace/templates/addTodo.kid:input
-msgid "submit"
+#: hubspace/templates/locationProfile.kid:td
+msgid "MicroSite Active"
 msgstr ""
 
-#: hubspace/templates/mainProfile.kid:h2
-msgid "Membership history"
-msgstr "Medlemshistoria"
-
-#: hubspace/templates/mainProfile.kid:h2
-msgid "About me"
-msgstr "Om mig"
-
-#: hubspace/templates/mainProfile.kid:a
-msgid "add card"
-msgstr "lägg till kort"
-
-#: hubspace/templates/mainProfile.kid:h2
-msgid "Card Registration"
-msgstr "Kortregistrering"
-
-#: hubspace/templates/mainProfile.kid:h2
-msgid "Relationship Details"
-msgstr "Relationsdetaljer"
-
-#: hubspace/templates/mainProfile.kid:a
-msgid "add new note"
-msgstr "lägg till ny anteckning"
-
-#: hubspace/templates/mainProfile.kid:h2
-msgid "Relationship History"
-msgstr "Relationshistoria"
-
-#: hubspace/templates/mainProfile.kid:h2
-msgid "Member services"
-msgstr "Medlemstjänster"
-
-#: hubspace/templates/mainProfile.kid:h2
-msgid "Additional information for SVN"
-msgstr "Övrig info för SVN"
-
-#: hubspace/templates/memberCommunitiesEdit.kid:p
-msgid "Knowledge clusters are communities of people who share similiar interests, practices and questions. Which of these email groups would you like to participate in?"
-msgstr "Kunskapsgrupper är sammanslutningar av individer med liknande intressen, verksamheter och frågeställningar. I vilka av dessa emailgrupper skulle du vilja delta?"
-
-#: hubspace/templates/loginMaster.kid:h1
-msgid "Feed"
-msgstr "Feed"
-
-#: hubspace/templates/loginMaster.kid:h1
-msgid "Upcoming Events in The Hub Network"
-msgstr "Kommande event i Hub-nätverket"
-
-#: hubspace/templates/loginMaster.kid:h1
-msgid "Recently Updated Profiles in The Hub Network"
-msgstr "Senaste uppdaterade profiler i Hub-nätverket"
-
-#: hubspace/templates/loginMaster.kid:label
-msgid "User Name"
+#: hubspace/templates/locationProfile.kid:td
+msgid "Invoice dute date (days after sending invoice)"
 msgstr ""
 
-#: hubspace/templates/loginMaster.kid:a
-msgid "Forgot your password?"
-msgstr "Glömt ditt lösenord?"
+#: hubspace/templates/locationProfile.kid:td
+msgid "Payment_Terms"
+msgstr "Betalningsvillkor"
 
-#: hubspace/templates/booking.kid:div
-msgid "What do you to want book?"
-msgstr "Vad vill du boka?"
-
-#: hubspace/templates/booking.kid:input
-msgid "Day View"
-msgstr "Dagvy"
-
-#: hubspace/templates/booking.kid:input
-msgid "Week View"
-msgstr "Veckovy"
-
-#: hubspace/templates/booking.kid:input
-msgid "Only show my bookings"
-msgstr "Visa bara mina bokningar"
-
-#: hubspace/templates/fulltextsearch.kid:h1
-msgid "Search"
-msgstr "Sök"
-
-#: hubspace/templates/fulltextsearch.kid:h2
-msgid "Search Results"
-msgstr "Sökresultat "
-
-#: hubspace/templates/fulltextsearch.kid:p
-msgid ""
-"Sorry, no users matched \n"
-"        \""
-msgstr ""
-"Inga sökträffar på \n"
-"        \""
-
-#: hubspace/templates/fulltextsearch.kid:span
-msgid "Query goes here"
-msgstr "Frågan ställs här"
-
-#: hubspace/templates/fulltextsearch.kid:span
-msgid "\"."
-msgstr "\"."
-
-#: hubspace/templates/fulltextsearch.kid:a
-msgid "display name"
-msgstr "visningsnamn"
-
-#: hubspace/templates/fulltextsearch.kid:span
-msgid "Business Type:"
-msgstr "Typ av företag:"
-
-#: hubspace/templates/network.kid:a
-msgid "Add new member"
-msgstr "Ny medlem"
-
-#: hubspace/templates/network.kid:a
-msgid "Search results"
-msgstr "Sökresultat"
-
-#: hubspace/templates/locationAdmin.kid:h1
-msgid "Invoice Image"
-msgstr "Fakturabild"
-
-#: hubspace/templates/locationAdmin.kid:p
-msgid "Image of 690px by 130px or equivalent proportions"
-msgstr "En bild med dimensionen 690px * 130px eller med samma proportioner"
-
-#: hubspace/templates/locationAdmin.kid:h1
-msgid "Top Bar Image"
-msgstr "Sidhuvudsbild"
-
-#: hubspace/templates/locationAdmin.kid:p
-msgid "Image of 850px by 87px or equivalent proportions"
-msgstr "En bild med dimensionen 850px * 87px eller med samma proportioner"
-
-#: hubspace/templates/locationAdmin.kid:h1
-msgid "Home Page Image"
-msgstr "Hemsidesbild"
-
-#: hubspace/templates/locationAdmin.kid:p
-msgid "Image of 850px by 113px or equivalent proportions"
-msgstr "En bild med dimensionen 850px * 113px eller med samma proportioner"
-
-#: hubspace/templates/locationAdmin.kid:h2
-msgid "Import / Export"
-msgstr "Importera / Exportera"
-
-#: hubspace/templates/locationAdmin.kid:td
-msgid "Upload outstanding invoice data"
-msgstr "Ladda upp utestående fakturainformation"
-
-#: hubspace/templates/locationAdmin.kid:td
-msgid "Download member list for Sage"
-msgstr "Ladda ner medlemslista för Sage"
-
-#: hubspace/templates/locationAdmin.kid:td
-msgid "Download invoice list for Sage"
-msgstr "Ladda ner fakturalista för Sage"
-
-#: hubspace/templates/locationAdmin.kid:div
-msgid "Start date:"
-msgstr "Startdatum:"
-
-#: hubspace/templates/locationAdmin.kid:a
-msgid "| End date:"
-msgstr "| Slutdatum:"
-
-#: hubspace/templates/locationAdmin.kid:h2
-msgid "Messages"
+#: hubspace/templates/locationProfile.kid:td
+msgid "Bcc Invoice"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kid:h1
-msgid "Translation"
+#: hubspace/templates/locationProfile.kid:td
+msgid "New Invoice numbering scheme"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kid:td
-msgid "Message catalogue file (.po)"
+#: hubspace/templates/locationProfile.kid:td
+msgid "Vat Included"
+msgstr "Moms inkluderad"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Vat Number"
+msgstr "Momsregnummer"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Default Level of Vat Charged (0%-100%)"
+msgstr "Förvald momssats (0%-100%)"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Billing Address"
+msgstr "Faktureringsadress"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Company No."
+msgstr "Organisationsnummer"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Bank"
+msgstr "Bank"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Bank Account No."
+msgstr "Bankkonto"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Sort Code"
+msgstr "Sorteringsbegrepp"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "IBAN No."
+msgstr "IBAN-nummer"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Swift No."
+msgstr "Swift-nummer"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Domain Name"
+msgstr "Domännamn"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Homepage Title"
+msgstr "Hemsida, titel"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Homepage Description"
+msgstr "Hemsida, beskrivning"
+
+#: hubspace/templates/microSiteExperience.kid:p
+msgid "The Hub Kings Cross is situated in a strikingly elegant listed building on York Way in the heart of Kings Cross. The restoration has seen the fusion of old and new, marrying the original features of the remarkable building with contemporary, striking design to deliver an exciting and stylish finish."
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kid:a
-msgid "Download"
+#: hubspace/templates/microSiteExperience.kid:p
+msgid "But the building is only the beginning of the story, it's what's happening inside it that's really exciting."
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kid:a
-msgid "Send updated translation file"
+#: hubspace/templates/microSiteExperience.kid:p
+msgid "During the day, The Hub Kings Cross is a dynamic members space which offers a new way of working and connecting. The traditional sterile office space is replaced with a vibrant flexible hot-desking work space which incorporates a cafe and state of the art meeting rooms. It's a place where social innovators at the forefront of the ethical economy can some to develop their ideas and connect with like-minded souls who share a passion for delivering positive social change."
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kid:a
-msgid "Help"
+#: hubspace/templates/microSiteExperience.kid:p
+msgid "During the evening, The Hub Kings Cross transform into London's most innovative event spaces for lectures, debates, dinners and cultural fare, playing host to some of the most imaginative and compelling speakers and facilitators from around the UK and beyond, aligned by their reputation as amazing thinkers and doers and their desire to make the world a radically better place."
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kid:h1
-msgid "Customization"
+#: hubspace/templates/microSiteExperience.kid:li
+msgid "inspired spaces for working, meeting and connecting with others"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kid:p
-msgid "Your browser does not support iframes."
+#: hubspace/templates/microSiteExperience.kid:li
+msgid "an evening programme of lectures, dinners, cultural events and exhibitions"
 msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:li
+msgid "a bar with a light restaurant"
+msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:li
+msgid "a global network of people working at the forefront of the sustainable economy"
+msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:li
+msgid "state of the art events space"
+msgstr ""
+
+#: hubspace/templates/addTodoBar.kid:H2
+msgid "Add a new list"
+msgstr "Lägg till en ny lista"
+
+#: hubspace/templates/addTodoBar.kid:td
+msgid "Name of list:"
+msgstr "Listnamn:"
+
+#: hubspace/templates/billingDetailsEdit.kid:input
+msgid "Use main profile details"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:input
+msgid "Bill to:"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:input
+msgid "Use billing details below"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Company name"
+msgstr "Företagsnamn"
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Billing address"
+msgstr "Faktureringsadress"
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Phone number"
+msgstr "Telefonnummer"
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Fax number"
+msgstr "Faxnummer"
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Email contact"
+msgstr "Mailkontakt"
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Company Number"
+msgstr "Organisationsnummer"
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "VAT Number"
+msgstr "Momsregistreringsnummer"
+
+#: hubspace/templates/addResources.kid:a
+msgid "Add new resource"
+msgstr "Lägg till ny resurs"
+
+#: hubspace/templates/addResources.kid:td
+msgid "Resource 1"
+msgstr "Resurs 1"
+
+#: hubspace/templates/addResources.kid:td
+msgid "Description goes here"
+msgstr "Beskrivning här"
+
+#: hubspace/templates/addResources.kid:td
+msgid "Resource 2"
+msgstr "Resurs 2"
+
+#: hubspace/templates/addResources.kid:td
+msgid "Resource 3"
+msgstr "Resurs 3"
+
+#: hubspace/templates/addResources.kid:td
+msgid "Resource 4"
+msgstr "Resurs 4"
+
+#: hubspace/templates/addResources.kid:a
+msgid "Add new tariff"
+msgstr "Lägg till ny tariff"
+
+#: hubspace/templates/addResources.kid:td
+msgid "Tariff 1"
+msgstr "Tariff 1"
+
+#: hubspace/templates/addResources.kid:td
+msgid "Tariff 2"
+msgstr "Tariff 2"
+
+#: hubspace/templates/addResources.kid:td
+msgid "Tariff 3"
+msgstr "Tariff 3"
+
+#: hubspace/templates/addResources.kid:td
+msgid "Tariff 4"
+msgstr "Tariff 4"
+
+#: hubspace/templates/addResources.kid:td
+msgid "Location"
+msgstr "Placering"
+
+#: hubspace/templates/addResources.kid:option
+msgid "London"
+msgstr "London"
+
+#: hubspace/templates/addResources.kid:option
+msgid "Bristol"
+msgstr "Bristol"
+
+#: hubspace/templates/addResources.kid:option
+msgid "hotdesk"
+msgstr "hotdesk"
+
+#: hubspace/templates/addResources.kid:option
+msgid "room"
+msgstr "rum"
+
+#: hubspace/templates/addResources.kid:option
+msgid "phone"
+msgstr "telefon"
+
+#: hubspace/templates/addResources.kid:option
+msgid "printer"
+msgstr "skrivare"
+
+#: hubspace/templates/addResources.kid:option
+msgid "tariff"
+msgstr "tariff"
+
+#: hubspace/templates/addResources.kid:option
+msgid "other"
+msgstr "annat"
+
+#: hubspace/templates/resources.kid:option
+msgid "Manage Tariffs"
+msgstr "Hantera tariffer"
+
+#: hubspace/templates/resources.kid:option
+msgid "Manage Resources"
+msgstr "Hantera resurser"
 
 #: hubspace/templates/locationAdmin.kid:h2
 msgid "Usage Reports"
@@ -2130,10 +2420,6 @@ msgstr ""
 #: hubspace/templates/locationAdmin.kid:br
 msgid "Resource Name"
 msgstr "Resursbenämning"
-
-#: hubspace/templates/locationAdmin.kid:td
-msgid "For User"
-msgstr "För användare"
 
 #: hubspace/templates/locationAdmin.kid:td
 msgid "Groupby (X-Axis in graphs)"
@@ -2202,6 +2488,90 @@ msgstr "Skapad"
 #: hubspace/templates/locationAdmin.kid:a
 msgid "Download CSV"
 msgstr "Ladda ner CSV"
+
+#: hubspace/templates/microSiteBlog2.kid:a
+msgid "Edit blog"
+msgstr ""
+
+#: hubspace/templates/microSiteBlog2.kid:br
+msgid "Blog URL:"
+msgstr ""
+
+#: hubspace/templates/microSiteSearch.kid:form
+msgid "Search for"
+msgstr ""
+
+#: hubspace/templates/relationshipStatusEdit.kid:td
+msgid "Signed By"
+msgstr "Kontrakterad av"
+
+#: hubspace/templates/memberProfileEdit.kid:td
+msgid "Active Profile?"
+msgstr "Aktiv profil?"
+
+#: hubspace/templates/memberProfileEdit.kid:span
+msgid "(When a user is first activated, a welcome message will be sent out with the username and password. If the password field is left empty when activating the user, the password will be reset to a random string.)"
+msgstr "(Ett email med användarnamn och lösenord skickas ut till den nya medlemmen. Om inget lösenord matas in kommer systemet att själv generera ett slumpmässigt lösenord)"
+
+#: hubspace/templates/memberProfileEdit.kid:td
+msgid "Show profile on The Hub's public website"
+msgstr "Visa profilen på the Hubs publika websida"
+
+#: hubspace/templates/memberProfileEdit.kid:em
+msgid "To change your password enter the new one in the two fields below"
+msgstr "Mata in det nya lösenordet i de två fälten nedan"
+
+#: hubspace/templates/memberProfileEdit.kid:td
+msgid "Confirm Password"
+msgstr "Bekräfta lösenord"
+
+#: hubspace/templates/memberProfileEdit.kid:td
+msgid "First name"
+msgstr "Förnamn"
+
+#: hubspace/templates/memberProfileEdit.kid:td
+msgid "Last name(s)"
+msgstr "Efternamn"
+
+#: hubspace/templates/memberProfileEdit.kid:td
+msgid "Type of business"
+msgstr "Typ av verksamhet"
+
+#: hubspace/templates/memberProfileEdit.kid:em
+msgid "(please include international dialing code)"
+msgstr "(inkludera landskod t ex +46)"
+
+#: hubspace/templates/memberProfileEdit.kid:td
+msgid "Email 1"
+msgstr "Email 1"
+
+#: hubspace/templates/memberProfileEdit.kid:big
+msgid "+"
+msgstr ""
+
+#: hubspace/templates/memberProfileEdit.kid:th
+msgid "location"
+msgstr "plats"
+
+#: hubspace/templates/memberProfileEdit.kid:th
+msgid "home hub"
+msgstr "Hemmahub"
+
+#: hubspace/templates/memberProfileEdit.kid:th
+msgid "member"
+msgstr "medlem"
+
+#: hubspace/templates/memberProfileEdit.kid:th
+msgid "host"
+msgstr "host"
+
+#: hubspace/templates/memberProfileEdit.kid:th
+msgid "director"
+msgstr "director"
+
+#: hubspace/templates/memberProfileEdit.kid:c
+msgid "Yes"
+msgstr "Ja"
 
 #: hubspace/templates/managementReport2.kid:caption
 msgid "Member Summary"
@@ -2275,155 +2645,17 @@ msgstr ""
 msgid "Usage by Tariffs"
 msgstr ""
 
-#: hubspace/templates/meetingBookingEdit.kid:td
-msgid "Select Resource"
-msgstr "Välj resurs"
-
-#: hubspace/templates/meetingBookingEdit.kid:td
-msgid "Meeting Name"
-msgstr "Rubrik för möte"
-
-#: hubspace/templates/meetingBookingEdit.kid:label
-msgid "Publicise event to The Hub's website"
-msgstr "Publicera detta event på The Hubs hemsida"
-
-#: hubspace/templates/meetingBookingEdit.kid:td
-msgid "Meeting Description"
-msgstr "Beskrivning av möte"
-
-#: hubspace/templates/meetingBookingEdit.kid:option
-msgid ":"
-msgstr ":"
-
-#: hubspace/templates/meetingBookingEdit.kid:option
-msgid "00"
-msgstr "00"
-
-#: hubspace/templates/meetingBookingEdit.kid:option
-msgid "15"
-msgstr "15"
-
-#: hubspace/templates/meetingBookingEdit.kid:option
-msgid "30"
-msgstr "30"
-
-#: hubspace/templates/meetingBookingEdit.kid:option
-msgid "45"
-msgstr "45"
-
-#: hubspace/templates/meetingBookingEdit.kid:option
-msgid "to"
-msgstr "till"
-
-#: hubspace/templates/meetingBookingEdit.kid:td
-msgid "Number of People"
-msgstr "Antal personer"
-
-#: hubspace/templates/meetingBookingEdit.kid:td
-msgid "Extras"
-msgstr "Extra"
-
-#: hubspace/templates/meetingBookingEdit.kid:td
-msgid "Price"
-msgstr "Pris"
-
-#: hubspace/templates/meetingBookingEdit.kid:div
-msgid "Special price for this booking"
-msgstr "Anpassat pris för den här bokningen"
-
-#: hubspace/templates/meetingBookingEdit.kid:em
-msgid "All prices include VAT"
-msgstr "Alla priser är inklusive moms"
-
-#: hubspace/templates/meetingBookingEdit.kid:em
-msgid "All prices exclude VAT"
-msgstr "Alla priser är exklusive moms"
-
-#: hubspace/templates/meetingBookingEdit.kid:td
-msgid "Tentative"
-msgstr "Preliminär"
-
-#: hubspace/templates/mini_details.kid:a
-msgid "x"
-msgstr "x"
-
-#: hubspace/templates/oldLoginMaster.kid:label
-msgid "User Name:"
-msgstr "Användarnamn"
-
-#: hubspace/templates/oldLoginMaster.kid:label
-msgid "Password:"
-msgstr "Lösenord:"
-
-#: hubspace/templates/tariffHistory.kid:strong
-msgid ""
-"Warning: While changing Tariffs below usages are detected for which invoices are already sent. You may want to note\n"
-"these and refund as per your policies."
+#: hubspace/templates/addResourceGroup.kid:h1
+msgid "Add a resource group"
 msgstr ""
 
-#: hubspace/templates/tariffHistory.kid:td
-msgid "Invoice Number"
+#: hubspace/templates/addResourceGroup.kid:h2
+msgid "Resource Group"
 msgstr ""
 
-#: hubspace/templates/tariffHistory.kid:td
-msgid "Booking time"
+#: hubspace/templates/addResourceGroup.kid:td
+msgid "Group Type"
 msgstr ""
-
-#: hubspace/templates/meetingBooking.kid:td
-msgid "Unavailable"
-msgstr "Ej tillgänglig"
-
-#: hubspace/templates/meetingBooking.kid:td
-msgid "Meeting name"
-msgstr "Rubrik för möte"
-
-#: hubspace/templates/meetingBooking.kid:td
-msgid "Number of people"
-msgstr "Antal personer"
-
-#: hubspace/templates/meetingBooking.kid:c
-msgid "(including VAT)"
-msgstr "(inklusive moms)"
-
-#: hubspace/templates/meetingBooking.kid:c
-msgid "(excluding VAT)"
-msgstr "(exklusive moms)"
-
-#: hubspace/templates/meetingBooking.kid:td
-msgid "Booked For"
-msgstr "Bokad för"
-
-#: hubspace/templates/meetingBooking.kid:td
-msgid "Booked By"
-msgstr "Bokad av"
-
-#: hubspace/templates/meetingBooking.kid:td
-msgid "Cancel Booking"
-msgstr "Avbryt bokning"
-
-#: hubspace/templates/meetingBooking.kid:a
-msgid "Cancel this Booking"
-msgstr "Ta bort den här bokningen"
-
-#: hubspace/templates/meetingBooking.kid:br
-msgid "(You will be notified if this booking expires/confirmed)"
-msgstr "(Du för ett meddelande om den här bokningen löper ut eller bekräfstas)"
-
-#: hubspace/templates/relationshipStatusEdit.kid:td
-msgid "Introduced By"
-msgstr "Introducerad av"
-
-#: hubspace/templates/relationshipStatusEdit.kid:td
-msgid "Signed By"
-msgstr "Kontrakterad av"
-
-#: hubspace/templates/relationshipStatusEdit.kid:option
-msgid "Unknown"
-msgstr "Okänd"
-
-#: hubspace/templates/relationshipStatusEdit.kid:td
-msgid "Host Contact"
-msgstr "Host-kontakt"
 
 #: hubspace/templates/locationProfileEdit.kid:td
 msgid "Local Language"
@@ -2431,6 +2663,10 @@ msgstr "Lokalt språk"
 
 #: hubspace/templates/locationProfileEdit.kid:em
 msgid "0 to disable due date calculation"
+msgstr ""
+
+#: hubspace/templates/locationProfileEdit.kid:em
+msgid "Invoice will be Bcced to this Email id"
 msgstr ""
 
 #: hubspace/templates/locationProfileEdit.kid:td
@@ -2448,6 +2684,178 @@ msgstr "Förvald momssats"
 #: hubspace/templates/locationProfileEdit.kid:td
 msgid "Sort Code (if applicable)"
 msgstr "Sorteringskod (om aktuellt)"
+
+#: hubspace/templates/newinvoice.kid:c
+msgid "Membership No."
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:strong
+msgid "Invoice details"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:td
+msgid "Number"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:td
+msgid "Period"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:td
+msgid "Due Date"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:h2
+msgid "Summary of usage"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:em
+msgid "Inclusive of VAT"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:em
+msgid "Exclusive of VAT"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:strong
+msgid "Sub Total"
+msgstr "Delsumma"
+
+#: hubspace/templates/newinvoice.kid:h3
+msgid "Invoice Total"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:td
+msgid "Excluding VAT"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:h2
+msgid "Usage details"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:td
+msgid "Sr. No."
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:em
+msgid "(Cancelled)"
+msgstr ""
+
+#: hubspace/templates/newinvoice.kid:em
+msgid "(Refund)"
+msgstr ""
+
+#: hubspace/templates/microSitePassword.kid:h3
+msgid "Request Username/Password"
+msgstr ""
+
+#: hubspace/templates/uploadImage.kid:div
+msgid "Images will be cropped to"
+msgstr ""
+
+#: hubspace/templates/uploadImage.kid:c
+msgid "and"
+msgstr ""
+
+#: hubspace/templates/fulltextsearch.kid:h1
+msgid "Search"
+msgstr "Sök"
+
+#: hubspace/templates/fulltextsearch.kid:h2
+msgid "Search Results"
+msgstr "Sökresultat "
+
+#: hubspace/templates/fulltextsearch.kid:p
+msgid ""
+"Sorry, no users matched \n"
+"        \""
+msgstr ""
+"Inga sökträffar på \n"
+"        \""
+
+#: hubspace/templates/fulltextsearch.kid:span
+msgid "Query goes here"
+msgstr "Frågan ställs här"
+
+#: hubspace/templates/fulltextsearch.kid:span
+msgid "\"."
+msgstr "\"."
+
+#: hubspace/templates/fulltextsearch.kid:a
+msgid "display name"
+msgstr "visningsnamn"
+
+#: hubspace/templates/fulltextsearch.kid:span
+msgid "Business Type:"
+msgstr "Typ av företag:"
+
+#: hubspace/templates/bristolData.kid:td
+msgid "Organisational Responsibilities"
+msgstr "Organisatoriskt ansvar"
+
+#: hubspace/templates/bristolData.kid:td
+msgid "Progressive organisational practices"
+msgstr "Framåtskridande organisatoriska aktiviteter"
+
+#: hubspace/templates/microSiteEvents.kid:h2
+msgid "Events subtitle"
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:p
+msgid "From debates and Q & A's to lectures and thought seminars, the Hub's inspirational events will aim to bring together unlikely allies, cut across societal and industry boundaries and challenge our members to create and lead new initiatives that address some of the world's most intractable problems."
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:p
+msgid "The power of art and culture to drive imaginative and interesting ideas is something close to the ethos of Hub and is reflected in our programming mix. Working with local creative artists, architects, developing film makers, and interesting musical groups, Hub Kings Cross will deliver an eclectic assortment of cultural events including exhibitions, recitals, film and documentary screenings."
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:h3
+msgid "WANT TO HAVE YOUR EVENT AT THE HUB KINGS CROSS?"
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:p
+msgid "The Hub Kings Cross can also be rented for private events during the evening from 6.00pm. The Hub has a capacity of 130 and is fully licensed to serve alcohol and play music. Private events at the Hub Kings Cross are delivered in partnership with Eat Green, renown for their ability to combine ethics with high quality food and service."
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:p
+msgid "For more information please email the team at:"
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:a
+msgid "kingcross.events@the-hub.net"
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:a
+msgid "or call us on"
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:strong
+msgid "0207 841 3450"
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:div
+msgid "Description:"
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:a
+msgid "iCal"
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:a
+msgid "back to Events Page"
+msgstr ""
+
+#: hubspace/templates/microSiteEvents.kid:a
+msgid "all events in iCal format"
+msgstr ""
+
+#: hubspace/templates/billingDetails.kid:td
+msgid "Member to bill"
+msgstr "Medlem att fakturera"
+
+#: hubspace/templates/billingDetails.kid:td
+msgid "Use my normal profile address"
+msgstr "Använd min vanliga adress"
 
 #: hubspace/templates/managementReport.kid:STYLE
 msgid ""
@@ -2492,410 +2900,6 @@ msgstr ""
 #: hubspace/templates/managementReport.kid:th
 msgid "Revenue"
 msgstr ""
-
-#: hubspace/templates/resourcetable.kid:td
-msgid "Start date"
-msgstr "Startdatum"
-
-#: hubspace/templates/resourcetable.kid:td
-msgid "End date"
-msgstr "Slutdatum"
-
-#: hubspace/templates/resourcetable.kid:td
-msgid "Quantity / Duration"
-msgstr "Antal / Varaktighet"
-
-#: hubspace/templates/resourcetable.kid:td
-msgid "Place"
-msgstr "Plats"
-
-#: hubspace/templates/resourcetable.kid:em
-msgid "(Including VAT unless stated otherwise)"
-msgstr "(Inklusive moms om inget annat anges)"
-
-#: hubspace/templates/resourcetable.kid:em
-msgid "(Excluding VAT unless stated otherwise)"
-msgstr "(Exklusive moms om inget annat anges)"
-
-#: hubspace/templates/resourcetable.kid:td
-msgid "Add To Open Invoice"
-msgstr "Lägg till på en öppen faktura"
-
-#: hubspace/templates/resourcetable.kid:td
-msgid "Delete Resource Usage"
-msgstr "Ta bort resursanvändning"
-
-#: hubspace/templates/resourcetable.kid:td
-msgid "Remove from Open Invoice"
-msgstr "Ta bort från öppen faktura"
-
-#: hubspace/templates/resourcetable.kid:td
-msgid "No Resource Usages"
-msgstr "Ingen resursanvändning"
-
-#: hubspace/templates/resourcetable.kid:td
-msgid "a"
-msgstr "en"
-
-#: hubspace/templates/memberProfileEdit.kid:td
-msgid "Active Profile?"
-msgstr "Aktiv profil?"
-
-#: hubspace/templates/memberProfileEdit.kid:span
-msgid "(When a user is first activated, a welcome message will be sent out with the username and password. If the password field is left empty when activating the user, the password will be reset to a random string.)"
-msgstr "(Ett email med användarnamn och lösenord skickas ut till den nya medlemmen. Om inget lösenord matas in kommer systemet att själv generera ett slumpmässigt lösenord)"
-
-#: hubspace/templates/memberProfileEdit.kid:td
-msgid "Show profile on The Hub's public website"
-msgstr "Visa profilen på the Hubs publika websida"
-
-#: hubspace/templates/memberProfileEdit.kid:em
-msgid "To change your password enter the new one in the two fields below"
-msgstr "Mata in det nya lösenordet i de två fälten nedan"
-
-#: hubspace/templates/memberProfileEdit.kid:td
-msgid "Confirm Password"
-msgstr "Bekräfta lösenord"
-
-#: hubspace/templates/memberProfileEdit.kid:td
-msgid "First name"
-msgstr "Förnamn"
-
-#: hubspace/templates/memberProfileEdit.kid:td
-msgid "Last name(s)"
-msgstr "Efternamn"
-
-#: hubspace/templates/memberProfileEdit.kid:td
-msgid "Type of business"
-msgstr "Typ av verksamhet"
-
-#: hubspace/templates/memberProfileEdit.kid:em
-msgid "(please include international dialing code)"
-msgstr "(inkludera landskod t ex +46)"
-
-#: hubspace/templates/memberProfileEdit.kid:td
-msgid "Email 1"
-msgstr "Email 1"
-
-#: hubspace/templates/memberProfileEdit.kid:big
-msgid "+"
-msgstr ""
-
-#: hubspace/templates/memberProfileEdit.kid:th
-msgid "location"
-msgstr "plats"
-
-#: hubspace/templates/memberProfileEdit.kid:th
-msgid "home hub"
-msgstr "Hemmahub"
-
-#: hubspace/templates/memberProfileEdit.kid:th
-msgid "member"
-msgstr "medlem"
-
-#: hubspace/templates/memberProfileEdit.kid:th
-msgid "host"
-msgstr "host"
-
-#: hubspace/templates/memberProfileEdit.kid:th
-msgid "director"
-msgstr "director"
-
-#: hubspace/templates/memberProfileEdit.kid:c
-msgid "Yes"
-msgstr "Ja"
-
-#: hubspace/templates/webSitePlaces.kid:a
-msgid "Edit Places"
-msgstr ""
-
-#: hubspace/templates/webSitePlaces.kid:h4
-msgid "Visit"
-msgstr ""
-
-#: hubspace/templates/webSitePlaces.kid:a
-msgid "Hub Berlin"
-msgstr ""
-
-#: hubspace/templates/webSitePlaces.kid:p
-msgid "Erkelenzdamm 59-61, Portal 1, 3. OG"
-msgstr ""
-
-#: hubspace/templates/webSitePlaces.kid:br
-msgid "10999 Berlin - Kreuzberg, Germany"
-msgstr ""
-
-#: hubspace/templates/webSitePlaces.kid:br
-msgid "Telephone:+49 30 707 1950"
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:h2
-msgid "Events subtitle"
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:p
-msgid "From debates and Q & A's to lectures and thought seminars, the Hub's inspirational events will aim to bring together unlikely allies, cut across societal and industry boundaries and challenge our members to create and lead new initiatives that address some of the world's most intractable problems."
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:p
-msgid "The power of art and culture to drive imaginative and interesting ideas is something close to the ethos of Hub and is reflected in our programming mix. Working with local creative artists, architects, developing film makers, and interesting musical groups, Hub Kings Cross will deliver an eclectic assortment of cultural events including exhibitions, recitals, film and documentary screenings."
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:h3
-msgid "WANT TO HAVE YOUR EVENT AT THE HUB KINGS CROSS?"
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:p
-msgid "The Hub Kings Cross can also be rented for private events during the evening from 6.00pm. The Hub has a capacity of 130 and is fully licensed to serve alcohol and play music. Private events at the Hub Kings Cross are delivered in partnership with Eat Green, renown for their ability to combine ethics with high quality food and service."
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:p
-msgid "For more information please email the team at:"
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:a
-msgid "kingcross.events@the-hub.net"
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:a
-msgid "or call us on"
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:strong
-msgid "0207 841 3450"
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:div
-msgid "Date:"
-msgstr "Datum:"
-
-#: hubspace/templates/microSiteEvents.kid:div
-msgid "Description:"
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:a
-msgid "iCal"
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:a
-msgid "back to Events Page"
-msgstr ""
-
-#: hubspace/templates/microSiteEvents.kid:a
-msgid "all events in iCal format"
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kid:p
-msgid "The Hub Kings Cross is situated in a strikingly elegant listed building on York Way in the heart of Kings Cross. The restoration has seen the fusion of old and new, marrying the original features of the remarkable building with contemporary, striking design to deliver an exciting and stylish finish."
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kid:p
-msgid "But the building is only the beginning of the story, it's what's happening inside it that's really exciting."
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kid:p
-msgid "During the day, The Hub Kings Cross is a dynamic members space which offers a new way of working and connecting. The traditional sterile office space is replaced with a vibrant flexible hot-desking work space which incorporates a cafe and state of the art meeting rooms. It's a place where social innovators at the forefront of the ethical economy can some to develop their ideas and connect with like-minded souls who share a passion for delivering positive social change."
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kid:p
-msgid "During the evening, The Hub Kings Cross transform into London's most innovative event spaces for lectures, debates, dinners and cultural fare, playing host to some of the most imaginative and compelling speakers and facilitators from around the UK and beyond, aligned by their reputation as amazing thinkers and doers and their desire to make the world a radically better place."
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kid:li
-msgid "inspired spaces for working, meeting and connecting with others"
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kid:li
-msgid "an evening programme of lectures, dinners, cultural events and exhibitions"
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kid:li
-msgid "a bar with a light restaurant"
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kid:li
-msgid "a global network of people working at the forefront of the sustainable economy"
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kid:li
-msgid "state of the art events space"
-msgstr ""
-
-#: hubspace/templates/pricingSchedule.kid:a
-msgid "delete"
-msgstr "ta bort"
-
-#: hubspace/templates/pricingSchedule.kid:td
-msgid "Period Starting"
-msgstr "Startar"
-
-#: hubspace/templates/pricingSchedule.kid:td
-msgid "Delete Pricing"
-msgstr "Ta bort pris"
-
-#: hubspace/templates/pricingSchedule.kid:a
-msgid "add pricing"
-msgstr "lägg till pris"
-
-#: hubspace/templates/pricingSchedule.kid:strong
-msgid "Starting Period:"
-msgstr "Startar:"
-
-#: hubspace/templates/pricingSchedule.kid:span
-msgid "month"
-msgstr "månad"
-
-#: hubspace/templates/pricingSchedule.kid:option
-msgid "year"
-msgstr "år"
-
-#: hubspace/templates/pricingSchedule.kid:strong
-msgid "Price:"
-msgstr "Pris:"
-
-#: hubspace/templates/addMember.kid:input
-msgid "Add Member"
-msgstr ""
-
-#: hubspace/templates/addResource.kid:td
-msgid "Time-Based"
-msgstr "Tids-baserad"
-
-#: hubspace/templates/addResource.kid:option
-msgid "Quantity-Based"
-msgstr "Antals-baserad"
-
-#: hubspace/templates/invoicesnippet.kid:h2
-msgid "Uninvoiced"
-msgstr "Ofakturerat"
-
-#: hubspace/templates/invoicesnippet.kid:c
-msgid "From"
-msgstr "Från"
-
-#: hubspace/templates/invoicesnippet.kid:a
-msgid "Create Invoice"
-msgstr "Skapa faktura"
-
-#: hubspace/templates/invoicesnippet.kid:div
-msgid "You must send existing invoices before creating new ones"
-msgstr "Du måste skicka redan skapade fakturor innan nya kan skapas"
-
-#: hubspace/templates/invoicesnippet.kid:div
-msgid "Add Resource Usage:"
-msgstr "Lägg till resursanvändning:"
-
-#: hubspace/templates/invoicesnippet.kid:option
-msgid "choose a resource..."
-msgstr "välj en resurs..."
-
-#: hubspace/templates/master.kid:a
-msgid "Logout"
-msgstr "Logga ut"
-
-#: hubspace/templates/master.kid:a
-msgid "Network"
-msgstr "Network"
-
-#: hubspace/templates/master.kid:a
-msgid "My Profile"
-msgstr "Min profil"
-
-#: hubspace/templates/master.kid:a
-msgid "Space"
-msgstr "Space"
-
-#: hubspace/templates/master.kid:a
-msgid "Hosting"
-msgstr "Hosting"
-
-#: hubspace/templates/master.kid:a
-msgid "Manage Website"
-msgstr ""
-
-#: hubspace/templates/master.kid:label
-msgid "Search member names"
-msgstr "Sök på medlemsnamn"
-
-#: hubspace/templates/master.kid:label
-msgid "Search everything"
-msgstr "Sök allt"
-
-#: hubspace/templates/master.kid:label
-msgid "Search by membership card"
-msgstr "Sök på medlemskort"
-
-#: hubspace/templates/master.kid:option
-msgid "All Hubs"
-msgstr "Alla hubbar"
-
-#: hubspace/templates/relationshipStatus.kid:td
-msgid "Signed Up By"
-msgstr "Kontrakterad av"
-
-#: hubspace/templates/notes.kid:label
-msgid "Details"
-msgstr "Detaljer"
-
-#: hubspace/templates/notes.kid:label
-msgid "Date to Follow Up"
-msgstr "Datum för uppföljning"
-
-#: hubspace/templates/notes.kid:td
-msgid "Follow-up Date"
-msgstr "Datum för uppföljning"
-
-#: hubspace/templates/notes.kid:td
-msgid "Action Assigned To"
-msgstr "Aktivitet delegerad till"
-
-#: hubspace/templates/notes.kid:td
-msgid "Action Closed"
-msgstr "Aktivitet avslutat"
-
-#: hubspace/templates/notes.kid:td
-msgid "Closed"
-msgstr "Avslutad"
-
-#: hubspace/templates/addTodoBar.kid:H2
-msgid "Add a new list"
-msgstr "Lägg till en ny lista"
-
-#: hubspace/templates/addTodoBar.kid:td
-msgid "Name of list:"
-msgstr "Listnamn:"
-
-#: hubspace/templates/plotGraph.kid:a
-msgid "Save parameters for future regeneration of this graph"
-msgstr "Spara parametrar för framtida bruk"
-
-#: hubspace/templates/addRusage.kid:td
-msgid "Billed User"
-msgstr "Fakturerad användare"
-
-#: hubspace/templates/addRusage.kid:td
-msgid "Start time:"
-msgstr "Starttid:"
-
-#: hubspace/templates/addRusage.kid:td
-msgid "End time:"
-msgstr "Sluttid:"
-
-#: hubspace/templates/addRusage.kid:td
-msgid "Time of Usage:"
-msgstr "Använd tid:"
-
-#: hubspace/templates/addRusage.kid:td
-msgid "Quantity:"
-msgstr "Antal:"
-
-#: hubspace/templates/addRusage.kid:td
-msgid "Custom billing name:"
-msgstr "Annat faktureringsnamn:"
-
-#: hubspace/templates/addRusage.kid:td
-msgid "Cost (leave blank for automatic cost):"
-msgstr "Kostnad (lämna tomt för automatisk kostnad)"
 
 #: hubspace/templates/old/sortable2.kid:li
 msgid "tiger"
