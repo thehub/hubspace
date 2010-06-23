@@ -96,7 +96,7 @@ def lang_selected(location, lang):
 		</tr>
                 <tr>
                      <td class="line">Billing Address</td>
-		     <td><input name="billing_address" type="text" value="${location.billing_address or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('billing_address', tg_errors)}</div></td>
+		     <td><textarea name="billing_address" >${location.billing_address or ''}</textarea><div class="errorMessage" py:if="tg_errors">${print_error('billing_address', tg_errors)}</div></td>
 		</tr>
                 <tr>
                      <td class="line">Bank</td>

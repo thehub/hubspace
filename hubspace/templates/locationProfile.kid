@@ -5,6 +5,7 @@ from hubspace.controllers import gip, is_owner, permission_or_owner
 from hubspace.validators import dateconverter
 from docutils.core import publish_parts
 from hubspace.utilities.i18n import languages_dict
+nl2br = lambda s: s.replace("\n","<br/>")
 ?>
 
 <div xmlns:py="http://purl.org/kid/ns#" py:strip="True">
@@ -77,7 +78,7 @@ from hubspace.utilities.i18n import languages_dict
 						</tr> 
                                                 <tr py:if="attr_not_none(location, 'billing_address')" >
 							<td class="line">Billing Address</td>
-							<td>${location.billing_address}</td>
+							<td>${XML(nl2br(location.billing_address))}</td>
 						</tr>
 						<tr py:if="attr_not_none(location, 'bank')" >
 							<td class="line">Bank</td>
