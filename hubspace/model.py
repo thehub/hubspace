@@ -381,6 +381,9 @@ class User(SQLObject):
             else:
                 billing_mode = 2
         return billing_mode
+    def __str__(self): return "<User: %d (%s)>" % (self.id, self.username)
+    def __repr__(self): return "<User: %d (%s)>" % (self.id, self.username)
+
 
 def usr_updt_listener(instance, kwargs):
     if 'user_name' in kwargs.keys():
@@ -715,6 +718,7 @@ class Location(SQLObject):
     # use this to change result of datetime.now
     vat_default = FloatCol(default=0)
     billing_address = UnicodeCol(default=None)
+    company_name = UnicodeCol(length=200, default=None)
     company_no = UnicodeCol(default=None)
     #we can use this for creating a new view onto the system
     url = UnicodeCol(default=None, unique=True) #might need to patch the db for this to take effect

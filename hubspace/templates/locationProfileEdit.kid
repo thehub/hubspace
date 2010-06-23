@@ -86,12 +86,16 @@ def lang_selected(location, lang):
 		     <td><input name="vat_default" type="text" value="${location.vat_default or 0}" /><div class="errorMessage" py:if="tg_errors">${print_error('vat_default', tg_errors)}</div></td>
 		</tr>
                 <tr>
-                     <td class="line">Billing Address</td>
-		     <td><input name="billing_address" type="text" value="${location.billing_address or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('billing_address', tg_errors)}</div></td>
+                     <td class="line">Company Name</td>
+		     <td><input name="company_name" type="text" value="${location.company_name or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('company_name', tg_errors)}</div></td>
 		</tr>
                 <tr>
                      <td class="line">Company No.</td>
 		     <td><input name="company_no" type="text" value="${location.company_no or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('company_no', tg_errors)}</div></td>
+		</tr>
+                <tr>
+                     <td class="line">Billing Address</td>
+		     <td><input name="billing_address" type="text" value="${location.billing_address or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('billing_address', tg_errors)}</div></td>
 		</tr>
                 <tr>
                      <td class="line">Bank</td>

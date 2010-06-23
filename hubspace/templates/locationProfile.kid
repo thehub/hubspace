@@ -67,14 +67,18 @@ from hubspace.utilities.i18n import languages_dict
 							<td class="line">Default Level of Vat Charged (0%-100%)</td>
 							<td>${location.vat_default}</td>
 						</tr>
-                                                <tr py:if="attr_not_none(location, 'billing_address')" >
-							<td class="line">Billing Address</td>
-							<td>${location.billing_address}</td>
-						</tr>
+                                                <tr py:if="attr_not_none(location, 'company_name')" >
+							<td class="line">Company Name</td>
+							<td>${location.company_name}</td>
+						</tr> 
                                                 <tr py:if="attr_not_none(location, 'company_no')" >
 							<td class="line">Company No.</td>
 							<td>${location.company_no}</td>
 						</tr> 
+                                                <tr py:if="attr_not_none(location, 'billing_address')" >
+							<td class="line">Billing Address</td>
+							<td>${location.billing_address}</td>
+						</tr>
 						<tr py:if="attr_not_none(location, 'bank')" >
 							<td class="line">Bank</td>
 							<td>${location.bank}</td>

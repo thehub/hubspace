@@ -4195,7 +4195,12 @@ The Hub Team
         except:
             freetext2 = ""
         d = dict(invoice=invoice, freetext1=freetext1, freetext2=freetext2)
-        html =  try_render(d, template='hubspace.templates.newinvoice', format='html', headers={'content-type':'text/html'})
+        #if(invoice.location.id == 1): # Location Islington = 1
+        if(invoice.location.id == 36): # Location Prague = 36
+            template='hubspace.templates.newinvoice2'
+        else:
+            template='hubspace.templates.newinvoice'
+        html =  try_render(d, template=template, format='html', headers={'content-type':'text/html'})
         html = html.replace("NEXTPAGEHACK", "<div> <pdf:nextpage/> </div> ")
         src = cStringIO.StringIO(html)
         dst = cStringIO.StringIO()
