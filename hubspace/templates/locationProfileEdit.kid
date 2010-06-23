@@ -87,7 +87,8 @@ def lang_selected(location, lang):
 		</tr>
                 <tr>
                      <td class="line">Company Name</td>
-		     <td><input name="company_name" type="text" value="${location.company_name or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('company_name', tg_errors)}</div></td>
+		     <td><input name="company_name" type="text" value="${location.company_name or ''}" /><em>This will appear on invoice.</em>
+                     <div class="errorMessage" py:if="tg_errors">${print_error('company_name', tg_errors)}</div></td>
 		</tr>
                 <tr>
                      <td class="line">Company No.</td>

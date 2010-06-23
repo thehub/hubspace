@@ -121,9 +121,13 @@ body { font-family: Deja; }
     <c py:strip="True" py:if="invoice.location.company_no"><c>Company Number</c>: ${invoice.location.company_no} </c> 
     <c py:if="invoice.location.vat_no" py:strip="True"><c>VAT Number</c>: ${invoice.location.vat_no} <br/></c>
     <c py:strip="True" py:if="invoice.location.billing_address">${nl2br(invoice.location.billing_address)} <br /></c>
-    <c py:strip="True" py:if="invoice.location.bank">${invoice.location.bank},</c>
-    <c py:if="invoice.location.account_no" py:strip="True"><c>Account Number</c>: ${invoice.location.account_no} <br/></c>
-    <a href="invoice.location.url">${invoice.location.url}</a> <br />
+    <a href="invoice.location.url">${invoice.location.url}</a> <br /><br />
+    <strong><c>Bank Details </c> <br /></strong>
+    <c py:strip="True" py:if="invoice.location.bank">${invoice.location.bank}</c><br />
+    <c py:if="invoice.location.account_no" py:strip="True"><c>Account Number</c>: ${invoice.location.account_no} </c><br />
+    <c py:strip="True" py:if="invoice.location.sort_code"><c>Sort Code</c>: <c py:strip="True">${invoice.location.sort_code} <br/></c></c>
+    <c py:if="invoice.location.swift_no" py:strip="True"><c>Swift Code</c>: ${invoice.location.swift_no} <br/></c>
+    <c py:if="invoice.location.iban_no" py:strip="True"><c>IBAN</c>: ${invoice.location.iban_no}</c>
     </p>
 </div>
 <table border="0" align="center" width="100%">
@@ -334,9 +338,11 @@ ${XML(nl2br(freetext2))}
 <tr><td></td></tr>
 <tr>
 <td align="left">
+<!--
   <c py:strip="True" py:if="invoice.location.sort_code"><br />Sort Code <c py:strip="True">${invoice.location.sort_code} <br/></c></c>
   <c py:if="invoice.location.swift_no" py:strip="True">Swift Code ${invoice.location.swift_no} <br/></c>
   <c py:if="invoice.location.iban_no" py:strip="True">IBAN ${invoice.location.iban_no} <br/></c>
+-->
   <c py:if="invoice.location.payment_terms" py:strip="True"><c>Payment Terms</c>: ${invoice.location.payment_terms}</c>
 </td>
 </tr>

@@ -751,6 +751,7 @@ class EditLocationSchema(v.Schema):
     vat_no =  All(no_ws, v.MaxLength(40))
     vat_default = FloatInRange(min=0, max=100)
     billing_address = no_ws
+    company_name = no_ws
     company_no = All(no_ws, v.MaxLength(40))
     bank = All(no_ws, v.MaxLength(40))
     sort_code = All(Numbers(), v.MaxLength(8))

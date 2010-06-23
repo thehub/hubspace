@@ -112,9 +112,14 @@ def get_roles_data(current_roles, editable_roles, locations):
                         <td class="line">Show profile on The Hub's public website</td>
                         <td><input name="public_field" id="public_field" type="checkbox" value="1" py:attrs="checked(object, 'public_field')" /><div class="errorMessage" py:if="tg_errors">${print_error('public_field', tg_errors)}</div></td>
                     </tr>
+                    <tr>
+                        <td class="line"></td>
+                        <td><em>Changing your username will change existing links to your Hub+ profile from external sites</em></td>
+                    </tr>
 		    <tr>
                         <td class="line">Username</td>
-                        <td><input name="user_name" id="user_name" type="text" class="text" value="${object.user_name}"/><div class="errorMessage" py:if="tg_errors">${print_error('user_name', tg_errors)}</div></td>
+                        <td><input name="user_name" id="user_name" type="text" class="text" value="${object.user_name}"/>
+                        <div class="errorMessage" py:if="tg_errors">${print_error('user_name', tg_errors)}</div></td>
                     </tr>
                     <tr>
                         <td class="line"></td>

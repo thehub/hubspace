@@ -44,7 +44,7 @@ from hubspace.utilities.i18n import languages_dict
 							<td>${location.invoice_duedate or "Not specified"}</td>
 						</tr>
                                                 <tr py:if="attr_not_none(location, 'payment_terms')" >
-							<td class="line">Payment_Terms</td>
+							<td class="line">Payment Terms</td>
 							<td>${location.payment_terms}</td>
 						</tr>
                                                 <tr py:if="attr_not_none(location, 'invoice_bcc')" >
