@@ -39,6 +39,7 @@ setup(name='hubspace',
            "mechanize",
            "whoosh",
            "pycha",
+           "Mako",
            "httpagentparser",
       ],
       entry_points="""
