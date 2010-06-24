@@ -90,31 +90,50 @@ from hubspace.configuration import site_default_lang,  site_folders, title, new_
 from cherrypy._cphttptools import Request
 import urllib2
 
-def update_tariff_bookings():
+
+def update_tariff_bookings(last_run=None):
     """get the last month for which tariffs have been booked anywhere in the system
     then for every active user in every location, find the tariff for that month and book the same tariff into the next month
     - should be run on the turn of the month
     """
-    for location in Location.select():
-        try:
-            loc_last_tariff = RUsage.select(AND(RUsage.q.resourceID==Resource.q.id,
-                                                Resource.q.type=='tariff',
-                                                Resource.q.placeID==location.id)).orderBy("start")[-1]
-        except:
+    last_run = last_run or reportutils.get_last_months_limits()[0]
+    bookings = RUsage.select(AND(RUsage.q.start >= last_run,
+                                 RUsage.q.resourceID==Resource.q.id,
+                                 RUsage.q.userID==User.q.id,
+                                 Resource.q.type =='tariff',
+                                 User.q.active == 1,
+                                 )).orderBy("start")
+    current_state = dict()
+    for booking in bookings:
+        if booking.user in current_state and current_state[booking.user].start > booking.start:
             continue
-        loc_last_tariff_date = loc_last_tariff.start
-        group = Group.select(AND(Group.q.level=='member',
-                                 Group.q.placeID==location.id))[0]
-        group_users = [user for user in group.users if user.active]
-        for user in group_users:
-            last_tariff = get_tariff(location.id, user.id, loc_last_tariff_date, default=False)
-            if last_tariff:
-                next_tariff_date = loc_last_tariff_date + timedelta(days=calendar.monthrange(loc_last_tariff_date.year, loc_last_tariff_date.month)[1])
-                tariff_booking = book_tariff(user, last_tariff, next_tariff_date.year, next_tariff_date.month, recalculate=False)
-                model.hub.commit()
-                model.hub.begin()
+        current_state[booking.user] = booking
+
+    loc_stats = dict(success = collections.defaultdict(list), failures = collections.defaultdict(list), skip = collections.defaultdict(list))
+    now = datetime.now()
+    today = date.today()
+
+    for user, old_booking in current_state.items():
+        if old_booking.start >= now:
+            applogger.info("Tariff update: (skip) User [%s (%s)], Tariff [%s], Tariff date [%s]" % (user.display_name, user.id, old_booking.resource.id, old_booking.start))
+            loc_stats['skip'][user.homeplace].append((old_booking,))
+            continue
+        try:
+            new_booking = book_tariff(user, old_booking.resource, now.year, now.month, recalculate=False)
+            model.hub.commit()
+            applogger.info("Tariff update: User [%s (%s)], Tariff [%s], [%s] -> [%s]" % (user.display_name, user.id, new_booking.resource.name, old_booking.start, new_booking.start))
+            loc_stats['success'][user.homeplace].append((old_booking, new_booking))
+            model.hub.begin()
+        except Exception, err:
+            applogger.exception("Tariff update: User [%s (%s)], Tariff [%s], Tariff date [%s]" % (user.display_name, user.id, old_booking.resource.name, old_booking.start))
+            loc_stats['failures'][user.homeplace].append((old_booking, str(err)))
+
     model.hub.commit()
-    print "finish"
+    data = dict (stats = loc_stats, START_TIME = now, TIME_TAKEN = now - datetime.now())
+    hubspace.alerts.sendTextEmail('tariff_autoupdate', None, extra_data = data)
+
+    return loc_stats
+
 
 def book_tariff(user, tariff, year, month, recalculate=True):
     lastday = calendar.monthrange(year, month)[1]
@@ -1109,7 +1128,7 @@ def process_entry(job, alias, start_date, aliases, resource_types):
 
 
 def book_print_resource(resource_id, resource_description, tg_errors=None, **kwargs):
-    """
+    """Create an rusage corresponding to a print job, ensuring that the description is unique. The description should be a unique hash based on the print log format. If it fails because the job is already processed will return 0, if it fails because of another error it will return 3...returns 2 if the username does not exist. If it succeeds it will return 1
     """
     resource_description = resource_description.decode('utf-8', 'replace')
     resource_description = resource_description.encode('utf-8')
@@ -1796,7 +1815,8 @@ class Root(controllers.RootController):
         # For all other errors we should call syncer rollback here.
         # And finally if there is no error, we send transaction complete signal to syncer. Which is
         # handled by TransactionCompleter filter.
-        #import pdb; pdb.set_trace()
+        #
+        # Also see: http://www.cherrypy.org/wiki/UpgradeTo22
         if config.get('server.testing', False):
             cherrypy.response.status = 500
         else:

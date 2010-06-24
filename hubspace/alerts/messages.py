@@ -5,6 +5,7 @@ import compiler
 import logging
 import macros
 from string import Template
+from mako.template import Template as MakoTemplate
 
 __all__ = ['bag']
 
@@ -28,6 +29,7 @@ class Message(object):
         self.tmplname = name
         self.available_macros = []
         self.can_be_customized = False
+        self.use_mako = False
 
     def getTemplates(self, location=None):
         tmpl_path = os.path.join(tmpl_dir, self.tmplname)
@@ -55,8 +57,8 @@ class Message(object):
         templates = self.getTemplates(location)
         d = self.getMacroValues(data)
         d.update(extra_data)
-        #print d
-        #print templates
+        if self.use_mako:
+            return dict( [(k, MakoTemplate(v).render(**d)) for (k,v) in templates.items()] )
         return dict( [(k, Template(v).substitute(**d)) for (k,v) in templates.items()] )
         
 
@@ -125,5 +127,10 @@ invoice_mail.label = "Invoice Mail"
 invoice_mail.can_be_customized = True
 invoice_mail.available_macros = [macros.Location_Phone(), macros.Location(), macros.Member_First_Name(), macros.Member_Email(), macros.Member_Last_Name(),
     macros.Hosts_Email(), macros.Location_URL()]
+
+tariff_autoupdate = Message('tariff_autoupdate')
+tariff_autoupdate.use_mako = True
+tariff_autoupdate.can_be_customized = False
+
 
 bag = dict ([(k,v) for (k,v) in locals().items() if isinstance(v, Message)])

@@ -1,0 +1,38 @@
+sender = "noreply@the-hub.net"
+to = "world.tech.space@the-hub.net"
+subject = "HubSpace Application Alert | Tariff Autoupdate"
+body = """
+Hey Dev,
+
+Here is the summary of scheduled Tariff Autoupdate.
+
+Details
+-------
+
+Failed updates:
+% for location in stats['failures']:
+* ${location.name} *
+ % for usage, err in stats['failures'][location]:
+  - ${usage.user.user_name}: ${err}
+ % endfor
+% endfor
+
+Skipped updates:
+% for location in stats['skip']:
+* ${location.name} *
+ % for usage in stats['skip'][location]:
+  - ${usage[0].user.user_name}: ${usage[0].resource.name}: ${usage[0].start}
+ % endfor
+% endfor
+
+Successful updates:
+% for location in stats['success']:
+* ${location.name} *
+ % for old_booking, new_booking in stats['success'][location]:
+  - ${old_booking.user.user_name}: ${old_booking.resource.name}: ${old_booking.start} -> ${new_booking.start}
+ % endfor
+% endfor
+
+Hope all is well.
+- hubspace
+"""
