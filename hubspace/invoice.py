@@ -7,7 +7,7 @@ __all__ = ['calculate_tax_and_amount']
 anomolies = file('anomolies.txt', 'a')
 
 def calculate_tax_and_amount(invoice):
-    resource_tax_dict, resource_cost_dict = invoice_tax_cost_breakdown(invoice)
+    resource_tax_dict, resource_cost_dict, rusages_cost_and_tax = invoice_tax_cost_breakdown(invoice)
     total_tax = Decimal("0")
     total_cost = Decimal("0")
     for res in resource_tax_dict:
@@ -24,6 +24,8 @@ def calculate_tax_and_amount(invoice):
 
     if invoice.vat_included != invoice.location.vat_included:
         invoice.vat_included = invoice.location.vat_included
+    
+    invoice.rusages_cost_and_tax = rusages_cost_and_tax
 
 
 def invoice_tax_cost_breakdown(invoice):
@@ -31,22 +33,26 @@ def invoice_tax_cost_breakdown(invoice):
     """
     resource_tax = {}
     resource_cost = {}
-    resources = Resource.select(AND(Resource.q.id==RUsage.q.resourceID,
-                                    RUsage.q.invoiceID==invoice.id), distinct=True)
+    rusages_cost_and_tax = {}
+    resources = Resource.select(AND(Resource.q.id==RUsage.q.resourceID, RUsage.q.invoiceID==invoice.id), distinct=True)
+    get_resource_effective_vat = lambda resource: [resource.place.vat_default, resource.vat][type(resource.vat)==float]
+    resource_vats = dict((resource, get_resource_effective_vat(resource)) for resource in resources)
     for resource in resources:
         res_cost = 0
-        for ruse in RUsage.select(AND(RUsage.q.resourceID==resource.id,
-                                      RUsage.q.invoiceID==invoice.id)):
-             res_cost += [ruse.customcost, ruse.cost][ruse.customcost == None]
-
-        percent_vat = [resource.place.vat_default, resource.vat][type(resource.vat)==float]
-        vat = calc_tax(res_cost, percent_vat, resource.place.vat_included)
-        resource_tax[resource.id] = (vat, percent_vat, resource.place.vat_included)
-        if not resource.place.vat_included:
-            res_cost += vat
+        percent_vat = resource_vats[resource]
+        vat_included = resource.place.vat_included
+        for ruse in (ruse for ruse in invoice.rusages if ruse.resource == resource):
+            ruse_cost = ruse.effectivecost
+            vat = calc_tax(ruse_cost, percent_vat, vat_included)
+            if not resource.place.vat_included:
+                ruse_cost += vat
+            res_cost += ruse_cost
+            rusages_cost_and_tax[ruse.id] = (res_cost, vat)
+        vat = calc_tax(res_cost, percent_vat, vat_included)
+        resource_tax[resource.id] = (vat, percent_vat, vat_included)
         resource_cost[resource.id] = res_cost
 
-    return resource_tax, resource_cost
+    return resource_tax, resource_cost, rusages_cost_and_tax
 
 
 def calc_tax(resource_total, percentage_tax, vat_included):
@@ -63,4 +69,3 @@ def calc_tax(resource_total, percentage_tax, vat_included):
     #use a different exponent to round to say 5 eurocents
     rounded = unrounded.quantize(TWOPLACES)
     return rounded
-

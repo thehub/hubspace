@@ -57,6 +57,7 @@ import hubspace.search
 from hubspace.validators import *
 from turbogears.validators import Money
 from hubspace import reportutils
+import hubspace.ruleslib as ruleslib
 
 import inspect, sqlobject, md5,random
 from sqlobject.inheritance import InheritableSQLObject
@@ -806,10 +807,7 @@ def show_rusages(rusages):
 
 
 def sum_resource_costs(rusages):
-    amount = 0
-    for rusage in rusages:
-        amount += [rusage.customcost,rusage.cost][rusage.customcost == None]
-    return amount
+    return sum(rusage.effectivecost for rusage in rusages)
 
 def format_time_delta(time_delta):
     hours = time_delta.seconds/3600
@@ -2389,6 +2387,19 @@ Exception:
             #mv locale paths appropriately
             for locale_path in glob('locales/*_'+location.name.lower().replace(' ', '')):
                 os.rename(locale_path, os.path.join(os.path.dirname(locale_path), os.path.basename(locale_path).split('_')[0] + '_' + kwargs['name'].lower().replace(' ', '')))
+
+        rule = ruleslib.get_rule_for_object(TaxExemptionRule, location)
+        if 'eu_tax_exemption' in kwargs:
+            if rule:
+                if not rule.enabled:
+                    rule.enabled = True
+            else:
+                TaxExemptionRule(enabled=True, for_object=location)
+            applogger.info("eu_tax_exemption enabled for %s" % location)
+        else:
+            if rule and rule.enabled:
+                rule.destroySelf()
+            applogger.info("eu_tax_exemption disabled for %s" % location)
         
         if not identity.has_permission("superuser"):
             del kwargs['vat_included']
@@ -3293,7 +3304,7 @@ Exception:
     @expose(template="hubspace.templates.billingDetails")
     @identity.require(not_anonymous())
     @validate(validators=BillingDetailsSchema())
-    def save_billingDetailsEdit(self, id, billing_mode, tg_errors=None, billto=None, **kwargs):
+    def save_billingDetailsEdit(self, id, billing_mode, euve_hubs=[], tg_errors=None, billto=None, **kwargs):
         billing_mode = int(billing_mode)
 	user = User.get(id)
 	if not permission_or_owner(user.homeplace, user,'manage_invoices'):
@@ -3326,6 +3337,26 @@ Exception:
 		raise IdentityFailure('what about not hacking the system')
             user.bill_to_profile = 0
             user.billto = User.get(billto)
+
+        if not isinstance(euve_hubs, list):
+            euve_hubs = [euve_hubs]
+        current_euve_hub_ids = [hub.id for hub in user.eu_tax_exemption_hubs]
+        new_euve_hub_ids = [int(hub_id) for hub_id in euve_hubs]
+        euve_hubs_to_disable = set(current_euve_hub_ids).difference(new_euve_hub_ids)
+        euve_hubs_to_enable = set(new_euve_hub_ids).difference(current_euve_hub_ids)
+
+        for hub_id in euve_hubs_to_disable:
+            hub = Location.get(hub_id)
+            applogger.info("removing hub %s from user %s EU Tax Exemption list" % (hub, user))
+            user.removeLocationWithEUTaxExemption(hub)
+        for hub_id in euve_hubs_to_enable:
+            hub = Location.get(hub_id)
+            rule = ruleslib.get_rule_for_object(TaxExemptionRule, hub)
+            if rule:
+                applogger.info("adding hub %s to user %s EU Tax Exemption list" % (hub, user))
+                user.addLocationWithEUTaxExemption(hub)
+            else:
+                applogger.info("skipping hub %s to user %s EU Tax Exemption list as rule is not enabled for this location" % (hub, user))
 
         cherrypy.response.headers['X-JSON'] = 'success'
         return {'object':user}
@@ -4215,11 +4246,13 @@ The Hub Team
         except:
             freetext2 = ""
         d = dict(invoice=invoice, freetext1=freetext1, freetext2=freetext2)
-        #if(invoice.location.id == 1): # Location Islington = 1
-        if(invoice.location.id == 36): # Location Prague = 36
+        if invoice.location.id == 36:
             template='hubspace.templates.newinvoice2'
         else:
-            template='hubspace.templates.newinvoice'
+            if invoice.eu_vat_exempted:
+                template = 'hubspace.templates.newinvoice_euve'
+            else:
+                template = 'hubspace.templates.newinvoice'
         html =  try_render(d, template=template, format='html', headers={'content-type':'text/html'})
         html = html.replace("NEXTPAGEHACK", "<div> <pdf:nextpage/> </div> ")
         src = cStringIO.StringIO(html)
@@ -4581,8 +4614,19 @@ The Hub Team
             invoice.sent = None
             calculate_tax_and_amount(invoice)
             invoice.sent = tmp
+            invoice.eu_vat_exempted = False
         else:
             calculate_tax_and_amount(invoice)
+
+        # Rules Processing
+        rules_processor = ruleslib.RulesProcessor(Invoice, invoice.location)
+        value = dict(rusages_cost_and_tax=invoice.rusages_cost_and_tax, total_tax=invoice.total_tax, amount=invoice.amount,
+            resource_tax_dict=invoice.resource_tax_dict, eu_vat_exempted=invoice.eu_vat_exempted)
+        new_value = rules_processor.process(invoice, value)
+        for k,v in new_value.items():
+            if v != value[k]:
+                setattr(invoice, k, v)
+
         return ''
 
     @expose()

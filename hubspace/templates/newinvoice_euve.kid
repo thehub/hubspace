@@ -207,11 +207,6 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
         </td>
         <td align="right"> 
             ${getResourceUsageCost(invoice, ivd, resource)} <br/>
-            <small>
-                <span py:if="invoice.vat_included"> <em>Inclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %) : </em> </span>
-                <span py:if="not invoice.vat_included"> <em>Exclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %): </em> </span>
-                (${invoice.location.currency} ${getResourceVATAmount(invoice, resource)})
-            </small>
         </td>
     </tr>
     </div>
@@ -223,11 +218,6 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
         </td>
         <td align="right"> 
             ${getRUsageCost(invoice, rusage)}<br/>
-            <small>
-                <span py:if="invoice.vat_included"> <em>Inclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %) : </em> </span>
-                <span py:if="not invoice.vat_included"> <em>Exclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %): </em> </span>
-                (${invoice.location.currency} ${calc_tax(rusage.effectivecost, getResourceVat(invoice, rusage.resource), invoice.vat_included)}
-            </small>
         </td>
     </tr>
     </div>
@@ -254,7 +244,7 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
 <td align="right">${c2s(invoice.amount - invoice.total_tax)} </td>
 </tr>
 <tr>
-<td>VAT</td>
+<td>VAT <em>(Exempt from VAT)</em></td>
 <td align="right">${c2s(invoice.total_tax)} </td>
 </tr>
 <tr>

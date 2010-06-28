@@ -2,6 +2,7 @@
 from hubspace.utilities.uiutils import print_error,oddOrEven
 from hubspace.model import User
 from hubspace.controllers import permission_or_owner
+from hubspace.ruleslib import find_locations_available_to_user_for_euve
 from sqlobject import AND
 
 odd_or_even = oddOrEven().odd_or_even
@@ -57,6 +58,17 @@ if 'tg_errors' not in locals():
 			<td class="line">VAT Number</td>
 			<td><input type="text" class="text billing_details" name="bill_vat_no" id="bill_vat_no" value="${user.bill_vat_no}"/><div class="errorMessage" py:if="tg_errors">${print_error('bill_vat_no', tg_errors)}</div></td>
                 </tr>
+		<tr class="${odd_or_even()}" py:if="find_locations_available_to_user_for_euve(user)">
+			<td class="line">EU VAT Exemption</td>
+                        <td>
+                        Check the Hub locations where tax exemption is applicable<br/>
+                        <div py:for="loc in find_locations_available_to_user_for_euve(user)">
+                            <input type="checkbox" name="euve_hubs" value="${loc.id}" py:attrs="loc in user.eu_tax_exemption_hubs and {'checked':'checked'} or {}"/>${loc.name}<br/>
+                        </div>
+			<div class="errorMessage" py:if="tg_errors">${print_error('bill_vat_no', tg_errors)}</div>
+                        </td>
+                </tr>
+
 	</table>
 	${load_billingDetailsEdit(object, tg_errors=tg_errors)}
 </div>	

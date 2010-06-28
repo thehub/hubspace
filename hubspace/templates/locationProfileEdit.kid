@@ -3,6 +3,7 @@ from hubspace.utilities.uiutils import oddOrEven, print_error, zones
 from hubspace.utilities.permissions import locations
 from hubspace.controllers import get_place, permission_or_owner, roles_grantable
 from hubspace.model import Location
+from hubspace.ruleslib import is_euve_enabled
 from turbogears import identity
 oddness = oddOrEven()
 tg_errors = None
@@ -84,6 +85,10 @@ def lang_selected(location, lang):
                 <tr>
                      <td class="line">Default Vat Level</td>
 		     <td><input name="vat_default" type="text" value="${location.vat_default or 0}" /><div class="errorMessage" py:if="tg_errors">${print_error('vat_default', tg_errors)}</div></td>
+		</tr>
+                <tr>
+                     <td class="line">EU Vat Exemption</td>
+		     <td><input name="eu_tax_exemption" type="checkbox" value="1" py:attrs="is_euve_enabled(location) and {'checked': 'checked'} or {}" /><em>Check to enable EU VAT Exemption processing for invoices</em><div class="errorMessage" py:if="tg_errors">${print_error('eu_tax_exemption', tg_errors)}</div></td>
 		</tr>
                 <tr>
                      <td class="line">Company Name</td>

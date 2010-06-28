@@ -1,4 +1,6 @@
 from sqlobject import *
+from sqlobject.inheritance import InheritableSQLObject
+
 from datetime import datetime
 import os
 from turbogears.database import PackageHub
@@ -17,7 +19,7 @@ import StringIO
 hub = PackageHub("hubspace")
 __connection__ = hub
 
-__all__=['Visit','VisitIdentity','Group','User','Permission','Location', 'Resource','RUsage','Pricing','Todo','Invoice', 'Note', 'Alias', 'Selection', 'UserMetaData', 'Open', 'Resourcegroup', 'AccessPolicy', 'PolicyGroup', 'UserGroup', 'UserPolicyGroup']
+__all__=['Visit','VisitIdentity','Group','User','Permission','Location', 'Resource','RUsage','Pricing','Todo','Invoice', 'Note', 'Alias', 'Selection', 'UserMetaData', 'Open', 'Resourcegroup', 'AccessPolicy', 'PolicyGroup', 'UserGroup', 'UserPolicyGroup', 'TaxExemptionRule', 'Rule']
 #looks to me like foreign keys cant have names containing '_'
 
 
@@ -220,6 +222,7 @@ class User(SQLObject):
     bill_email = UnicodeCol(default="")
     bill_company_no = UnicodeCol(default="")
     bill_vat_no = UnicodeCol(default="")
+    eu_tax_exemption_hubs = RelatedJoin('Location', intermediateTable='eu_tax_exemption', joinColumn='user_id', otherColumn='location_id', addRemoveName='LocationWithEUTaxExemption')
 
     def _get_billing_mode(self):
         if self.bill_to_profile: return 0
@@ -739,6 +742,7 @@ class Location(SQLObject):
     invoices = MultipleJoin("Invoice",joinColumn='location_id')
     vat_included = IntCol(default=1)
     rfid_enabled = IntCol(default=0)
+    eu_tax_exemption_users = RelatedJoin('User', intermediateTable='eu_tax_exemption', joinColumn='location_id', otherColumn='user_id', addRemoveName='UserForEUTaxExemption')
     messages = PickleCol(default={}, length=2**16+1)
 
     def _get_messages(self):
@@ -1048,6 +1052,8 @@ class Invoice(SQLObject):
         else:
             raise ValueError
     location = ForeignKey('Location')
+    rusages_cost_and_tax = PickleCol(default={})
+    eu_vat_exempted = BoolCol(default=False)
     def __str__(self):
         return "Invoice id: %s, number %s, user: %s %s" % (self.id, self.number, self.user.user_name, str([r.id for r in self.rusages]))
 
@@ -1155,11 +1161,72 @@ class ResourceQueue(SQLObject):
     foruser = ForeignKey("User")
     rusage = ForeignKey("RUsage")
 
+class Rule(InheritableSQLObject):
+    enabled = BoolCol()
+    for_object = StringCol()
+    conditions = PickleCol(default=[])
+    has_conditions = True
+    def _get_for_object(self):
+        o_type, o_id = self._SO_get_for_object().split('.')
+        return globals()[o_type].get(int(o_id))
+    def _set_for_object(self, for_object):
+        self._SO_set_for_object(for_object.__class__.__name__ + '.' + str(for_object.id))
+
+class ConditionTypes(object): pass
+condition_types = ConditionTypes()
+
+class ConditionType(object):
+    def __init__(self, name, label):
+        self.name = name
+        self.label = label
+    def check(self, v):
+        self._check(v)
+        return True
+
+class Bool(ConditionType):
+    def _check(self, value):
+        if value not in (True, False):
+            raise ConditionGrammerCheckFailed('either True/False')
+
+condition_types.Bool = Bool
+
+def calc_rusage_cost(rusage):
+    import hubspace.invoice as invoicelib
+    cost = rusage.effectivecost
+    tax_included = rusage.resource.place.vat_included
+    if tax_included:
+        tax_percent = rusage.resource.vat or rusage.resource.place.vat_default
+        tax = invoicelib.calc_tax(cost, tax_percent, tax_included)
+        cost = cost - tax
+    return cost, 0
+
+class TaxExemptionRule(Rule):
+    on_type = Invoice
+    has_conditions = False
+    def is_available(self):
+        return self.for_object.timeezone.startswith('Europe/')
+    def apply(self, on_object, value):
+        invoice = on_object
+        eu_tax_exemption_needed = invoice.user in invoice.location.eu_tax_exemption_users
+        if eu_tax_exemption_needed:
+            resource_tax_dict = value['resource_tax_dict']
+            rusages_cost_and_tax = dict((rusage.id, calc_rusage_cost(rusage)) for rusage in invoice.rusages)
+            return dict ( rusages_cost_and_tax = rusages_cost_and_tax,
+                          resource_tax_dict = dict((k, (0, 0, v[2])) for k,v in resource_tax_dict.items()),
+                          total_tax = 0,
+                          eu_vat_exempted = True,
+                          amount = sum(v[0] for v in rusages_cost_and_tax.values()) )
+        return value
+
+#class QuantityAdvantage(Rule):
+#    on_type = RUsage
+#    condition_grammer = ()
+#
 #class APIKey(SQLObject):
 #    key = StringCol(unique=True)
 #    user = ForeignKey("User", cascade=True)
 #    apis = PickleCol(default=[])
 
 # Create missing tables
-#for sobj in [MessageCustomization, APIKey]:
-#    sobj.createTable(ifNotExists=True)
+for sobj in [MessageCustomization, Rule, TaxExemptionRule]:
+    sobj.createTable(ifNotExists=True)
