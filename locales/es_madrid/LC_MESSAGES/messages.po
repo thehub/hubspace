@@ -19,31 +19,31 @@ msgstr ""
 msgid "Also booked: "
 msgstr ""
 
-#: hubspace/controllers.py:1627
+#: hubspace/controllers.py:1646
 msgid "VAT"
 msgstr "IVA"
 
-#: hubspace/controllers.py:1628
+#: hubspace/controllers.py:1647
 msgid "Date"
 msgstr "Fecha"
 
-#: hubspace/controllers.py:1629
+#: hubspace/controllers.py:1648
 msgid "Description"
 msgstr "Descripción"
 
-#: hubspace/controllers.py:1753
+#: hubspace/controllers.py:1772
 msgid "No"
 msgstr ""
 
-#: hubspace/controllers.py:1753
+#: hubspace/controllers.py:1772
 msgid "Yes"
 msgstr "Sí"
 
-#: hubspace/controllers.py:2569 hubspace/controllers.py:2694
+#: hubspace/controllers.py:2602 hubspace/controllers.py:2727
 msgid " (Hint: You should not include currency signs)"
 msgstr ""
 
-#: hubspace/controllers.py:3523 hubspace/utilities/login.py:16
+#: hubspace/controllers.py:3576 hubspace/utilities/login.py:16
 msgid "Your username or password were incorrect. Please try again."
 msgstr "Tu nombre de usuario o contraseña son incorrectas. Por favor, inténtalo de nuevo."
 
@@ -51,7 +51,7 @@ msgstr "Tu nombre de usuario o contraseña son incorrectas. Por favor, inténtal
 msgid "Please log in."
 msgstr "Por favor, entra."
 
-#: hubspace/controllers.py:3555 hubspace/utilities/login.py:46
+#: hubspace/controllers.py:3608 hubspace/utilities/login.py:46
 msgid "Please enter the email address associated with your account"
 msgstr "Por favor, introduce el email asociado a tu cuenta."
 
@@ -59,19 +59,19 @@ msgstr "Por favor, introduce el email asociado a tu cuenta."
 msgid "A confirmation email was sent to you. "
 msgstr "Se te ha enviado un email de confirmación."
 
-#: hubspace/controllers.py:3577 hubspace/utilities/login.py:68
+#: hubspace/controllers.py:3630 hubspace/utilities/login.py:68
 msgid "The email was not correct"
 msgstr "El email no es correcto."
 
-#: hubspace/controllers.py:3585 hubspace/utilities/login.py:76
+#: hubspace/controllers.py:3638 hubspace/utilities/login.py:76
 msgid "The confirmation key is wrong - maybe you need to check your email?"
 msgstr "La clave de confirmación es incorrecta. Quizá necesites revisar el email de nuevo."
 
-#: hubspace/controllers.py:3606 hubspace/utilities/login.py:95
+#: hubspace/controllers.py:3659 hubspace/utilities/login.py:95
 msgid "The new password was sent to you."
 msgstr "Se te ha enviado la nueva contraseña."
 
-#: hubspace/controllers.py:4334
+#: hubspace/controllers.py:4394
 msgid "Problem sending the invoice: Member's billing preferences are set to not to use profile details and billing preferences has no email address specified. You may want visit member's 'Billing Details' section."
 msgstr ""
 
@@ -1177,6 +1177,90 @@ msgstr ""
 msgid "for private event hire and member events."
 msgstr ""
 
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Membership No."
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Company No."
+msgstr "Nº de Compañía"
+
+#: hubspace/templates/newinvoice_euve.kid:strong
+msgid "Invoice details"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Number"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Period"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Due Date"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:h2
+msgid "Summary of usage"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:strong
+msgid "Sub Total"
+msgstr "Subtotal"
+
+#: hubspace/templates/newinvoice_euve.kid:h3
+msgid "Invoice Total"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Excluding VAT"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:em
+msgid "(Exempt from VAT)"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:strong
+msgid "Total"
+msgstr "Total"
+
+#: hubspace/templates/newinvoice_euve.kid:h2
+msgid "Usage details"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Sr. No."
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Quantity"
+msgstr "Cantidad"
+
+#: hubspace/templates/newinvoice_euve.kid:em
+msgid "(Cancelled)"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:em
+msgid "(Refund)"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:br
+msgid "Sort Code"
+msgstr "Nº de Sucursal Bancaria"
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Swift Code"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Payment Terms"
+msgstr "Plazo de Pago"
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "|"
+msgstr "|"
+
 #: hubspace/templates/network.kid:a
 msgid "Add new member"
 msgstr "Añadir Nuevo Miembro"
@@ -1253,10 +1337,6 @@ msgstr "Iniciar"
 msgid "End"
 msgstr "Finalizar"
 
-#: hubspace/templates/resourcetable.kid:td
-msgid "Quantity"
-msgstr "Cantidad"
-
 #: hubspace/templates/resourcetable.kid:a
 msgid "change"
 msgstr "Cambiar"
@@ -1300,10 +1380,6 @@ msgstr ""
 #: hubspace/templates/managementdata.kid:input
 msgid "Invoiced"
 msgstr ""
-
-#: hubspace/templates/managementdata.kid:input
-msgid "Total"
-msgstr "Total"
 
 #: hubspace/templates/managementdata.kid:h2
 msgid "Export User Data"
@@ -1388,10 +1464,6 @@ msgstr ""
 #: hubspace/templates/managementdata.kid:em
 msgid "OR"
 msgstr ""
-
-#: hubspace/templates/managementdata.kid:a
-msgid "|"
-msgstr "|"
 
 #: hubspace/templates/managementdata.kid:a
 msgid "View >>"
@@ -2122,10 +2194,6 @@ msgid "Invoice dute date (days after sending invoice)"
 msgstr ""
 
 #: hubspace/templates/locationProfile.kid:td
-msgid "Payment_Terms"
-msgstr "Plazos_de_Pago"
-
-#: hubspace/templates/locationProfile.kid:td
 msgid "Bcc Invoice"
 msgstr ""
 
@@ -2146,12 +2214,12 @@ msgid "Default Level of Vat Charged (0%-100%)"
 msgstr "Porcentaje de IVA cobrado por defecto (0%-100%)"
 
 #: hubspace/templates/locationProfile.kid:td
-msgid "Billing Address"
-msgstr "Dirección de Facturación"
+msgid "Company Name"
+msgstr ""
 
 #: hubspace/templates/locationProfile.kid:td
-msgid "Company No."
-msgstr "Nº de Compañía"
+msgid "Billing Address"
+msgstr "Dirección de Facturación"
 
 #: hubspace/templates/locationProfile.kid:td
 msgid "Bank"
@@ -2160,10 +2228,6 @@ msgstr "Entidad bancaria"
 #: hubspace/templates/locationProfile.kid:td
 msgid "Bank Account No."
 msgstr "Número de cuenta bancaria"
-
-#: hubspace/templates/locationProfile.kid:td
-msgid "Sort Code"
-msgstr "Nº de Sucursal Bancaria"
 
 #: hubspace/templates/locationProfile.kid:td
 msgid "IBAN No."
@@ -2268,6 +2332,14 @@ msgstr "Número de la Compañía"
 #: hubspace/templates/billingDetailsEdit.kid:td
 msgid "VAT Number"
 msgstr "CIF"
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "EU VAT Exemption"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Check the Hub locations where tax exemption is applicable"
+msgstr ""
 
 #: hubspace/templates/addResources.kid:a
 msgid "Add new resource"
@@ -2518,6 +2590,10 @@ msgid "Show profile on The Hub's public website"
 msgstr "Mostrar mi perfil en la página web pública del Hub"
 
 #: hubspace/templates/memberProfileEdit.kid:em
+msgid "Changing your username will change existing links to your Hub+ profile from external sites"
+msgstr ""
+
+#: hubspace/templates/memberProfileEdit.kid:em
 msgid "To change your password enter the new one in the two fields below"
 msgstr "Para cambiar tu contraseña introduce la nueva en los dos campos de abajo"
 
@@ -2670,10 +2746,6 @@ msgid "Invoice will be Bcced to this Email id"
 msgstr ""
 
 #: hubspace/templates/locationProfileEdit.kid:td
-msgid "Payment Terms"
-msgstr "Plazo de Pago"
-
-#: hubspace/templates/locationProfileEdit.kid:td
 msgid "Microsite Active"
 msgstr ""
 
@@ -2682,32 +2754,20 @@ msgid "Default Vat Level"
 msgstr "Porcentaje de IVA por defecto"
 
 #: hubspace/templates/locationProfileEdit.kid:td
+msgid "EU Vat Exemption"
+msgstr ""
+
+#: hubspace/templates/locationProfileEdit.kid:em
+msgid "Check to enable EU VAT Exemption processing for invoices"
+msgstr ""
+
+#: hubspace/templates/locationProfileEdit.kid:em
+msgid "This will appear on invoice."
+msgstr ""
+
+#: hubspace/templates/locationProfileEdit.kid:td
 msgid "Sort Code (if applicable)"
 msgstr "Nº de Sucursal (si es aplicable)"
-
-#: hubspace/templates/newinvoice.kid:c
-msgid "Membership No."
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:strong
-msgid "Invoice details"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Number"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Period"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Due Date"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:h2
-msgid "Summary of usage"
-msgstr ""
 
 #: hubspace/templates/newinvoice.kid:em
 msgid "Inclusive of VAT"
@@ -2717,32 +2777,12 @@ msgstr ""
 msgid "Exclusive of VAT"
 msgstr ""
 
-#: hubspace/templates/newinvoice.kid:strong
-msgid "Sub Total"
-msgstr "Subtotal"
-
-#: hubspace/templates/newinvoice.kid:h3
-msgid "Invoice Total"
+#: hubspace/templates/newinvoice.kid:c
+msgid "Account Number"
 msgstr ""
 
-#: hubspace/templates/newinvoice.kid:td
-msgid "Excluding VAT"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:h2
-msgid "Usage details"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Sr. No."
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:em
-msgid "(Cancelled)"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:em
-msgid "(Refund)"
+#: hubspace/templates/newinvoice.kid:c
+msgid "IBAN"
 msgstr ""
 
 #: hubspace/templates/microSitePassword.kid:h3
@@ -2788,6 +2828,10 @@ msgstr "Nombre"
 #: hubspace/templates/fulltextsearch.kid:span
 msgid "Business Type:"
 msgstr "Tipo de Negocio:"
+
+#: hubspace/templates/newinvoice2.kid:c
+msgid "Bank Details"
+msgstr ""
 
 #: hubspace/templates/bristolData.kid:td
 msgid "Organisational Responsibilities"

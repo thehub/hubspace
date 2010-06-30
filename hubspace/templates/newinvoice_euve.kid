@@ -326,11 +326,11 @@ ${XML(nl2br(freetext2))}
 <td align="left">
   ${invoice.location.bank}
   <br />
-  <c py:if="invoice.location.account_no" py:strip="True">Account Number ${invoice.location.account_no} <br/></c>
-  <c py:strip="True" py:if="invoice.location.sort_code"><br />Sort Code <c py:strip="True">${invoice.location.sort_code} <br/></c></c>
-  <c py:if="invoice.location.swift_no" py:strip="True">Swift Code ${invoice.location.swift_no} <br/></c>
-  <c py:if="invoice.location.iban_no" py:strip="True">IBAN ${invoice.location.iban_no} <br/></c>
-  <c py:if="invoice.location.vat_no" py:strip="True">VAT Number ${invoice.location.vat_no} <br/></c>
+  <c py:if="invoice.location.account_no" py:strip="True"><c>Account Number</c> ${invoice.location.account_no} <br/></c>
+  <c py:strip="True" py:if="invoice.location.sort_code"><br /><c>Sort Code</c> <c py:strip="True">${invoice.location.sort_code} <br/></c></c>
+  <c py:if="invoice.location.swift_no" py:strip="True"><c>Swift Code</c> ${invoice.location.swift_no} <br/></c>
+  <c py:if="invoice.location.iban_no" py:strip="True"><c>IBAN</c> ${invoice.location.iban_no} <br/></c>
+  <c py:if="invoice.location.vat_no" py:strip="True"><c>VAT Number</c> ${invoice.location.vat_no} <br/></c>
   <c py:if="invoice.location.payment_terms" py:strip="True"><c>Payment Terms</c>: ${invoice.location.payment_terms}</c>
 </td>
 </tr>
