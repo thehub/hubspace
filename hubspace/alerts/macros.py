@@ -41,6 +41,10 @@ class Hosts_Email(Macro):
     def getValue(self, data):
         return data['location'].hosts_email
 
+class Membership_Number(Macro):
+    def getValue(self, data):
+        return data['user'].id
+
 class Member_Name(Macro):
     def getValue(self, data):
         return data['user'].display_name
