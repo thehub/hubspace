@@ -92,7 +92,7 @@ from cherrypy._cphttptools import Request
 import urllib2
 
 
-def update_tariff_bookings(last_run=None):
+def update_tariff_bookings(last_run=None, now=None):
     """get the last month for which tariffs have been booked anywhere in the system
     then for every active user in every location, find the tariff for that month and book the same tariff into the next month
     - should be run on the turn of the month
@@ -111,8 +111,7 @@ def update_tariff_bookings(last_run=None):
         current_state[booking.user] = booking
 
     loc_stats = dict(success = collections.defaultdict(list), failures = collections.defaultdict(list), skip = collections.defaultdict(list))
-    now = datetime.now()
-    today = date.today()
+    now = now or datetime.now()
 
     for user, old_booking in current_state.items():
         if old_booking.start >= now:
@@ -195,6 +194,11 @@ class schedSafe(object):
             end_all()
         applogger.debug("schedSafe: done")
 
+def test_job():
+    print("test_job: runs")
+    applogger.info("test_job: runs")
+    raise Exception('zz')
+
 def start_scheduler():
     """start the scheduler and add the timed jobs. These jobs must be sure to do model.hub.commit() in all cases EVEN IF THEY ONLY READ - otherwise they will hold onto database transaction in postgres forever! Its often wise to break them down into smaller transactions, by committing and then beginning new transactions using model.hub.begin().
     """
@@ -202,6 +206,7 @@ def start_scheduler():
     add_interval_task(schedSafe(bookinglib.requestBookingConfirmations), taskname="Request booking confirmations", initialdelay=60 * 60, interval=60 * 60)
     add_weekday_task(send_unknown_aliases, [1], (0,0))
     add_monthday_task(update_tariff_bookings, [1], (0,0))
+    add_monthday_task(action=test_job, taskname="Tariff Autoupdate",monthdays=[1], timeonday=(7,27), args=[], kw={})
     add_monthday_task(schedule_access_policy_updates, [3], (0,0))
     add_interval_task(reportutils.do_report_maintainance, taskname="Report generation routine tasks", initialdelay=30*60, interval=24*60*60)
     if datetime.now() > datetime(datetime.today().year, datetime.today().month, 3):
