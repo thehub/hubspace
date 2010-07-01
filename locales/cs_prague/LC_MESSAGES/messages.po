@@ -6,12 +6,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2010-04-01 09:44\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-06-29 14:44+0100\n"
+"Last-Translator: Radek Hradil <radek.hradil@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
 
@@ -21,15 +21,15 @@ msgstr ""
 
 #: hubspace/controllers.py:1646
 msgid "VAT"
-msgstr ""
+msgstr "DPH"
 
 #: hubspace/controllers.py:1647
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: hubspace/controllers.py:1648
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #: hubspace/controllers.py:1772
 msgid "No"
@@ -95,7 +95,7 @@ msgstr ""
 
 #: hubspace/templates/tariffHistory.kid:td
 msgid "Member"
-msgstr ""
+msgstr "člen"
 
 #: hubspace/templates/tariffHistory.kid:td
 msgid "Invoice Number"
@@ -399,11 +399,11 @@ msgstr ""
 
 #: hubspace/templates/billing.kid:td
 msgid "Amount"
-msgstr ""
+msgstr "Částka"
 
 #: hubspace/templates/billing.kid:em
 msgid "(Including VAT)"
-msgstr ""
+msgstr "(Včetně DPH)"
 
 #: hubspace/templates/billing.kid:td
 msgid "View"
@@ -491,7 +491,7 @@ msgstr ""
 
 #: hubspace/templates/manageResources.kid:div
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #: hubspace/templates/manageResources.kid:div
 msgid "Type"
@@ -803,11 +803,11 @@ msgstr ""
 
 #: hubspace/templates/meetingBooking.kid:td
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: hubspace/templates/meetingBooking.kid:td
 msgid "Time"
-msgstr ""
+msgstr "čas"
 
 #: hubspace/templates/meetingBooking.kid:td
 msgid "Number of people"
@@ -899,7 +899,7 @@ msgstr ""
 
 #: hubspace/templates/notes.kid:label
 msgid "Details"
-msgstr ""
+msgstr "Podrobnosti"
 
 #: hubspace/templates/notes.kid:label
 msgid "Date to Follow Up"
@@ -1015,7 +1015,7 @@ msgstr ""
 
 #: hubspace/templates/meetingBookingEdit.kid:td
 msgid "VAT"
-msgstr ""
+msgstr "DPH"
 
 #: hubspace/templates/meetingBookingEdit.kid:em
 msgid "All prices include VAT"
@@ -1183,39 +1183,42 @@ msgstr ""
 
 #: hubspace/templates/newinvoice_euve.kid:c
 msgid "Company No."
-msgstr ""
+msgstr "IČ"
 
 #: hubspace/templates/newinvoice_euve.kid:strong
 msgid "Invoice details"
-msgstr ""
+msgstr "Detaily faktury"
 
 #: hubspace/templates/newinvoice_euve.kid:td
 msgid "Number"
-msgstr ""
+msgstr "číslo"
 
 #: hubspace/templates/newinvoice_euve.kid:td
 msgid "Period"
-msgstr ""
+msgstr "období"
+
+msgid "Last date of period"
+msgstr "Datum uskutečnění zdanitelného plnění"
 
 #: hubspace/templates/newinvoice_euve.kid:td
 msgid "Due Date"
-msgstr ""
+msgstr "Splatnost"
 
 #: hubspace/templates/newinvoice_euve.kid:h2
 msgid "Summary of usage"
-msgstr ""
+msgstr "Souhrn služeb"
 
 #: hubspace/templates/newinvoice_euve.kid:strong
 msgid "Sub Total"
-msgstr ""
+msgstr "Mezisoučet"
 
 #: hubspace/templates/newinvoice_euve.kid:h3
 msgid "Invoice Total"
-msgstr ""
+msgstr "Celkem"
 
 #: hubspace/templates/newinvoice_euve.kid:td
 msgid "Excluding VAT"
-msgstr ""
+msgstr "bez DPH"
 
 #: hubspace/templates/newinvoice_euve.kid:em
 msgid "(Exempt from VAT)"
@@ -1223,19 +1226,19 @@ msgstr ""
 
 #: hubspace/templates/newinvoice_euve.kid:strong
 msgid "Total"
-msgstr ""
+msgstr "Celkem"
 
 #: hubspace/templates/newinvoice_euve.kid:h2
 msgid "Usage details"
-msgstr ""
+msgstr "Detaily užívání"
 
 #: hubspace/templates/newinvoice_euve.kid:td
 msgid "Sr. No."
-msgstr ""
+msgstr " "
 
 #: hubspace/templates/newinvoice_euve.kid:td
 msgid "Quantity"
-msgstr ""
+msgstr "množství"
 
 #: hubspace/templates/newinvoice_euve.kid:em
 msgid "(Cancelled)"
@@ -2203,11 +2206,11 @@ msgstr ""
 
 #: hubspace/templates/locationProfile.kid:td
 msgid "Vat Included"
-msgstr ""
+msgstr "Včetně VAT"
 
 #: hubspace/templates/locationProfile.kid:td
 msgid "Vat Number"
-msgstr ""
+msgstr "DIČ"
 
 #: hubspace/templates/locationProfile.kid:td
 msgid "Default Level of Vat Charged (0%-100%)"
@@ -2223,19 +2226,19 @@ msgstr ""
 
 #: hubspace/templates/locationProfile.kid:td
 msgid "Bank"
-msgstr ""
+msgstr "Banka"
 
 #: hubspace/templates/locationProfile.kid:td
 msgid "Bank Account No."
-msgstr ""
+msgstr "Číslo b.ú."
 
 #: hubspace/templates/locationProfile.kid:td
 msgid "IBAN No."
-msgstr ""
+msgstr "IBAN"
 
 #: hubspace/templates/locationProfile.kid:td
 msgid "Swift No."
-msgstr ""
+msgstr "Swift"
 
 #: hubspace/templates/locationProfile.kid:td
 msgid "Domain Name"
@@ -2327,11 +2330,11 @@ msgstr ""
 
 #: hubspace/templates/billingDetailsEdit.kid:td
 msgid "Company Number"
-msgstr ""
+msgstr "IČ"
 
 #: hubspace/templates/billingDetailsEdit.kid:td
 msgid "VAT Number"
-msgstr ""
+msgstr "DIČ"
 
 #: hubspace/templates/billingDetailsEdit.kid:td
 msgid "EU VAT Exemption"
@@ -2769,15 +2772,15 @@ msgstr ""
 
 #: hubspace/templates/newinvoice.kid:em
 msgid "Inclusive of VAT"
-msgstr ""
+msgstr "včetně DPH"
 
 #: hubspace/templates/newinvoice.kid:em
 msgid "Exclusive of VAT"
-msgstr ""
+msgstr "bez DPH"
 
 #: hubspace/templates/newinvoice.kid:c
 msgid "Account Number"
-msgstr ""
+msgstr "Číslo účtu"
 
 #: hubspace/templates/newinvoice.kid:c
 msgid "IBAN"
@@ -2827,7 +2830,7 @@ msgstr ""
 
 #: hubspace/templates/newinvoice2.kid:c
 msgid "Bank Details"
-msgstr ""
+msgstr "Bankovní spojení"
 
 #: hubspace/templates/bristolData.kid:td
 msgid "Organisational Responsibilities"
@@ -2875,7 +2878,7 @@ msgstr ""
 
 #: hubspace/templates/microSiteEvents.kid:div
 msgid "Description:"
-msgstr ""
+msgstr "Popis"
 
 #: hubspace/templates/microSiteEvents.kid:a
 msgid "iCal"

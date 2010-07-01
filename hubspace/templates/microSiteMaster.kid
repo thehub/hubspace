@@ -31,7 +31,8 @@ def pn(thepage):
     <div py:replace="item[:]"/>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
     <meta content="Places for meeting, working, learning, innovating and connecting dedicated to inspiring and supporting enterprising and imaginative initiatives for a radically better world. " name="description" />
-    <c py:if="not page.page_type=='blog'" >
+    <meta py:if="location and location.name=='Brussels'" content="social entrepreneur, enterprise, entreprise sociale, entrepreneurs sociaux, maatschappelijke ondernemer, hub brussels, bruxelle, brussel, innovatie, innovation, imagination, verbeelding, maatschappelijke verandering, social change, changement sociale" name="keywords"  />
+    <c py:if="not page.page_type=='blog'" py:strip="True" >
         <title>${title and title or "The Hub King's Cross"} ${page.title and page.title != title and '| ' + page.title.title() or ""}</title>
         <link rel="stylesheet" href="/static/css/micro/blueprint/screen.css" type="text/css" media="screen, projection"/>
     	<link rel="stylesheet" href="/static/css/micro/blueprint/print.css" type="text/css" media="print"/>

@@ -21,8 +21,8 @@ from hubspace.validators import dateconverter
 from turbogears.validators import DateTimeConverter
 
 formatDate = dateconverter.from_python
-formatDate = lambda t: t.strftime("%b %-d %Y")
-formatDateTime = lambda t: t.strftime("%b %-d %Y %l:%M%P")
+formatDate = lambda t: t.strftime("%-d/%m/%Y")
+formatDateTime = lambda t: t.strftime("%-d/%m/%Y %R")
 dtc = DateTimeConverter("%B %Y").from_python
 
 def getResourceUsageCost(ivd, resource):
@@ -151,8 +151,8 @@ body { font-family: Deja; }
         </address>
 
         <c py:strip="True" py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"><c>Company No. </c>${invoice.user.bill_company_no}<br/></c>
-        <c py:strip="True" py:if="not invoice.user.billto and invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><c>VAT</c> ${invoice.user.bill_vat_no}</c>
-        <c py:strip="True" py:if="invoice.user.billto and invoice.user.billto.bill_vat_no"><br/><c>VAT</c> ${invoice.user.billto.bill_vat_no}</c>
+        <c py:strip="True" py:if="not invoice.user.billto and invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><c>VAT Number</c> ${invoice.user.bill_vat_no}</c>
+        <c py:strip="True" py:if="invoice.user.billto and invoice.user.billto.bill_vat_no"><br/><c>VAT Number</c> ${invoice.user.billto.bill_vat_no}</c>
         </p>
     </td>
     <td width="50%">
@@ -171,6 +171,10 @@ body { font-family: Deja; }
         <tr>
             <td>Period</td>
             <td>${formatDate(invoice.start)} to ${formatDate(invoice.end_time)}</td>
+        </tr>
+        <tr>
+            <td>Last date of period</td>
+            <td>${formatDate(invoice.end_time)}</td>
         </tr>
         <tr py:if="invoice.location.invoice_duedate">
             <td>Due Date</td>
@@ -250,7 +254,7 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
 <thead style="background: #C0C0C0;">
 <tr>
     <td>Description</td>
-    <td align="right">Amount ${invoice.location.currency}</td>
+    <td align="right"><c>Amount</c> ${invoice.location.currency}</td>
 </tr>
 </thead>
 <tr>
