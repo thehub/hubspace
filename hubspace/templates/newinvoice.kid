@@ -51,6 +51,11 @@ def getDueDate(invoice):
     due = sent + datetime.timedelta(invoice.location.invoice_duedate)
     return formatDate(due)
 
+def sum_tax_for_usages(invoice, rusages):
+    if invoice.rusages_cost_and_tax: 
+        return sum(invoice.rusages_cost_and_tax[ru.id][1] for ru in rusages)
+    return getResourceVATAmount(invoice, rusages[0].resource)
+
 from itertools import chain
 
 def sumUsageCosts(invoice, ivd):
@@ -210,7 +215,7 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
             <small>
                 <span py:if="invoice.vat_included"> <em>Inclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %) : </em> </span>
                 <span py:if="not invoice.vat_included"> <em>Exclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %): </em> </span>
-                (${invoice.location.currency} ${getResourceVATAmount(invoice, resource)})
+                (${invoice.location.currency} ${sum_tax_for_usages(invoice, rusages)})
             </small>
         </td>
     </tr>
@@ -226,7 +231,7 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
             <small>
                 <span py:if="invoice.vat_included"> <em>Inclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %) : </em> </span>
                 <span py:if="not invoice.vat_included"> <em>Exclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %): </em> </span>
-                (${invoice.location.currency} ${calc_tax(rusage.effectivecost, getResourceVat(invoice, rusage.resource), invoice.vat_included)}
+                (${invoice.location.currency} ${invoice.rusages_cost_and_tax[rusage.id][1]}
             </small>
         </td>
     </tr>
