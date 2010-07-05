@@ -47,7 +47,7 @@ def invoice_tax_cost_breakdown(invoice):
             if not resource.place.vat_included:
                 ruse_cost += vat
             res_cost += ruse_cost
-            rusages_cost_and_tax[ruse.id] = (res_cost, vat)
+            rusages_cost_and_tax[ruse.id] = (ruse_cost, vat)
         vat = calc_tax(res_cost, percent_vat, vat_included)
         resource_tax[resource.id] = (vat, percent_vat, vat_included)
         resource_cost[resource.id] = res_cost
