@@ -58,8 +58,10 @@ def vat_exception(rusage, invoice, user):
 <?python
 rusages = invdata[0][resource]
 x+=1
+manage_invoice_locs = [ru.resource.place for ru in rusages if permission_or_owner(ru.resource.place, None, 'manage_invoices')]
 ?>
                     <tr py:if="len(rusages)==1 or resource.type=='custom'" py:for="rusage in rusages" class="${odd_or_even()}">
+                        <span py:if="rusage.resource.place in manage_invoice_locs" py:strip="True">
                         <td py:content='rusage.resource_name'>Resource</td>
                         <td py:content='format_date(rusage.start)'>Start</td>
                         <td py:content='format_date(rusage.end_time)'>End</td>
@@ -70,10 +72,11 @@ x+=1
                         <td py:if="unsent_for_user(user) and invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')"><a id="rusage-${rusage.id}" class="add_to_invoice">Add to Invoice</a></td>
                         <td py:if="invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')"><a id="delrusage-${rusage.id}" class="del_rusage">Delete</a></td>
                         <td py:if="unsent_for_user(user) and unsent_for_user(user).id==invoice and permission_or_owner(user.homeplace, None, 'manage_invoices')"><a id="rusage-${rusage.id}" class="remove_from_invoice">Remove from Invoice</a></td>
+                        </span>
 
 
                     </tr>
-                  <span py:if="len(rusages)>1 and resource.type!='custom'" py:strip="True">
+                  <span py:if="len(rusages)>1 and resource.type!='custom' and resource.place in manage_invoice_locs" py:strip="True">
                     <tr class="${odd_or_even()}">
                         <td class="composite_rusage" id="${theuser.id}_${invoice or 0}_${resource.id}_${user.id}">${rusages[0].resource_name}<a class="view_sub_usages" id="sub_${theuser.id}_${invoice or 0}_${resource.id}_${user.id}"></a></td>
                         <td py:content='format_date(min([r.start for r in rusages]))'>Start</td>

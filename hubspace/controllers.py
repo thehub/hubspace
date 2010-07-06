@@ -477,12 +477,7 @@ def uninvoiced_users(location, resource_type, search_from_date):
     else:
         users = []
     
-    users = [user.billto for user in users]
-    unique_users = []
-    for user in users:
-	if user not in unique_users:
-            unique_users.append(user)
-    return unique_users
+    return set(user.billto for user in users)
 
 
 ##################  Users  ####################
@@ -4622,6 +4617,7 @@ The Hub Team
             invoice.eu_vat_exempted = False
         else:
             calculate_tax_and_amount(invoice)
+            invoice.eu_vat_exempted = False
 
         # Rules Processing
         rules_processor = ruleslib.RulesProcessor(Invoice, invoice.location)

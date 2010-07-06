@@ -91,7 +91,7 @@ def billto(user):
     
       <c py:strip="True" py:if="billed_by_someone(user)">
         From <a id="display_create_invoice_start_${user.id}" class="date_select">${dateconverter.from_python(get_earliest(user))} <img src="/static/images/booking_down.png" /></a> to <a id="display_create_invoice_end_${user.id}" class="date_select">${dateconverter.from_python(get_latest(user))} <img src="/static/images/booking_down.png" /></a>
-        <a py:if="permission_or_owner(user.homeplace, None, 'manage_invoices')" id="create_invoice_${user.id}" class="create_invoice">Create Invoice</a>
+        <a py:if="permission_or_owner(list(Location.select()), None, 'manage_invoices')" id="create_invoice_${user.id}" class="create_invoice">Create Invoice</a>
         <div style="color:#FF0000;display:none;" id="${user.id}_cannot_create" py:if='not invoice and unsent_for_user(user)'>You must send existing invoices before creating new ones</div>
     
         <form id="${user.id}_change_create_invoice_dates">
