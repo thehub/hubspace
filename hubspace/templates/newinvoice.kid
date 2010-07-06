@@ -56,6 +56,14 @@ def sum_tax_for_usages(invoice, rusages):
         return sum(invoice.rusages_cost_and_tax[ru.id][1] for ru in rusages)
     return getResourceVATAmount(invoice, rusages[0].resource)
 
+def invoice_total(invoice, exclude_tax=False):
+    if exclude_tax:
+        total = invoice.location.vat_included and (invoice.amount - invoice.total_tax) or invoice.amount
+    else:
+        total = invoice.location.vat_included and invoice.amount or invoice.amount + invoice.total_tax
+    return c2s(total)
+
+
 from itertools import chain
 
 def sumUsageCosts(invoice, ivd):
@@ -256,7 +264,7 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
 </thead>
 <tr>
 <td>Excluding VAT</td>
-<td align="right">${c2s(invoice.amount - invoice.total_tax)} </td>
+<td align="right">${invoice_total(invoice, exclude_tax=True)} </td>
 </tr>
 <tr>
 <td>VAT</td>
@@ -264,7 +272,7 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
 </tr>
 <tr>
 <td align="left"><strong>Total</strong></td>
-<td align="right">${c2s(invoice.amount)} </td>
+<td align="right">${invoice_total(invoice)} </td>
 </tr>
 </table>
 
@@ -320,7 +328,7 @@ rusages = sorted(invoice.rusages, key=sorter)
     <td></td>
     <td></td>
     <td><strong>Total</strong></td>
-    <td align="right">${c2s(invoice.amount)}</td>
+    <td align="right">${invoice_total(invoice)}</td>
 </tr>
 </tbody>
 </table>
