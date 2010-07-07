@@ -57,10 +57,9 @@ def sum_tax_for_usages(invoice, rusages):
     return getResourceVATAmount(invoice, rusages[0].resource)
 
 def invoice_total(invoice, exclude_tax=False):
+    total = invoice.amount
     if exclude_tax:
-        total = invoice.location.vat_included and (invoice.amount - invoice.total_tax) or invoice.amount
-    else:
-        total = invoice.location.vat_included and invoice.amount or invoice.amount + invoice.total_tax
+        total -= invoice.total_tax
     return c2s(total)
 
 
