@@ -19,6 +19,7 @@ from hubspace.invoice import calc_tax
 from hubspace.utilities.uiutils import c2s
 from hubspace.validators import dateconverter
 from turbogears.validators import DateTimeConverter
+from hubspace.utilities.i18n import hubspace_lang_code
 
 formatDate = dateconverter.from_python
 formatDate = lambda t: t.strftime("%b %-d %Y")
@@ -73,11 +74,10 @@ def sumUsageCosts(invoice, ivd):
 
 nl2br = lambda s: s.replace("\n","<br/>")
 
-def lang():
-    return cherrypy.session.get('locale', 'en')
+lang = lambda invoice: hubspace_lang_code(invoice.location)
 ?>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" xml:lang="${lang()}" lang="${lang()}">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" xml:lang="${lang(invoice)}" lang="${lang(invoice)}">
 
 <style>
 /* Normal */
@@ -238,7 +238,7 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
             <small>
                 <span py:if="invoice.vat_included"> <em>Inclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %) : </em> </span>
                 <span py:if="not invoice.vat_included"> <em>Exclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %): </em> </span>
-                (${invoice.location.currency} ${invoice.rusages_cost_and_tax[rusage.id][1]}
+                (${invoice.location.currency} ${getRUsageCost(invoice, rusage)})
             </small>
         </td>
     </tr>
