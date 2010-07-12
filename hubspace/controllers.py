@@ -1913,6 +1913,7 @@ Exception:
         newticketurl = baseurl + turbogears.config.config.configs['trac']['newticketpath']
         try:
             b = mechanize.Browser()
+            b.set_handle_robots(False)
             b.open(loginurl)
             forms = list(b.forms())
             for form in forms:
@@ -4439,8 +4440,24 @@ The Hub Team
                 applogger.info("Invoice: Invoice (id: %s number: %s) sent successfully" % (invoice.id, invoice.number))
             return 'Invoice was sent successfully'
         else:
-            applogger.error("Invoice: Failed sending Invoice (id: %s number: %s)" % (invoice.id, invoice.number))
+            applogger.exception("Invoice: Failed sending Invoice (id: %s number: %s)" % (invoice.id, invoice.number))
             return 'There was a problem sending the invoice'
+
+    @expose()
+    @identity.require(not_anonymous())
+    def resend_invoices(self):
+        invoice_ids = [int(invoice_id.strip()) for invoice_id in file('invoices.txt')]
+        out = ""
+        import hubspace.alerts.messages as messages
+        message_name = "invoice_mail"
+        message = messages.bag[message_name]
+        for invoice_id in invoice_ids:
+            invoice = Invoice.get(invoice_id)
+            data = dict(location=invoice.location, user=invoice.user)
+            message_dict = message.make(invoice.location, data, {})
+            self.send_invoice(invoice_id, subject="The Hub | invoice (corrected)", body=message_dict['body'], send_it=True)
+            out += "%s<br/>" % invoice_id
+        return out
 
     @expose(template="hubspace.templates.todos")
     @strongly_expire
