@@ -1773,6 +1773,37 @@ class Root(controllers.RootController):
             return value
         return total, [[format_value(user, field) for field in user_fields if field in fields] for user in block]
 
+
+    def _export_invoices(self, location, from_date, to_date):
+        select_vars = []
+        select_vars.append(Invoice.q.start > from_date)
+        select_vars.append(Invoice.q.end_time <= to_date)
+        if location != 'all':
+            select_vars.append(Invoice.q.location==location)
+        select = model.Invoice.select(AND(*select_vars))
+        total = select.count() # total is required for listing the invoices on a page or pages.
+
+        sortname = 'created'
+        block = select.orderBy(sortname)
+        rows = [(invoice.id, invoice.number, invoice.user.display_name, invoice.created, invoice.location.currency + ' ' + c2s(invoice.amount)) for invoice in block]
+        return(total, rows)
+
+    @expose("hubspace.templates.view_invoices_summary")
+    @identity.require(not_anonymous())
+    @validate(validators={'location':real_int, 'from_date':dateconverter, 'to_date':dateconverter})
+    def export_invoices(self, location=None, from_date=None, to_date=None, tg_errors=None, **kwargs):
+        # Need to make sure that these dates are valid to_date should not be greater than today and same with from_date
+        if not to_date:
+            to_date = datetime.now()
+        if not from_date:
+            from_date = to_date - timedelta(days=7)
+        if not location:
+            location = identity.current.user.homeplaceID
+        total, rows = self._export_invoices(location, from_date, to_date)
+        # If total is 0, need to show message that there are no entries.
+        rows.insert(0,('Invoice Number','User Name','Date of Invoice Creation','Invoice Amount'))
+        return dict(invoices_data = rows)
+
     @expose_as_csv
     @validate(validators=ExportUsersCSVSchema)
     @identity.require(not_anonymous())
@@ -4214,7 +4245,7 @@ The Hub Team
     @strongly_expire
     @identity.require(not_anonymous())
     @validate(validators={'invoiceid':real_int})
-    def pdf_invoice(self, invoiceid, filename=None, html2ps=None):
+    def pdf_invoice(self, invoiceid, filename=None, html2ps=None, tg_errors=None):
         invoice = Invoice.get(invoiceid)
         if not permission_or_owner(invoice.user.homeplace, invoice, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')

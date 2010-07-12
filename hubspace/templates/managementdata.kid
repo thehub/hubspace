@@ -87,10 +87,67 @@ user_columns = user_fields.values()
           <input type="submit" class="small yellow nicebutton" value="Download spreadsheet"/>
       </div>
       </form>
-
-    <br/>
-    <table id="flex1"></table>
+      <table id="flex1"></table>
+</div></div>
+    <div><div class="dataBox" py:def="invoices_export_func()">
+        <div class="dataBoxHeader">
+	    <a class="title" id="link_adminStuff2"><h2>Export Invoice Data</h2></a>
+	</div>
+    <div class="dataBoxContent">
+     <form id="invoices_export_form">
+     <div>
+         <span>Select Location</span>
+         <select name="location">
+            <option py:if="identity.has_permission('superuser')" value="all">All</option>
+            <option py:for="location in locations()" value="${location.id}" py:attrs="select_home_hub(location)">${location.name}</option>
+         </select>
+         <i py:if="identity.has_permission('superuser')"> * Selecting "All" location may result in slower report generation</i>
+     </div>
+     <div>
+          <table border="0">
+          <tr>
+          <td>Select a Date Range: </td>
+          <td>
+            <p>
+            <a class="date_select" id="display_from_date">Start </a> To <a class="date_select" id="display_end_date">End  </a><em> (Default: Last 7 days) </em>
+            <input id="from_date" name="from_date" type="text" class="invisible_input"/>
+            <input id="to_date" name="to_date" type="text" class="invisible_input"/>
+            <script type="text/javascript">
+              var sage_invoice_list_dates = function() {
+                  var end_date_input = jq('#to_date');
+                  var end_date_trigger = jq('#display_end_date');
+                  end_date_input.datepicker({onSelect:function(datetext){jq('#display_end_date').html(datetext);}});
+                  end_date_trigger.click(function() {  
+                      end_date_input.datepicker('show');
+                      end_date_input.blur();
+                  });
+                  var date_input = jq('#from_date');
+                  var date_trigger = jq('#display_from_date');
+                  date_input.datepicker({onSelect:function(datetext){jq('#display_from_date').html(datetext);}});
+                  date_trigger.click(function() {  
+                      date_input.datepicker('show');
+                      date_input.blur();
+                  });
+              };
+              sage_invoice_list_dates();
+	    </script>
+            </p>
+            </td>
+          </tr>
+          </table>
+     </div>
+      <div>
+          <input type="button" id="view_invoices_summary" class="small yellow nicebutton" value="View Summary"/>
+<!--          <input type="submit" id="download_summary" class="small yellow nicebutton" value="Download Summary"/>
+          <input type="submit" id="download_invoices" class="small yellow nicebutton" value="Download Invoices"/> -->
+      </div>
+      </form>
     </div>
+    </div>
+    ${invoices_export_func()}
+    </div>
+    <div id="invoices_export_div">
+
     </div>
 
     <div class="dataBox">

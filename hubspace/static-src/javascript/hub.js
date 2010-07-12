@@ -996,6 +996,8 @@ var append_members = function (response) {
 
 };
 
+var invoices_export_listeners = function () {
+};
 //////////////////////////SEARCH//////////////
 var Search = Class.create();
 Search.prototype = {
@@ -1169,6 +1171,14 @@ var show_users_grid = function (evt) {
 var init_search_invoices = function () {
     set_inplace_cal(jq('#display_search_from_date'), jq('#search_from_date'));
 };
+
+//////////////////////////EXPORT INVOICES//////////////
+var invoices_export = function (evt) {
+    var form = jq('#invoices_export_form').serializeArray();
+    jq('#invoices_export_div').load('/export_invoices', form, invoices_export_listeners);
+    return false;
+};
+
 ////////////////TABS & NAVIGATION///////////////////////
 var Tabs = function () {
     var current_user_id = jq('#current_user_id').attr('class');
@@ -1495,6 +1505,9 @@ var Tabs = function () {
             if (section_name === 'host' && subsection_name === 'managementdata') {
                jq('#users_grid').click(show_users_grid);
                jq('#generate_report').click(get_report);
+               jq('#view_invoices_summary').click(invoices_export);
+               // jq('#download_summary').click(download_summary);
+               // jq('#download_invoices').click(download_invoices);
                o.addBoxExpanders();
             }
             if (section_name === 'host' && subsection_name === 'resources') {
