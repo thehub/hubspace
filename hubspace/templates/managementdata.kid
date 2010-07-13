@@ -94,7 +94,7 @@ user_columns = user_fields.values()
 	    <a class="title" id="link_adminStuff2"><h2>Export Invoice Data</h2></a>
 	</div>
     <div class="dataBoxContent">
-     <form id="invoices_export_form">
+     <form id="invoices_export_form" action="/invoices_summary.csv" method="post">
      <div>
          <span>Select Location</span>
          <select name="location">
@@ -113,23 +113,23 @@ user_columns = user_fields.values()
             <input id="from_date" name="from_date" type="text" class="invisible_input"/>
             <input id="to_date" name="to_date" type="text" class="invisible_input"/>
             <script type="text/javascript">
-              var sage_invoice_list_dates = function() {
-                  var end_date_input = jq('#to_date');
-                  var end_date_trigger = jq('#display_end_date');
-                  end_date_input.datepicker({onSelect:function(datetext){jq('#display_end_date').html(datetext);}});
-                  end_date_trigger.click(function() {  
-                      end_date_input.datepicker('show');
-                      end_date_input.blur();
+              var export_invoice_list_dates = function() {
+                  var to_date_input = jq('#to_date');
+                  var to_date_trigger = jq('#display_end_date');
+                  to_date_input.datepicker({onSelect:function(datetext){jq('#display_end_date').html(datetext);}});
+                  to_date_trigger.click(function() {  
+                      to_date_input.datepicker('show');
+                      to_date_input.blur();
                   });
-                  var date_input = jq('#from_date');
-                  var date_trigger = jq('#display_from_date');
-                  date_input.datepicker({onSelect:function(datetext){jq('#display_from_date').html(datetext);}});
-                  date_trigger.click(function() {  
-                      date_input.datepicker('show');
-                      date_input.blur();
+                  var from_date_input = jq('#from_date');
+                  var from_date_trigger = jq('#display_from_date');
+                  from_date_input.datepicker({onSelect:function(datetext){jq('#display_from_date').html(datetext);}});
+                  from_date_trigger.click(function() {  
+                      from_date_input.datepicker('show');
+                      from_date_input.blur();
                   });
               };
-              sage_invoice_list_dates();
+              export_invoice_list_dates();
 	    </script>
             </p>
             </td>
@@ -137,14 +137,14 @@ user_columns = user_fields.values()
           </table>
      </div>
       <div>
-          <input type="button" id="view_invoices_summary" class="small yellow nicebutton" value="View Summary"/>
-<!--          <input type="submit" id="download_summary" class="small yellow nicebutton" value="Download Summary"/>
-          <input type="submit" id="download_invoices" class="small yellow nicebutton" value="Download Invoices"/> -->
+            <input type="button" id="view_invoices_summary" class="small yellow nicebutton" value="View Summary"/>
+            <input type="submit" id="invoices_summary" class="small yellow nicebutton" value="Download Summary"/>
+          <!-- <input type="submit" id="download_bulk_invoices" class="small yellow nicebutton" value="Download Bulk Invoices"/> -->
       </div>
       </form>
     </div>
     </div>
-    ${invoices_export_func()}
+        ${invoices_export_func()}
     </div>
     <div id="invoices_export_div">
 

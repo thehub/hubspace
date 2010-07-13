@@ -1175,7 +1175,7 @@ var init_search_invoices = function () {
 //////////////////////////EXPORT INVOICES//////////////
 var invoices_export = function (evt) {
     var form = jq('#invoices_export_form').serializeArray();
-    jq('#invoices_export_div').load('/export_invoices', form, invoices_export_listeners);
+    jq('#invoices_export_div').load('/export_invoices_summary', form, invoices_export_listeners);
     return false;
 };
 
@@ -1506,8 +1506,6 @@ var Tabs = function () {
                jq('#users_grid').click(show_users_grid);
                jq('#generate_report').click(get_report);
                jq('#view_invoices_summary').click(invoices_export);
-               // jq('#download_summary').click(download_summary);
-               // jq('#download_invoices').click(download_invoices);
                o.addBoxExpanders();
             }
             if (section_name === 'host' && subsection_name === 'resources') {
