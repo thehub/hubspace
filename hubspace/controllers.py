@@ -1774,35 +1774,46 @@ class Root(controllers.RootController):
         return total, [[format_value(user, field) for field in user_fields if field in fields] for user in block]
 
 
-    def _export_invoices(self, location, from_date, to_date):
-        select_vars = []
-        select_vars.append(Invoice.q.start > from_date)
-        select_vars.append(Invoice.q.end_time <= to_date)
-        if location != 'all':
-            select_vars.append(Invoice.q.location==location)
-        select = model.Invoice.select(AND(*select_vars))
-        total = select.count() # total is required for listing the invoices on a page or pages.
-
-        sortname = 'created'
-        block = select.orderBy(sortname)
-        rows = [(invoice.id, invoice.number, invoice.user.display_name, invoice.created, invoice.location.currency + ' ' + c2s(invoice.amount)) for invoice in block]
-        return(total, rows)
-
-    @expose("hubspace.templates.view_invoices_summary")
-    @identity.require(not_anonymous())
-    @validate(validators={'location':real_int, 'from_date':dateconverter, 'to_date':dateconverter})
-    def export_invoices(self, location=None, from_date=None, to_date=None, tg_errors=None, **kwargs):
-        # Need to make sure that these dates are valid to_date should not be greater than today and same with from_date
+    def _export_invoices_summary(self, location_id, from_date, to_date):
         if not to_date:
             to_date = datetime.now()
         if not from_date:
             from_date = to_date - timedelta(days=7)
-        if not location:
-            location = identity.current.user.homeplaceID
-        total, rows = self._export_invoices(location, from_date, to_date)
-        # If total is 0, need to show message that there are no entries.
-        rows.insert(0,('Invoice Number','User Name','Date of Invoice Creation','Invoice Amount'))
-        return dict(invoices_data = rows)
+        if not location_id:
+            location_id = identity.current.user.homeplaceID
+
+        invoice_filter = []
+        invoice_filter.append(Invoice.q.start > from_date)
+        invoice_filter.append(Invoice.q.end_time <= to_date)
+        if location_id != 'all':
+            invoice_filter.append(Invoice.q.location==location_id)
+        select = model.Invoice.select(AND(*invoice_filter))
+
+        sortname = 'created'
+        select = select.orderBy(sortname)
+        format_inv_row = lambda inv: (inv.id, inv.number, inv.user.display_name, inv.created.strftime('%b %d, %Y'), inv.location.currency +' '+ c2s(inv.amount))
+        title_row = ('Number','User Name','Date of Creation','Amount') # i18n
+        rows = ( (format_inv_row(invoice)) for invoice in select )
+        return title_row, rows
+       
+
+    @expose("hubspace.templates.view_invoices_summary")
+    @identity.require(not_anonymous())
+    @validate(validators={'location':real_int, 'from_date':dateconverter, 'to_date':dateconverter})
+    def export_invoices_summary(self, location=None, from_date=None, to_date=None, tg_errors=None, **kwargs):
+        title_row, rows = self._export_invoices_summary(location, from_date, to_date)
+        return dict(title_row = title_row, invoices_data = rows)
+
+    @expose_as_csv
+    @strongly_expire
+    @identity.require(not_anonymous())
+    @validate(validators={'location':real_int, 'from_date':dateconverter, 'to_date':dateconverter})
+    def invoices_summary_csv(self, location=None, from_date=None, to_date=None, filename=None, tg_errors=None, **kwargs):
+        filename = 'invoices_summary.csv'
+        title_row, rows = self._export_invoices_summary(location, from_date, to_date)
+        out = [row[1:] for row in rows]
+        out.insert(0, title_row)
+        return out
 
     @expose_as_csv
     @validate(validators=ExportUsersCSVSchema)
@@ -1913,6 +1924,7 @@ Exception:
         newticketurl = baseurl + turbogears.config.config.configs['trac']['newticketpath']
         try:
             b = mechanize.Browser()
+            b.set_handle_robots(False)
             b.open(loginurl)
             forms = list(b.forms())
             for form in forms:
@@ -4439,8 +4451,24 @@ The Hub Team
                 applogger.info("Invoice: Invoice (id: %s number: %s) sent successfully" % (invoice.id, invoice.number))
             return 'Invoice was sent successfully'
         else:
-            applogger.error("Invoice: Failed sending Invoice (id: %s number: %s)" % (invoice.id, invoice.number))
+            applogger.exception("Invoice: Failed sending Invoice (id: %s number: %s)" % (invoice.id, invoice.number))
             return 'There was a problem sending the invoice'
+
+    @expose()
+    @identity.require(not_anonymous())
+    def resend_invoices(self):
+        invoice_ids = [int(invoice_id.strip()) for invoice_id in file('invoices.txt')]
+        out = ""
+        import hubspace.alerts.messages as messages
+        message_name = "invoice_mail"
+        message = messages.bag[message_name]
+        for invoice_id in invoice_ids:
+            invoice = Invoice.get(invoice_id)
+            data = dict(location=invoice.location, user=invoice.user)
+            message_dict = message.make(invoice.location, data, {})
+            self.send_invoice(invoice_id, subject="The Hub | invoice (corrected)", body=message_dict['body'], send_it=True)
+            out += "%s<br/>" % invoice_id
+        return out
 
     @expose(template="hubspace.templates.todos")
     @strongly_expire

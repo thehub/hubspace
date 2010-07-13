@@ -6,6 +6,7 @@ from hubspace.utilities.uiutils import now
 def get_tariff(loc, userid, usage_start_time, default=True):   
     result = Resource.select(AND(RUsage.q.resourceID == Resource.q.id,
                                  Resource.q.type=='tariff',
+                                 RUsage.q.cancelled==0,
                                  RUsage.q.userID==userid,
                                  Resource.q.placeID==loc,
                                  RUsage.q.start <= usage_start_time,
