@@ -41,6 +41,8 @@ setup(name='hubspace',
            "pycha",
            "Mako",
            "httpagentparser",
+           "html5lib",
+           "vobject",
       ],
       entry_points="""
 [console_scripts]
