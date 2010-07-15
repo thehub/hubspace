@@ -53,7 +53,6 @@ from hubspace.tariff import get_tariff
 
 import hubspace.sync.core as sync
 import hubspace.search
-
 from hubspace.validators import *
 from turbogears.validators import Money
 from hubspace import reportutils
@@ -164,15 +163,19 @@ def send_unknown_aliases():
     model.hub.commit()
 
 
-from hubspace.scheduler import _start_scheduler, add_oneoff_task, add_weekday_task, add_weekday_task, _get_scheduler, add_monthday_task, add_interval_task
+#from hubspace.scheduler import _start_scheduler, add_oneoff_task, add_weekday_task, add_weekday_task, _get_scheduler, add_monthday_task, add_interval_task
+from turbogears.scheduler import _start_scheduler, add_weekday_task, add_weekday_task, _get_scheduler, add_monthday_task, add_interval_task
+#from tgscheduler import start_scheduler as _start_scheduler
+#from tgscheduler.scheduler import add_interval_task, add_weekday_task, add_single_task
+#from tgscheduler.scheduler import add_monthly_task as add_monthday_task
 
 def startup():
     config.update({'i18n.get_locale':get_hubspace_locale})
     #hubspace.search.populate()
     hubspace_compile()
+    start_scheduler()
     for location in Location.select():
         get_updates_data(location)
-    start_scheduler()
 
 class schedSafe(object):
     """
@@ -194,23 +197,18 @@ class schedSafe(object):
             end_all()
         applogger.debug("schedSafe: done")
 
-def test_job():
-    print("test_job: runs")
-    applogger.info("test_job: runs")
-    raise Exception('zz')
-
 def start_scheduler():
     """start the scheduler and add the timed jobs. These jobs must be sure to do model.hub.commit() in all cases EVEN IF THEY ONLY READ - otherwise they will hold onto database transaction in postgres forever! Its often wise to break them down into smaller transactions, by committing and then beginning new transactions using model.hub.begin().
     """
     #turbogears.scheduler.add_interval_task(action=parse_print_file, taskname='parse the print log', initialdelay=0, interval=600)
-    add_interval_task(schedSafe(bookinglib.requestBookingConfirmations), taskname="Request booking confirmations", initialdelay=60 * 60, interval=60 * 60)
+    add_interval_task(schedSafe(bookinglib.requestBookingConfirmations), taskname="Request booking confirmations", initialdelay=60*60, interval=60*60)
     add_weekday_task(send_unknown_aliases, [1], (0,0))
     add_monthday_task(update_tariff_bookings, [1], (0,0))
-    add_monthday_task(action=test_job, taskname="Tariff Autoupdate",monthdays=[1], timeonday=(7,27), args=[], kw={})
-    add_monthday_task(schedule_access_policy_updates, [3], (0,0))
+    #add_monthday_task(schedule_access_policy_updates, [3], (0,0)) # TODO commented because we need to figure out support for oadd_oneoff_task
     add_interval_task(reportutils.do_report_maintainance, taskname="Report generation routine tasks", initialdelay=30*60, interval=24*60*60)
-    if datetime.now() > datetime(datetime.today().year, datetime.today().month, 3):
-        schedule_access_policy_updates()
+    #if datetime.now() > datetime(datetime.today().year, datetime.today().month, 3):
+    #    schedule_access_policy_updates() # TODO commented because we need to figure out support for add_oneoff_task
+    print "scheduler started"
 
 turbogears.startup.call_on_startup.append(startup)
 
@@ -232,7 +230,9 @@ def schedule_access_policy_updates():
         time_zone = timezone(zone_name)
         recalc_time = datetime(next_month_start.year, next_month_start.month, 1, tzinfo=time_zone).astimezone(timezone('UTC'))
         #recalc_time = datetime.now() + timedelta(seconds=10) #uncomment this to test 
-        add_oneoff_task(recalculate_tariff_accessPolicies, recalc_time.date(), recalc_time.timetuple()[3:5], kw=dict(location=loc))
+        # recalculate_tariff_accessPolicies is executed only once #TODO add support for add_oneoff_task
+        applogger.info("scheduling access policy update for %s with initialdelay %s seconds" %(loc, recalc_delay))
+        add_oneoff_task(recalculate_tariff_accessPolicies, initialdelay=recalc_delay, kw=dict(location=loc, ondate=recalc_time.date()))
     model.hub.commit()
 
 def recreate_tables(force=False):
@@ -319,7 +319,7 @@ def setup():
         model.hub.commit()
         print "setup: Done"
 
-if not model.User.select().count():
+if not User.select().count():
     setup()
 
 sync.setupSync()
