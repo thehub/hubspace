@@ -37,6 +37,7 @@ def remindForConfirmation(booking):
     applogger.debug("bookinglib: confirmation reminder sent to %(to)s. %(b_id)s (%(resource_name)s: %(start)s-%(end)s)" % d)
 
 def requestBookingConfirmations():
+    print "begin requestBookingConfirmations"
     bookings_unconfirmed = model.RUsage.selectBy(confirmed=0)
     d1 = 24 # hours
     d2 = ((t_booking_life - datetime.timedelta(seconds=6*60*60)), (t_booking_life - datetime.timedelta(seconds=5*60*60)))
@@ -46,7 +47,8 @@ def requestBookingConfirmations():
         try:
             ## 1 ##
             if t_lapsed >= d3: # Time over. So destroy tentative booking
-                notifyTentativeBookingRelease(booking)
+                if datetime.datetime.now() < booking.date_booked and not booking.invoiced():
+                    notifyTentativeBookingRelease(booking)
                 for u in booking.suggested_usages:
                     applogger.debug("bookinglib: destroying suggested_usage %s" % u.id)
                     u.destroySelf()
