@@ -16,14 +16,15 @@ def start_this_month(location):
     return dateconverter.from_python(datetime(right_now.year, right_now.month, 1))
 
 def getResources(location):
-    return [("Any", "all")] + [(r.name, r.id) for r in location.resources if r.type != "tariff"]
+    return [("Any", "all")] + sorted([(r.name, r.id) for r in location.resources if r.type != "tariff"])
 
-all_users = [("All", "all")] + [(u.user_name, u.id) for u in User.select()]
+all_users = [("All", "all")] + sorted([(u.user_name, u.id) for u in User.select()])
 
 
 res_types = [type for type in resource_types if type not in ['calendar']]
 
-rtype_opts = zip(res_types, res_types)
+rtype_opts = sorted(zip(res_types, res_types))
+print "rtype_opts = ", rtype_opts
 
 def makeOptDict(r, typ):
     def_d = dict (user = "All", r_type = "room", r_name = "Any")
