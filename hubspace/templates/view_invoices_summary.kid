@@ -7,6 +7,7 @@ import itertools
 count = itertools.count()
 count.next()
 invoices_data = list(invoices_data)
+are_entries = 0
 are_entries = len(invoices_data) > 1
 ?>
 <div py:if="not are_entries">

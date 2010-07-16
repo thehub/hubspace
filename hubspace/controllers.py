@@ -201,7 +201,7 @@ def start_scheduler():
     """start the scheduler and add the timed jobs. These jobs must be sure to do model.hub.commit() in all cases EVEN IF THEY ONLY READ - otherwise they will hold onto database transaction in postgres forever! Its often wise to break them down into smaller transactions, by committing and then beginning new transactions using model.hub.begin().
     """
     #turbogears.scheduler.add_interval_task(action=parse_print_file, taskname='parse the print log', initialdelay=0, interval=600)
-    add_interval_task(schedSafe(bookinglib.requestBookingConfirmations), taskname="Request booking confirmations", initialdelay=60*60, interval=60*60)
+    add_interval_task(schedSafe(bookinglib.requestBookingConfirmations), taskname="Request booking confirmations", initialdelay=0, interval=60*60)
     add_weekday_task(send_unknown_aliases, [1], (0,0))
     add_monthday_task(update_tariff_bookings, [1], (0,0))
     #add_monthday_task(schedule_access_policy_updates, [3], (0,0)) # TODO commented because we need to figure out support for oadd_oneoff_task
@@ -1789,10 +1789,10 @@ class Root(controllers.RootController):
             invoice_filter.append(Invoice.q.location==location_id)
         select = model.Invoice.select(AND(*invoice_filter))
 
-        sortname = 'created'
+        sortname = 'sent'
         select = select.orderBy(sortname)
         format_inv_row = lambda inv: (inv.id, inv.number, inv.user.display_name, inv.created.strftime('%b %d, %Y'), inv.location.currency +' '+ c2s(inv.amount))
-        title_row = ('Number','User Name','Date of Creation','Amount') # i18n
+        title_row = ('Number','User Name','Sent Date','Amount') # i18n
         rows = ( (format_inv_row(invoice)) for invoice in select )
         return title_row, rows
        
@@ -1802,6 +1802,7 @@ class Root(controllers.RootController):
     @validate(validators={'location':real_int, 'from_date':dateconverter, 'to_date':dateconverter})
     def export_invoices_summary(self, location=None, from_date=None, to_date=None, tg_errors=None, **kwargs):
         title_row, rows = self._export_invoices_summary(location, from_date, to_date)
+        invoices_data = []
         return dict(title_row = title_row, invoices_data = rows)
 
     @expose_as_csv

@@ -24,7 +24,6 @@ all_users = [("All", "all")] + sorted([(u.user_name, u.id) for u in User.select(
 res_types = [type for type in resource_types if type not in ['calendar']]
 
 rtype_opts = sorted(zip(res_types, res_types))
-print "rtype_opts = ", rtype_opts
 
 def makeOptDict(r, typ):
     def_d = dict (user = "All", r_type = "room", r_name = "Any")
