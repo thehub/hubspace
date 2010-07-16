@@ -1783,8 +1783,8 @@ class Root(controllers.RootController):
             location_id = identity.current.user.homeplaceID
 
         invoice_filter = []
-        invoice_filter.append(Invoice.q.start > from_date)
-        invoice_filter.append(Invoice.q.end_time <= to_date)
+        invoice_filter.append(Invoice.q.sent >= from_date)
+        invoice_filter.append(Invoice.q.sent <= to_date)
         if location_id != 'all':
             invoice_filter.append(Invoice.q.location==location_id)
         select = model.Invoice.select(AND(*invoice_filter))
