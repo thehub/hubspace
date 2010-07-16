@@ -201,7 +201,7 @@ def start_scheduler():
     """start the scheduler and add the timed jobs. These jobs must be sure to do model.hub.commit() in all cases EVEN IF THEY ONLY READ - otherwise they will hold onto database transaction in postgres forever! Its often wise to break them down into smaller transactions, by committing and then beginning new transactions using model.hub.begin().
     """
     #turbogears.scheduler.add_interval_task(action=parse_print_file, taskname='parse the print log', initialdelay=0, interval=600)
-    add_interval_task(schedSafe(bookinglib.requestBookingConfirmations), taskname="Request booking confirmations", initialdelay=0, interval=60*60)
+    add_interval_task(schedSafe(bookinglib.requestBookingConfirmations), taskname="Request booking confirmations", initialdelay=60*60, interval=60*60)
     add_weekday_task(send_unknown_aliases, [1], (0,0))
     add_monthday_task(update_tariff_bookings, [1], (0,0))
     #add_monthday_task(schedule_access_policy_updates, [3], (0,0)) # TODO commented because we need to figure out support for oadd_oneoff_task
