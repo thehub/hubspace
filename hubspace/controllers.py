@@ -3724,7 +3724,8 @@ The Hub Team
 
         if len(args)>0 and args[0]=='failed':
             cherrypy.response.status=403
-            return try_render(login_args(*args, **kwargs), template='microSiteLogin', format='xhtml', headers={'content-type':'text/html'}, fragment=False, folder_paths=site_folder_paths)
+            redirect(cherrypy.request.base + '/public/login')
+            #return try_render(login_args(*args, **kwargs), template='microSiteLogin', format='xhtml', headers={'content-type':'text/html'}, fragment=False, folder_paths=site_folder_paths)
 
         
         if identity.current.anonymous or not identity.current.user.active:
