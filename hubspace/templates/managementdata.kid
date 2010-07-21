@@ -153,7 +153,7 @@ user_columns = user_fields.values()
 
     <div><div class="dataBox" py:def="rusages_export_func()">
         <div class="dataBoxHeader">
-	    <a class="title" id="link_adminStuff2"><h2>Export Resource Usage Data</h2></a>
+	    <a class="title" id="link_adminStuff2"><h2>Export Invoiced Resource Usage Data</h2></a>
 	</div>
     <div class="dataBoxContent">
      <form id="rusages_export_form" action="/rusages_summary.csv" method="post">

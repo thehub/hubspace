@@ -1804,18 +1804,19 @@ class Root(controllers.RootController):
         if not location_id:
             location_id = identity.current.user.homeplaceID
 
-        invoice_filter = []
-        invoice_filter.append(Invoice.q.start > from_date)
-        invoice_filter.append(Invoice.q.end_time <= to_date)
+        rusage_filter = []
+        rusage_filter.append(RUsage.q.start > from_date)
+        rusage_filter.append(RUsage.q.start <= to_date)
         if location_id != 'all':
-            invoice_filter.append(Invoice.q.location==location_id)
-        select = model.Invoice.select(AND(*invoice_filter))
-
-        sortname = 'created'
-        select = select.orderBy(sortname)
-        format_inv_row = lambda inv: (inv.id, inv.number, inv.user.display_name, inv.created.strftime('%b %d, %Y'), inv.location.currency +' '+ c2s(inv.amount))
-        title_row = ('Number','User Name','Date of Creation','Amount') # i18n
-        rows = ( (format_inv_row(invoice)) for invoice in select )
+            rusage_filter.extend([RUsage.q.resource==Resource.q.id,
+                                  Resource.q.place==location_id,
+                                  RUsage.q.invoice!=None])
+        select = model.RUsage.select(AND(*rusage_filter))
+        select = select.orderBy(['invoiceID', 'start'])
+        format_rusage_row = lambda rusage: (rusage.invoice.user.id, rusage.invoice.user.username, rusage.invoice.user.display_name, rusage.userID, rusage.user.username, rusage.user.display_name, rusage.invoiceID, dtc.from_python(rusage.invoice.sent), rusage.resource_name, rusage.resource.type, dtc.from_python(rusage.start), dtc.from_python(rusage.end_time), rusage.quantity, c2s(rusage.effective_cost))
+        inclusive_or_exclusive = Location.get(location_id).vat_included and "Including VAT" or "Excluding VAT"
+        title_row = ('Invoiced: Member ID','Invoiced:User Name', 'Invoiced:Full Name', 'UsedBy:Member ID','UsedBy:User Name', 'UsedBy:Full Name', 'Invoice ID', 'Invoice Sent Date', 'Resource','Resource Type', 'Usage Starts', 'Usage Ends', 'Quantity', 'Cost (%s)' % inclusive_or_exclusive) # i18n
+        rows = ( (format_rusage_row(rusage)) for rusage in select )
         return title_row, rows
 
 
@@ -1846,7 +1847,7 @@ class Root(controllers.RootController):
     def rusages_summary_csv(self, location=None, from_date=None, to_date=None, filename=None, tg_errors=None, **kwargs):
         filename = 'rusages_summary.csv'
         title_row, rows = self._export_rusages_summary(location, from_date, to_date)
-        out = [row[1:] for row in rows]
+        out = [row for row in rows]
         out.insert(0, title_row)
         return out
 
