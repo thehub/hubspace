@@ -54,7 +54,7 @@
 			<td py:if="can_change(location, user, month[0], year)==False">${get_tariff_for_datetime(location, user, month[0], year)}</td>
                     <td py:if="can_change(location, user, month[0], year)">
                         <select class="tariffEdit" id="tariff.${year}.${month[0]}" name="tariff.${year}.${month[0]}">
-                             <option py:for="t_id, t_name in tariffs(location, user, month[0], year).iteritems()" py:attrs="selected(location, user, month[0], year, t_id)" value="${t_id}">
+                             <option py:for="t_id, t_name in sorted(tariffs(location, user, month[0], year).iteritems(), key=lambda x: x[1])" py:attrs="selected(location, user, month[0], year, t_id)" value="${t_id}">
                                   ${t_name}
                              </option>
                         </select>

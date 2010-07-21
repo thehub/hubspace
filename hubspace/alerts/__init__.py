@@ -21,4 +21,4 @@ def sendTextEmail(message_name, location=None, data={}, extra_data={}, to=None, 
         #    sendTextEmailAlert("notify_dev", False)
 
 if __name__ == '__main__':
-    sendTextEmail("shon@localhost", "booking_cancellation", dict(resource_name="some room"))
+    sendTextEmail("booking_cancellation", to="shon@localhost", dict(resource_name="some room"))

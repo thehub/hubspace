@@ -2,7 +2,7 @@
 from hubspace.utilities.uiutils import oddOrEven
 odd_or_even = oddOrEven().odd_or_even
 def tariffs(location):
-   return [resource for resource in location.resources if resource.type=='tariff'] 
+   return sorted([resource for resource in location.resources if resource.type=='tariff'])
 ?>
 
 <div xmlns:py="http://purl.org/kid/ns#" py:strip="True">

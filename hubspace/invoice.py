@@ -45,12 +45,12 @@ def invoice_tax_cost_breakdown(invoice):
             ruse_cost = ruse.effectivecost
             vat = calc_tax(ruse_cost, percent_vat, vat_included)
             res_cost += ruse_cost
-            if not vat_included:
-                res_cost += vat
             rusages_cost_and_tax[ruse.id] = (ruse_cost, vat)
         vat = calc_tax(res_cost, percent_vat, vat_included)
         resource_tax[resource.id] = (vat, percent_vat, vat_included)
         resource_cost[resource.id] = res_cost
+        if not vat_included:
+            resource_cost[resource.id] = res_cost + vat
 
     return resource_tax, resource_cost, rusages_cost_and_tax
 

@@ -60,7 +60,8 @@ def resources():
             for resource in location.resources:
                 if resource not in resources and resource.type!='tariff' and resource.active:
                     resources.append(resource)
-    return resources
+    resources_sorted = sorted(resources, key= lambda resource: resource.name.lower()) 
+    return resources_sorted
 
 def user_billed_for(user):
     billed = [u for u in user.billed_for]

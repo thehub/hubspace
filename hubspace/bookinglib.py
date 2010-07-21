@@ -33,10 +33,11 @@ def remindForConfirmation(booking):
                end = booking.end_time,
                to = to,
                b_id = booking.id )
-    hubspace.alerts.sendTextEmail(to, "t_booking_reminder", d)
+    hubspace.alerts.sendTextEmail("t_booking_reminder", to=to, d)
     applogger.debug("bookinglib: confirmation reminder sent to %(to)s. %(b_id)s (%(resource_name)s: %(start)s-%(end)s)" % d)
 
 def requestBookingConfirmations():
+    print "begin requestBookingConfirmations"
     bookings_unconfirmed = model.RUsage.selectBy(confirmed=0)
     d1 = 24 # hours
     d2 = ((t_booking_life - datetime.timedelta(seconds=6*60*60)), (t_booking_life - datetime.timedelta(seconds=5*60*60)))
@@ -46,7 +47,15 @@ def requestBookingConfirmations():
         try:
             ## 1 ##
             if t_lapsed >= d3: # Time over. So destroy tentative booking
-                notifyTentativeBookingRelease(booking)
+                try:
+                    if datetime.datetime.now() < booking.date_booked and not booking.invoiced():
+                        notifyTentativeBookingRelease(booking)
+                except:
+                    applogger.exception("bookinglib: ")
+                finally:
+                    for request in model.ResourceQueue.selectBy(rusage=booking):
+                        request.destroySelf()
+                applogger.debug("bookinglib: destroyed ResourceQueue for %s" % booking.id)
                 for u in booking.suggested_usages:
                     applogger.debug("bookinglib: destroying suggested_usage %s" % u.id)
                     u.destroySelf()
@@ -90,7 +99,6 @@ def notifyTentativeBookingRelease(booking):
         data = dict ( rusage = booking, user = booking.user, location = booking.resource.place )
         hubspace.alerts.sendTextEmail("t_booking_expired_watcher", to=to, data=data)
         applogger.debug("bookinglib: release notification sent to %(to)s. %(b_id)s:%(req_id)s (%(resource_name)s: %(start)s-%(end)s)" % d)
-        request.destroySelf()
     data = dict ( rusage = booking, user = booking.user, location = booking.resource.place )
     hubspace.alerts.sendTextEmail("t_booking_expired_hosts", data=data)
     applogger.debug("bookinglib: release notification sent. %(b_id)s (%(resource_name)s: %(start)s-%(end)s)" % d)
