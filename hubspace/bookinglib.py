@@ -33,7 +33,7 @@ def remindForConfirmation(booking):
                end = booking.end_time,
                to = to,
                b_id = booking.id )
-    hubspace.alerts.sendTextEmail(to, "t_booking_reminder", d)
+    hubspace.alerts.sendTextEmail("t_booking_reminder", to=to, d)
     applogger.debug("bookinglib: confirmation reminder sent to %(to)s. %(b_id)s (%(resource_name)s: %(start)s-%(end)s)" % d)
 
 def requestBookingConfirmations():
