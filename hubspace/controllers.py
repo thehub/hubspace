@@ -1796,6 +1796,29 @@ class Root(controllers.RootController):
         rows = ( (format_inv_row(invoice)) for invoice in select )
         return title_row, rows
        
+    def _export_rusages_summary(self, location_id, from_date, to_date):
+        if not to_date:
+            to_date = datetime.now()
+        if not from_date:
+            from_date = to_date - timedelta(days=7)
+        if not location_id:
+            location_id = identity.current.user.homeplaceID
+
+        invoice_filter = []
+        invoice_filter.append(Invoice.q.start > from_date)
+        invoice_filter.append(Invoice.q.end_time <= to_date)
+        if location_id != 'all':
+            invoice_filter.append(Invoice.q.location==location_id)
+        select = model.Invoice.select(AND(*invoice_filter))
+
+        sortname = 'created'
+        select = select.orderBy(sortname)
+        format_inv_row = lambda inv: (inv.id, inv.number, inv.user.display_name, inv.created.strftime('%b %d, %Y'), inv.location.currency +' '+ c2s(inv.amount))
+        title_row = ('Number','User Name','Date of Creation','Amount') # i18n
+        rows = ( (format_inv_row(invoice)) for invoice in select )
+        return title_row, rows
+
+
 
     @expose("hubspace.templates.view_invoices_summary")
     @identity.require(not_anonymous())
@@ -1814,6 +1837,18 @@ class Root(controllers.RootController):
         out = [row[1:] for row in rows]
         out.insert(0, title_row)
         return out
+
+    @expose_as_csv
+    @strongly_expire
+    @identity.require(not_anonymous())
+    @validate(validators={'location':real_int, 'from_date':dateconverter, 'to_date':dateconverter})
+    def rusages_summary_csv(self, location=None, from_date=None, to_date=None, filename=None, tg_errors=None, **kwargs):
+        filename = 'rusages_summary.csv'
+        title_row, rows = self._export_rusages_summary(location, from_date, to_date)
+        out = [row[1:] for row in rows]
+        out.insert(0, title_row)
+        return out
+
 
     @expose_as_csv
     @validate(validators=ExportUsersCSVSchema)

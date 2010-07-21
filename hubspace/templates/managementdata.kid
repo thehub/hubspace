@@ -150,6 +150,68 @@ user_columns = user_fields.values()
 
     </div>
 
+
+    <div><div class="dataBox" py:def="rusages_export_func()">
+        <div class="dataBoxHeader">
+	    <a class="title" id="link_adminStuff2"><h2>Export Resource Usage Data</h2></a>
+	</div>
+    <div class="dataBoxContent">
+     <form id="rusages_export_form" action="/rusages_summary.csv" method="post">
+     <div>
+         <span>Select Location</span>
+         <select name="location">
+            <option py:if="identity.has_permission('superuser')" value="all">All</option>
+            <option py:for="location in locations()" value="${location.id}" py:attrs="select_home_hub(location)">${location.name}</option>
+         </select>
+         <i py:if="identity.has_permission('superuser')"> * Selecting "All" location may result in slower report generation</i>
+     </div>
+     <div>
+          <table border="0">
+          <tr>
+          <td>Select a Date Range: </td>
+          <td>
+            <p>
+            <a class="date_select" id="rusage_display_from_date">Start </a> To <a class="date_select" id="rusage_display_end_date">End  </a><em> (Default: Last 7 days) </em>
+            <input id="rusage_from_date" name="from_date" type="text" class="invisible_input"/>
+            <input id="rusage_to_date" name="to_date" type="text" class="invisible_input"/>
+            <script type="text/javascript">
+              var export_rusage_list_dates = function() {
+                  var to_date_input = jq('#rusage_to_date');
+                  var to_date_trigger = jq('#rusage_display_end_date');
+                  to_date_input.datepicker({onSelect:function(datetext){jq('#rusage_display_end_date').html(datetext);}});
+                  to_date_trigger.click(function() {  
+                      to_date_input.datepicker('show');
+                      to_date_input.blur();
+                  });
+                  var from_date_input = jq('#rusage_from_date');
+                  var from_date_trigger = jq('#rusage_display_from_date');
+                  from_date_input.datepicker({onSelect:function(datetext){jq('#rusage_display_from_date').html(datetext);}});
+                  from_date_trigger.click(function() {  
+                      from_date_input.datepicker('show');
+                      from_date_input.blur();
+                  });
+              };
+              export_rusage_list_dates();
+	    </script>
+            </p>
+            </td>
+          </tr>
+          </table>
+     </div>
+      <div>
+            <input type="submit" id="rusages_summary" class="small yellow nicebutton" value="Download Summary"/>
+      </div>
+      </form>
+    </div>
+    </div>
+        ${rusages_export_func()}
+    </div>
+    <div id="rusages_export_div">
+
+    </div>
+
+
+
     <div class="dataBox">
         <div class="dataBoxHeader">
 	    <a class="title" id="management_reports"><h2>Reports</h2></a>
