@@ -41,6 +41,13 @@ def getRUsageCost(invoice, rusage):
         cost = rusage.effectivecost
     return c2s(cost)
 
+def getRUsageTax(invoice, rusage):
+    if invoice.rusages_cost_and_tax: 
+        tax = invoice.rusages_cost_and_tax[rusage.id][1]
+    else:
+        tax = getResourceVat(invoice, rusage.resource)
+    return c2s(tax)
+
 def getResourceVat(invoice, resource):
     return invoice.resource_tax_dict[resource.id][1]
 
@@ -238,7 +245,7 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
             <small>
                 <span py:if="invoice.vat_included"> <em>Inclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %) : </em> </span>
                 <span py:if="not invoice.vat_included"> <em>Exclusive of VAT </em><em>(${getResourceVat(invoice, resource)} %): </em> </span>
-                (${invoice.location.currency} ${getRUsageCost(invoice, rusage)})
+                (${invoice.location.currency} ${getRUsageTax(invoice, rusage)})
             </small>
         </td>
     </tr>
