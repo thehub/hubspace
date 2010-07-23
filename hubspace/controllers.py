@@ -136,12 +136,18 @@ def update_tariff_bookings(last_run=None, now=None):
 
 def book_tariff(user, tariff, year, month, recalculate=True):
     lastday = calendar.monthrange(year, month)[1]
-    tariff_booking = create_rusage(start=datetime(year,month,1,0,0,1),
+    is_duplicate = RUsage.selectBy(resourceID=tariff.id, start=datetime(year,month,1,0,0,1), userID=user.id).count()
+    if is_duplicate:
+        applogger.warn("Duplicate Tariff booking: %s [%s %s] %s" % (tariff.name, month, year, user.display_name))
+        tariff_booking = RUsage.selectBy(resourceID=tariff.id, start=datetime(year,month,1,0,0,1), userID=user.id)[0]
+    else:
+        tariff_booking = create_rusage(start=datetime(year,month,1,0,0,1),
                                    end_time=datetime(year,month,lastday,0,0,0)+timedelta(days=1),
                                    resource=tariff.id,
                                    user=user.id)
-    if recalculate:
-        tariff_booking_changed_recalculate(user, tariff, tariff_booking.start, tariff_booking.end_time)
+        applogger.info("Tariff booking: %s [%s %s] %s" % (tariff.name, month, year, user.display_name))
+        if recalculate:
+            recalc_usages_for_new_tariff(user, tariff, tariff_booking.start, tariff_booking.end_time)
 
     return tariff_booking
 
@@ -690,7 +696,7 @@ def pricing_changed_recalculate(new_pricing):
     for rusage in rusages:
         rusage.cost = calculate_cost(rusage)
    
-def tariff_booking_changed_recalculate(user=None, tariff=None, start=None, end=None, catch_invoiced=False):
+def recalc_usages_for_new_tariff(user=None, tariff=None, start=None, end=None, catch_invoiced=False):
     """recalculate costs for usage: because a user changes tariff.
     Find all the rusages affected by that tariffbooking and not the tariffbooking itself
     """     
@@ -710,7 +716,7 @@ def tariff_booking_changed_recalculate(user=None, tariff=None, start=None, end=N
     rusages_invoiced = []
     for rusage in rusages:
         if catch_invoiced and rusage.invoiced:
-            applogger.warn("tariff_booking_changed_recalculate: skipping rusage %s as it's already invoiced" % rusage.id)
+            applogger.warn("recalc_usages_for_new_tariff: skipping rusage %s as it's already invoiced" % rusage.id)
             if rusage.tariff != tariff:
                 rusages_invoiced.append(rusage)
             continue
@@ -1637,6 +1643,7 @@ class Root(controllers.RootController):
     feed = Feed()
     sites = Sites()
     rpc = RPC()
+
 
     @expose()
     def langtest(self):
@@ -3035,7 +3042,7 @@ Exception:
                 #did we move back to the guest tariff - if so destroy old booking and recalculate costs
                 if current_tariff_booking and not tariffid:
                     self.delete_rusage(current_tariff_booking.id)
-                    invoiced_usages = tariff_booking_changed_recalculate(user, location.defaulttariff, \
+                    invoiced_usages = recalc_usages_for_new_tariff(user, location.defaulttariff, \
                         current_tariff_booking.start, current_tariff_booking.end_time, True)
                     already_invoiced += invoiced_usages
                                       
@@ -3044,7 +3051,7 @@ Exception:
                     if current_tariff_booking:
                         self.delete_rusage(current_tariff_booking.id)
                     tariff_booking = self.book_tariff(userid=user.id, tariffid=tariffid, year=int(year), month=int(month), recalculate=False)
-                    invoiced_usages = tariff_booking_changed_recalculate(user, tariff_booking.resource, tariff_booking.start, tariff_booking.end_time, True)
+                    invoiced_usages = recalc_usages_for_new_tariff(user, tariff_booking.resource, tariff_booking.start, tariff_booking.end_time, True)
                     already_invoiced += invoiced_usages
 
         final_current_tariff = get_tariff(location.id, user.id, now(location.id))
@@ -4992,8 +4999,9 @@ The Hub Team
     @exception_handler(print_exception, "isinstance(tg_exceptions, NoSuchObject)")
     @exception_handler(print_exception, "isinstance(tg_exceptions, ResourceHasRUsages)")
     @identity.require(not_anonymous())
-    @validate(validators={'name':v.UnicodeString(not_empty=True)})
-    def delete_resource(self, name):
+    @validate(validators={'res_id':real_int})
+    def delete_resource(self, res_id):
+        name = Resource.get(res_id).name
         resource = Resource.selectBy(name=name)
         if resource.count()==0:
             return NoSuchObject("No such resource as "+ name +" exists")
