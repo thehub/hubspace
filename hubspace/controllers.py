@@ -4674,8 +4674,9 @@ The Hub Team
     @validate(validators={'start':dateconverter, 'end_time':dateconverter, 'userid':real_int})
     def create_invoice(self, autocollect=True,**kwargs):
         amount = 0
-        kwargs.setdefault('user', kwargs['userid'])        
+        kwargs.setdefault('user', kwargs['userid'])
         user = User.get(kwargs['user'])
+        location = identity.current.user.homeplace
         
         if not permission_or_owner(user.homeplace, None, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
@@ -4689,14 +4690,15 @@ The Hub Team
         if not kwargs['start']:
             kwargs['start']=datetime(1970,1,1)
         if not kwargs['end_time']:
-            kwargs['end_time']= now(user.homeplace)
-        kwargs.setdefault('location',user.homeplace)
+            kwargs['end_time']= now(location)
+        kwargs.setdefault('location', location)
         invoice = create_object('Invoice',**kwargs)
 
         if autocollect:
-            for u in users:                
+            for u in users:
                 for rusage in get_rusages(u, None, kwargs['start'], kwargs['end_time']):
-                    rusage.invoice = invoice.id
+                    if rusage.resource.place == location:
+                        rusage.invoice = invoice.id
         
         self.update_invoice_amount(invoice.id)
         return {'object':user}
