@@ -6,6 +6,7 @@ from hubspace.validators import dateconverter
 from hubspace.model import Invoice, Location
 from sqlobject import AND
 from hubspace.controllers import display_resource_table, get_collected_invoice_data, permission_or_owner
+from turbogears import identity
 import calendar
 
 
@@ -30,7 +31,7 @@ def get_earliest(user):
        earliest = now(user.homeplace)
     return min(earliest, now(user.homeplace))
  
-def get_latest(user):
+def get_latest(user, use_monthstart=False):
     """end date == end of previous calendar month to now
     if end date - start date < 1 month => enddate=now
     if there is an invoice created and not sent end date same as invoice end date
@@ -40,17 +41,25 @@ def get_latest(user):
         return unsent_invoice.end_time
 
     start = get_earliest(user)
-    right_now = now(user.homeplace)
-    month = right_now.month-1
-    year = right_now.year
+    today = now(user.homeplace)
+
+    if use_monthstart:
+        month = today.month
+        year = today.year
+        end = datetime(year, month, 1)
+        return end if end > start else start
+
+    month = today.month-1
+    year = today.year
     if month == 0:
         year = year-1
         month = 12
-    end = datetime(year, month, calendar.monthrange(year, month)[1])
+    day = calendar.monthrange(year, month)[1]
+    end = datetime(year, month, day)
     if (end - start) > timedelta(days=end.day):
         return end
     else:
-        return right_now
+        return today
 
    
 def resources():
@@ -82,6 +91,10 @@ def billto(user):
 
 <c xmlns:py="http://purl.org/kid/ns#" py:strip="True">
 <c py:def="display_invoice(user=None, invoice=None)" py:strip="True">
+    <?python
+    ignore_end_time = identity.current.user.homeplaceID == 23
+    use_monthstart = ignore_end_time
+    ?>
     <div py:if='not invoice'>
            <h2>Uninvoiced</h2>
       <c py:strip="True" py:if="not billed_by_someone(user)">
@@ -91,7 +104,7 @@ def billto(user):
       </c>
     
       <c py:strip="True" py:if="billed_by_someone(user)">
-        From <a id="display_create_invoice_start_${user.id}" class="date_select">${dateconverter.from_python(get_earliest(user))} <img src="/static/images/booking_down.png" /></a> to <a id="display_create_invoice_end_${user.id}" class="date_select">${dateconverter.from_python(get_latest(user))} <img src="/static/images/booking_down.png" /></a>
+        From <a id="display_create_invoice_start_${user.id}" class="date_select">${dateconverter.from_python(get_earliest(user))} <img src="/static/images/booking_down.png" /></a> to <a id="display_create_invoice_end_${user.id}" class="date_select">${dateconverter.from_python(get_latest(user, use_monthstart))} <img src="/static/images/booking_down.png" /></a>
         <a py:if="permission_or_owner(list(Location.select()), None, 'manage_invoices')" id="create_invoice_${user.id}" class="create_invoice">Create Invoice</a>
         <div style="color:#FF0000;display:none;" id="${user.id}_cannot_create" py:if='not invoice and unsent_for_user(user)'>You must send existing invoices before creating new ones</div>
     
@@ -107,7 +120,7 @@ def billto(user):
                    start_date_input.blur();
               });
 	   </script>
-           <input id="create_invoice_end_${user.id}" name="end_time" type="text" class="invisible_input" style="top:-30px;margin-left:145px;position:relative;" value="${dateconverter.from_python(get_latest(user))}"/> 
+           <input id="create_invoice_end_${user.id}" name="end_time" type="text" class="invisible_input" style="top:-30px;margin-left:145px;position:relative;" value="${dateconverter.from_python(get_latest(user, use_monthstart))}"/> 
            <script type="text/javascript">
               var end_date_input = jq('#create_invoice_end_${user.id}');
               var end_date_trigger = jq('#display_create_invoice_end_${user.id}');
@@ -120,7 +133,7 @@ def billto(user):
        </form>
      </c>
        <div id="rusage_area_${user.id}">
-           ${XML(display_resource_table(user=user, invoice=invoice, earliest=get_earliest(user), latest=get_latest(user)))}
+    ${XML(display_resource_table(user=user, invoice=invoice, earliest=get_earliest(user), latest=get_latest(user, use_monthstart), ignore_end_time=ignore_end_time))}
        </div>
      
      <div py:if="permission_or_owner(user.homeplace, None, 'manage_invoices') and user.billto in [None, user]" id="${user.id}_add_rusage">
@@ -135,7 +148,7 @@ Add Resource Usage:<form id="${user.id}_add_rusage_form" class="add_rusage_form"
    </div>
    <div py:if="invoice">
      <h2>Invoice ${invoice.number}</h2>
-    ${XML(display_resource_table(user=user, invoice=invoice, earliest=get_earliest(user), latest=get_latest(user)))}
+           ${XML(display_resource_table(user=user, invoice=invoice, earliest=get_earliest(user), latest=get_latest(user, use_monthstart)))}
    </div>
   
 </c>

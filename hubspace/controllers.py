@@ -731,7 +731,7 @@ class NotBillable(Exception):
     def __str__(self):
         return repr(self.value)
     
-def get_collected_invoice_data(user=None, invoice=None, earliest=None, latest=None):
+def get_collected_invoice_data(user=None, invoice=None, earliest=None, latest=None, ignore_end_time=False):
     empty = True
     if not user and not invoice:
         raise 'CantWorkLikeThis', 'You need to supply an userid or an invoiceid'
@@ -745,7 +745,7 @@ def get_collected_invoice_data(user=None, invoice=None, earliest=None, latest=No
         inv_id = "no"
         collected = {}
         for user in users:
-            collected[user] = show_rusages(get_rusages(user, invoice, earliest, latest))
+            collected[user] = show_rusages(get_rusages(user, invoice, earliest, latest, ignore_end_time))
             if len(collected[user][0])>1:
                 empty = False
             
@@ -765,7 +765,7 @@ def get_invoice_rusages(invoice):
     return collected
     
 
-def get_rusages(user=None, invoice=None, earliest=None, latest=None):
+def get_rusages(user=None, invoice=None, earliest=None, latest=None, ignore_end_time=False):
     if user:
         user = user.id
     if invoice:
@@ -775,11 +775,19 @@ def get_rusages(user=None, invoice=None, earliest=None, latest=None):
     else:
         earliest = datetime(earliest.year, earliest.month, earliest.day, 0, 0, 0, 0)
         latest = datetime(latest.year, latest.month, latest.day, 0, 0, 0, 0)+timedelta(days=1)
-        rusages = RUsage.select(AND(RUsage.q.userID==user,
-                                    RUsage.q.confirmed==1,
-                                    RUsage.q.invoiceID==invoice,
-                                    RUsage.q.end_time>=earliest,
-                                    RUsage.q.end_time<=latest)).orderBy('start')
+        if ignore_end_time:
+            conds = [RUsage.q.userID==user,
+                   RUsage.q.confirmed==1,
+                   RUsage.q.invoiceID==invoice,
+                   RUsage.q.start>=earliest,
+                   RUsage.q.start<=latest]
+        else:
+            conds = [RUsage.q.userID==user,
+                   RUsage.q.confirmed==1,
+                   RUsage.q.invoiceID==invoice,
+                   RUsage.q.end_time>=earliest,
+                   RUsage.q.end_time<=latest]
+        rusages = RUsage.select(AND(*conds)).orderBy('start')
     return rusages
 
 from hubspace.utilities.dicts import ODict
@@ -835,13 +843,13 @@ def show_quantity_or_duration(rusage):
         return q
     return format_time_delta(q)
 
-def display_resource_table(user=None, invoice=None, earliest=None, latest=None):
+def display_resource_table(user=None, invoice=None, earliest=None, latest=None, ignore_end_time=False):
     if invoice:
         invoice_data = get_collected_invoice_data(invoice=invoice)
         user = invoice.user
         invoice = invoice.id
     elif user:
-        invoice_data = get_collected_invoice_data(user=user, earliest=earliest, latest=latest)
+        invoice_data = get_collected_invoice_data(user=user, earliest=earliest, latest=latest, ignore_end_time=ignore_end_time)
         invoice = None
 
     ourdata = dict(invoice=invoice,
@@ -3882,10 +3890,11 @@ The Hub Team
         home_group = None
         if 'homeplace' in kwargs:
             location = Location.get(int(kwargs['homeplace']))
-            ##add user to member group for this location
-            home_group = Group.selectBy(level='member', place=location.id)[0]
         else:
-            location = Location.get(1)
+            location = identity.current.user.homeplace
+        
+        ##add user to member group for this location
+        home_group = Group.selectBy(level='member', place=location.id)[0]
 
         if not permission_or_owner(None,None,'manage_users'):
             raise IdentityFailure('what about not hacking the system')
@@ -4998,6 +5007,7 @@ The Hub Team
         cherrypy.response.headers['X-JSON'] = 'success'
         return {'object': resource.place}
 
+    @expose()
     @exception_handler(print_exception, "isinstance(tg_exceptions, NoSuchObject)")
     @exception_handler(print_exception, "isinstance(tg_exceptions, ResourceHasRUsages)")
     @identity.require(not_anonymous())
@@ -5006,12 +5016,14 @@ The Hub Team
         name = Resource.get(res_id).name
         resource = Resource.selectBy(name=name)
         if resource.count()==0:
+            applogger.error("No such resource as "+ name +" exists")
             return NoSuchObject("No such resource as "+ name +" exists")
         resource = resource[0]
         if not permission_or_owner(resource.place,None,'manage_resources'):
             raise IdentityFailure('what about not hacking the system')
 
         if len(resource.usages)>0:
+            applogger.info("Could not delete resource %(name)s. %(name)s has usages." %({'name':name}))
             raise ResourceHasUsages("Could not delete resource %(name)s. %(name)s has usages." %({'name':name}))
         for pricing in resource.prices:
             pricing.destroySelf()
@@ -5026,6 +5038,7 @@ The Hub Team
         for req in resource.requiredby:
             resource.removeRequiredby(req)
         
+        applogger.info("Resource '%(name)s' has been deleted" %({'name':name}))
         resource.destroySelf()
         return "Resource '%(name)s' has been deleted" %({'name':name})
 
