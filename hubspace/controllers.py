@@ -4700,12 +4700,13 @@ The Hub Team
             kwargs['start']=datetime(1970,1,1)
         if not kwargs['end_time']:
             kwargs['end_time']= now(location)
+        ignore_end_time = location.id == 23 # #777
         kwargs.setdefault('location', location)
         invoice = create_object('Invoice',**kwargs)
 
         if autocollect:
             for u in users:
-                for rusage in get_rusages(u, None, kwargs['start'], kwargs['end_time']):
+                for rusage in get_rusages(u, None, kwargs['start'], kwargs['end_time'], ignore_end_time):
                     if rusage.resource.place == location:
                         rusage.invoice = invoice.id
         

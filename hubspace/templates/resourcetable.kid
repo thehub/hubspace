@@ -60,8 +60,7 @@ def vat_exception(rusage, invoice, user):
 rusages = invdata[0][resource]
 x+=1
 ?>
-                    <tr py:if="len(rusages)==1 or resource.type=='custom'" py:for="rusage in rusages" class="${odd_or_even()}">
-                        <span py:if="rusage.resource.place == identity.current.user.homeplace" py:strip="True">
+                    <tr py:if="(len(rusages)==1 or resource.type=='custom') and resource.place == identity.current.user.homeplace" py:for="rusage in rusages" class="${odd_or_even()}">
                         <td py:content='rusage.resource_name'>Resource</td>
                         <td py:content='format_date(rusage.start)'>Start</td>
                         <td py:content='format_date(rusage.end_time)'>End</td>
@@ -72,7 +71,6 @@ x+=1
                         <td py:if="unsent_for_user(user) and invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')"><a id="rusage-${rusage.id}" class="add_to_invoice">Add to Invoice</a></td>
                         <td py:if="invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')"><a id="delrusage-${rusage.id}" class="del_rusage">Delete</a></td>
                         <td py:if="unsent_for_user(user) and unsent_for_user(user).id==invoice and permission_or_owner(user.homeplace, None, 'manage_invoices')"><a id="rusage-${rusage.id}" class="remove_from_invoice">Remove from Invoice</a></td>
-                        </span>
 
 
                     </tr>
