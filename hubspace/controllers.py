@@ -5004,27 +5004,30 @@ The Hub Team
     @identity.require(not_anonymous())
     @validate(validators={'res_id':real_int})
     def delete_resource(self, res_id):
-        name = Resource.get(res_id).name
-        resource = Resource.selectBy(name=name)
-        print "i m in delete_resource"
-        if resource.count()==0:
-            applogger.error("No such resource as "+ name +" exists")
-            return NoSuchObject("No such resource as "+ name +" exists")
-        resource = resource[0]
+        resource = Resource.get(res_id)
+
         if not permission_or_owner(resource.place,None,'manage_resources'):
             raise IdentityFailure('what about not hacking the system')
 
+        name = resource.name
+        loc_name = resource.place.name
+        res_label = "%s @ %s" % (name, loc_name)
+        applogger.info("deleting resource %s" % (res_label))
+
         if len(resource.usages)>0:
-            applogger.info("Could not delete resource %(name)s. %(name)s has usages." %({'name':name}))
-            raise ResourceHasUsages("Could not delete resource %(name)s. %(name)s has usages." %({'name':name}))
+            msg = "Could not delete resource %(res_label)s: It has usages" % locals()
+            applogger.error(msg)
+            raise ResourceHasUsages(msg)
+        applogger.info("%s has no usages so it's safe to delete" % res_label)
 
         if resource.resgroup:
             temp_list = resource.resgroup.resources_order
+            applogger.info("removing resource from resource group %s" % resource.resgroup.id)
             temp_list.remove(res_id)
             resource.resgroup.resources_order = temp_list
+            applogger.info("removed resource from resource group %s" % resource.resgroup.id)
         else:
-            applogger.info("Resource %(name)s comes under Ungrouped category." %({'name':name}))
-            print "Resource " + name + " comes under Ungrouped category."
+            applogger.info("Resource %s comes under Ungrouped category." % res_label)
 
         for pricing in resource.prices:
             pricing.destroySelf()
@@ -5042,10 +5045,11 @@ The Hub Team
             resource.removeSuggestedby(sugg)
         for req in resource.requiredby:
             resource.removeRequiredby(req)
-        resource.del_resimage()
+        del resource.resimage
+        applogger.info("removed all resource references")
         
-        applogger.info("Resource '%(name)s' has been deleted" %({'name':name}))
         resource.destroySelf()
+        applogger.info("Resource %s has been deleted" % res_label)
         return "Resource '%(name)s' has been deleted" %({'name':name})
 
     ##################RESOURCE GROUPS##################################

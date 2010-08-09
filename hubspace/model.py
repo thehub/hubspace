@@ -675,6 +675,10 @@ class Resource(SQLObject):
         self.resimage_mimetype = 'image/png'
         self.resimage = value
 
+    def _del_resimage(self):
+        if os.path.exists(self.imageFilename('resimage')):
+            os.remove(self.imageFilename('resimage'))
+
     def _get_resimage(self):
         if not os.path.exists(self.imageFilename('resimage')):
             return None

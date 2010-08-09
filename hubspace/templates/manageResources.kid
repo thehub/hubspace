@@ -2,6 +2,7 @@
 from hubspace.utilities.uiutils import oddOrEven, c2s
 from hubspace.model import Pricing, Resource, group_type_labels, group_types_descriptions
 from hubspace.controllers import get_pricing, resource_groups
+from docutils.core import publish_parts
 
 odd_or_even = oddOrEven().odd_or_even
 
@@ -16,11 +17,19 @@ def order_resources(group):
     resources = resources + [resource for resource in group.resources if resource.id not in resources_order]
     return resources
 
-from docutils.core import publish_parts
+def get_deletable_resources(location):
+    from sqlobject.sqlbuilder import EXISTS, Select
+    from sqlobject import AND, OR, DESC, NOT, IN
+    from hubspace.model import RUsage
+    resources_can_be_deleted = list( Resource.select(AND(Resource.q.place==location.id, NOT(IN(Resource.q.id, Select(RUsage.q.resourceID, distinct=True))))) )
+    return resources_can_be_deleted
 ?>
 
 <div xmlns:py="http://purl.org/kid/ns#" py:strip="True">
    <div class="dataBox" py:def="resource_table(object)"> <div class="dataBoxHeader">
+   <?python
+    resources_can_be_deleted = get_deletable_resources(object)
+   ?>
            <a class="modify" id="addResource" href="#add_resource">Add Resource</a>
            <a class="modify" id="addResourceGroup" href="#add_resource">Add Resource Group</a>
            <a class="title" id="link_addResources"><h2>Resources</h2></a>
@@ -62,14 +71,17 @@ from docutils.core import publish_parts
                          <c py:strip="True" py:for="resource in order_resources(group)">
                            <li title="drag the resource using arrows to the left re-order it" id="item-${resource.id}" class="resource_item">
                                <div class="handle"></div>
-                               <div class="resourceName"><span id="resourceName_${resource.id}">${resource.name}</span><a id="resourceName_${resource.id}Edit" class="button">edit</a></div>
+                               <div class="resourceName"><span id="resourceName_${resource.id}">${resource.name}</span><a id="resourceName_${resource.id}Edit" class="button">edit </a>
+                               <br/>
+                               <a py:if="resource in resources_can_be_deleted" class="button res_delete" title="Delete Resource" id="resource_delete-${resource.id}">Delete</a>
+                               </div>
                                <div class="resourceDescription"><span id="resourceDescription_${resource.id}">${resource.description}</span><a id="resourceDescription_${resource.id}Edit" class="button">edit</a></div>
                                <div class="resourceType"><span id="resourceType_${resource.id}">${resource.type}</span><a id="resourceType_${resource.id}Edit" class="button">edit</a></div>
                                <div class="resourceTimeBased">${resource.time_based and 'true' or 'false'}</div>
                                <div class="resourceVAT"><span id="resourceVAT_${resource.id}">${[resource.place.vat_default, resource.vat][type(resource.vat)==float]}</span><a id="resourceVAT_${resource.id}Edit" class="button">edit</a></div>
                                <div py:if="not resource.active" class="resourceActive">Inactive <a class="button activate" id="activeness-${resource.id}">activate</a></div>
                                <div py:if="resource.active" class="resourceActive">Active <a class="button activate" id="activeness-${resource.id}">de-activate</a></div>
-                               <div py:if="resource.time_based" class="more_res_details" id="res_details-${resource.id}" title="more details"><a href="/more_res_details">more...</a></div>
+                               <div py:if="resource.time_based" class="more_res_details" id="res_details-${resource.id}" title="more details"><a href="/more_res_details">more...</a> </div>
                                <div class="extra_details"></div>
                            </li>
                          </c>

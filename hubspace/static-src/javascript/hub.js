@@ -318,6 +318,15 @@ Resources.prototype = {
         jq('.expand_res_group').one('click', function () {
             that.open_res_group(jq(this));
         });
+        jq('.res_delete').click(function () {
+                var resource_id = jq(this).attr('id').split('-')[1];
+                jq.get('/delete_resource', {'res_id': resource_id}, function (data) 
+                {
+                    jq('#resource_delete-'+resource_id).text('Success').css({'font-style':'italic', 'class':'', 'color':'black'});
+                });
+        });
+        //jq('.res_delete').confirm();  //Have to comment out this line, as .confirm() conflicts with 'prototype-1.6.0.3.js' and does not function as expected
+
         jq('.more_res_details').one('click', function () {
             that.load_extra(jq(this));
             return false;
