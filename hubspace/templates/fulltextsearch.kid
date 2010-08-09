@@ -9,7 +9,7 @@ def user_link(user, subsection=''):
 <div xmlns:py="http://purl.org/kid/ns#" py:strip="True">
     <h1>Search</h1>
     <div class="dataBoxHeader">
-           <a class="title" id="link_search_results"><h2>Search Results</h2></a>
+           <a class="title" id="link_search_results"><h2>Search Results (${len(results)})</h2></a>
     </div>
     <div class="dataBoxContent" id="fulltextSearch">
     <p py:if="len(results)==0 and query">
