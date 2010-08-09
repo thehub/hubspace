@@ -456,35 +456,25 @@ def roles_grantable(location):
 #########################Search for users who need invoicing##############
 
 
-def uninvoiced_users(location, resource_type, search_from_date):
-    if len(resource_type)==2:
-        users = User.select(AND(User.q.id==RUsage.q.userID,
-                                RUsage.q.invoiceID==None,
-                                RUsage.q.end_time<=search_from_date,
-                                RUsage.q.resourceID==Resource.q.id,
-                                Resource.q.placeID==location),
-                            distinct=True)
-    elif resource_type[0]=='tariff':
-        users = User.select(AND(User.q.id==RUsage.q.userID,
-                                RUsage.q.invoiceID==None,
-                                RUsage.q.end_time<=search_from_date,
-                                RUsage.q.resourceID==Resource.q.id,
-                                Resource.q.type=='tariff',
-                                Resource.q.placeID==location),
-                            distinct=True)
-    elif resource_type[0]=='resources':        
-        users = User.select(AND(User.q.id==RUsage.q.userID,
-                                RUsage.q.invoiceID==None,
-                                RUsage.q.end_time<=search_from_date,
-                                RUsage.q.resourceID==Resource.q.id,
-                                Resource.q.type!='tariff',
-                                Resource.q.placeID==location),
-                            distinct=True)
-    else:
-        users = []
-    
-    return set(user.billto for user in users)
+def uninvoiced_users(location, resource_type, search_from_date, include_zero_usage_cost_members):
+    conds = [RUsage.q.invoiceID==None,
+             Resource.q.placeID==location,
+             RUsage.q.end_time<=search_from_date,
+             RUsage.q.resourceID==Resource.q.id,
+             RUsage.q.cancelled==0]
 
+    if not len(resource_type)==2:
+        if resource_type[0]=='tariff':
+            conds.append(Resource.q.type=='tariff')
+        elif resource_type[0]=='resources':
+            conds.append(Resource.q.type!='tariff')
+    
+    rusages = RUsage.select(AND(*conds)).orderBy("user_id")
+    rusages_by_users = itertools.groupby(rusages, lambda ru: ru.user)
+    users = set(user.billto for user, usages in rusages_by_users if sum(ru.effectivecost for ru in usages))
+
+    return users
+    
 
 ##################  Users  ####################
 
@@ -4147,8 +4137,8 @@ The Hub Team
     @strongly_expire
     @identity.require(not_anonymous())
     @validate(validators={'location':real_int, 'resource_type':ForEach(v.UnicodeString()), 'search_from_date':dateconverter})
-    def uninvoiced_users(self, location, resource_type, search_from_date, **kwargs):
-        users=uninvoiced_users(location, resource_type, search_from_date)
+    def uninvoiced_users(self, location, resource_type, search_from_date, include_zero_usage_cost_members=False):
+        users=uninvoiced_users(location, resource_type, search_from_date, include_zero_usage_cost_members)
         return try_render({'results':users, 'query':'', 'subsection':'billing'}, template='hubspace.templates.fulltextsearch', format='xhtml', headers={'content-type':'text/html'}, fragment=True) 
 
 
@@ -5016,6 +5006,7 @@ The Hub Team
     def delete_resource(self, res_id):
         name = Resource.get(res_id).name
         resource = Resource.selectBy(name=name)
+        print "i m in delete_resource"
         if resource.count()==0:
             applogger.error("No such resource as "+ name +" exists")
             return NoSuchObject("No such resource as "+ name +" exists")
@@ -5026,10 +5017,23 @@ The Hub Team
         if len(resource.usages)>0:
             applogger.info("Could not delete resource %(name)s. %(name)s has usages." %({'name':name}))
             raise ResourceHasUsages("Could not delete resource %(name)s. %(name)s has usages." %({'name':name}))
+
+        if resource.resgroup:
+            temp_list = resource.resgroup.resources_order
+            temp_list.remove(res_id)
+            resource.resgroup.resources_order = temp_list
+        else:
+            applogger.info("Resource %(name)s comes under Ungrouped category." %({'name':name}))
+            print "Resource " + name + " comes under Ungrouped category."
+
         for pricing in resource.prices:
             pricing.destroySelf()
-        for pricing in resource.tariff_for:
-            pricing.destroySelf()
+        for tariff in resource.default_tariff_for:
+            tariff.destroySelf()
+        for policy in resource.access_policies:
+            policy.destroySelf()
+        for tariff in resource.tariff_for:
+            tariff.destroySelf()
         for sugg in resource.suggestions:
             resource.removeSuggestions(sugg)
         for req in resource.requires:
@@ -5038,6 +5042,7 @@ The Hub Team
             resource.removeSuggestedby(sugg)
         for req in resource.requiredby:
             resource.removeRequiredby(req)
+        resource.del_resimage()
         
         applogger.info("Resource '%(name)s' has been deleted" %({'name':name}))
         resource.destroySelf()

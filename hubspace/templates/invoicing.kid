@@ -39,6 +39,7 @@ from turbogears import identity
             </script>
 
       </div>
+      <input type="checkbox" name="include_zero_usage_cost_members" checked="checked"/> Display members with zero usage cost
       <div>
           <br />
           <input type="submit" value="Search" id="invoices_search" />
