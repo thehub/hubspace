@@ -188,7 +188,7 @@ body { font-family: Deja; }
         </tr>
         <tr>
             <td>Last date of period</td>
-            <td>${formatDate(invoice.end_time)}</td>
+            <td>${formatDate(invoice.created)}</td>            
         </tr>
         <tr py:if="invoice.location.invoice_duedate">
             <td>Due Date</td>
