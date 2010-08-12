@@ -8,6 +8,7 @@ from sqlobject import AND
 from hubspace.controllers import display_resource_table, get_collected_invoice_data, permission_or_owner
 from turbogears import identity
 import calendar
+from hubspace.templates.locationselect import locationselect
 
 
 def get_earliest(user):
@@ -104,12 +105,15 @@ def billto(user):
       </c>
     
       <c py:strip="True" py:if="billed_by_someone(user)">
-        From <a id="display_create_invoice_start_${user.id}" class="date_select">${dateconverter.from_python(get_earliest(user))} <img src="/static/images/booking_down.png" /></a> to <a id="display_create_invoice_end_${user.id}" class="date_select">${dateconverter.from_python(get_latest(user, use_monthstart))} <img src="/static/images/booking_down.png" /></a>
-        <a py:if="permission_or_owner(list(Location.select()), None, 'manage_invoices')" id="create_invoice_${user.id}" class="create_invoice">Create Invoice</a>
         <div style="color:#FF0000;display:none;" id="${user.id}_cannot_create" py:if='not invoice and unsent_for_user(user)'>You must send existing invoices before creating new ones</div>
     
         <form id="${user.id}_change_create_invoice_dates">
         <input type="hidden" name="userid" value="${user.id}" />
+        <c>- Location:</c>  ${locationselect(user, ['host'], 'invoice_location')}
+        <br/>
+        - Period: From <a id="display_create_invoice_start_${user.id}" class="date_select">${dateconverter.from_python(get_earliest(user))} <img src="/static/images/booking_down.png" /></a> to <a id="display_create_invoice_end_${user.id}" class="date_select">${dateconverter.from_python(get_latest(user, use_monthstart))} <img src="/static/images/booking_down.png" /></a>
+        <br/>
+            <button type="button" py:if="permission_or_owner(list(Location.select()), None, 'manage_invoices')" id="create_invoice_${user.id}" class="create_invoice">Create Invoice</button>
         <input id="create_invoice_start_${user.id}" name="start" type="text" class="invisible_input" style="top:-30px;margin-left:30px;position:relative;" value="${dateconverter.from_python(get_earliest(user))}"/> 
            <script type="text/javascript">
               var start_date_input = jq('#create_invoice_start_${user.id}');

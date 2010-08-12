@@ -151,11 +151,12 @@ def user_locations(user, levels=['host']):
     """get all the locations in which a user has any of the "levels" (by virtue of group membership)
     """
     if 'superuser' in levels and 'superuser' in pip(user.homeplace):
-        return Location.select()
+        return Location.select().orderBy('name')
     locations = []
     for group in user.groups:
         if group.level in levels and group.place and group.place not in locations:
             locations.append(group.place)
+    locations.sort(key=lambda loc: loc.name)
     return locations
 
 

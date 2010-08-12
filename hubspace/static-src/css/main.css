@@ -1003,7 +1003,6 @@ div#bill_redirect {
 .create_invoice{
    cursor:pointer;
    position:relative;
-   left: 30px
 }
 .unsent{
    cursor:pointer;
