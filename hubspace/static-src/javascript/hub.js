@@ -2006,7 +2006,6 @@ var set_billing_listeners = function () {
     jq('table.invoice_history a.pdf_invoice').unbind('click');
     jq('table.invoice_history a.pdf_invoice').click(pdf_invoice);
     var user = navigation.current_profile_id();
-    jq('.invoice_location').change(update_rusages);
     jq('#create_invoice_' + user).unbind('click');
     jq('#create_invoice_' + user).one('click', create_new_invoice);
     jq('table.invoice_history a.remove_invoice').unbind('click');

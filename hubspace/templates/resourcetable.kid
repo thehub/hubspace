@@ -60,7 +60,7 @@ def vat_exception(rusage, invoice, user):
 rusages = invdata[0][resource]
 x+=1
 ?>
-                    <tr py:if="(len(rusages)==1 or resource.type=='custom') and resource.place == identity.current.user.homeplace" py:for="rusage in rusages" class="${odd_or_even()}">
+                    <tr py:if="(len(rusages)==1 or resource.type=='custom')" py:for="rusage in rusages" class="${odd_or_even()}">
                         <td py:content='rusage.resource_name'>Resource</td>
                         <td py:content='format_date(rusage.start)'>Start</td>
                         <td py:content='format_date(rusage.end_time)'>End</td>
@@ -74,7 +74,7 @@ x+=1
 
 
                     </tr>
-                  <span py:if="len(rusages)>1 and resource.type!='custom' and resource.place == identity.current.user.homeplace" py:strip="True">
+                  <span py:if="len(rusages)>1 and resource.type!='custom'" py:strip="True">
                     <tr class="${odd_or_even()}">
                         <td class="composite_rusage" id="${theuser.id}_${invoice or 0}_${resource.id}_${user.id}">${rusages[0].resource_name}<a class="view_sub_usages" id="sub_${theuser.id}_${invoice or 0}_${resource.id}_${user.id}"></a></td>
                         <td py:content='format_date(min([r.start for r in rusages]))'>Start</td>

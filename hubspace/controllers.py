@@ -722,7 +722,7 @@ class NotBillable(Exception):
     def __str__(self):
         return repr(self.value)
     
-def get_collected_invoice_data(user=None, location=None, invoice=None, earliest=None, latest=None, ignore_end_time=False):
+def get_collected_invoice_data(user=None, invoice=None, earliest=None, latest=None, ignore_end_time=False, locations=[]):
     empty = True
     if not user and not invoice:
         raise 'CantWorkLikeThis', 'You need to supply an userid or an invoiceid'
@@ -736,7 +736,7 @@ def get_collected_invoice_data(user=None, location=None, invoice=None, earliest=
         inv_id = "no"
         collected = {}
         for user in users:
-            collected[user] = show_rusages(get_rusages(user, invoice, earliest, latest, ignore_end_time, location))
+            collected[user] = show_rusages(get_rusages(user, invoice, earliest, latest, ignore_end_time, locations))
             if len(collected[user][0])>1:
                 empty = False
             
@@ -756,7 +756,7 @@ def get_invoice_rusages(invoice):
     return collected
     
 
-def get_rusages(user=None, invoice=None, earliest=None, latest=None, ignore_end_time=False, location=None):
+def get_rusages(user=None, invoice=None, earliest=None, latest=None, ignore_end_time=False, locations=None):
     if user:
         user = user.id
     if invoice:
@@ -778,8 +778,9 @@ def get_rusages(user=None, invoice=None, earliest=None, latest=None, ignore_end_
                    RUsage.q.invoiceID==invoice,
                    RUsage.q.end_time>=earliest,
                    RUsage.q.end_time<=latest]
-        if location:
-            conds.append([Resource.q.placeID==location.id, RUsage.q.resourceID==Resource.q.id])
+        if locations:
+            location_ids = [loc.id for loc in locations]
+            conds.extend([IN(Resource.q.placeID, location_ids), RUsage.q.resourceID==Resource.q.id])
         rusages = RUsage.select(AND(*conds)).orderBy('start')
     return rusages
 
@@ -836,13 +837,13 @@ def show_quantity_or_duration(rusage):
         return q
     return format_time_delta(q)
 
-def display_resource_table(user=None, location=None, invoice=None, earliest=None, latest=None, ignore_end_time=False):
+def display_resource_table(user=None, locations=None, invoice=None, earliest=None, latest=None, ignore_end_time=False):
     if invoice:
         invoice_data = get_collected_invoice_data(invoice=invoice)
         user = invoice.user
         invoice = invoice.id
     elif user:
-        invoice_data = get_collected_invoice_data(user=user, location=location, earliest=earliest, latest=latest, ignore_end_time=ignore_end_time)
+        invoice_data = get_collected_invoice_data(user=user, earliest=earliest, latest=latest, ignore_end_time=ignore_end_time, locations=locations)
         invoice = None
 
     ourdata = dict(invoice=invoice,
@@ -4562,7 +4563,7 @@ The Hub Team
     @strongly_expire
     @identity.require(not_anonymous())
     @validate(validators={'userid':v.Int(), 'invoiceid':v.Int(), 'start':dateconverter, 'end_time':dateconverter})
-    def update_resource_table(self, tg_errors=None, userid=None, location_id=None, invoiceid=None, start=None, end_time=None, **kwargs):
+    def update_resource_table(self, tg_errors=None, userid=None, invoiceid=None, start=None, end_time=None, **kwargs):
         if tg_errors:
             raise `str(tg_errors.get('invoiceid') or tg_errors)`
         user=None
@@ -4574,13 +4575,14 @@ The Hub Team
             if not user:
                 user = invoice.user
 
-        location = location_id and Location.get(location_id)
+        locations = user_locations(identity.current.user, levels=['host'])
+        locations = list(locations)
 
 	#user is used as the object here because we want to allow the user to update the resource table when invoice=None (ie. to look through uninvoiced items)
         if not permission_or_owner(user.homeplace, user, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
 
-        return display_resource_table(user=user, location=location, invoice=invoice, earliest=start, latest=end_time)
+        return display_resource_table(user=user, locations=locations, invoice=invoice, earliest=start, latest=end_time)
 
 
     @expose(format="json")
@@ -4701,8 +4703,7 @@ The Hub Team
         if autocollect:
             for u in users:
                 for rusage in get_rusages(u, None, kwargs['start'], kwargs['end_time'], ignore_end_time):
-                    if rusage.resource.place == location:
-                        rusage.invoice = invoice.id
+                    rusage.invoice = invoice.id
         
         self.update_invoice_amount(invoice.id)
         return {'object':user}
