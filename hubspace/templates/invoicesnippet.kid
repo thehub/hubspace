@@ -93,7 +93,7 @@ def billto(user):
 <c xmlns:py="http://purl.org/kid/ns#" py:strip="True">
 <c py:def="display_invoice(user=None, invoice=None)" py:strip="True">
     <?python
-    ignore_end_time = identity.current.user.homeplaceID == 23
+    ignore_end_time = identity.current.user.homeplaceID != 12
     use_monthstart = ignore_end_time
     ?>
     <div py:if='not invoice'>
