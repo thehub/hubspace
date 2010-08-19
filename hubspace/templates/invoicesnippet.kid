@@ -109,7 +109,7 @@ def billto(user):
     
         <form id="${user.id}_change_create_invoice_dates">
         <input type="hidden" name="userid" value="${user.id}" />
-        <c>- Invoicing Location:</c>  ${locationselect(user, ['host'], 'select', 'invoice_location')}
+        <c>- Invoicing Location:</c>  ${locationselect(identity.current.user, ['host'], 'select', 'invoice_location')}
         <br/>
         - Period: From <a id="display_create_invoice_start_${user.id}" class="date_select">${dateconverter.from_python(get_earliest(user))} <img src="/static/images/booking_down.png" /></a> to <a id="display_create_invoice_end_${user.id}" class="date_select">${dateconverter.from_python(get_latest(user, use_monthstart))} <img src="/static/images/booking_down.png" /></a>
         <br/>
