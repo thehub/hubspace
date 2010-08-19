@@ -113,6 +113,7 @@ t_booking_reminder.available_macros = [macros.Location(), macros.Member_Name(), 
     macros.Member_First_Name(), macros.Booked_by()]
 
 trac_submission_failed = Message("trac_submission_failed")
+trac_submission_failed.macros = [macros.Trac_URL(), macros.Traceback(), macros.Username()]
 
 invoice_freetext_1 = Message("invoice_freetext_1")
 invoice_freetext_1.label = "Invoice Free Text (Page 1)"
