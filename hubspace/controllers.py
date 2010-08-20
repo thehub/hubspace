@@ -1673,7 +1673,7 @@ class Root(controllers.RootController):
         if not isinstance(locations, list): locations = [locations]
         if not isinstance(report_types, list): report_types = [report_types]
         locations = [int(loc) for loc in locations]
-        if not set(locations).issubset(tuple(loc.id for loc in user_locations(identity.current.user))):
+        if not set(locations).issubset(tuple(loc.id for loc in user_locations(identity.current.user, ['superuser', 'host', 'director']))):
             raise IdentityFailure('what about not hacking the system')
         if start and end:
             start, end = dateconverter.to_python(start), dateconverter.to_python(end)
