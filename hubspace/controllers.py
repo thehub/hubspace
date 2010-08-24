@@ -471,8 +471,12 @@ def uninvoiced_users(location, resource_type, search_from_date, include_zero_usa
             conds.append(Resource.q.type!='tariff')
     
     rusages = RUsage.select(AND(*conds)).orderBy("user_id")
-    rusages_by_users = itertools.groupby(rusages, lambda ru: ru.user)
-    users = set(user.billto for user, usages in rusages_by_users if sum(ru.effectivecost for ru in usages))
+
+    if include_zero_usage_cost_members:
+        users = set(usage.user.billto for usage in rusages)
+    else:
+        rusages_by_users = itertools.groupby(rusages, lambda ru: ru.user)
+        users = set(user.billto for user, usages in rusages_by_users if sum(ru.effectivecost for ru in usages))
 
     return users
     
