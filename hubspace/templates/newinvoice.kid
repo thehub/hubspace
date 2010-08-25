@@ -143,23 +143,30 @@ body { font-family: Deja; }
 <div id="headerContent">
 <h3>The Hub ${invoice.location.name} </h3><br/>
 </div>
+
+<?python
+show_display_name = True
+if invoice.user.billing_mode == 1:
+    company_name = invoice.user.bill_to_company
+    if company_name:
+        show_display_name = False
+else:
+    company_name = invoice.user.organisation
+
+invoice_data = get_collected_invoice_data(invoice=invoice)[0].items()
+vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_included
+multiuser_invoice = (len(invoice_data) > 1)
+?>
+
 <img src="${invoice.location.imageFilename('invlogo')}"/>
 
 <table border="0" align="center" width="100%">
 <tr>
     <td align="left" width="25%">
-        <br/>
         <p>
-        <strong> ${invoice.user.display_name}<br/> </strong>
+        <c py:if="show_display_name" py:strip="True"><strong> ${invoice.user.display_name}</strong><br/> </c>
         <c>Membership No.</c> ${invoice.user.id} <br/>
-        </p>
-        <p>
-        <?python
-        company_name = invoice.user.bill_to_profile and invoice.user.organisation or invoice.user.bill_to_company or invoice.user.billto.display_name
-        if company_name == invoice.user.display_name: company_name = ""
-        ?>
-        <strong> ${company_name} <br/> </strong>
-
+        <c py:if="company_name" py:strip="True"><strong> ${company_name}</strong><br/> </c>
         <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address)} </c>
         <address py:if="not invoice.user.bill_to_profile" py:strip="True">
             <c py:for="line in invoice.user.billingaddress.split('\n')">${line}<br/></c>
@@ -202,14 +209,9 @@ ${XML(nl2br(freetext1))}
 
 <h2>Summary of usage</h2>
 
-<?python
-invoice_data = get_collected_invoice_data(invoice=invoice)[0].items()
-vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_included
-?>
-
 <div width="80%" py:for="user, ivd in invoice_data">
 
-    <h3>${user.display_name}</h3>
+    <h3 py:if="show_display_name and multiuser_invoice" py:strip="True">${user.display_name}</h3>
 
     <table width="100%" border="0.1" style="padding: 0.2em;">
     <thead style="background: #C0C0C0;">
@@ -296,7 +298,7 @@ c = itertools.count(1)
 <thead style="background: #C0C0C0;">
 <tr>
     <td valign="middle" width="5%">Sr. No.</td>
-    <td>Member</td>
+    <td py:if="multiuser_invoice" py:strip="True">Member</td>
     <td>Description</td>
     <td width="10%">Quantity</td>
     <td>Time</td>
@@ -311,7 +313,7 @@ rusages = sorted(invoice.rusages, key=sorter)
 
 <tr py:for="rusage in rusages">
     <td>${c.next()}</td>
-    <td>${rusage.user.display_name}</td>
+    <td py:if="multiuser_invoice" py:strip="True">${rusage.user.display_name}</td>
     <td>${rusage.resource_name} <div py:if="rusage.cancelled and not rusage.refund"><em>(Cancelled)</em></div>
                                 <div py:if="rusage.refund"><em>(Refund)</em></div>
         <div py:if="rusage.meeting_name"><em>${rusage.meeting_name}</em></div></td>
@@ -322,7 +324,7 @@ rusages = sorted(invoice.rusages, key=sorter)
 </tr>
 <tr>
     <td></td>
-    <td></td>
+    <td py:if="multiuser_invoice"></td>
     <td></td>
     <td></td>
     <td><strong>VAT</strong></td>
@@ -330,7 +332,7 @@ rusages = sorted(invoice.rusages, key=sorter)
 </tr>
 <tr bgcolor="lightblue">
     <td></td>
-    <td></td>
+    <td py:if="multiuser_invoice"></td>
     <td></td>
     <td></td>
     <td><strong>Total</strong></td>
