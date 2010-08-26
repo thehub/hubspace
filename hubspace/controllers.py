@@ -32,6 +32,7 @@ from hubspace.utilities.templates import try_render
 from hubspace.utilities.login import login_args
 from hubspace.feeds import get_updates_data, cached_updates, clear_cache
 from hubspace.invoice import *
+from hubspace.utilities.users import fields as user_fields
 
 from datetime import datetime, timedelta, time, date
 from time import ctime, mktime
@@ -1761,7 +1762,6 @@ class Root(controllers.RootController):
         return kw
 
     def _export_users(self, location, sortname, sortorder, fields, start, end):
-        from hubspace.utilities.users import fields as user_fields
         fields = [f for f in user_fields if f in fields]
         sortname = (sortname in fields and sortname) or "display_name" in fields and "display_name" or fields[0]
         if location == "all":
@@ -1873,6 +1873,8 @@ class Root(controllers.RootController):
             location = identity.current.user.homeplaceID
         start, end = 0, None
         total, rows = self._export_users(location, sortname, sortorder, usercols_selection, start, end)
+        title_row = [user_fields[str(column)]['label'] for column in usercols_selection]
+        rows.insert(0, title_row)
         return rows
 
     @expose(format="json")
