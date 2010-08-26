@@ -46,7 +46,7 @@ from hubspace.utilities.autoreload import autoreload
 from hubspace.utilities.dicts import AttrDict
 from hubspace.utilities.image_preview import create_image_preview
 from hubspace.utilities.static_files import hubspace_compile
-from hubspace.utilities.uiutils import c2s, inv_currency, unsent_for_user, get_multiselected, set_multiselected, set_freetext_metadata, get_freetext_metadata, set_singleselected, get_singleselected, now
+from hubspace.utilities.uiutils import c2s, inv_currency, unsent_for_user, get_multiselected, set_multiselected, set_singleselected, get_singleselected, now
 from hubspace.utilities.permissions import user_locations, addUser2Group, get_current_roles, get_editable_roles, create_permissions_for_group
 from hubspace.utilities.users import filter_members
 from hubspace.tariff import get_tariff
@@ -363,7 +363,7 @@ def make_document(user):
     if org:
         document.add(Field('organisation', org, STORE, TOKENIZED))
 
-    biz_type =  get_freetext_metadata(user, 'biz_type')
+    biz_type =  model.get_freetext_metadata(user, 'biz_type')
     if not isinstance(biz_type, basestring):
         biz_type = None
     if biz_type:
@@ -3253,7 +3253,7 @@ Exception:
         changed_attrs = []
         for kwarg in kwargs:
             if kwarg in metadata:
-                set_freetext_metadata(user, kwarg, unicode(kwargs[kwarg]))
+                model.set_freetext_metadata(user, kwarg, unicode(kwargs[kwarg]))
             else:
                 changed = modify_attribute(user, kwarg, kwargs[kwarg])
                 if changed:
@@ -3347,7 +3347,7 @@ Exception:
         metadata = ['introduced_by']
         for kwarg in kwargs:
             if kwarg in metadata:
-                set_freetext_metadata(user, kwarg, unicode(kwargs[kwarg]))
+                model.set_freetext_metadata(user, kwarg, unicode(kwargs[kwarg]))
             else:
                 modify_attribute(user, kwarg, kwargs[kwarg])
 

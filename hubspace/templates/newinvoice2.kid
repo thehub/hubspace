@@ -159,7 +159,7 @@ body { font-family: Deja; }
         ?>
         <strong> ${company_name} <br/> </strong>
 
-        <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address)} </c>
+        <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address_with_postcode)} </c>
         <address py:if="not invoice.user.bill_to_profile" py:strip="True">
             <c py:for="line in invoice.user.billingaddress.split('\n')">${line}<br/></c>
         </address>

@@ -20,7 +20,7 @@ for k,v in (
     ("tariff_name", dict (label = "Tariff", value = "tariff_name")),
     ("email_address", dict (label = "Email", value = "email_address", checked = "checked")),
     ("organisation", dict (label = "Organisation", value = "organisation")),
-    ("address", dict (label = "Address", value = "address")),
+    ("address_with_postcode", dict (label = "Address", value = "address_with_postcode")),
     ("mobile", dict (label = "Mobile", value = "mobile")),
     ("work", dict (label = "Work Phone", value = "work")),
     ("fax", dict (label = "Fax", value = "fax")),

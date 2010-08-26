@@ -19,7 +19,7 @@ import StringIO
 hub = PackageHub("hubspace")
 __connection__ = hub
 
-__all__=['Visit','VisitIdentity','Group','User','Permission','Location', 'Resource','RUsage','Pricing','Todo','Invoice', 'Note', 'Alias', 'Selection', 'UserMetaData', 'Open', 'Resourcegroup', 'AccessPolicy', 'PolicyGroup', 'UserGroup', 'UserPolicyGroup', 'TaxExemptionRule', 'Rule']
+__all__=['Visit','VisitIdentity','Group','User','Permission','Location', 'Resource','RUsage','Pricing','Todo','Invoice', 'Note', 'Alias', 'Selection', 'UserMetaData', 'Open', 'Resourcegroup', 'AccessPolicy', 'PolicyGroup', 'UserGroup', 'UserPolicyGroup', 'TaxExemptionRule', 'Rule', 'get_freetext_metadata', 'set_freetext_metadata']
 #looks to me like foreign keys cant have names containing '_'
 
 
@@ -58,6 +58,25 @@ def delete_object_reference(instance, post_funcs):
 
 resource_types = ['hotdesk', 'room', 'phone', 'printer', 'tariff', 'custom', 'other', 'calendar']
 graph_types = ('pattern', 'timeseries')
+
+def get_freetext_metadata(obj, attr):
+    try:
+        return getattr(obj, attr)
+    except:
+        try:
+            metadata = UserMetaData.select(AND(UserMetaData.q.userID == obj.id,
+                                               UserMetaData.q.attr_name == attr))
+            return metadata[0].attr_value
+        except:
+            return u''
+
+def set_freetext_metadata(obj, attr, val):
+    metadata = UserMetaData.select(AND(UserMetaData.q.userID == obj.id,
+                                       UserMetaData.q.attr_name == attr))
+    try:
+        metadata[0].attr_value = val
+    except:
+        UserMetaData(user=obj.id, attr_name=attr, attr_value=val)
 
 class Visit(SQLObject):
     class sqlmeta:
@@ -167,6 +186,9 @@ class User(SQLObject):
         self._SO_set_last_name(val)
         if hasattr(self, 'first_name'):
             self._SO_set_display_name(self.first_name + ' ' + val)
+    def _get_address_with_postcode(self):
+        postcode = get_freetext_metadata(self, 'postcode')
+        return self.address + ' ' + postcode
     title = UnicodeCol(length=255,default="")
     organisation = UnicodeCol(length=255,default="")
     mobile = UnicodeCol(length=30,default="")

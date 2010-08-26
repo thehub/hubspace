@@ -167,7 +167,7 @@ multiuser_invoice = (len(invoice_data) > 1)
         <c py:if="show_display_name" py:strip="True"><strong> ${invoice.user.display_name}</strong><br/> </c>
         <c>Membership No.</c> ${invoice.user.id} <br/>
         <c py:if="company_name" py:strip="True"><strong> ${company_name}</strong><br/> </c>
-        <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address)} </c>
+        <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address_with_postcode)} </c>
         <address py:if="not invoice.user.bill_to_profile" py:strip="True">
             <c py:for="line in invoice.user.billingaddress.split('\n')">${line}<br/></c>
         </address>

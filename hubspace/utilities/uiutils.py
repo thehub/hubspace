@@ -1,6 +1,6 @@
 from turbogears.validators import Money
 from turbogears import config, identity
-from hubspace.model import Invoice, Selection, UserMetaData, Location
+from hubspace.model import Invoice, Selection, UserMetaData, Location, get_freetext_metadata, set_freetext_metadata
 from pytz import common_timezones, timezone
 from datetime import datetime, timedelta
 from sqlobject import AND
@@ -186,26 +186,6 @@ def selected_multiple(obj, attr, opt):
         if selection.selection == opt:
             return {'selected':'selected'}
     return {}
-
-
-def get_freetext_metadata(obj, attr):
-    try:
-        return getattr(obj, attr)
-    except:
-        try:
-            metadata = UserMetaData.select(AND(UserMetaData.q.userID == obj.id,
-                                               UserMetaData.q.attr_name == attr))
-            return metadata[0].attr_value
-        except:
-            return u''
-
-def set_freetext_metadata(obj, attr, val):
-    metadata = UserMetaData.select(AND(UserMetaData.q.userID == obj.id,
-                                       UserMetaData.q.attr_name == attr))
-    try:
-        metadata[0].attr_value = val
-    except:
-        UserMetaData(user=obj.id, attr_name=attr, attr_value=val)
 
 def sanitize_input(chars):
     """
