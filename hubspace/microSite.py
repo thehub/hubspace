@@ -1319,29 +1319,22 @@ class MicroSite(controllers.Controller):
         except Exception, err:
             applogger.error("render_page: failed for path_name [%s], args [%s], kwargs [%s]" % (path_name, str(args), str(kwargs)))
             raise
-        loc_id = template_args['location'].id
-        if page_needs_regenerating.get(loc_id, False) and not path_name.endswith('.html'): #this is for feed pages members.html and events.html
-                                                              #surely this should be if path_name doesn't end in .html
-            for page_type, bool in page_needs_regenerating[loc_id].items():
-                if bool == True:
-                    pages = Page.select(AND(Page.q.location==self.location, Page.q.page_type==page_type)) #there should usually only be 1 such page i.e. members page or events page but that is not guaranteed
-                    applogger.debug("regenerating %s pages of type %s for location %s" %(str(pages.count()), page_type, str(self.location)))
-                    for page in pages:
-                        self.render_page(page.path_name, relative_path='./')
-                    page_needs_regenerating[loc_id][page_type] = False
 
-        try:
-            page = Page.select(AND(Page.q.location==self.location, Page.q.path_name==path_name))[0]
-            template = self.site_types[page.page_type].template
-        except IndexError:
+        loc_id = template_args['location'].id
+        if does_any_page_need_regen(loc_id) or not path_name.endswith('.html'):
             try:
+                page = Page.select(AND(Page.q.location==self.location, Page.q.path_name==path_name))[0]
+            except IndexError:
                 page = Page.select(AND(Page.q.location==self.location, Page.q.path_name==path_name + '.html'))[0]
-                template = self.site_types[page.page_type].template
             except:
-                template = 'hubspace.templates.microSiteHome'
                 page = None
-        
-         
+            if page:
+                template = self.site_types[page.page_type].template
+                self.render_page(page.path_name, relative_path='./')
+                page_needs_regenerating[loc_id][page_type] = False
+            else:
+                template = 'hubspace.templates.microSiteHome'
+           
         out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
         #write the output to the static page
         if self.site_types[Page.select(AND(IN(Page.q.path_name, [path_name, path_name + '.html']),

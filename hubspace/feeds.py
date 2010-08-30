@@ -14,6 +14,9 @@ applogger = logging.getLogger("hubspace")
 
 page_needs_regenerating = collections.defaultdict(lambda: {'members': True, 'events': True})
 
+def does_any_page_need_regen(location):
+    return True in page_needs_regenerating[location].values()
+
 def mark_pages_for_regen(location, page_type):
     page_needs_regenerating[location][page_type] = True
 
