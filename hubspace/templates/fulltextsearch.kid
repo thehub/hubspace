@@ -7,6 +7,10 @@ def user_link(user, subsection=''):
 ?>
 
 <div xmlns:py="http://purl.org/kid/ns#" py:strip="True">
+    <?python
+    if type(results) not in (list, tuple):
+        results = tuple(results)
+    ?>
     <h1>Search</h1>
     <div class="dataBoxHeader">
            <a class="title" id="link_search_results"><h2>Search Results (${len(results)})</h2></a>
