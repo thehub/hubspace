@@ -113,7 +113,10 @@ def filter_members(location, text_filter, type, active_only, start, end, overrid
         users = hubspace.search.do_search(text_filter)
         if location:
             user_ids = tuple(user.id for user in users)
-            users = User.select(AND(IN(User.q.id, user_ids), User.q.homeplaceID==location.id))
+            if not user_ids:
+                users = []
+            else:
+                users = User.select(AND(IN(User.q.id, user_ids), User.q.homeplaceID==location.id))
 
     if start != None and end != None:
         users = users[start:end]
