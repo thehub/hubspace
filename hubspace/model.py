@@ -10,7 +10,7 @@ from hubspace.utilities.image_preview import create_image_preview
 from hubspace.configuration import new_or_old
 import hubspace.errors
 import StringIO
-from turbogears import identity 
+from turbogears import identity
 from inspect import getmodule
 from sqlobject.events import listen, RowUpdateSignal, RowCreatedSignal, RowDestroySignal
 
@@ -1086,6 +1086,8 @@ class Invoice(SQLObject):
     eu_vat_exempted = BoolCol(default=False)
     def __str__(self):
         return "Invoice id: %s, number %s, user: %s %s" % (self.id, self.number, self.user.user_name, str([r.id for r in self.rusages]))
+
+    ponumbers = PickleCol(default=[])
 
 def findNumberMissing(start, l):
     """

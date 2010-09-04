@@ -12,6 +12,7 @@ message_name = "invoice_mail"
             message = messages.bag[message_name]
             data = dict(location=object.location, user=object.user)
             message_dict = message.make(object.location, data, {})
+            purchaseorders_string = ', '.join(object.ponumbers or [])
             ?>
                 <table cellpadding="0" cellspacing="0" class="detailTable">
                     <tr class="odd">
@@ -23,6 +24,10 @@ message_name = "invoice_mail"
                         <td><input type="text" class="text" id="invoice_mail_subject" name="subject" value="${message_dict['subject']}" /></td>
                     </tr>
                     <tr class="odd">
+                        <td class="line">Purchase Order No:</td>
+                        <td><input type="text" class="text" id="invoice_ponumber" name="ponumber" value="${purchaseorders_string}" /></td>
+                    </tr>
+                    <tr class="even">
                         <td class="line">Message:</td>
                         <td>
                             <textarea id="invoice_mail_body" name="body">${message_dict['body']}

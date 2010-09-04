@@ -171,10 +171,13 @@ multiuser_invoice = (len(invoice_data) > 1)
         <address py:if="not invoice.user.bill_to_profile" py:strip="True">
             <c py:for="line in invoice.user.billingaddress.split('\n')">${line}<br/></c>
         </address>
-
         <c py:strip="True" py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"><c>Company No.</c>${invoice.user.bill_company_no}<br/></c>
         <c py:strip="True" py:if="not invoice.user.billto and invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><c>VAT</c> ${invoice.user.bill_vat_no}</c>
         <c py:strip="True" py:if="invoice.user.billto and invoice.user.billto.bill_vat_no"><br/><c>VAT</c> ${invoice.user.billto.bill_vat_no}</c>
+        <?python
+            purchaseorders_string = ', '.join(invoice.ponumbers)
+        ?>
+        <c py:strip="True" py:if="purchaseorders_string"><c>Purchase Order No: </c>${purchaseorders_string}</c>
         </p>
     </td>
     <td width="50%">

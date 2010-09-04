@@ -1651,7 +1651,6 @@ class Root(controllers.RootController):
     sites = Sites()
     rpc = RPC()
 
-
     @expose()
     def langtest(self):
         hub_locale = get_hubspace_locale()
@@ -4478,7 +4477,6 @@ The Hub Team
             invoice = Invoice.get(invoiceid)
         except:
             return "problem sending invoice"
- 
         if not permission_or_owner(invoice.user.homeplace, None, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
 
@@ -4492,6 +4490,16 @@ The Hub Team
             return "user has no email address"
 
         bcc = invoice.location.invoice_bcc
+
+        ponumbers_string = kwargs.get('ponumber')
+        if ponumbers_string:
+            if ',' in ponumbers_string:
+                ponumbers = [ponum.strip() for ponum in ponumbers_string.replace(' ','').split(',') if ponum.strip()]
+            else:
+                ponumbers = [ponumbers_string.strip()]
+            invoice.ponumbers = ponumbers
+        else:
+            invoice.ponumbers = []
 
         pdf = self.create_pdf_invoice(invoiceid=invoiceid)
 
