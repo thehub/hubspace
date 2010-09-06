@@ -177,7 +177,7 @@ multiuser_invoice = (len(invoice_data) > 1)
         <?python
             purchaseorders_string = ', '.join(invoice.ponumbers or [])
         ?>
-        <c py:strip="True" py:if="purchaseorders_string"><c>Purchase Order No: </c>${purchaseorders_string}</c>
+        <c py:strip="True" py:if="purchaseorders_string"><br/><c>Purchase Order No: </c>${purchaseorders_string}</c>
         </p>
     </td>
     <td width="50%">
