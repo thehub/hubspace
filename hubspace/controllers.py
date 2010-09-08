@@ -30,7 +30,7 @@ from datetime import datetime,timedelta, time, date
 from hubspace.utilities.object import create_object, get_attribute_names, modify_attribute, modify_attributes, get_attribute
 from hubspace.utilities.templates import try_render
 from hubspace.utilities.login import login_args
-from hubspace.feeds import get_updates_data, cached_updates, clear_cache
+from hubspace.feeds import get_updates_data, cached_updates
 from hubspace.invoice import *
 from hubspace.utilities.users import fields as user_fields
 
@@ -214,6 +214,7 @@ def start_scheduler():
     add_monthday_task(update_tariff_bookings, [1], (0,0))
     #add_monthday_task(schedule_access_policy_updates, [3], (0,0)) # TODO commented because we need to figure out support for oadd_oneoff_task
     add_interval_task(reportutils.do_report_maintainance, taskname="Report generation routine tasks", initialdelay=30*60, interval=24*60*60)
+    add_interval_task(refresh_static_pages, taskname="Regenerate static pages as required", initialdelay=30, interval=4*60*60)
     #if datetime.now() > datetime(datetime.today().year, datetime.today().month, 3):
     #    schedule_access_policy_updates() # TODO commented because we need to figure out support for add_oneoff_task
     print "scheduler started"
@@ -1568,6 +1569,7 @@ class Members(controllers.Controller):
 from hubspace.utilities.booking import booking_offset_plus_height, default_booking_params
 from hubspace.utilities.i18n import get_hubspace_locale, get_location_from_base_url, get_po_path, install_new_locale, get_hubspace_user_locale
 from hubspace.microSite import Sites
+from hubspace.microSite import Sites, refresh_static_pages
 ##################  Root  ####################
 
 def syncer_expose(f):
@@ -2701,8 +2703,6 @@ Exception:
 
         del kwargs['end']
         del kwargs['start']
-        if kwargs['public_field']==1:
-            clear_cache('events', resource.place)
 
         if resource.place.tentative_booking_enabled:
             kwargs['confirmed'] = int(not kwargs.get('tentative', 0))
@@ -3173,9 +3173,6 @@ Exception:
         kwargs['modified'] = now(user.homeplace)    
         modify_attribute(user, 'description', kwargs['description'])
         modify_attribute(user, 'modified', datetime.now())
-        if user.public_field == 1:
-            location = user.homeplace
-            clear_cache('profiles', location)
     
         hubspace.search.update(user)
         cherrypy.response.headers['X-JSON'] = 'success'
@@ -3277,7 +3274,6 @@ Exception:
 
         if location and ('homeplace' in changed_attrs or 'organisation' in changed_attrs) and user.public_field == 1:
             user.modified = datetime.now()
-            clear_cache('profiles', location)
 
         for alias_name in kwargs.get('new_alias'):
             if alias_name: create_object('Alias', user = id, alias_name=alias_name)
@@ -3956,8 +3952,6 @@ The Hub Team
             send_welcome_mail(user, kwargs['password'])
         model.hub.commit()
         hubspace.search.update(user)
-        if kwargs['public_field']==1:
-            clear_cache('profiles', location)
         cherrypy.response.headers['X-JSON'] = 'success'
         return str(user.id)
 
@@ -3967,7 +3961,6 @@ The Hub Team
         user = User.get(id)
         if user.active: send_welcome_mail(user, None)
         hubspace.search.add(user)
-        if user.public_field: clear_cache('profiles', user.homeplace)
         return True
 
     @syncer_expose
@@ -3975,7 +3968,6 @@ The Hub Team
     def onusermod(self, id):
         user = User.get(id)
         hubspace.search.add(user)
-        if user.public_field: clear_cache('profiles', user.homeplace)
         return True
 
     @syncer_expose

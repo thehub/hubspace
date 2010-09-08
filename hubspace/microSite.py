@@ -1,3 +1,6 @@
+import os
+import os.path
+import glob
 from turbogears import controllers, expose, redirect, identity, validators as v, validate, config
 from turbogears.identity.exceptions import IdentityFailure
 from hubspace.validators import *
@@ -9,16 +12,18 @@ from hubspace.utilities.permissions import is_host, addUser2Group
 from hubspace.utilities.object import modify_attribute, obj_of_type
 from hubspace.model import Location, LocationMetaData, User, RUsage, Group, MicroSiteSpace, ObjectReference, ListItem, Page, MetaWrapper, PublicPlace, List
 from sqlobject import AND, SQLObjectNotFound, IN, LIKE, func
+from sqlobject.events import listen, RowUpdateSignal, RowCreatedSignal, RowDestroySignal
 import os, re, unicodedata, md5, random, sys, datetime, traceback, hmac as create_hmac
 from hashlib import sha1
 import cherrypy
 from kid import XML
-from hubspace.feeds import get_local_profiles, get_local_future_events, get_local_past_events, page_needs_regenerating
+from hubspace.feeds import get_local_profiles, get_local_future_events, get_local_past_events
 from BeautifulSoup import BeautifulSoup
 import sendmail
 import hubspace.model
 model = hubspace.model 
 from hubspace.utilities.cache import strongly_expire
+from hubspace.utilities.uiutils import now
 import hubspace.sync.core as sync
 
 from turbogears import database
@@ -31,7 +36,7 @@ from hubspace import configuration
 import vobject
 import patches
 import logging
-applogger = logging.getLogger("hubspace") 
+applogger = logging.getLogger("hubspace")
 
 def place(obj):
     if isinstance(obj, Location):
@@ -1309,24 +1314,6 @@ class MicroSite(controllers.Controller):
         if subpath.endswith('/'):
             subpath = subpath[:-1]
             
-    def generate_missing_static_pages(self):
-        loc_id = self.location
-        pagetypes_to_regen = tuple(typ for typ, flag in page_needs_regenerating[loc_id].items() if flag)
-        if pagetypes_to_regen:
-            pages = Page.select(AND(Page.q.location==self.location, IN(Page.q.page_type, pagetypes_to_regen)))
-            for page in pages:
-                if self.site_types[page.page_type].static:
-                    template = self.site_types[page.page_type].template
-                    template_args = self.construct_args(page.path_name)
-                    out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
-                    template_args['render_static'] = True
-                    content = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
-                    new_html = open(self.site_dir + '/' + page.path_name, 'w')
-                    new_html.write(content)
-                    new_html.close()
-                    page_needs_regenerating[loc_id][page.page_type] = False
-                    applogger.info("microsite: page generated: %s (%s)" % (new_html, page.page_type))
-
     def render_page(self, path_name, *args, **kwargs):
         path_name = path_name.split('#')[0]
         try:
@@ -1334,8 +1321,6 @@ class MicroSite(controllers.Controller):
         except Exception, err:
             applogger.error("render_page: failed for path_name [%s], args [%s], kwargs [%s]" % (path_name, str(args), str(kwargs)))
             raise
-
-        self.generate_missing_static_pages()
 
         if path_name:
             page = Page.select(AND(Page.q.location==self.location, IN(Page.q.path_name, path_name + '.html')))[0]
@@ -1345,6 +1330,11 @@ class MicroSite(controllers.Controller):
             template = 'hubspace.templates.microSiteHome'
            
         out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
+
+        if self.site_types[page.page_type].static:
+            new_html = open(self.site_dir + '/' + page.path_name, 'w')
+            new_html.write(out)
+            new_html.close()
         return out
 
 class Sites(controllers.Controller):
@@ -1426,3 +1416,67 @@ class Sites(controllers.Controller):
         """
 	pass
         
+def refresh_static_pages():
+    sites = (site for site in cherrypy.root.sites.__class__.__dict__.values() if isinstance(site, MicroSite))
+    for site in sites:
+        static_pages = glob.glob(site.site_dir + '/*.html')
+        get_mtime = lambda path: datetime.datetime.fromtimestamp(os.stat(path).st_mtime)
+        page_times = ((page, get_mtime(page)) for page in static_pages)
+        for page, m_time in page_times:
+            if not now(site.location).day == m_time.day:
+                applogger.info("microsite: removing %s" % page)
+                os.remove(page)
+
+    
+def remove_generated_page(location_id, page_type):
+    sites = (site for site in cherrypy.root.sites.__class__.__dict__.values() if isinstance(site, MicroSite))
+    for site in sites:
+        if site.location == location_id: break
+    else:
+        applogger.warning("could not find microsite instance for location [%d] page_type [%s]" % (location_id, page_type))
+        return
+    if site.site_types[page_type].static:
+        pages = Page.select(AND(Page.q.location==location_id, Page.q.page_type==page_type))
+        for page in pages:
+            path = site.site_dir + '/' + page.page_path
+            applogger.info("microsite: removing %s" % path)
+            if os.path.isfile(path):
+                os.remove(path)
+
+def on_add_rusage(kwargs, post_funcs):
+    rusage = kwargs['class'].get(kwargs['id'])
+    if rusage.public_field:
+        applogger.info("microsite.on_add_rusage: added %(id)s" % kwargs)
+        location = rusage.resource.place.id
+        remove_generated_page(location, "events")
+
+def on_del_rusage(rusage, post_funcs):
+    if rusage.public_field:
+        applogger.info("microsite.on_del_rusage: removing %s" % rusage.id)
+        location = rusage.resource.placeID
+        remove_generated_page(location, "events")
+
+def on_updt_rusage(instance, kwargs):
+    if 'public_field' in kwargs or instance.public_field: #  not precise logic
+        applogger.info("microsite.on_updt_rusage: updating %s" % instance.id)
+        location = instance.resource.placeID
+        remove_generated_page(location, "events")
+    
+def on_add_user(kwargs, post_funcs):
+    user = kwargs['class'].get(kwargs['id'])
+    if user.public_field:
+        applogger.info("microsite.on_add_user: updating %s" % instance.id)
+        location = user.homeplaceID
+        remove_generated_page(location, "members")
+
+def on_updt_user(instance, kwargs):
+    if 'public_field' in kwargs or instance.public_field: #  not precise logic
+        applogger.info("microsite.on_updt_user: updating %s" % instance.id)
+        location = instance.homeplaceID
+        remove_generated_page(location, "members")
+
+listen(on_add_rusage, RUsage, RowCreatedSignal)
+listen(on_updt_rusage, RUsage, RowUpdateSignal)
+listen(on_del_rusage, RUsage, RowDestroySignal)
+listen(on_add_user, User, RowCreatedSignal)
+listen(on_updt_user, User, RowUpdateSignal)
