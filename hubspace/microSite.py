@@ -1438,7 +1438,7 @@ def remove_generated_page(location_id, page_type):
     if site.site_types[page_type].static:
         pages = Page.select(AND(Page.q.location==location_id, Page.q.page_type==page_type))
         for page in pages:
-            path = site.site_dir + '/' + page.page_path
+            path = site.site_dir + '/' + page.path_name
             applogger.info("microsite: removing %s" % path)
             if os.path.isfile(path):
                 os.remove(path)

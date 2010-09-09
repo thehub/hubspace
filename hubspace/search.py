@@ -65,11 +65,11 @@ def sync():
 if not os.path.exists(indexdir):
     os.mkdir(indexdir)
     ix = create_in(indexdir, schema)
+    writer = ix.writer()
     populate()
 else:
     ix = open_dir(indexdir)
-
-writer = ix.writer()
+    writer = ix.writer()
 
 def stop():
     global writer
