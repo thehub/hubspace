@@ -1315,6 +1315,7 @@ class MicroSite(controllers.Controller):
             subpath = subpath[:-1]
             
     def render_page(self, path_name, *args, **kwargs):
+        applogger.debug("render_page: request for [%s]" % path_name)
         path_name = path_name.split('#')[0]
         try:
             template_args = self.construct_args(path_name, *args, **kwargs)
@@ -1332,7 +1333,9 @@ class MicroSite(controllers.Controller):
         out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
 
         if self.site_types[page.page_type].static:
-            new_html = open(self.site_dir + '/' + page.path_name, 'w')
+            path = self.site_dir + '/' + page.path_name + '.html'
+            applogger.info("render_page: generating [%s]" % path)
+            new_html = open(path, 'w')
             new_html.write(out)
             new_html.close()
         return out
