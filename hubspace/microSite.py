@@ -1333,7 +1333,7 @@ class MicroSite(controllers.Controller):
         out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
 
         if self.site_types[page.page_type].static:
-            path = self.site_dir + '/' + page.path_name + '.html'
+            path = self.site_dir + '/' + page.path_name
             applogger.info("render_page: generating [%s]" % path)
             new_html = open(path, 'w')
             new_html.write(out)
