@@ -1324,7 +1324,7 @@ class MicroSite(controllers.Controller):
             raise
 
         if path_name:
-            page = Page.select(AND(Page.q.location==self.location, IN(Page.q.path_name, path_name + '.html')))[0]
+            page = Page.select(AND(Page.q.location==self.location, IN(Page.q.path_name, [path_name, path_name + '.html'])))[0]
             template = self.site_types[page.page_type].template
         else:
             page = None
@@ -1468,7 +1468,7 @@ def on_updt_rusage(instance, kwargs):
 def on_add_user(kwargs, post_funcs):
     user = kwargs['class'].get(kwargs['id'])
     if user.public_field:
-        applogger.info("microsite.on_add_user: updating %s" % instance.id)
+        applogger.info("microsite.on_add_user: updating %s" % user.id)
         location = user.homeplaceID
         remove_generated_page(location, "members")
 
