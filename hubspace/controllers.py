@@ -214,7 +214,7 @@ def start_scheduler():
     add_monthday_task(update_tariff_bookings, [1], (0,0))
     #add_monthday_task(schedule_access_policy_updates, [3], (0,0)) # TODO commented because we need to figure out support for oadd_oneoff_task
     add_interval_task(reportutils.do_report_maintainance, taskname="Report generation routine tasks", initialdelay=30*60, interval=24*60*60)
-    add_interval_task(refresh_static_pages, taskname="Regenerate static pages as required", initialdelay=30, interval=4*60*60)
+    add_interval_task(refresh_all_static_pages, taskname="Regenerate static pages as required", initialdelay=30, interval=4*60*60)
     #if datetime.now() > datetime(datetime.today().year, datetime.today().month, 3):
     #    schedule_access_policy_updates() # TODO commented because we need to figure out support for add_oneoff_task
     print "scheduler started"
@@ -1569,7 +1569,7 @@ class Members(controllers.Controller):
 from hubspace.utilities.booking import booking_offset_plus_height, default_booking_params
 from hubspace.utilities.i18n import get_hubspace_locale, get_location_from_base_url, get_po_path, install_new_locale, get_hubspace_user_locale
 from hubspace.microSite import Sites
-from hubspace.microSite import Sites, refresh_static_pages
+from hubspace.microSite import Sites, refresh_all_static_pages
 ##################  Root  ####################
 
 def syncer_expose(f):

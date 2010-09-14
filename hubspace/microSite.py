@@ -1332,7 +1332,7 @@ class MicroSite(controllers.Controller):
            
         out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
 
-        if self.site_types[page.page_type].static:
+        if page and self.site_types[page.page_type].static:
             path = self.site_dir + '/' + page.path_name
             applogger.info("render_page: generating [%s]" % path)
             new_html = open(path, 'w')
@@ -1419,19 +1419,24 @@ class Sites(controllers.Controller):
         """
 	pass
         
-def refresh_static_pages():
-    sites = (site for site in cherrypy.root.sites.__class__.__dict__.values() if isinstance(site, MicroSite))
-    for site in sites:
-        static_pages = glob.glob(site.site_dir + '/*.html')
-        get_mtime = lambda path: datetime.datetime.fromtimestamp(os.stat(path).st_mtime)
-        page_times = ((page, get_mtime(page)) for page in static_pages)
-        for page, m_time in page_times:
-            if not now(site.location).day == m_time.day:
-                applogger.info("microsite: removing %s" % page)
-                os.remove(page)
 
-    
-def remove_generated_page(location_id, page_type):
+def refresh_all_static_pages():
+    sites = dict((site.location, site) for site in cherrypy.root.sites.__class__.__dict__.values() if isinstance(site, MicroSite))
+    for page in Page.select():
+        site = sites[page.locationID]
+        if site.site_types[page.page_type].static:
+            path = page.path_name
+            mtime = datetime.datetime.fromtimestamp(os.stat(path).st_mtime)
+            if not now(site.location).day == m_time.day:
+                if os.path.isfile(path):
+                    os.remove(path)
+                try:
+                    self.render_page(page.path_name, relative_path='./')
+                except Exeption, err:
+                    applogger.warn("microsite: refresh_static_pages failed to regenerate %s" % path)
+
+
+def regenerate_page(location_id, page_type, check_mtime=False):
     sites = (site for site in cherrypy.root.sites.__class__.__dict__.values() if isinstance(site, MicroSite))
     for site in sites:
         if site.location == location_id: break
@@ -1442,41 +1447,42 @@ def remove_generated_page(location_id, page_type):
         pages = Page.select(AND(Page.q.location==location_id, Page.q.page_type==page_type))
         for page in pages:
             path = site.site_dir + '/' + page.path_name
-            applogger.info("microsite: removing %s" % path)
             if os.path.isfile(path):
+                applogger.info("microsite: removing %s" % path)
                 os.remove(path)
+            site.render_page(page.path_name)
 
 def on_add_rusage(kwargs, post_funcs):
     rusage = kwargs['class'].get(kwargs['id'])
     if rusage.public_field:
         applogger.info("microsite.on_add_rusage: added %(id)s" % kwargs)
         location = rusage.resource.place.id
-        remove_generated_page(location, "events")
+        regenerate_page(location, "events")
 
 def on_del_rusage(rusage, post_funcs):
     if rusage.public_field:
         applogger.info("microsite.on_del_rusage: removing %s" % rusage.id)
         location = rusage.resource.placeID
-        remove_generated_page(location, "events")
+        regenerate_page(location, "events")
 
 def on_updt_rusage(instance, kwargs):
     if 'public_field' in kwargs or instance.public_field: #  not precise logic
         applogger.info("microsite.on_updt_rusage: updating %s" % instance.id)
         location = instance.resource.placeID
-        remove_generated_page(location, "events")
+        regenerate_page(location, "events")
     
 def on_add_user(kwargs, post_funcs):
     user = kwargs['class'].get(kwargs['id'])
     if user.public_field:
         applogger.info("microsite.on_add_user: updating %s" % user.id)
         location = user.homeplaceID
-        remove_generated_page(location, "members")
+        regenerate_page(location, "members")
 
 def on_updt_user(instance, kwargs):
     if 'public_field' in kwargs or instance.public_field: #  not precise logic
         applogger.info("microsite.on_updt_user: updating %s" % instance.id)
         location = instance.homeplaceID
-        remove_generated_page(location, "members")
+        regenerate_page(location, "members")
 
 listen(on_add_rusage, RUsage, RowCreatedSignal)
 listen(on_updt_rusage, RUsage, RowUpdateSignal)
