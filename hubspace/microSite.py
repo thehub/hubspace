@@ -1315,7 +1315,7 @@ class MicroSite(controllers.Controller):
             subpath = subpath[:-1]
             
     def render_page(self, path_name, *args, **kwargs):
-        applogger.debug("render_page: request for [%s]" % path_name)
+        #applogger.debug("render_page: request for [%s]" % path_name)
         path_name = path_name.split('#')[0]
         try:
             template_args = self.construct_args(path_name, *args, **kwargs)
@@ -1426,14 +1426,14 @@ def refresh_all_static_pages():
         site = sites[page.locationID]
         if site.site_types[page.page_type].static:
             path = page.path_name
-            mtime = datetime.datetime.fromtimestamp(os.stat(path).st_mtime)
-            if not now(site.location).day == m_time.day:
-                if os.path.isfile(path):
+            if os.path.isfile(path):
+                mtime = datetime.datetime.fromtimestamp(os.stat(path).st_mtime)
+                if not now(site.location).day == m_time.day:
                     os.remove(path)
-                try:
-                    self.render_page(page.path_name, relative_path='./')
-                except Exeption, err:
-                    applogger.warn("microsite: refresh_static_pages failed to regenerate %s" % path)
+            try:
+                self.render_page(page.path_name, relative_path='./')
+            except Exeption, err:
+                applogger.warn("microsite: refresh_static_pages failed to regenerate %s" % path)
 
 
 def regenerate_page(location_id, page_type, check_mtime=False):
