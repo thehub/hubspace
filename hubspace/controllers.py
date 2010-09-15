@@ -4495,18 +4495,23 @@ The Hub Team
 
         pdf = self.create_pdf_invoice(invoiceid=invoiceid)
 
-        if not kwargs.get('send_it'):
-            return "Invoice not sent by email not sent!"
-        host_mail = invoice.user.homeplace.hosts_email
-        value = send_mail(to=to, sender=host_mail, subject=subject, body=body, attachment=pdf, cc=host_mail, attachment_name="Invoice%s.pdf"%invoice.number,bcc=bcc)
-        if value:
+        if kwargs.get('send_it'):
+            host_mail = invoice.user.homeplace.hosts_email
+            value = send_mail(to=to, sender=host_mail, subject=subject, body=body, attachment=pdf, cc=host_mail, attachment_name="Invoice%s.pdf"%invoice.number,bcc=bcc)
+            if value:
+                if not invoice.sent:
+                    invoice.sent = now(invoice.location)
+                    applogger.info("Invoice: Invoice (id: %s number: %s) sent successfully" % (invoice.id, invoice.number))
+                ret_msg = _('Invoice was sent successfully')
+            else:
+                applogger.exception("Invoice: Failed sending Invoice (id: %s number: %s)" % (invoice.id, invoice.number))
+                ret_msg = _('There was a problem sending the invoice')
+        else:
             if not invoice.sent:
                 invoice.sent = now(invoice.location)
-                applogger.info("Invoice: Invoice (id: %s number: %s) sent successfully" % (invoice.id, invoice.number))
-            return 'Invoice was sent successfully'
-        else:
-            applogger.exception("Invoice: Failed sending Invoice (id: %s number: %s)" % (invoice.id, invoice.number))
-            return 'There was a problem sending the invoice'
+            ret_msg = _("Invoice not sent by email!")
+
+        return ret_msg
 
     @expose()
     @identity.require(not_anonymous())
