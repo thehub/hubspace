@@ -3948,6 +3948,11 @@ The Hub Team
             for grp in to_groups:
                 self.addUser2Group(user, grp)
 
+        metadata = ['postcode', 'biz_type']
+        for kwarg in kwargs:
+            if kwarg in metadata:
+                model.set_freetext_metadata(user, kwarg, unicode(kwargs[kwarg]))
+
         if user.active:
             send_welcome_mail(user, kwargs['password'])
         model.hub.commit()
