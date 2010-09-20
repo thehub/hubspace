@@ -1432,7 +1432,7 @@ def refresh_all_static_pages():
                     os.remove(path)
             try:
                 self.render_page(page.path_name, relative_path='./')
-            except Exeption, err:
+            except Exception, err:
                 applogger.warn("microsite: refresh_static_pages failed to regenerate %s" % path)
 
 
