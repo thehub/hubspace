@@ -4697,9 +4697,11 @@ The Hub Team
         amount = 0
         kwargs.setdefault('user', kwargs['userid'])
         user = User.get(kwargs['user'])
-        location = location_id and Location.get(location_id) or identity.current.user.homeplace
+        cuser = identity.current.user
+        location = location_id and Location.get(location_id) or cuser.homeplace
         
         if not permission_or_owner(location, None, 'manage_invoices'):
+            applogger.warning("Denied '%s (%s)' to invoice for location '%s (%s)'" % (cuser.username, cuser.id, location.name, location.id))
             raise IdentityFailure('what about not hacking the system')
 
         users = [u for u in user.billed_for]

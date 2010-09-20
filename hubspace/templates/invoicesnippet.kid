@@ -63,15 +63,16 @@ def get_latest(user, use_monthstart=False):
         return today
 
    
-def resources():
-    resources = []
+def get_resources():
+    resource_d = {}
     for location in Location.select():
         if permission_or_owner(location, None, "manage_resources"):
+            resources = []
             for resource in location.resources:
                 if resource not in resources and resource.type!='tariff' and resource.active:
                     resources.append(resource)
-    resources_sorted = sorted(resources, key= lambda resource: resource.name.lower()) 
-    return resources_sorted
+            resource_d[location.name] = sorted(resources, key= lambda resource: resource.name.lower()) 
+    return sorted(resource_d.items())
 
 def user_billed_for(user):
     billed = [u for u in user.billed_for]
@@ -144,7 +145,9 @@ def billto(user):
 Add Resource Usage:<form id="${user.id}_add_rusage_form" class="add_rusage_form">
                        <select name="resource_id" id="${user.id}_resource">
                             <option disabled="disabled" selected="selected" value="0">choose a resource...</option>
-                            <option py:for="resource in resources()" value="${resource.id}">${resource.name}</option>
+                            <optgroup py:for="loc_name, resources in get_resources()" label="${loc_name}">
+                                <option py:for="resource in resources" value="${resource.id}">${resource.name}</option>
+                            </optgroup>
                        </select> 
                        <div id="${user.id}_resource_form"></div>           
                    </form>
