@@ -4694,7 +4694,7 @@ The Hub Team
         user = User.get(kwargs['user'])
         location = location_id and Location.get(location_id) or identity.current.user.homeplace
         
-        if not permission_or_owner(user.homeplace, None, 'manage_invoices'):
+        if not permission_or_owner(location, None, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
 
         users = [u for u in user.billed_for]
@@ -4713,7 +4713,7 @@ The Hub Team
 
         if autocollect:
             for u in users:
-                for rusage in get_rusages(u, None, kwargs['start'], kwargs['end_time'], ignore_end_time):
+                for rusage in get_rusages(u, None, kwargs['start'], kwargs['end_time'], ignore_end_time, [location]):
                     rusage.invoice = invoice.id
         
         self.update_invoice_amount(invoice.id)
