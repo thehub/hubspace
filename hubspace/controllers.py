@@ -49,6 +49,7 @@ from hubspace.utilities.image_preview import create_image_preview
 from hubspace.utilities.static_files import hubspace_compile
 from hubspace.utilities.uiutils import c2s, inv_currency, unsent_for_user, get_multiselected, set_multiselected, set_singleselected, get_singleselected, now
 from hubspace.utilities.permissions import user_locations, addUser2Group, get_current_roles, get_editable_roles, create_permissions_for_group
+import hubspace.utilities.permissions as permissionslib
 from hubspace.utilities.users import filter_members
 from hubspace.tariff import get_tariff
 
@@ -1540,8 +1541,7 @@ class RFID(controllers.Controller):
 
 
 def make_superuser(user):
-    super_group = Group.select(AND(Group.q.group_name=='superuser', 
-                                   Group.q.placeID==None))[0]
+    super_group = Group.select(AND(Group.q.group_name=='superuser', Group.q.placeID==None))[0]
     super_group.addUser(user)
 
 ##################Members SubController############
@@ -3589,11 +3589,26 @@ Exception:
     def make_superuser(self, user_name=""):
         """to create a new superuser call '/make_superuser?user_name=$username'
         """
-        user = User.by_user_name(user_name)
-        if not user_name and not user:
+        users = list(User.selectBy(username=username))
+        if not users:
             return ""
+        user = users[0]
         make_superuser(user)
         return  user_name + " is now a superuser"
+
+    @identity.require(identity.has_permission('superuser'))
+    @expose()
+    @validate(validators={'user_name': username})
+    def demote_superuser(self, user_name=""):
+        """to revoke superuser rights call '/demote_superuser?user_name=$username'
+        """
+        users = list(User.selectBy(username=username))
+        if not users:
+            return ""
+        user = users[0]
+        super_group = Group.select(AND(Group.q.group_name=='superuser', Group.q.placeID==None))[0]
+        super_group.removeUser(user)
+        return  user_name + " is no longer a superuser"
 
     @expose(template="hubspace.templates.createSuperUser")
     def setup_form(self, name, currency='GBP'):
@@ -4719,8 +4734,9 @@ The Hub Team
         invoice = create_object('Invoice',**kwargs)
 
         if autocollect:
+            cuser_locations = permissionslib.locations('manage_invoices')
             for u in users:
-                for rusage in get_rusages(u, None, kwargs['start'], kwargs['end_time'], ignore_end_time, [location]):
+                for rusage in get_rusages(u, None, kwargs['start'], kwargs['end_time'], ignore_end_time, cuser_locations):
                     rusage.invoice = invoice.id
         
         self.update_invoice_amount(invoice.id)
