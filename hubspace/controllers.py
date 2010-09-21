@@ -3585,30 +3585,30 @@ Exception:
 
     @identity.require(identity.has_permission('superuser'))
     @expose()
-    @validate(validators={'user_name': username})
-    def make_superuser(self, user_name=""):
+    @validate(validators={'username': username})
+    def make_superuser(self, username):
         """to create a new superuser call '/make_superuser?user_name=$username'
         """
-        users = list(User.selectBy(username=username))
+        users = list(User.selectBy(user_name=username))
         if not users:
             return ""
         user = users[0]
         make_superuser(user)
-        return  user_name + " is now a superuser"
+        return  username + " is now a superuser"
 
     @identity.require(identity.has_permission('superuser'))
     @expose()
-    @validate(validators={'user_name': username})
-    def demote_superuser(self, user_name=""):
+    @validate(validators={'username': username})
+    def demote_superuser(self, username):
         """to revoke superuser rights call '/demote_superuser?user_name=$username'
         """
-        users = list(User.selectBy(username=username))
+        users = list(User.selectBy(user_name=username))
         if not users:
             return ""
         user = users[0]
         super_group = Group.select(AND(Group.q.group_name=='superuser', Group.q.placeID==None))[0]
         super_group.removeUser(user)
-        return  user_name + " is no longer a superuser"
+        return  username + " is no longer a superuser"
 
     @expose(template="hubspace.templates.createSuperUser")
     def setup_form(self, name, currency='GBP'):
