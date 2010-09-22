@@ -141,7 +141,7 @@ def billto(user):
     ${XML(display_resource_table(user=user, invoice=invoice, earliest=get_earliest(user), latest=get_latest(user, use_monthstart), ignore_end_time=ignore_end_time))}
        </div>
      
-     <div py:if="permission_or_owner(user.homeplace, None, 'manage_invoices') and user.billto in [None, user]" id="${user.id}_add_rusage">
+     <div py:if="permission_or_owner(list(Location.select()), None, 'manage_invoices') and user.billto in [None, user]" id="${user.id}_add_rusage">
 Add Resource Usage:<form id="${user.id}_add_rusage_form" class="add_rusage_form">
                        <select name="resource_id" id="${user.id}_resource">
                             <option disabled="disabled" selected="selected" value="0">choose a resource...</option>

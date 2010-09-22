@@ -4584,7 +4584,8 @@ The Hub Team
             invoice = Invoice.get(invoiceid)
             user = invoice.user
 
-        if not permission_or_owner(invoice.location, invoice, 'manage_invoices'):
+        location = invoice and invoice.location or user.homeplace
+        if not permission_or_owner(location, invoice, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
         
         if not user:
