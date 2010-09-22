@@ -742,6 +742,7 @@ def get_collected_invoice_data(user=None, invoice=None, earliest=None, latest=No
             users.append(user)
         inv_id = "no"
         collected = {}
+        locations = locations or permissionslib.locations('manage_invoices')
         for user in users:
             collected[user] = show_rusages(get_rusages(user, invoice, earliest, latest, ignore_end_time, locations))
             if len(collected[user][0])>1:
@@ -4583,7 +4584,7 @@ The Hub Team
             invoice = Invoice.get(invoiceid)
             user = invoice.user
 
-        if not permission_or_owner(user.homeplace, invoice, 'manage_invoices'):
+        if not permission_or_owner(invoice.location, invoice, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
         
         if not user:
