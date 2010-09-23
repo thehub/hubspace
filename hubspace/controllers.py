@@ -4325,7 +4325,7 @@ The Hub Team
     @validate(validators={'invoiceid':real_int})
     def pdf_invoice(self, invoiceid, filename=None, html2ps=None, tg_errors=None):
         invoice = Invoice.get(invoiceid)
-        if not permission_or_owner(invoice.user.homeplace, invoice, 'manage_invoices'):
+        if not permission_or_owner(invoice.location, invoice, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
         pdf = self.create_pdf_invoice(invoiceid=invoiceid,html2ps=html2ps)
         #cherrypy.response.headers['Content-type'] = 'application/pdf'
@@ -4342,7 +4342,7 @@ The Hub Team
     @identity.require(not_anonymous())
     def show_newinvoice(self, invoiceid):
         invoice=model.Invoice.get(int(invoiceid))
-        if not permission_or_owner(invoice.user.homeplace, invoice, 'manage_invoices'):
+        if not permission_or_owner(invoice.location, invoice, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
         MCust = model.MessageCustomization
         try:
@@ -4612,7 +4612,9 @@ The Hub Team
         locations = list(locations)
 
 	#user is used as the object here because we want to allow the user to update the resource table when invoice=None (ie. to look through uninvoiced items)
-        if not permission_or_owner(user.homeplace, user, 'manage_invoices'):
+        location = invoice and invoice.location or user.homeplace
+        if not permission_or_owner(user.homeplace, user, 'manage_invoices') \
+            and not permissionslib.locations('manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
 
         return display_resource_table(user=user, locations=locations, invoice=invoice, earliest=start, latest=end_time)
@@ -4753,7 +4755,7 @@ The Hub Team
         Calculates the tax on the invoice
         """
         invoice = Invoice.get(invoiceid)
-        if not permission_or_owner(invoice.user.homeplace, invoice, 'manage_invoices'):
+        if not permission_or_owner(invoice.location, invoice, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
         
         if invoice.sent and force and permission_or_owner(None, None, 'superuser'):
@@ -4783,7 +4785,7 @@ The Hub Team
     def remove_invoice(self, invoiceid, **kwargs):
         inv = Invoice.get(invoiceid)        
         
-        if not permission_or_owner(inv.user.homeplace, None, 'manage_invoices'):
+        if not permission_or_owner(inv.location, None, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
         
         if inv.sent != None:

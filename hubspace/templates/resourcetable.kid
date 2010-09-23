@@ -30,6 +30,7 @@ def vat_exception(rusage, invoice, user):
 <c py:def="resource_table(invoice_data, user, invoice)" py:strip="True">
      <?python 
      x=0 
+     inv_location = invoice and Invoice.get(invoice).location or None
      ?>
      <div py:for="theuser, invdata in invoice_data[0].items()" class="dataBox">
        <?python
@@ -50,7 +51,7 @@ def vat_exception(rusage, invoice, user):
                     <td>Cost <em py:if="vat_inclusive_invoice(invoice, user)">(Including VAT unless stated otherwise)</em><em py:if="not vat_inclusive_invoice(invoice, user)">(Excluding VAT unless stated otherwise)</em></td>
                     <td py:if="unsent_for_user(user) and invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')" id="open_invoice" class="${unsent_for_user(user).id}">Add To Open Invoice</td>
                     <td py:if="invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')">Delete Resource Usage</td>
-                    <td py:if="unsent_for_user(user) and unsent_for_user(user).id==invoice and permission_or_owner(user.homeplace, None, 'manage_invoices')">Remove from Open Invoice</td>
+                    <td py:if="unsent_for_user(user) and unsent_for_user(user).id==invoice and permission_or_owner(inv_location, None, 'manage_invoices')">Remove from Open Invoice</td>
                 </tr>
                 <tr py:if="not invdata[0]" class="empty_table_warning">
                   <td colspan="${colspan(user, invoice)}">No Resource Usages</td>
@@ -66,11 +67,11 @@ x+=1
                         <td py:content='format_date(rusage.end_time)'>End</td>
                         <td py:content='show_quantity_or_duration(rusage)'>Quantity</td>
                         <td py:content='rusage.resource.place.name'>Place</td>
-                        <td py:if="invoice==None"><div id="cost-${rusage.id}" class="custom_cost">${inv_currency(invoice, user)} ${c2s([rusage.customcost,rusage.cost][rusage.customcost == None])} ${XML(vat_exception(rusage, invoice, user))}</div> &nbsp;<a py:if="permission_or_owner(user.homeplace, None, 'manage_invoices')" id="cost-${rusage.id}Edit" style="cursor:pointer;">change</a></td>
+                        <td py:if="invoice==None"><div id="cost-${rusage.id}" class="custom_cost">${inv_currency(invoice, user)} ${c2s([rusage.customcost,rusage.cost][rusage.customcost == None])} ${XML(vat_exception(rusage, invoice, user))}</div> &nbsp;<a py:if="permission_or_owner(inv_location, None, 'manage_invoices')" id="cost-${rusage.id}Edit" style="cursor:pointer;">change</a></td>
                         <td py:if="invoice!=None">${inv_currency(invoice, user)} ${c2s([rusage.customcost,rusage.cost][rusage.customcost == None])} ${XML(vat_exception(rusage, invoice, user))}</td>
                         <td py:if="unsent_for_user(user) and invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')"><a id="rusage-${rusage.id}" class="add_to_invoice">Add to Invoice</a></td>
                         <td py:if="invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')"><a id="delrusage-${rusage.id}" class="del_rusage">Delete</a></td>
-                        <td py:if="unsent_for_user(user) and unsent_for_user(user).id==invoice and permission_or_owner(user.homeplace, None, 'manage_invoices')"><a id="rusage-${rusage.id}" class="remove_from_invoice">Remove from Invoice</a></td>
+                        <td py:if="unsent_for_user(user) and unsent_for_user(user).id==invoice and permission_or_owner(inv_location, None, 'manage_invoices')"><a id="rusage-${rusage.id}" class="remove_from_invoice">Remove from Invoice</a></td>
 
 
                     </tr>
@@ -84,7 +85,7 @@ x+=1
                         <td>${inv_currency(invoice, user)} ${c2s(sum_resource_costs(rusages))}  ${XML(vat_exception(rusage, invoice, user))}</td>
                         <td py:if="unsent_for_user(user) and invoice==None and invdata[0] and permission_or_owner(user.homeplace, None, 'manage_invoices')"></td>
                        <td py:if="invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')"></td>
-                        <td py:if="unsent_for_user(user) and unsent_for_user(user).id==invoice and permission_or_owner(user.homeplace, None, 'manage_invoices')"></td>
+                        <td py:if="unsent_for_user(user) and unsent_for_user(user).id==invoice and permission_or_owner(inv_location, None, 'manage_invoices')"></td>
                     </tr>
                   </span>
                 </span>
