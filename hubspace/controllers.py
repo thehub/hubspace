@@ -4702,7 +4702,7 @@ The Hub Team
 
         rusage = RUsage.get(id)
 
-        if not permission_or_owner(rusage.user.homeplace, None, 'manage_rusages'):
+        if not permission_or_owner(rusage.resource.place, None, 'manage_rusages'):
             raise IdentityFailure('what about not hacking the system')
 
         rusage.customcost = kwargs['customcost']
