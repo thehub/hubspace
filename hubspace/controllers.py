@@ -4490,7 +4490,7 @@ The Hub Team
             invoice = Invoice.get(invoiceid)
         except:
             return "problem sending invoice"
-        if not permission_or_owner(invoice.user.homeplace, None, 'manage_invoices'):
+        if not permission_or_owner(invoice.location, None, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
 
         if not invoice.sent:
