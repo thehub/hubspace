@@ -284,6 +284,15 @@ Resources.prototype = {
         jq.each(jq('table#tariff_management div.resourceDescription'), function (i, ele) {
             that.edit_detail('description', 'text_large', ele, '/save_resource_property', 'Resource');
         });
+        jq('.tar_delete').click(function () {
+                var tariff_id = jq(this).attr('id').split('-')[1];
+                jq.get('/delete_resource', {'res_id': tariff_id}, function (data) 
+                {
+                    jq('#tariff_delete-'+tariff_id).text('Success').css({'font-style':'italic', 'class':'', 'color':'black'});
+                });
+        });
+        jq('.tar_delete').confirm();
+
     },
     manage_resources_listeners: function () {
         var that = this;
