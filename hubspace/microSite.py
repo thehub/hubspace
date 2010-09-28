@@ -1331,12 +1331,14 @@ class MicroSite(controllers.Controller):
             template = 'hubspace.templates.microSiteHome'
            
         out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
-
+ 
         if page and self.site_types[page.page_type].static:
             path = self.site_dir + '/' + page.path_name
             applogger.info("render_page: generating [%s]" % path)
+            template_args['render_static'] = True
+            public_html = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
             new_html = open(path, 'w')
-            new_html.write(out)
+            new_html.write(public_html)
             new_html.close()
         return out
 
@@ -1450,7 +1452,7 @@ def regenerate_page(location_id, page_type, check_mtime=False):
             if os.path.isfile(path):
                 applogger.info("microsite: removing %s" % path)
                 os.remove(path)
-            site.render_page(page.path_name)
+            site.render_page(page.path_name, relative_path="./")
 
 def on_add_rusage(kwargs, post_funcs):
     rusage = kwargs['class'].get(kwargs['id'])
