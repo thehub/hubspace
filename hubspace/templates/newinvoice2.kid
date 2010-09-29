@@ -165,8 +165,8 @@ body { font-family: Deja; }
         </address>
 
         <c py:strip="True" py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"><c>Company No. </c>${invoice.user.bill_company_no}<br/></c>
-        <c py:strip="True" py:if="not invoice.user.billto and invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><c>VAT Number</c> ${invoice.user.bill_vat_no}</c>
-        <c py:strip="True" py:if="invoice.user.billto and invoice.user.billto.bill_vat_no"><br/><c>VAT Number</c> ${invoice.user.billto.bill_vat_no}</c>
+        <c py:strip="True" py:if="not invoice.user.billto and invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><c>VAT No.</c> ${invoice.user.bill_vat_no}</c>
+        <c py:strip="True" py:if="invoice.user.billto and invoice.user.billto.bill_vat_no"><br/><c>VAT No.</c> ${invoice.user.billto.bill_vat_no}</c>
         </p>
     </td>
     <td width="50%">

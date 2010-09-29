@@ -2985,4 +2985,4 @@ msgid "Dogs"
 msgstr ""
 
 msgid "VAT No."
-msgstr "VAT"
+msgstr "UID"
