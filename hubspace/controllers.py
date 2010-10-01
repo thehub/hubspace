@@ -215,7 +215,7 @@ def start_scheduler():
     add_monthday_task(update_tariff_bookings, [1], (0,0))
     #add_monthday_task(schedule_access_policy_updates, [3], (0,0)) # TODO commented because we need to figure out support for oadd_oneoff_task
     add_interval_task(reportutils.do_report_maintainance, taskname="Report generation routine tasks", initialdelay=30*60, interval=24*60*60)
-    add_interval_task(refresh_all_static_pages, taskname="Regenerate static pages as required", initialdelay=30, interval=4*60*60)
+    add_interval_task(refresh_all_static_pages, taskname="Regenerate static pages as required", initialdelay=3*60, interval=4*60*60)
     #if datetime.now() > datetime(datetime.today().year, datetime.today().month, 3):
     #    schedule_access_policy_updates() # TODO commented because we need to figure out support for add_oneoff_task
     print "scheduler started"
@@ -1660,9 +1660,11 @@ class Root(controllers.RootController):
         locale = get_hubspace_user_locale()
         session_locale = cherrypy.session.get('locale')
         vat = _("VAT")
+        vat_number = _("VAT Number")
+        vat_no = _("VAT No.")
         date = _("Date")
         description = _("Description")
-        out = '<br/>'.join([hub_locale, locale, session_locale, vat, date, description])
+        out = '<br/>'.join([hub_locale, locale, session_locale, vat, vat_number, vat_no, date, description])
         return out
 
     @expose()
