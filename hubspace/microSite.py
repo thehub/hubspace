@@ -1179,6 +1179,7 @@ class MicroSite(controllers.Controller):
             if self.site_types[page.page_type].static == True:
                 try:
                     self.render_page(page.path_name, relative_path='./')
+                    applogger.debug("regenerate_all: calling render_page with (%s, %s) location [%s]" % (page.path_name, './',self.location))
                 except:
                     applogger.exception("failed to render page with name " + page.name + ", location " + `self.location` + " and id " + `page.id`  )
 
@@ -1315,7 +1316,7 @@ class MicroSite(controllers.Controller):
             subpath = subpath[:-1]
             
     def render_page(self, path_name, *args, **kwargs):
-        #applogger.debug("render_page: request for [%s]" % path_name)
+        #applogger.debug("render_page: request [%s %s %s]" % (path_name, str(args), str(kwargs)))
         path_name = path_name.split('#')[0]
         try:
             template_args = self.construct_args(path_name, *args, **kwargs)
@@ -1330,16 +1331,17 @@ class MicroSite(controllers.Controller):
             page = None
             template = 'hubspace.templates.microSiteHome'
            
-        out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
  
         if page and self.site_types[page.page_type].static:
             path = self.site_dir + '/' + page.path_name
-            applogger.info("render_page: generating [%s]" % path)
-            template_args['render_static'] = True
-            public_html = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
-            new_html = open(path, 'w')
-            new_html.write(public_html)
-            new_html.close()
+            if path_name.endswith('.html'): # same method serves for events.html and events/<event-id> so in case in case if URL path
+                                            # does not end with .html we do not need to generate html page. Or we don't support that yet.
+                applogger.info("render_page: generating [%s] template_args [%s]" % (path, str(template_args)))
+                template_args['render_static'] = True # TODO: what difference does render_static make?
+                out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
+                new_html = open(path, 'w')
+                new_html.write(out)
+                new_html.close()
         return out
 
 class Sites(controllers.Controller):
@@ -1423,19 +1425,21 @@ class Sites(controllers.Controller):
         
 
 def refresh_all_static_pages():
+    # Problems with this code 
+    # - If it is called from a scheduled job, at points it tries to use tg identity framework which is not possible outside http request
     sites = dict((site.location, site) for site in cherrypy.root.sites.__class__.__dict__.values() if isinstance(site, MicroSite))
     for page in Page.select():
         site = sites[page.locationID]
         if site.site_types[page.page_type].static:
             path = page.path_name
+            if not path.endswith('.html'): continue
             if os.path.isfile(path):
                 mtime = datetime.datetime.fromtimestamp(os.stat(path).st_mtime)
                 if not now(site.location).day == m_time.day:
-                    os.remove(path)
-            try:
-                self.render_page(page.path_name, relative_path='./')
-            except Exception, err:
-                applogger.warn("microsite: refresh_static_pages failed to regenerate %s" % path)
+                    try:
+                        site.render_page(page.path_name, relative_path='./')
+                    except Exception, err:
+                        applogger.exception("refresh_static_pages: failed to regenerate %s with error '%s'" % (path, err))
 
 
 def regenerate_page(location_id, page_type, check_mtime=False):
@@ -1448,11 +1452,9 @@ def regenerate_page(location_id, page_type, check_mtime=False):
     if site.site_types[page_type].static:
         pages = Page.select(AND(Page.q.location==location_id, Page.q.page_type==page_type))
         for page in pages:
-            path = site.site_dir + '/' + page.path_name
-            if os.path.isfile(path):
-                applogger.info("microsite: removing %s" % path)
-                os.remove(path)
-            site.render_page(page.path_name, relative_path="./")
+            if page.path_name.endswith('.html'):
+                applogger.debug("regenerating page: location_id [%s] path_name [%s]" % (location_id, page.path_name))
+                site.render_page(page.path_name, relative_path='./')
 
 def on_add_rusage(kwargs, post_funcs):
     rusage = kwargs['class'].get(kwargs['id'])
