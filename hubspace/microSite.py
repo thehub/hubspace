@@ -1331,17 +1331,19 @@ class MicroSite(controllers.Controller):
             page = None
             template = 'hubspace.templates.microSiteHome'
            
- 
-        if page and self.site_types[page.page_type].static:
-            path = self.site_dir + '/' + page.path_name
-            if path_name.endswith('.html'): # same method serves for events.html and events/<event-id> so in case in case if URL path
-                                            # does not end with .html we do not need to generate html page. Or we don't support that yet.
-                applogger.info("render_page: generating [%s] template_args [%s]" % (path, str(template_args)))
-                template_args['render_static'] = True # TODO: what difference does render_static make?
-                out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
-                new_html = open(path, 'w')
-                new_html.write(out)
-                new_html.close()
+        path = self.site_dir + '/' + page.path_name
+        if page and self.site_types[page.page_type].static and path_name.endswith('.html'):
+            # same method serves for events.html and events/<event-id> so in case in case if URL path
+            # does not end with .html we do not need to generate html page. Or we don't support that yet.
+            applogger.info("render_page: generating [%s] for location [%s]" % (path, self.location))
+            #applogger.info("render_page: generating [%s] template_args [%s]" % (path, str(template_args)))
+            template_args['render_static'] = True # TODO: what difference does render_static make?
+            out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
+            new_html = open(path, 'w')
+            new_html.write(out)
+            new_html.close()
+        else:
+            out = try_render(template_args, template=template, format='xhtml', headers={'content-type':'text/xhtml'})
         return out
 
 class Sites(controllers.Controller):
