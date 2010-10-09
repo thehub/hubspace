@@ -62,18 +62,19 @@ def sync():
     raise NotImplemented
     return True
 
+def build_writer():
+    return ix.writer(postlimit = 256 * 1024 * 1024)
+
 if not os.path.exists(indexdir):
     os.mkdir(indexdir)
     ix = create_in(indexdir, schema)
-    writer = ix.writer()
+    writer = build_writer()
     populate()
 else:
     ix = open_dir(indexdir)
-    writer = ix.writer()
+    writer = build_writer()
 
 def stop():
-    global writer
-    del writer # required?
     ix.close()
     ix.unlock()
     print "search shutdown"

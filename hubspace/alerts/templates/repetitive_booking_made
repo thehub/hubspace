@@ -1,0 +1,23 @@
+sender = "noreply@the-hub.net"
+to = "${MEMBER_EMAIL}"
+cc = "${BOOKING_CONTACT}"
+subject = "The Hub | Repetitive booking confirmation"
+body = """
+Dear ${MEMBER_FIRST_NAME},
+
+Thank you for your booking at The Hub ${LOCATION}.
+
+Your booking from ${BOOKING_START} to ${BOOKING_END} on ${BOOKING_DATE} for ${RESOURCE} is repeated for below 
+${REPEAT_DATES}s
+
+The expected cost of this usage is ${CURRENCY} ${COST}.
+${ALSO_BOOKED}
+    
+In the event of a cancellation, the individual or organization booking the space will be charged 50% of the totaL cost, unless it is cancelled more than two weeks prior to the event.
+        
+If you have any questions or further requirements please contact The Hub's hosting team at ${HOSTS_EMAIL} or call us on ${LOCATION_PHONE}.
+
+We look forward to seeing you.
+
+The ${LOCATION} Hosting Team
+"""

@@ -84,6 +84,17 @@ def public_or_private(rusage):
 				<td class="right">${rusage.notes}
                                   </td>
 			</tr>
+                        <tr py:if="rusage.confirmed and permission_or_owner(rusage.resource.place, None, 'manage_resources')">
+                              <td class="left">Repeat Booking</td>
+                              <td class="right">
+                                <ul>
+                                <li><a id="repeat_booking" class="${rusage.id}">Repeat this Booking</a></li>
+                                <li py:if="rusage.repetition_id">
+                                    <a id="repeat_booking_info" class="${rusage.id}">Show repeated bookings</a>
+                                </li>
+                                </ul>
+                            </td>
+                        </tr>
 	                <tr py:if="can_delete_rusage(rusage)">
                               <td class="left">Cancel Booking</td>
                               <td class="right"><a id="del_booking" class="${rusage.id}">Cancel this Booking</a></td>

@@ -112,6 +112,20 @@ t_booking_reminder.available_macros = [macros.Location(), macros.Member_Name(), 
     macros.Booking_Date(), macros.Resource(), macros.Also_Booked(), macros.Hosts_Email(), macros.Booking_Contact(),
     macros.Member_First_Name(), macros.Booked_by()]
 
+repetitive_booking_made = Message("repetitive_booking_made")
+repetitive_booking_made.label = "Repetitive Booking Made"
+repetitive_booking_made.can_be_customized = True
+repetitive_booking_made.available_macros = [macros.Location(), macros.Member_Name(), macros.Membership_Number(), macros.Member_Email(),
+    macros.Location_Phone(),macros.Location_URL(), macros.Booking_Contact(), macros.Booking_Start(), macros.Booking_End(),
+    macros.Booking_Date(), macros.Resource(), macros.Also_Booked(), macros.Hosts_Email(), macros.Booking_Contact(), macros.Repeat_Dates(),
+    macros.Member_First_Name(), macros.Currency(), macros.Cost()]
+
+repetitive_booking_cancellation = Message("booking_cancellation")
+repetitive_booking_cancellation.available_macros = [macros.Location(), macros.Member_Name(), macros.Membership_Number(), macros.Member_Email(),
+    macros.Location_Phone(), macros.Location_URL(), macros.Booking_Contact(), macros.Booking_Start(), macros.Booking_End(),
+    macros.Booking_Date(), macros.Resource(), macros.Also_Booked(), macros.Hosts_Email(), macros.Booking_Contact(), macros.Repeat_Dates(),
+    macros.Member_First_Name(), macros.Currency(), macros.Cost(), macros.Time_Left_To_Confirm(), macros.Booked_by()]
+
 trac_submission_failed = Message("trac_submission_failed")
 trac_submission_failed.macros = [macros.Trac_URL(), macros.Traceback(), macros.Username()]
 
@@ -131,6 +145,5 @@ invoice_mail.available_macros = [macros.Location_Phone(), macros.Location(), mac
 tariff_autoupdate = Message('tariff_autoupdate')
 tariff_autoupdate.use_mako = True
 tariff_autoupdate.can_be_customized = False
-
 
 bag = dict ([(k,v) for (k,v) in locals().items() if isinstance(v, Message)])
