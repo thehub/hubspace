@@ -13,7 +13,7 @@ import hubspace.bookinglib as bookinglib
 import hubspace.alerts.messages
 from cgi import escape
 
-__all__ = ['Numbers', 'phone', 'MessageCustSchema', 'ExportUsersJSONSchema', 'ExportUsersCSVSchema', 'ProfileSchema', 'MemberServiceSchema', 'datetimeconverter', 'datetimeconverter2', 'timeconverter', 'timeconverterAMPM', 'AddMemberSchema', 'AddNoteSchema', 'EditNoteSchema', 'BillingDetailsSchema', 'real_int', 'IntOrNone', 'dateconverter', 'EditBookingSchema', 'CreateBookingSchema',  "CreateUsageSchema", "CreateUsageByNameSchema", "EditTodoSchema", "CreateTodoSchema", 'BristolDataSchema', "AddPricingSchema", "EditLocationSchema", "FloatInRange", 'AddAction', 'DateRange', 'NoHyphen', "StartBookingSchema", "BoolInt", "valid_rfid", 'username', 'email_address', 'no_ws_ne_cp', 'no_ws']
+__all__ = ['Numbers', 'phone', 'MessageCustSchema', 'ExportUsersJSONSchema', 'ExportUsersCSVSchema', 'ProfileSchema', 'MemberServiceSchema', 'datetimeconverter', 'datetimeconverter2', 'timeconverter', 'timeconverterAMPM', 'AddMemberSchema', 'AddNoteSchema', 'EditNoteSchema', 'BillingDetailsSchema', 'real_int', 'IntOrNone', 'dateconverter', 'dateconverter2', 'EditBookingSchema', 'CreateBookingSchema',  "CreateUsageSchema", "CreateUsageByNameSchema", "EditTodoSchema", "CreateTodoSchema", 'BristolDataSchema', "AddPricingSchema", "EditLocationSchema", "FloatInRange", 'AddAction', 'DateRange', 'NoHyphen', "StartBookingSchema", "BoolInt", "valid_rfid", 'username', 'email_address', 'no_ws_ne_cp', 'no_ws']
 
 class Numbers(v.Regex):
     """Must contain only integers and spaces (e.g. phone number)
@@ -221,6 +221,7 @@ datetimeconverter = v.DateTimeConverter("%a, %d %B %Y %H:%M:%S")
 datetimeconverter2 = v.DateTimeConverter("%a, %d %B %Y %H:%M")
 daterange_item = v.DateTimeConverter("%a %b %d %Y")
 dateconverter = v.DateTimeConverter("%a, %d %B %Y")
+dateconverter2 = v.DateConverter(month_style='mm/dd/yyyy')
 timeconverter = v.DateTimeConverter("%H:%M")
 timeconverterAMPM = v.DateTimeConverter("%I:%M%p")
 

@@ -1016,6 +1016,7 @@ var append_members = function (response) {
 
 var invoices_export_listeners = function () {
 };
+
 //////////////////////////SEARCH//////////////
 var Search = Class.create();
 Search.prototype = {
@@ -1834,6 +1835,8 @@ var create_booking = function (date_str) {
         jq('#submit_add_booking').click(function () {
             add_booking();
         });
+
+
     };
     var booking_listen = function (response) {
         jq('#booking_popup .close_popup').one('click', function () {
@@ -1915,11 +1918,39 @@ var create_booking = function (date_str) {
         });
         jq('.confirmBooking').click(function (evt) {
             var r_id = Event.element(evt).id.split('-')[1];
-            var req = new Ajax.Request('/confirmBooking', {parameters: "rusage_id=" + r_id, method: 'post', onComplete: jq(this).val("Confrmed.")});
+            var req = new Ajax.Request('/confirmBooking/' + r_id, {onComplete: jq(this).val("Confrmed.")});
             var params = jq("#space_loc_time").serializeArray();
             booking_popup.hide();
             jq('#space-bookingContent').load('/load_make_booking', params, set_space_listeners);
         });
+        jq('#repeat_booking').click( function () {
+            var url = '/repeat_meetingBooking/' + jq(this).attr('class');
+            var html = '<iframe src="' + url + '" width="700" height="700"/>';
+            var dialog = jq('<div></div>').html(html).dialog({
+                autoOpen: false,
+                title: 'Repeat booking',
+                height: 700,
+                width: 700,
+                zindex: 1000,
+                position: 'top',
+                resizable: true
+                });
+            dialog.dialog('open');
+            });
+        jq('#repeat_booking_info').click( function () {
+            var url = '/repeat_meetingBookingInfo/' + jq(this).attr('class');
+            var html = '<iframe src="' + url + '" width="700" height="700"/>';
+            var dialog = jq('<div></div>').html(html).dialog({
+                autoOpen: false,
+                title: 'Repeat booking',
+                height: 700,
+                width: 700,
+                zindex: 1000,
+                position: 'top',
+                resizable: true
+                });
+            dialog.dialog('open');
+            });
 
     };
     var do_start_booking = function (pos, start_time, end_time, resource_id) {

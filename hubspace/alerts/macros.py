@@ -106,6 +106,11 @@ class Booked_by(Macro):
         from hubspace.validators import timeconverter, dateconverter
         return dateconverter.from_python(data['rusage'].bookedby.display_name)
 
+class Repeat_Dates(Macro):
+    label = "Repeat Dates"
+    def getValue(self, data):
+        return  '   ' + '\n   '.join(adate.strftime("%a, %b %d %Y") for adate in data['repeat_dates'])
+
 class Currency(Macro):
     def getValue(self, data):
         rusage = data['rusage']

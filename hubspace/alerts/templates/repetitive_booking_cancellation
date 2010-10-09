@@ -1,0 +1,24 @@
+sender = "${BOOKING_CONTACT}"
+to = "${BOOKING_CONTACT}"
+subject = "HubSpace Alert: Repetitive Booking cancellation"
+body = """\
+Dear Host,
+
+The repetitive booking for "${RESOURCE}" by user "${BOOKED_BY}" was just cancelled. Therefore the resource is available for booking from ${BOOKING_START} to ${BOOKING_END} on ${BOOKING_DATE}.
+You may want to charge for this booking cancellation as per your policies, in which case you will need to reduce the refund.
+
+Booking details:
+    Booked by:  ${BOOKED_BY}
+    Resource:   ${RESOURCE}
+    Start Time: ${BOOKING_START}
+    End Time:   ${BOOKING_END}
+    Booked for: $(REPEAT_DATES)s
+
+This is an automated alert. Please do not reply.
+
+All the best.
+"""
+
+
+
+

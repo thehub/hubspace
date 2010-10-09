@@ -69,3 +69,7 @@ class ObjDict(object):
             raise KeyError(key)
     def __contains__(self, key):
         return hasattr(self.obj, key)
+    def __str__(self):
+        return self.obj.__str__()
+    def __repr__(self):
+        return self.obj.__repr__()
