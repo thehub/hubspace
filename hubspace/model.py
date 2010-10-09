@@ -1020,6 +1020,7 @@ class RUsage(SQLObject):
     cancelled = IntCol(default=0)
     refund = IntCol(default=0)
     refund_for = IntCol(default=None)
+    repetition_id = IntCol(default=None)
     keys_cant_change_if_invoiced = ('start', 'end_time', 'userID', 'cost', 'customcost')
     _codetmpl = """\
 def _set_%(name)s(self, val):
