@@ -90,7 +90,7 @@ def public_or_private(rusage):
                                 <ul>
                                 <li><a id="repeat_booking" class="${rusage.id}">Repeat this Booking</a></li>
                                 <li py:if="rusage.repetition_id">
-                                    <a id="repeat_booking_info" class="${rusage.id}">Show repeated bookings</a>
+                                    <a id="repeat_booking_info" class="${rusage.repetition_id}">Show repeated bookings</a>
                                 </li>
                                 </ul>
                             </td>
