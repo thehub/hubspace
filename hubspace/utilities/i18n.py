@@ -56,28 +56,32 @@ def get_hubspace_locale():
     """get the locale based on the home hub of the user or the base_url and the name of the hub
     """
     #if user is not logged in, then reset the locale
-    if identity.not_anonymous() and '_' not in cherrypy.session.get('locale', ''):
-        cherrypy.session['locale'] = ''
-    locale = cherrypy.session.get('locale', '')
-    if locale:
-        return locale
+    try:
+        if identity.not_anonymous() and '_' not in cherrypy.session.get('locale', ''):
+            cherrypy.session['locale'] = ''
+        locale = cherrypy.session.get('locale', '')
+        if locale:
+            return locale
 
-    if identity.current.anonymous:
-        locale = site_default_lang.get(cherrypy.request.base, 'en')
-    else:
-        locale = get_hubspace_user_locale()
+        if identity.current.anonymous:
+            locale = site_default_lang.get(cherrypy.request.base, 'en')
+        else:
+            locale = get_hubspace_user_locale()
 
-    cherrypy.session['locale'] = locale
-    tool = tool_instance()
+        cherrypy.session['locale'] = locale
+        tool = tool_instance()
 
-    if os.path.exists(tool.get_locale_catalog(locale, "messages")):
-        if not os.path.exists(tool.get_locale_mo(locale, "messages")):
-            tool.compile_message_catalogs(locale)
-        #should maybe test for each domain separately?
+        if os.path.exists(tool.get_locale_catalog(locale, "messages")):
+            if not os.path.exists(tool.get_locale_mo(locale, "messages")):
+                tool.compile_message_catalogs(locale)
+            #should maybe test for each domain separately?
+            return cherrypy.session.get('locale')
+
+        install_new_locale(locale)
         return cherrypy.session.get('locale')
-
-    install_new_locale(locale)
-    return cherrypy.session.get('locale')
+    except identity.RequestRequiredException:
+        # called from a scheduled job?
+        return 'en'
 
 def get_po_path(location=None):
     if location:
