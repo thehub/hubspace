@@ -4,7 +4,7 @@ subject = "HubSpace Alert: Booking cancellation"
 body = """\
 Dear Host,
 
-The booking for "${RESOURCE}" by user "${BOOKED_BY}" was just cancelled. Therefore the resource would is available for booking from ${BOOKING_START} to ${BOOKING_END} on ${BOOKING_DATE}.
+The booking for "${RESOURCE}" by user "${BOOKED_BY}" was just cancelled. Therefore the resource is available for booking from ${BOOKING_START} to ${BOOKING_END} on ${BOOKING_DATE}.
 You may want to charge for this booking cancellation as per your policies, in which case you will need to reduce the refund.
 
 Booking details:
@@ -13,7 +13,7 @@ Booking details:
     Start Time: ${BOOKING_START}
     End Time:   ${BOOKING_END}
 
-This is an automated alert. Do not reply.
+This is an automated alert. Please do not reply.
 
 All the best.
 """
