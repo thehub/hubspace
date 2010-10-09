@@ -50,6 +50,7 @@ from hubspace.utilities.static_files import hubspace_compile
 from hubspace.utilities.uiutils import c2s, inv_currency, unsent_for_user, get_multiselected, set_multiselected, set_singleselected, get_singleselected, now
 from hubspace.utilities.permissions import user_locations, addUser2Group, get_current_roles, get_editable_roles, create_permissions_for_group
 import hubspace.utilities.permissions as permissionslib
+import hubspace.utilities.date as dateutils
 from hubspace.utilities.users import filter_members
 from hubspace.tariff import get_tariff
 
@@ -138,13 +139,14 @@ def update_tariff_bookings(last_run=None, now=None):
 
 
 def book_tariff(user, tariff, year, month, recalculate=True):
+    suppress_notification = 'False' # I am not sure if I should set this to False now.
     lastday = calendar.monthrange(year, month)[1]
     is_duplicate = RUsage.selectBy(resourceID=tariff.id, start=datetime(year,month,1,0,0,1), userID=user.id).count()
     if is_duplicate:
         applogger.warn("Duplicate Tariff booking: %s [%s %s] %s" % (tariff.name, month, year, user.display_name))
         tariff_booking = RUsage.selectBy(resourceID=tariff.id, start=datetime(year,month,1,0,0,1), userID=user.id)[0]
     else:
-        tariff_booking = create_rusage(start=datetime(year,month,1,0,0,1),
+        tariff_booking = create_rusage(suppress_notification=False, start=datetime(year,month,1,0,0,1),
                                    end_time=datetime(year,month,lastday,0,0,0)+timedelta(days=1),
                                    resource=tariff.id,
                                    user=user.id)
@@ -507,7 +509,7 @@ def get_users_for_location(place=None):
     
 booking_confirmation_text =  """Dear %(name)s,\n\nThank you for your booking at The Hub %(location)s.\n\nYou have booked %(resource)s from %(start)s to %(end)s on %(date)s. The expected cost of this usage is %(currency)s %(cost)s.\n\n%(options)sIn the event of a cancellation, the individual or organization booking the space will be charged 50%% of the total cost, unless it is cancelled more than two weeks prior to the event.\n\nIf you have any questions or further requirements please contact The Hub's hosting team at %(hosts_email)s or call us on %(telephone)s.\n\nWe look forward to seeing you.\n\nThe Hosting Team"""  
 
-def create_rusage(**kwargs):
+def create_rusage(suppress_notification = False, **kwargs):
     '''Creates an RUsage, the use of an resource. It will also determine
     the cost of this usage at creation time, because the booked resource
     could later be removed, rendering the rusage otherwise useless. This
@@ -578,7 +580,11 @@ def create_rusage(**kwargs):
             location = rusage.resource.place
             data = dict ( rusage = rusage, user = rusage.user, location = location )
             msg_name = rusage.confirmed and "booking_confirmation" or "t_booking_made"
-            hubspace.alerts.sendTextEmail(msg_name, location, data)
+            if suppress_notification:
+                applogger.warn('%s notification suppressed for booking %s' % (msg_name, rusage.id))
+            else:
+                hubspace.alerts.sendTextEmail(msg_name, location, data)
+
     return rusage
            
 def user_stats(users):
@@ -916,23 +922,26 @@ def resource_groups(location):
 
 ####Make Bookings ############
 
-def make_booking(**kwargs):
+
+def make_booking(suppress_notification=False, **kwargs):
     resource = Resource.get(kwargs['resource'])
     
+    end_time = kwargs.get('end_time', kwargs.get('end_datetime'))
     if resource.time_based and unavailable_for_booking(kwargs['resource'],
                                                        kwargs['start'],
-                                                       kwargs['end_time'],
+                                                       end_time,
                                                        kwargs['rusage']).count():
         raise 'BookingConflict', 'Resource %s cannot be booked between %s and %s' % (resource.id,
                                                                                      kwargs['start'],
-                                                                                     kwargs['end_time'])
+                                                                                     end_time)
 
-    rusage = create_rusage(**kwargs)
+    rusage = create_rusage(suppress_notification=False, **kwargs)
 
     if 'options' in kwargs:
         book_suggested_resources(kwargs['options'], rusage, kwargs['user'], kwargs['start'], kwargs['end_time'])
 
     return rusage
+
 
 def book_suggested_resources(resource_ids, booking, user, start, end_time):
     for resource in resource_ids:
@@ -949,7 +958,6 @@ def printer_resources(loc_id):
                                    'bw': 'A4BW'},
                       'A3': {'colour': 'A3Colour',
                              'bw': 'A3BW'}}
-    
 
     for size in resource_types:
         for col in resource_types[size]:
@@ -1139,8 +1147,6 @@ def process_entry(job, alias, start_date, aliases, resource_types):
     code = book_print_resource(resource_id, resource_description=hash_description, quantity=pages, start=start_date, end_time=end_date, user=user_id)
     return code
 
-
-
 def book_print_resource(resource_id, resource_description, tg_errors=None, **kwargs):
     """Create an rusage corresponding to a print job, ensuring that the description is unique. The description should be a unique hash based on the print log format. If it fails because the job is already processed will return 0, if it fails because of another error it will return 3...returns 2 if the username does not exist. If it succeeds it will return 1
     """
@@ -1160,7 +1166,7 @@ def book_print_resource(resource_id, resource_description, tg_errors=None, **kwa
     try:
         kwargs['resource_description'] = resource_description
         kwargs['resource'] = resource_id
-        make_booking(**kwargs)
+        make_booking(suppress_notification=False, **kwargs)
         return "1"
     except Exception, e:
         print `e`
@@ -1660,11 +1666,9 @@ class Root(controllers.RootController):
         locale = get_hubspace_user_locale()
         session_locale = cherrypy.session.get('locale')
         vat = _("VAT")
-        vat_number = _("VAT Number")
-        vat_no = _("VAT No.")
         date = _("Date")
         description = _("Description")
-        out = '<br/>'.join([hub_locale, locale, session_locale, vat, vat_number, vat_no, date, description])
+        out = '<br/>'.join([hub_locale, locale, session_locale, vat, date, description])
         return out
 
     @expose()
@@ -2662,6 +2666,31 @@ Exception:
 
         return {'location':loc, 'date':date, 'res_group':res_group, 'view':view, 'rooms_displayed':rooms_displayed, 'room_selected':room_selected, 'only_my_bookings':only_my_bookings}
 
+    def clone_booking(self, booking, new_data, can_set_costs=False):
+        """
+        booking: A RUsage instance
+        new_data: dict of attribute names and values. This would override existing booking attribute values
+            new_data must contain start and end_time
+        returns attrs_dict
+        """
+        attrs_not_to_copy = set(['cancelled', 'end_time', 'invoiceID', 'refund_for', 'start', 'usagesuggestedbyID', 'date_booked'])
+        if not can_set_costs:
+            attrs_not_to_copy.add('cost')
+            attrs_not_to_copy.add('customcost')
+        all_attrs = set([c.name for c in RUsage.sqlmeta.columnList])
+        attrs_to_copy = all_attrs.difference(attrs_not_to_copy)
+        attrs_dict = dict((attr, getattr(booking, attr)) for attr in attrs_to_copy)
+        attrs_dict['resource_id'] = booking.resourceID
+        attrs_dict['date_booked'] = now(booking.resource.place)
+        attrs_dict['date'] = new_data['start'].strftime("%a, %d %B %Y")
+        attrs_dict['start'] = hubspace.utilities.dicts.ObjDict(new_data['start'])
+        attrs_dict['end'] = hubspace.utilities.dicts.ObjDict(new_data['end_time'])
+        attrs_dict['tentative'] = 0 if booking.confirmed else 1
+        attrs_dict['suppress_notification'] = True
+        for key in ('start', 'end_time'):
+            new_data.pop(key)
+        attrs_dict.update(new_data)
+        return self.add_booking(**attrs_dict)
 
     @expose()
     @identity.require(not_anonymous())
@@ -2715,8 +2744,6 @@ Exception:
 
         return  self.book_resource(**kwargs)
 
-
-    
     @expose()
     @identity.require(not_anonymous())
     @validate(validators=CreateUsageByNameSchema())
@@ -2794,9 +2821,12 @@ Exception:
             return try_render({'user':User.get(kwargs['pageuser']), 'invoice':None}, template='hubspace.templates.invoicesnippet', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
         else:
             return try_render({'rusage':new_rusage}, template='hubspace.templates.meetingBooking', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
+    
+    @expose('hubspace.templates.meetingBookingRepeat')
+    @identity.require(not_anonymous())
+    def repeat_meetingBooking(self, booking_id):
+        return dict(booking_id = booking_id)
 
-    
-    
     @expose()
     @identity.require(not_anonymous())
     @validate(validators=EditBookingSchema())
@@ -2893,7 +2923,7 @@ Exception:
             # refund will be reflected in the next invoice
             rusage_id = self.cancel_rusage(rusage.id)
             kwargs['resource'] = kwargs['resource_id']
-            rusage = create_rusage(**kwargs)
+            rusage = create_rusage(suppress_notification=False, **kwargs)
 
 
         cherrypy.response.headers['X-JSON'] = 'success'
@@ -2991,7 +3021,7 @@ Exception:
         if tariffid==0:
             return ""
         
-        tariff = Resource.get(tariffid)       
+        tariff = Resource.get(tariffid)
         user = User.get(userid)
         
         if not permission_or_owner(tariff.place,None,'manage_users'):
@@ -4890,6 +4920,114 @@ The Hub Team
             return str(new_rusage.id)
         raise IdentityFailure("You can't cancel that booking")
 
+    @expose()
+    @identity.require(not_anonymous())
+    @validate(validators={'repetition_id':real_int})
+    def editRecurringEvent(self, repetition_id, recursive_pattern, from_date='', to_date='', list_of_dates=[], **kwargs):
+    # What about the pattern?
+        list_of_dates = calculate_dates_from_pattern(from_date, end_date, list_of_dates, recursive_pattern)
+        # not to forget: email after successful editing
+        return 'success'
+       
+    @expose()
+    @identity.require(not_anonymous())
+    @validate(validators={"repetition_id":real_int})
+    def deleteRecurringEvent(self, **kwargs):
+        # Use cancel_rusage mechanism to delete invoiced rusages.
+        return 'success'
+       
+    def calculate_dates_from_pattern(self, booking, pattern, from_date=None, to_date=None, *args, **kw):
+        repeat_dates = []
+        if from_date and to_date:
+            from_date = dateconverter2.to_python(from_date)
+            to_date = dateconverter2.to_python(to_date)
+            date_next = from_date
+
+        if pattern == "daily":
+            repeat_every = int(kw.get('daily_opt_every'))
+            while date_next <= to_date:
+                repeat_dates.append(date_next)
+                date_next += timedelta(repeat_every)
+        elif pattern == "weekly":
+            weekday_names = kw['weekly_opt_repeat_days']
+            weekday_abbrs = list(calendar.day_abbr)
+            repeat_weekdays = list(weekday_abbrs.index(name) for name in weekday_names)
+            while date_next <= to_date:
+                if date_next.weekday() in repeat_weekdays:
+                    repeat_dates.append(date_next)
+                date_next += timedelta(1)
+        elif pattern == "monthly":
+            by_weekday = kw['monthly_opt_day'] == 'weekday'
+            by_day = kw['monthly_opt_day'] == 'day'
+            if by_day:
+                repeat_day = int(kw['monthly_opt_day_day'])
+                if date_next.day > repeat_day:
+                    date_next = dateutils.advance_one_month(date_next)
+                date_next = date(date_next.year, date_next.month, repeat_day)
+            if by_weekday:
+                repeat_weekday = int(kw['monthly_opt_weekday_day'])
+                repeat_week_no = int(kw['monthly_opt_weekday_week_no'])
+                date_month_start = dateutils.get_month_start(date_next)
+                this_month_match = dateutils.find_by_weekday_for_week_no(date_month_start, repeat_weekday, repeat_week_no)
+                if date_next > this_month_match:
+                    date_next = dateutils.get_next_month_start(date_next)
+                    date_next = dateutils.find_by_weekday_for_week_no(date_next, repeat_weekday, repeat_week_no)
+            while date_next <= to_date:
+                repeat_dates.append(date_next)
+                if by_day:
+                    date_next = dateutils.advance_one_month(date_next)
+                elif by_weekday:
+                    date_next = dateutils.get_next_month_start(date_next)
+                    date_next = dateutils.find_by_weekday_for_week_no(date_next, repeat_weekday, repeat_week_no)
+        elif pattern == "multidate":
+            repeat_dates = kw['repeat_dates'].split(',')
+            repeat_dates = [dateconverter2.to_python(adate) for adate in repeat_dates]
+
+        return [dt for dt in repeat_dates if dt != booking.start.date] # to filter out initial booking so we return only clones
+
+
+    @expose("hubspace.templates.meetingBookingRepeatInfo")
+    @identity.require(not_anonymous())
+    @validate(validators={'booking_id':real_int})
+    def repeat_meetingBookingInfo(self, booking_id):
+        return dict(booking_id=booking_id)
+
+    @expose(allow_json=True)
+    @identity.require(not_anonymous())
+    @validate(validators={'booking_id':real_int})
+    def addRecurringEvent(self, booking_id, pattern, **kwargs):
+        # clones given booking for dates matching specified pattern
+        booking = RUsage.get(booking_id)
+        repeat_dates = self.calculate_dates_from_pattern(booking, pattern, **kwargs)
+        if len(repeat_dates) > 100:
+            return 'Crossed system limits: You can not make %s bookings at a time.<br/> You may contact support for queries.' % len(repeat_dates)
+        msgs = []
+        repetition_id = booking.id
+        booking.repetition_id = repetition_id
+
+        for adate in repeat_dates:
+            if adate == booking.start.date: continue
+            data = dict(
+                start = datetime(adate.year, adate.month, adate.day, booking.start.hour, booking.start.minute),
+                end_time = datetime(adate.year, adate.month, adate.day, booking.end_time.hour, booking.end_time.minute),
+                repetition_id = repetition_id,
+                )
+            try:
+                self.clone_booking(booking, data)
+                msg = adate.strftime('%a, %b %d %Y') + ': success'
+            except Exception, err:
+                applogger.exception("recursive booking")
+                msg = adate.strftime('%a, %b %d %Y') + ': error - ' + str(err)
+            except: # BookingConflict lands here
+                applogger.exception("recursive booking")
+                msg = adate.strftime('%a, %b %d %Y') + ': error - possible booking conflict'
+            msgs.append(msg)
+
+        location = booking.resource.place
+        data = dict ( rusage = booking, user = booking.user, location = location, repeat_dates = repeat_dates )
+        msg_name = "repetitive_booking_made"
+        hubspace.alerts.sendTextEmail(msg_name, location, data)
+        return 'Repeat booking status:<br/> <ol>' + ''.join('<li>%s</li>' % msg for msg in msgs) + '</ol>'
        
     @expose()
     @identity.require(not_anonymous())
