@@ -24,7 +24,7 @@
 <?python
 from hubspace.model import RUsage
 booking = RUsage.get(booking_id)
-repeat_usages = RUsage.selectBy(repetition_id=booking_id)
+repeat_usages = RUsage.selectBy(repetition_id=booking_id).orderBy('start')
 ?>
 
 <h4 class="box">Bookings Details</h4>

@@ -17,8 +17,7 @@
     <script type="text/javascript" src="/static/datepicker/js/layout.js"></script>
 
 <style>
-<!-- Override blueprint's td. Else datepicker showing years blows out of proportion -->
-td {padding:0px 0px 0px 0px;}
+th {padding:0px 0px 0px 0px;}
 </style>
 
 </head>

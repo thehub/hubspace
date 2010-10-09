@@ -139,14 +139,13 @@ def update_tariff_bookings(last_run=None, now=None):
 
 
 def book_tariff(user, tariff, year, month, recalculate=True):
-    suppress_notification = 'False' # I am not sure if I should set this to False now.
     lastday = calendar.monthrange(year, month)[1]
     is_duplicate = RUsage.selectBy(resourceID=tariff.id, start=datetime(year,month,1,0,0,1), userID=user.id).count()
     if is_duplicate:
         applogger.warn("Duplicate Tariff booking: %s [%s %s] %s" % (tariff.name, month, year, user.display_name))
         tariff_booking = RUsage.selectBy(resourceID=tariff.id, start=datetime(year,month,1,0,0,1), userID=user.id)[0]
     else:
-        tariff_booking = create_rusage(suppress_notification=False, start=datetime(year,month,1,0,0,1),
+        tariff_booking = create_rusage(start=datetime(year,month,1,0,0,1),
                                    end_time=datetime(year,month,lastday,0,0,0)+timedelta(days=1),
                                    resource=tariff.id,
                                    user=user.id)
@@ -509,7 +508,7 @@ def get_users_for_location(place=None):
     
 booking_confirmation_text =  """Dear %(name)s,\n\nThank you for your booking at The Hub %(location)s.\n\nYou have booked %(resource)s from %(start)s to %(end)s on %(date)s. The expected cost of this usage is %(currency)s %(cost)s.\n\n%(options)sIn the event of a cancellation, the individual or organization booking the space will be charged 50%% of the total cost, unless it is cancelled more than two weeks prior to the event.\n\nIf you have any questions or further requirements please contact The Hub's hosting team at %(hosts_email)s or call us on %(telephone)s.\n\nWe look forward to seeing you.\n\nThe Hosting Team"""  
 
-def create_rusage(suppress_notification = False, **kwargs):
+def create_rusage(**kwargs):
     '''Creates an RUsage, the use of an resource. It will also determine
     the cost of this usage at creation time, because the booked resource
     could later be removed, rendering the rusage otherwise useless. This
@@ -575,15 +574,15 @@ def create_rusage(suppress_notification = False, **kwargs):
             request = cherrypy.request.headers
         except AttributeError:
             request = None
-        if rusage.resource.type != 'tariff' and rusage.resource.time_based and request:
-            #validators.Money.from_python and therefore c2s does not work outside a request - which it needs to for some scheduled jobs
-            location = rusage.resource.place
-            data = dict ( rusage = rusage, user = rusage.user, location = location )
-            msg_name = rusage.confirmed and "booking_confirmation" or "t_booking_made"
-            if suppress_notification:
-                applogger.warn('%s notification suppressed for booking %s' % (msg_name, rusage.id))
-            else:
+        if not kwargs.get('suppress_notification'):
+            if rusage.resource.type != 'tariff' and rusage.resource.time_based and request:
+                #validators.Money.from_python and therefore c2s does not work outside a request - which it needs to for some scheduled jobs
+                location = rusage.resource.place
+                data = dict ( rusage = rusage, user = rusage.user, location = location )
+                msg_name = rusage.confirmed and "booking_confirmation" or "t_booking_made"
                 hubspace.alerts.sendTextEmail(msg_name, location, data)
+        else:
+            applogger.warn('booking notification suppressed for booking %s' % rusage.id)
 
     return rusage
            
@@ -923,7 +922,7 @@ def resource_groups(location):
 ####Make Bookings ############
 
 
-def make_booking(suppress_notification=False, **kwargs):
+def make_booking(**kwargs):
     resource = Resource.get(kwargs['resource'])
     
     end_time = kwargs.get('end_time', kwargs.get('end_datetime'))
@@ -935,7 +934,7 @@ def make_booking(suppress_notification=False, **kwargs):
                                                                                      kwargs['start'],
                                                                                      end_time)
 
-    rusage = create_rusage(suppress_notification=False, **kwargs)
+    rusage = create_rusage(**kwargs)
 
     if 'options' in kwargs:
         book_suggested_resources(kwargs['options'], rusage, kwargs['user'], kwargs['start'], kwargs['end_time'])
@@ -1166,7 +1165,7 @@ def book_print_resource(resource_id, resource_description, tg_errors=None, **kwa
     try:
         kwargs['resource_description'] = resource_description
         kwargs['resource'] = resource_id
-        make_booking(suppress_notification=False, **kwargs)
+        make_booking(**kwargs)
         return "1"
     except Exception, e:
         print `e`
@@ -2673,7 +2672,7 @@ Exception:
             new_data must contain start and end_time
         returns attrs_dict
         """
-        attrs_not_to_copy = set(['cancelled', 'end_time', 'invoiceID', 'refund_for', 'start', 'usagesuggestedbyID', 'date_booked'])
+        attrs_not_to_copy = set(['cancelled', 'end_time', 'invoiceID', 'refund_for', 'start', 'date_booked'])
         if not can_set_costs:
             attrs_not_to_copy.add('cost')
             attrs_not_to_copy.add('customcost')
@@ -2687,6 +2686,7 @@ Exception:
         attrs_dict['end'] = hubspace.utilities.dicts.ObjDict(new_data['end_time'])
         attrs_dict['tentative'] = 0 if booking.confirmed else 1
         attrs_dict['suppress_notification'] = True
+        attrs_dict['options'] = [usage.resource.id for usage in booking.suggested_usages]
         for key in ('start', 'end_time'):
             new_data.pop(key)
         attrs_dict.update(new_data)
@@ -2923,7 +2923,7 @@ Exception:
             # refund will be reflected in the next invoice
             rusage_id = self.cancel_rusage(rusage.id)
             kwargs['resource'] = kwargs['resource_id']
-            rusage = create_rusage(suppress_notification=False, **kwargs)
+            rusage = create_rusage(**kwargs)
 
 
         cherrypy.response.headers['X-JSON'] = 'success'
@@ -4983,7 +4983,7 @@ The Hub Team
             repeat_dates = kw['repeat_dates'].split(',')
             repeat_dates = [dateconverter2.to_python(adate) for adate in repeat_dates]
 
-        return [dt for dt in repeat_dates if dt != booking.start.date] # to filter out initial booking so we return only clones
+        return [dt for dt in repeat_dates if dt != booking.start.date()] # to filter out initial booking so we return only clones
 
 
     @expose("hubspace.templates.meetingBookingRepeatInfo")
