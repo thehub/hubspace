@@ -97,7 +97,14 @@ def public_or_private(rusage):
                         </tr>
 	                <tr py:if="can_delete_rusage(rusage)">
                               <td class="left">Cancel Booking</td>
-                              <td class="right"><a id="del_booking" class="${rusage.id}">Cancel this Booking</a></td>
+                              <td class="right">
+                              <ul>
+                              <li><a id="del_booking" class="${rusage.id}">Cancel this Booking</a></li>
+                              <li><a py:if="rusage.repetition_id" id="del_repeatbooking" class="${rusage.repetition_id}">
+                                Cancel all occurances of this Booking</a>
+                              </li>
+                              </ul>
+                              </td>
                         </tr>	
                         <tr py:if="rusage.resource.place.tentative_booking_enabled and rusage.resource.type == 'room'">
                                 <td class="left">Tentative</td>

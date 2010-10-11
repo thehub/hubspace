@@ -4859,6 +4859,15 @@ The Hub Team
 
     @expose()
     @identity.require(not_anonymous())
+    def delete_rusages(self, rusage_ids):
+        if not isinstance(rusage_ids, (tuple, list)):
+            rusage_ids = (rusage_ids,)
+        for rusage_id in rusage_ids:
+            self.delete_rusage(rusage_id)
+        return "success"
+        
+    @expose()
+    @identity.require(not_anonymous())
     @validate(validators={"rusage":real_int})
     def delete_rusage(self, rusage, **kwargs):
         """
@@ -4873,20 +4882,21 @@ The Hub Team
         if rusage.invoiced:
             return self.cancel_rusage(rusage.id)
 
-        invoice_updt_reqd = bool(rusage.invoice)
-        invoice = rusage.invoice
+        else:
+            invoice_updt_reqd = bool(rusage.invoice)
+            invoice = rusage.invoice
 
-        for suggestion in rusage.suggested_usages:
-            suggestion.destroySelf()
-        if not rusage.confirmed:
-            bookinglib.notifyTentativeBookingRelease(rusage)
-        applogger.info("Deleting RUsage %s" % rusage)
-        rusage.destroySelf()
+            for suggestion in rusage.suggested_usages:
+                suggestion.destroySelf()
+            if not rusage.confirmed:
+                bookinglib.notifyTentativeBookingRelease(rusage)
+            applogger.info("Deleting RUsage %s" % rusage)
+            rusage.destroySelf()
 
-        if invoice_updt_reqd:
-            self.update_invoice_amount(invoice.id)
+            if invoice_updt_reqd:
+                self.update_invoice_amount(invoice.id)
 
-        return ''
+            return ''
  
     @expose()
     @identity.require(not_anonymous())
@@ -4932,7 +4942,11 @@ The Hub Team
     @expose()
     @identity.require(not_anonymous())
     @validate(validators={"repetition_id":real_int})
-    def deleteRecurringEvent(self, **kwargs):
+    def delete_repeating_usages(self, repetition_id):
+        repeat_usages = RUsage.selectBy(repetition_id=repetition_id)
+        applogger.info("deleting repeat usages with repetition_id %s" % repetition_id)
+        for usage in repeat_usages:
+            self.delete_rusage(usage.id)
         # Use cancel_rusage mechanism to delete invoiced rusages.
         return 'success'
        
