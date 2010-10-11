@@ -1,3 +1,4 @@
+import turbogears
 import turbogears.identity as identity
 
 class Macro(object):
