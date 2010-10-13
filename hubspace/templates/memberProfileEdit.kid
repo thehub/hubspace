@@ -52,8 +52,6 @@ def locations(object):
                 locations.append(location)
     locations.sort(alpha)
     return locations
-  
-
 
 def current_home(location, user):
     if hasattr(user, 'homeplace') and not isinstance(user.homeplace, basestring):
@@ -235,14 +233,14 @@ else:
 locations_relevant = sorted(set(current_roles.keys() + editable_roles.keys()), key=lambda loc: loc.name)
 roles_data = get_roles_data(current_roles, editable_roles, locations_relevant)
 ?>
-                            <tr py:for="location in locations_relevant">
+                            <div class="errorMessage" py:if="tg_errors">${print_error('homeplace', tg_errors)}</div>
+                            <tr py:if="location.id != 53" py:for="location in locations_relevant"> <!-- 53 is hubPlus -->
                                 <td>
                                     ${location.name}
                                     <div class="errorMessage" py:if="tg_errors">${print_error('groups', tg_errors)}</div>
                                 </td>
                                 <td>
                                     <input type="radio" name="homeplace" value="${location.id}" py:attrs="current_home(location, object)" />
-                                    <div class="errorMessage" py:if="tg_errors">${print_error('homeplace', tg_errors)}</div>
                                 </td>
                                 <td py:for="role in roles">
                                     <input py:if="roles_data[location][role][1]" type="checkbox" name="groups.${location.id}.${role}" 
