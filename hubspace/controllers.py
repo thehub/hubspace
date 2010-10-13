@@ -3963,6 +3963,9 @@ The Hub Team
 
             if 'homeplace' in kwargs:
                 kwargs['homeplace'] = Location.get(kwargs['homeplace'])
+            else:
+                kwargs['homeplace'] = location
+
             
             obj = AttrDict(**kwargs)
             return {'new_user':obj, 'tg_errors':tg_errors}
