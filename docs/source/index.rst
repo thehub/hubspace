@@ -9,9 +9,11 @@ Welcome to Hubspace's documentation!
 Topics:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    changelog
+
+   message_catalogue
 
 Indices and tables
 ==================
