@@ -1912,9 +1912,14 @@ var create_booking = function (date_str) {
         },
                        message: 'Are you sure you want to cancel this booking? '};
         jq("#del_booking").confirm_action(options);
+        var repeat_options = {action: function (ele) {
+            confirm_delete_repeat_usages(ele);
+        },
+                       message: 'Are you sure you want to cancel all repeatebookings? '};
+        jq("#del_repeatbooking").confirm_action(repeat_options);
         jq('.notify_on_available').click(function (evt) {
             var r_id = Event.element(evt).id.split('-')[1];
-            var req = new Ajax.Request('/addToResourceQueue', {parameters: "rusage_id=" + r_id, method: 'post', onComplete: jq(this).remove()});
+            var req = new Ajax.Request('/addToResourceQueue', {parameters: "rusage_id=" + r_id, method: 'post', onComplete: jq(this).remove()}        );
         });
         jq('.confirmBooking').click(function (evt) {
             var r_id = Event.element(evt).id.split('-')[1];
@@ -2259,6 +2264,11 @@ var confirm_delete_rusage = function (ele) {
     }
 
     var req = new Ajax.Request('/delete_rusage', {method: 'post', parameters: 'rusage=' + rusage, onComplete: complete});
+};
+
+var confirm_delete_repeat_usages = function (ele) {
+    var repeat_id = ele.attr('class');
+    var req = new Ajax.Request('/delete_repeating_usages/' + repeat_id, {onComplete: complete_delete_rusage});
 };
 
 var confirm_cancel_rusage = function (ele) {

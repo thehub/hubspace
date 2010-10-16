@@ -127,7 +127,7 @@ repetitive_booking_cancellation.available_macros = [macros.Location(), macros.Me
     macros.Member_First_Name(), macros.Currency(), macros.Cost(), macros.Time_Left_To_Confirm(), macros.Booked_by()]
 
 trac_submission_failed = Message("trac_submission_failed")
-trac_submission_failed.macros = [macros.Trac_URL(), macros.Traceback(), macros.Username()]
+trac_submission_failed.available_macros = [macros.Trac_URL(), macros.Traceback(), macros.Username()]
 
 invoice_freetext_1 = Message("invoice_freetext_1")
 invoice_freetext_1.label = "Invoice Free Text (Page 1)"
