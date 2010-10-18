@@ -193,7 +193,7 @@ def on_updt_rusage(instance, kwargs):
         instance_cache.update(kwargs)
     else:
         if kwargs.get('public_field', False):
-            cached_updates[location]['events'].add(rusage)
+            cached_updates[location]['events'].add(instance)
             applogger.info("feeds.on_add_rusage: added %(id)s" % kwargs)
 
 def on_updt_user(instance, kwargs):
