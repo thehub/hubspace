@@ -2684,6 +2684,7 @@ Exception:
         attrs_dict['date'] = new_data['start'].strftime("%a, %d %B %Y")
         attrs_dict['start'] = hubspace.utilities.dicts.ObjDict(new_data['start'])
         attrs_dict['end'] = hubspace.utilities.dicts.ObjDict(new_data['end_time'])
+        attrs_dict['user'] = booking.user.id
         attrs_dict['tentative'] = 0 if booking.confirmed else 1
         attrs_dict['suppress_notification'] = True
         attrs_dict['options'] = [usage.resource.id for usage in booking.suggested_usages]
@@ -5029,8 +5030,9 @@ The Hub Team
                 end_time = datetime(adate.year, adate.month, adate.day, booking.end_time.hour, booking.end_time.minute),
                 repetition_id = repetition_id,
                 )
+            can_set_costs = permission_or_owner(booking.resource.place, None, 'manage_resources')
             try:
-                self.clone_booking(booking, data)
+                self.clone_booking(booking, data, can_set_costs=can_set_costs)
                 msg = adate.strftime('%a, %b %d %Y') + ': success'
             except Exception, err:
                 applogger.exception("recursive booking")
