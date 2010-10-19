@@ -1,5 +1,6 @@
 <?python
 from hubspace.validators import timeconverter, datetimeconverter2 as dt
+from docutils.core import publish_parts
 event = None
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" py:extends="'microSiteMaster.kid'">
@@ -34,7 +35,16 @@ event = None
 				   </div>
 				   <div class="property"><div class="propertyTitle">Date:</div><div class="propertyValue">${dt.from_python(event.start)} - ${timeconverter.from_python(event.end_time)}</div>
 				   </div>
-				   <div py:if="event.meeting_description" class="property"><div class="propertyTitle">Description:</div><div class="propertyValue description">${event.meeting_description}</div>
+				   <div py:if="event.meeting_description" class="property">
+                                   <?python
+                                   description = event.meeting_description
+                                   try:
+                                       description = publish_parts(description, writer_name="html")["html_body"]
+                                   except:
+                                       pass 
+                                   ?>
+                                   <div class="propertyTitle">Description:</div><div class="propertyValue description">${event.meeting_description}
+                                   </div>
 				   </div>
                     <div><a href="${relative_path}icalfeed.ics/${event.id}">iCal</a></div>
 				   <div><div><p class="backLink"><a href="../${page.path_name}">back to Events Page</a></p></div></div>
