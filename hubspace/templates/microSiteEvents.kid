@@ -43,7 +43,7 @@ event = None
                                    except:
                                        pass 
                                    ?>
-                                   <div class="propertyTitle">Description:</div><div class="propertyValue description">${event.meeting_description}
+                                   <div class="propertyTitle">Description:</div><div class="propertyValue description">${XML(description)}
                                    </div>
 				   </div>
                     <div><a href="${relative_path}icalfeed.ics/${event.id}">iCal</a></div>
