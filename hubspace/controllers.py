@@ -3966,7 +3966,6 @@ The Hub Team
                 kwargs['homeplace'] = Location.get(kwargs['homeplace'])
             else:
                 kwargs['homeplace'] = location
-
             
             obj = AttrDict(**kwargs)
             return {'new_user':obj, 'tg_errors':tg_errors}
@@ -4363,23 +4362,28 @@ The Hub Team
         invoice = Invoice.get(invoiceid)
         if not permission_or_owner(invoice.location, invoice, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
-        pdf = self.create_pdf_invoice(invoiceid=invoiceid,html2ps=html2ps)
-        #cherrypy.response.headers['Content-type'] = 'application/pdf'
-        return pdf
+        cherrypy.response.headers['Content-type'] = 'application/pdf'
+        return self.gen_or_get_invoice_pdf(invoiceid)
     
     @expose()
-    @identity.require(not_anonymous())
-    def new_invoices(self):
-        invoice_ids = (inv.id for inv in model.Invoice.selectBy(location = identity.current.user.homeplace)[:10])
-        invoice_urls = ("<a href=/show_newinvoice/%s> %s </a>" % (invoice_id, invoice_id) for invoice_id in invoice_ids)
-        return "<br/>".join(invoice_urls)
+    @identity.require(identity.has_permission('superuser'))
+    def gen_missing_invoice_pdfs(self):
+        failed = []
+        for invoice in Invoice.select():
+            print invoice.id
+            if invoice.sent and not get_invoice_pdf(invoice.id):
+                try:
+                    content = self.gen_invoice_pdf(invoice.id)
+                    store_invoice_pdf(invoice.id, content)
+                except:
+                    failed.append(invoice.id)
+        return 'done' + str(failed)
 
-    @expose()
-    @identity.require(not_anonymous())
-    def show_newinvoice(self, invoiceid):
+    def gen_or_get_invoice_pdf(self, invoiceid):
+        return get_invoice_pdf(invoiceid) or self.gen_invoice_pdf(invoiceid)
+
+    def gen_invoice_pdf(self, invoiceid):
         invoice=model.Invoice.get(int(invoiceid))
-        if not permission_or_owner(invoice.location, invoice, 'manage_invoices'):
-            raise IdentityFailure('what about not hacking the system')
         MCust = model.MessageCustomization
         try:
             freetext1 = MCust.select(AND(MCust.q.message=="invoice_freetext_1", MCust.q.location==invoice.location))[0].text
@@ -4404,15 +4408,9 @@ The Hub Team
         dst = cStringIO.StringIO()
         pdf = pisa.CreatePDF(src, dst, encoding='utf-8')
         dst.seek(0)
-        cherrypy.response.headers['Content-type'] = 'application/pdf'
-        return dst.read()
+        content = dst.read()
+        return content
 
-    def create_pdf_invoice(self, invoiceid, html2ps=None):
-        invoiceid = int(invoiceid)
-        invoice = Invoice.get(invoiceid)
-        return self.show_newinvoice(invoiceid)
-
-    @expose()
     @identity.require(not_anonymous())
     def old_invoice(self, invoice_no, html2ps=None):
         try:
@@ -4517,7 +4515,6 @@ The Hub Team
             return 'could not send mail'
 
 
-
     @expose()
     @identity.require(not_anonymous())
     def send_invoice(self, invoiceid=None, subject="", body="", **kwargs):
@@ -4529,17 +4526,6 @@ The Hub Team
         if not permission_or_owner(invoice.location, None, 'manage_invoices'):
             raise IdentityFailure('what about not hacking the system')
 
-        if not invoice.sent:
-            self.update_invoice_amount(invoiceid)
-
-        to = invoice.user.bill_to_profile and invoice.user.email_address or invoice.user.bill_email
-        if not to:
-            if not invoice.user.bill_to_profile and not invoice.user.bill_email:
-                return _("Problem sending the invoice: Member's billing preferences are set to not to use profile details and billing preferences has no email address specified. You may want visit member's 'Billing Details' section.")
-            return "user has no email address"
-
-        bcc = invoice.location.invoice_bcc
-
         ponumbers_string = kwargs.get('ponumber')
         if ponumbers_string:
             if ',' in ponumbers_string:
@@ -4550,10 +4536,19 @@ The Hub Team
         else:
             invoice.ponumbers = []
 
-        pdf = self.create_pdf_invoice(invoiceid=invoiceid)
+        pdf = self.gen_or_get_invoice_pdf(invoiceid)
+        if not invoice.sent:
+            self.update_invoice_amount(invoiceid)
+            store_invoice_pdf(invoice.id, pdf)
 
         if kwargs.get('send_it'):
+            to = invoice.user.bill_to_profile and invoice.user.email_address or invoice.user.bill_email
+            if not to:
+                if not invoice.user.bill_to_profile and not invoice.user.bill_email:
+                    return _("Problem sending the invoice: Member's billing preferences are set to not to use profile details and billing preferences has no email address specified. You may want visit member's 'Billing Details' section.")
+                return "user has no email address"
             host_mail = invoice.user.homeplace.hosts_email
+            bcc = invoice.location.invoice_bcc
             value = send_mail(to=to, sender=host_mail, subject=subject, body=body, attachment=pdf, cc=host_mail, attachment_name="Invoice%s.pdf"%invoice.number,bcc=bcc)
             if value:
                 if not invoice.sent:
@@ -4812,6 +4807,9 @@ The Hub Team
         for k,v in new_value.items():
             if v != value[k]:
                 setattr(invoice, k, v)
+
+        content = self.gen_invoice_pdf(invoiceid)
+        store_invoice_pdf(invoiceid, content)
 
         return ''
 

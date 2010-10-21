@@ -1,10 +1,10 @@
+import os
 from decimal import Decimal
 from model import Resource, RUsage
 from sqlobject import AND
 
-__all__ = ['calculate_tax_and_amount']
-
-anomolies = file('anomolies.txt', 'a')
+#anomolies = file('anomolies.txt', 'a') # what is this?
+invoice_dir = "invoices"
 
 def calculate_tax_and_amount(invoice):
     resource_tax_dict, resource_cost_dict, rusages_cost_and_tax = invoice_tax_cost_breakdown(invoice)
@@ -69,3 +69,24 @@ def calc_tax(resource_total, percentage_tax, vat_included):
     #use a different exponent to round to say 5 eurocents
     rounded = unrounded.quantize(TWOPLACES)
     return rounded
+
+def make_invoice_path(invoice_id):
+    return os.path.join(invoice_dir, str(invoice_id))
+
+def store_invoice_pdf(invoice_id, content):
+    file(make_invoice_path(invoice_id), 'w').write(content)
+    return True
+
+def get_invoice_pdf(invoice_id):
+    try:
+        return file(make_invoice_path(invoice_id)).read()
+    except IOError:
+        return None
+
+def remove_invoice_pdf(invoice_id):
+    path = make_invoice_path(invoice_id)
+    if os.path.isfile(path):
+        os.remove(path)
+
+if not os.path.isdir(invoice_dir):
+    os.mkdir(invoice_dir)
