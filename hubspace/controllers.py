@@ -4809,7 +4809,8 @@ The Hub Team
                 setattr(invoice, k, v)
 
         content = self.gen_invoice_pdf(invoiceid)
-        store_invoice_pdf(invoiceid, content)
+        if invoice.sent:
+            store_invoice_pdf(invoiceid, content)
 
         return ''
 
