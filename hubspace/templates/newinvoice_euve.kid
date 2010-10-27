@@ -117,9 +117,27 @@ def lang():
     padding: 1;
     }
 body { font-family: Deja; }
+h1 {font-size:300%; color: grey;}
+h2 {font-size:200%; color: grey;}
+h3 {font-size:150%; color: grey;}
 </style>
 
 <body>
+
+<?python
+show_display_name = True
+if invoice.user.billing_mode == 1:
+    company_name = invoice.user.bill_to_company
+    if company_name:
+        show_display_name = False
+else:
+    company_name = invoice.user.organisation
+
+invoice_data = get_collected_invoice_data(invoice=invoice)[0].items()
+vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_included
+multiuser_invoice = (len(invoice_data) > 1)
+negative_total = invoice.amount < 0
+?>
 
 <div id="headerContent">
 <h3>The Hub ${invoice.location.name} </h3><br/>
@@ -145,17 +163,25 @@ body { font-family: Deja; }
         <address py:if="not invoice.user.bill_to_profile" py:strip="True">
             <c py:for="line in invoice.user.billingaddress.split('\n')">${line}<br/></c>
         </address>
-
         <c py:strip="True" py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"><c>Company No.</c> ${invoice.user.bill_company_no}<br/></c>
         <c py:strip="True" py:if="not invoice.user.billto and invoice.user.bill_vat_no and not invoice.user.bill_to_profile"><c>VAT No.</c> ${invoice.user.bill_vat_no}</c>
         <c py:strip="True" py:if="invoice.user.billto and invoice.user.billto.bill_vat_no"><br/><c>VAT No.</c> ${invoice.user.billto.bill_vat_no}</c>
+        <?python
+            purchaseorders_string = ', '.join(invoice.ponumbers or [])
+        ?>
+        <c py:strip="True" py:if="purchaseorders_string"><br/><c>Purchase Order No: </c>${purchaseorders_string}</c>
         </p>
     </td>
-    <td width="50%">
+    <td width="40%">
     </td>
     <td>
-        <strong>Invoice details</strong>
-        <table cellpadding="2">
+        <table cellpadding="1">
+        <tr>
+            <td colspan="2">
+            <h2 py:if="negative_total">CREDIT NOTE</h2>
+            <h1 py:if="not negative_total">INVOICE</h1>
+            </td>
+        </tr>
         <tr>
             <td width="30%">Number </td>
             <td width="70%"> ${invoice.number}</td>
@@ -181,12 +207,7 @@ body { font-family: Deja; }
 ${XML(nl2br(freetext1))}
 </p>
 
-<h2>Summary of usage</h2>
-
-<?python
-invoice_data = get_collected_invoice_data(invoice=invoice)[0].items()
-vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_included
-?>
+<h3>Summary of usage</h3>
 
 <div width="80%" py:for="user, ivd in invoice_data">
 
@@ -231,12 +252,13 @@ vat_included = invoice.sent and invoice.vat_included or invoice.location.vat_inc
 </div>
 
 <br/>
-<h3>Invoice Total</h3>
+<h3 py:if="negative_total">Total</h3>
+<h3 py:if="not negative_total">Invoice Total</h3>
 <table width="100%" border="0.1" style="padding: 0.2em;">
 <thead style="background: #C0C0C0;">
 <tr>
     <td>Description</td>
-    <td align="right">Amount ${invoice.location.currency}</td>
+    <td align="right"><c>Amount</c> ${invoice.location.currency}</td>
 </tr>
 </thead>
 <tr>
@@ -260,7 +282,7 @@ c = itertools.count(1)
 
 <br/>
 
-<h2>Usage details</h2>
+<h3>Usage details</h3>
 
 <table width="100%" border="0.1" style="background: #eee; padding: 0.2em;"  repeat="1">
 <tbody>
@@ -281,6 +303,9 @@ rusages = sorted(invoice.rusages, key=sorter)
 ?>
 
 <tr py:for="rusage in rusages">
+    <?python
+    usage_cost = getRUsageCost(invoice, rusage)
+    ?>
     <td>${c.next()}</td>
     <td>${rusage.user.display_name}</td>
     <td>${rusage.resource_name} <div py:if="rusage.cancelled and not rusage.refund"><em>(Cancelled)</em></div>
@@ -289,7 +314,7 @@ rusages = sorted(invoice.rusages, key=sorter)
     <td>${rusage.resource.time_based and "-" or rusage.quantity}</td>
     <td py:if="rusage.resource.time_based">${formatDateTime(rusage.start)} - <br/> ${formatDateTime(rusage.end_time)}</td>
     <td py:if="not rusage.resource.time_based">${rusage.resource.type == 'tariff' and dtc(rusage.start) or formatDateTime(rusage.start)}</td>
-    <td align="right">${getRUsageCost(invoice, rusage)} </td>
+    <td align="right">${usage_cost}</td>
 </tr>
 <tr>
     <td></td>
