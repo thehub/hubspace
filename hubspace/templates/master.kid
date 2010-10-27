@@ -88,7 +88,7 @@ def host_in_rfid_location():
 		<div id="searchExtra">
 		    <select id="search_locality" name="hub">
 			<option value="0" selected="selected">All Hubs</option>
-		        <option py:for="location in Location.select(AND(Location.q.is_region==0), orderBy='name')" value="${location.id}">${location.name}</option>
+                        <option py:for="location in Location.select(AND(Location.q.is_region==0, Location.q.hidden==False, Location.q.id!=53), orderBy='name')" value="${location.id}">${location.name}</option> <!-- Location.id = 53 is for hiding hubPlus from the location list -->
 		    </select>
 		</div>
 		<div class="scrollArrow up"><div class="scrollArrow" id="up"></div></div>

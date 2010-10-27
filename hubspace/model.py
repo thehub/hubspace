@@ -738,7 +738,7 @@ class Location(SQLObject):
     is_region = IntCol(default=0)
     in_region = ForeignKey('Location', default=None)
     has_hubs = MultipleJoin("Location", joinColumn="in_region_id")
-    #hidden = BoolCol(default=False)
+    hidden = BoolCol(default=False)
     invoice_newscheme = IntCol(default=1)
     tentative_booking_enabled = IntCol(default=1)
     resourcegroups = MultipleJoin("Resourcegroup", joinColumn="location_id")
