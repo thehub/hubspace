@@ -1259,7 +1259,7 @@ class MicroSite(controllers.Controller):
             ve.add('uid').value = url
             ve.add('url').value = url
 
-        cherrypy.response.headers['Content-Type'] = 'text/calendar'
+        cherrypy.response.headers['Content-Type'] = 'text/calendar; charset=utf-8'
         cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="icalfeed.ics"'
         
         return cal.serialize()
