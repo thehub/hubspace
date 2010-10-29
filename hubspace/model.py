@@ -1,5 +1,6 @@
 from sqlobject import *
 from sqlobject.inheritance import InheritableSQLObject
+from sqlobject.dberrors import IntegrityError
 
 from datetime import datetime
 import os
@@ -1130,7 +1131,7 @@ def setInvoiceNumber(kwargs, post_funcs):
     location_id = instance.location.id
     if instance.location.invoice_newscheme:
         # do we need to acquire a lock here? why?
-        inv_all = list(Invoice.select(Invoice.q.locationID == location_id, orderBy='created').reversed())
+        inv_all = list(Invoice.select(Invoice.q.locationID == location_id, orderBy='number').reversed())
         # Above query may slow down things a bit, however with difficulties of producing right query as we have
         # two different invoicing numbering with ORM on top, I prefer slower but cleaner approach. Ideally I wanted to
         # step through smaller blocks
@@ -1143,7 +1144,10 @@ def setInvoiceNumber(kwargs, post_funcs):
         else:
             next_num = start
         def f(inv):
-            inv.number = next_num
+            try:
+                inv.number = next_num
+            except IntegrityError:
+                inv.number = next_num + 1
         post_funcs.append(f)
 
 
