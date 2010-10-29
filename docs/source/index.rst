@@ -15,6 +15,8 @@ Topics:
 
    message_catalogue
 
+   eu_tax
+
 Indices and tables
 ==================
 
