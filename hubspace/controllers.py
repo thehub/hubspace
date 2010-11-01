@@ -1670,6 +1670,15 @@ class Root(controllers.RootController):
         out = '<br/>'.join([hub_locale, locale, session_locale, vat, date, description])
         return out
 
+    @expose(format="json")
+    def verify_credentials(self, username, password):
+        try:
+            user = User.by_user_name(username)
+            retcode = turbogears.identity.current_provider.validate_password(user, username, password)
+        except Exception, err:
+            retcode = False
+        return {'authenticated':retcode}
+
     @expose()
     def fastlogin(self, username=1, password=1):
         import turbogears.visit as visit
@@ -3232,7 +3241,6 @@ Exception:
         suggestions = [res['biz_type'] for res in results]
         return '\n'.join(suggestions)
 
-
     @expose()
     @identity.require(not_anonymous())
     def usage_stats(self):
@@ -3241,7 +3249,6 @@ Exception:
         active = User.select(AND(User.q.active==1))
         active_users = user_stats(active)
         return "Of all users: " + `all_users` + '\n\nOf active users' + `active_users`
- 
 
     @expose(template="hubspace.templates.memberProfile")
     @identity.require(not_anonymous())
