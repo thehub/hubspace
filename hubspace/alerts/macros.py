@@ -1,4 +1,5 @@
 import sys
+import traceback
 import turbogears
 import turbogears.identity as identity
 
