@@ -158,10 +158,19 @@ multiuser_invoice = (len(invoice_data) > 1)
 negative_total = invoice.amount < 0
 ?>
 
-<div id="headerContent">
-<h3>The Hub ${invoice.location.name} </h3><br/>
-</div>
-<img src="${invoice.location.imageFilename('invlogo')}"/>
+<table>
+<tr>
+    <td>
+        <h3>The Hub ${invoice.location.name} </h3><br/>
+        <img src="${invoice.location.imageFilename('invlogo')}"/>
+    </td>
+    <td valign="bottom" width="30%">
+        <h2 py:if="negative_total">CREDIT NOTE</h2>
+        <h1 py:if="not negative_total">INVOICE</h1>
+    </td>
+</tr>
+</table>
+<hr/>
 
 <table border="0" align="center" width="100%">
 <tr>
@@ -187,12 +196,6 @@ negative_total = invoice.amount < 0
     </td>
     <td>
         <table cellpadding="1">
-        <tr>
-            <td colspan="2">
-            <h2 py:if="negative_total">CREDIT NOTE</h2>
-            <h1 py:if="not negative_total">INVOICE</h1>
-            </td>
-        </tr>
         <tr>
             <td width="30%">Number </td>
             <td width="70%"> ${invoice.number}</td>
