@@ -6,6 +6,7 @@
  * and GPL (GPL-LICENSE.txt) licenses.
  */
 
+
 /**
  * For more docs and examples visit:
  * http://nadiana.com/jquery-confirm-plugin
