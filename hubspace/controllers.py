@@ -3451,11 +3451,11 @@ Exception:
             cherrypy.response.headers['X-JSON'] = 'error'
             return self.error_template('billingDetailsEdit', {'object':obj, 'tg_errors':tg_errors})
 
-        if billing_mode == 0 or (billing_mode == 2 and billto == user.id):
+        if billing_mode == 0 or (billing_mode == 2 and billto == user.id): # Use the details from the profile itself.
             user.billto = user
             user.bill_to_profile = 1
 
-        elif billing_mode == 1:
+        elif billing_mode == 1: # Use the details given in billing section.
             user.bill_to_profile = 0
             user.billto = user
             for billing_attr in ('bill_company_no', 'bill_fax', 'bill_to_company', 'bill_vat_no', 'billingaddress',
