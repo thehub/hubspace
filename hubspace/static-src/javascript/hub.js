@@ -143,6 +143,51 @@ var editMemberProfileListeners = function () {
     jq("#add_more_alias").click(add_alias_box);
 };
 
+//////////////////////Repeat Booking////////////////////////
+var pop_up_repeat_booking = function(){
+    var url = '/repeat_meetingBooking/' + jq(this).attr('id').split('-')[1];
+    var html = '<iframe src="' + url + '" width="700" height="700"/>';
+    var dialog = jq('<div></div>').html(html).dialog({
+        autoOpen: false,
+        title: 'Repeat booking',
+        height: 700,
+        width: 700,
+        zindex: 1000,
+        position: 'top',
+        resizable: true
+        });
+    dialog.dialog('open');
+};
+
+var pop_up_repeat_booking_info = function(){
+    var url = '/repeat_meetingBookingInfo/' + jq(this).attr('id').split('-')[1];
+    var html = '<iframe src="' + url + '" width="700" height="700"/>';
+    var dialog = jq('<div></div>').html(html).dialog({
+        autoOpen: false,
+        title: 'Repeat booking',
+        height: 700,
+        width: 700,
+        zindex: 1000,
+        position: 'top',
+        resizable: true
+        });
+    dialog.dialog('open');
+};
+
+var options = {action: function (ele) {
+    confirm_delete_rusage(ele);
+},
+               message: 'Are you sure you want to cancel this booking? '};
+jq("#del_booking").confirm_action(options);
+var repeat_options = {action: function (ele) {
+    confirm_delete_repeat_usages(ele);
+},
+               message: 'Are you sure you want to cancel all repeatebookings? '};
+jq(".del_repeatbooking").confirm_action(repeat_options);
+jq('.notify_on_available').click(function (evt) {
+    var r_id = Event.element(evt).id.split('-')[1];
+    var req = new Ajax.Request('/addToResourceQueue', {parameters: "rusage_id=" + r_id, method: 'post', onComplete: jq(this).remove()}        );
+});
 
 //////////////////////Resources////////////////////////
 var Resources = Class.create();
@@ -1907,20 +1952,6 @@ var create_booking = function (date_str) {
         }, null, function (data) {
             edit_booking_listen(data.render);
         });
-        var options = {action: function (ele) {
-            confirm_delete_rusage(ele);
-        },
-                       message: 'Are you sure you want to cancel this booking? '};
-        jq("#del_booking").confirm_action(options);
-        var repeat_options = {action: function (ele) {
-            confirm_delete_repeat_usages(ele);
-        },
-                       message: 'Are you sure you want to cancel all repeatebookings? '};
-        jq("#del_repeatbooking").confirm_action(repeat_options);
-        jq('.notify_on_available').click(function (evt) {
-            var r_id = Event.element(evt).id.split('-')[1];
-            var req = new Ajax.Request('/addToResourceQueue', {parameters: "rusage_id=" + r_id, method: 'post', onComplete: jq(this).remove()}        );
-        });
         jq('.confirmBooking').click(function (evt) {
             var r_id = Event.element(evt).id.split('-')[1];
             var req = new Ajax.Request('/confirmBooking/' + r_id, {onComplete: jq(this).val("Confrmed.")});
@@ -1928,35 +1959,8 @@ var create_booking = function (date_str) {
             booking_popup.hide();
             jq('#space-bookingContent').load('/load_make_booking', params, set_space_listeners);
         });
-        jq('#repeat_booking').click( function () {
-            var url = '/repeat_meetingBooking/' + jq(this).attr('class');
-            var html = '<iframe src="' + url + '" width="700" height="700"/>';
-            var dialog = jq('<div></div>').html(html).dialog({
-                autoOpen: false,
-                title: 'Repeat booking',
-                height: 700,
-                width: 700,
-                zindex: 1000,
-                position: 'top',
-                resizable: true
-                });
-            dialog.dialog('open');
-            });
-        jq('#repeat_booking_info').click( function () {
-            var url = '/repeat_meetingBookingInfo/' + jq(this).attr('class');
-            var html = '<iframe src="' + url + '" width="700" height="700"/>';
-            var dialog = jq('<div></div>').html(html).dialog({
-                autoOpen: false,
-                title: 'Repeat booking',
-                height: 700,
-                width: 700,
-                zindex: 1000,
-                position: 'top',
-                resizable: true
-                });
-            dialog.dialog('open');
-            });
-
+        jq('.repeat_booking').click(pop_up_repeat_booking);
+        jq('.repeat_booking_info').click(pop_up_repeat_booking_info);
     };
     var do_start_booking = function (pos, start_time, end_time, resource_id) {
         booking_popup.css('top', round_popup_offset(pos));
@@ -2063,7 +2067,7 @@ var set_billing_listeners = function () {
     var options = {action: function (ele) {
         confirm_delete_rusage(ele);
     },
-                   message: 'Are you sure you want to delete this usage? '};
+                   message: 'Are you sure? '};
     jq('#' + section_name + '-billingContent table a.del_rusage').confirm_action(options);
     jq.each(jq('#' + section_name + '-billingContent table div.custom_cost'), function (i, ele) {
         listen_custom_costs(ele);
@@ -2076,6 +2080,9 @@ var set_billing_listeners = function () {
     jq('#' + user + '_resource').unbind('change');
     jq('#' + user + '_resource').change(switch_resource);
     set_inplace_edit(user, 'User', 'billingDetails_' + user, 'billingDetailsEdit', null, null, null, reload_billing, null, edit_billing);
+    jq('.repeat_booking_info').click(pop_up_repeat_booking_info);
+    jq('.repeat_booking').click(pop_up_repeat_booking);
+    jq('.sub_repeat_booking').click(pop_up_repeat_booking);
 };
 var edit_billing = function () {
     jq("#for_billto").autocomplete("/filter_book_for", {width: 260,
@@ -2267,7 +2274,7 @@ var confirm_delete_rusage = function (ele) {
 };
 
 var confirm_delete_repeat_usages = function (ele) {
-    var repeat_id = ele.attr('class');
+    var repeat_id = ele.attr('id').split('-')[1];
     var req = new Ajax.Request('/delete_repeating_usages/' + repeat_id, {onComplete: complete_delete_rusage});
 };
 
@@ -2373,12 +2380,14 @@ var insert_sub_usages = function (link, json) {
         },
                        message: 'Are you sure you want to delete this usage? '};
         jq('table#' + table.attr('id') + ' a.del_rusage').confirm_action(options);
+        jq('.sub_repeat_booking').click(pop_up_repeat_booking);
         if (jq('#send_invoice_' + ids[3])) {
             jq('#' + table.attr('id') + ' a.add_to_invoice').click(add_rusage_to_invoice);
         }
     }
     if (invoice_id != '0' && jq('#send_invoice_' + ids[3])) {
         jq('table#' + table.attr('id') + ' a.remove_from_invoice').one('click', remove_rusage_from_invoice);
+        // jq('.sub_repeat_booking').click(pop_up_repeat_booking); // Verify it from Shekhar : i think we need the binding here as well
     }
 
 };

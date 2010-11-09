@@ -88,9 +88,9 @@ def public_or_private(rusage):
                               <td class="left">Repeat Booking</td>
                               <td class="right">
                                 <ul>
-                                <li><a id="repeat_booking" class="${rusage.id}">Repeat this Booking</a></li>
+                                <li><a id="caladd-${rusage.id}" class="repeat_booking">Repeat this Booking</a></li>
                                 <li py:if="rusage.repetition_id">
-                                    <a id="repeat_booking_info" class="${rusage.repetition_id}">Show repeated bookings</a>
+                                    <a id="calshow-${rusage.repetition_id}" class="repeat_booking_info">Show repeated bookings</a>
                                 </li>
                                 </ul>
                             </td>
@@ -99,8 +99,8 @@ def public_or_private(rusage):
                               <td class="left">Cancel Booking</td>
                               <td class="right">
                               <ul>
-                              <li><a id="del_booking" class="${rusage.id}">Cancel this Booking</a></li>
-                              <li><a py:if="rusage.repetition_id" id="del_repeatbooking" class="${rusage.repetition_id}">
+                              <li><a id="del_booking" class="caldel-${rusage.id}">Cancel this Booking</a></li>
+                              <li><a py:if="rusage.repetition_id" class="del_repeatbooking" id="caldel-${rusage.repetition_id}">
                                 Cancel all occurances of this Booking</a>
                               </li>
                               </ul>

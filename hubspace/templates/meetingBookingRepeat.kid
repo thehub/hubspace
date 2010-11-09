@@ -196,6 +196,8 @@ $(document).ready(function() {
 });
 </script>
 
+<h4 class="box">Add Bookings </h4>
+
 <form id="repeat_booking">
 
 <input type="hidden" name="booking_id" value="${booking_id}"/>

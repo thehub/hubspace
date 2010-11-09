@@ -4974,6 +4974,7 @@ The Hub Team
                 date_next += timedelta(repeat_every)
         elif pattern == "weekly":
             weekday_names = kw['weekly_opt_repeat_days']
+            weekday_names = isinstance(weekday_names, basestring) and [weekday_names] or weekday_names
             weekday_abbrs = list(calendar.day_abbr)
             repeat_weekdays = list(weekday_abbrs.index(name) for name in weekday_names)
             while date_next <= to_date:

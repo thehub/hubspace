@@ -73,6 +73,14 @@ $('#del_usages').confirm({
 </tr>
 </table>
 
+<div class="prepend-2">
+<form action="/repeat_meetingBooking">
+<input name="booking_id" type="hidden" value="${booking.id}"/>
+<input type="submit" value="Add more repeat bookings.."/>
+</form>
+</div>
+<br/>
+
 <h4 class="box">Repeated bookings</h4>
 <form id="del_bookings">
 <table class="prepend-1 append-1 span-15  colborder">

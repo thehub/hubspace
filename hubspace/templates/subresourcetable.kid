@@ -12,7 +12,8 @@ from hubspace.controllers import show_quantity_or_duration, permission_or_owner
     <a id="rusage-${rusage.id}" class="add_to_invoice">Add to Invoice</a>
 </c>
 <c py:if="'delrusage' in locals()" py:strip="True">
-    <a id="delrusage-${rusage.id}" class="del_rusage">Delete</a>
+    <a id="delrusage-${rusage.id}" class="del_rusage">Delete this</a>
+    <a id="sub-${rusage.id}" class="sub_repeat_booking"> Repeat</a>
 </c>
 <c py:if="'remove_from_invoice' in locals()" py:strip="True">
     <a id="rusage-${rusage.id}" class="remove_from_invoice">Remove from Invoice</a>
