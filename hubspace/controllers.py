@@ -4349,9 +4349,9 @@ The Hub Team
                    invoice.sent.strftime('%d/%m/%Y'),
                    invoice.number,
                    'Invoice %s for period %s to %s' %(invoice.number, invoice.start.strftime('%d/%m/%Y'), invoice.end_time.strftime('%d/%m/%Y')),
-                   str(abs(excluding_vat)), #net amount
+                   str(excluding_vat), #net amount
                    "T1",
-                   str(abs(invoice.total_tax)), #tax amount
+                   str(invoice.total_tax), #tax amount
                    1,
                    1,
                    invoice.user.display_name.encode('utf-8'))
