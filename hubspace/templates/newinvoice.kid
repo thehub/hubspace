@@ -171,7 +171,7 @@ negative_total = invoice.amount < 0
         <c>Membership No.</c> ${invoice.user.id} <br/>
         <c py:if="company_name" py:strip="True"><strong> ${company_name}</strong><br/> </c>
         <c py:strip="True" py:if="invoice.user.bill_to_profile"> ${nl2br(invoice.user.address_with_postcode)} </c>
-        <address py:if="not invoice.user.bill_to_profile" py:strip="True">
+        <address py:if="not invoice.user.bill_to_profile and invoice.user.billingaddress" py:strip="True">
             <c py:for="line in invoice.user.billingaddress.split('\n')">${line}<br/></c>
         </address>
         <c py:strip="True" py:if="invoice.user.bill_company_no and not invoice.user.bill_to_profile"><c>Company No.</c> ${invoice.user.bill_company_no}<br/></c>
