@@ -3451,11 +3451,11 @@ Exception:
             cherrypy.response.headers['X-JSON'] = 'error'
             return self.error_template('billingDetailsEdit', {'object':obj, 'tg_errors':tg_errors})
 
-        if billing_mode == 0 or (billing_mode == 2 and billto == user.id):
+        if billing_mode == 0 or (billing_mode == 2 and billto == user.id): # Use the details from the profile itself.
             user.billto = user
             user.bill_to_profile = 1
 
-        elif billing_mode == 1:
+        elif billing_mode == 1: # Use the details given in billing section.
             user.bill_to_profile = 0
             user.billto = user
             for billing_attr in ('bill_company_no', 'bill_fax', 'bill_to_company', 'bill_vat_no', 'billingaddress',
@@ -4349,9 +4349,9 @@ The Hub Team
                    invoice.sent.strftime('%d/%m/%Y'),
                    invoice.number,
                    'Invoice %s for period %s to %s' %(invoice.number, invoice.start.strftime('%d/%m/%Y'), invoice.end_time.strftime('%d/%m/%Y')),
-                   str(abs(excluding_vat)), #net amount
+                   str(excluding_vat), #net amount
                    "T1",
-                   str(abs(invoice.total_tax)), #tax amount
+                   str(invoice.total_tax), #tax amount
                    1,
                    1,
                    invoice.user.display_name.encode('utf-8'))
@@ -4974,6 +4974,7 @@ The Hub Team
                 date_next += timedelta(repeat_every)
         elif pattern == "weekly":
             weekday_names = kw['weekly_opt_repeat_days']
+            weekday_names = isinstance(weekday_names, basestring) and [weekday_names] or weekday_names
             weekday_abbrs = list(calendar.day_abbr)
             repeat_weekdays = list(weekday_abbrs.index(name) for name in weekday_names)
             while date_next <= to_date:

@@ -50,7 +50,7 @@ def vat_exception(rusage, invoice, user):
                     <td>Place</td>
                     <td>Cost <em py:if="vat_inclusive_invoice(invoice, user)">(Including VAT unless stated otherwise)</em><em py:if="not vat_inclusive_invoice(invoice, user)">(Excluding VAT unless stated otherwise)</em></td>
                     <td py:if="unsent_for_user(user) and invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')" id="open_invoice" class="${unsent_for_user(user).id}">Add To Open Invoice</td>
-                    <td py:if="invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')">Delete Resource Usage</td>
+                    <td py:if="invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')">Manage</td>
                     <td py:if="unsent_for_user(user) and unsent_for_user(user).id==invoice and permission_or_owner(inv_location, None, 'manage_invoices')">Remove from Open Invoice</td>
                 </tr>
                 <tr py:if="not invdata[0]" class="empty_table_warning">
@@ -62,7 +62,8 @@ rusages = invdata[0][resource]
 x+=1
 ?>
                     <tr py:if="(len(rusages)==1 or resource.type=='custom')" py:for="rusage in rusages" class="${odd_or_even()}">
-                        <td py:content='rusage.resource_name'>Resource</td>
+                        <td> <c py:content='rusage.resource_name'>Resource </c>
+                        </td>
                         <td py:content='format_date(rusage.start)'>Start</td>
                         <td py:content='format_date(rusage.end_time)'>End</td>
                         <td py:content='show_quantity_or_duration(rusage)'>Quantity</td>
@@ -70,14 +71,24 @@ x+=1
                         <td py:if="invoice==None"><div id="cost-${rusage.id}" class="custom_cost">${inv_currency(invoice, user)} ${c2s([rusage.customcost,rusage.cost][rusage.customcost == None])} ${XML(vat_exception(rusage, invoice, user))}</div> &nbsp;<a py:if="permission_or_owner(inv_location, None, 'manage_invoices')" id="cost-${rusage.id}Edit" style="cursor:pointer;">change</a></td>
                         <td py:if="invoice!=None">${inv_currency(invoice, user)} ${c2s([rusage.customcost,rusage.cost][rusage.customcost == None])} ${XML(vat_exception(rusage, invoice, user))}</td>
                         <td py:if="unsent_for_user(user) and invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')"><a id="rusage-${rusage.id}" class="add_to_invoice">Add to Invoice</a></td>
-                        <td py:if="invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')"><a id="delrusage-${rusage.id}" class="del_rusage">Delete</a></td>
+                        <td py:if="invoice==None and permission_or_owner(user.homeplace, None, 'manage_invoices')">
+                            <a id="delrusage-${rusage.id}" class="del_rusage">Delete this</a>
+                            <br />
+                            <c py:if="not rusage.repetition_id">
+                                <a id="custom-${rusage.id}" class="repeat_booking">Repeat</a>
+                            </c>
+                            <c py:if="rusage.repetition_id">
+                                <a id="custom-${rusage.repetition_id}" class="repeat_booking_info">Repeat</a>
+                            </c>
+                        </td>
                         <td py:if="unsent_for_user(user) and unsent_for_user(user).id==invoice and permission_or_owner(inv_location, None, 'manage_invoices')"><a id="rusage-${rusage.id}" class="remove_from_invoice">Remove from Invoice</a></td>
 
 
                     </tr>
                   <span py:if="len(rusages)>1 and resource.type!='custom'" py:strip="True">
                     <tr class="${odd_or_even()}">
-                        <td class="composite_rusage" id="${theuser.id}_${invoice or 0}_${resource.id}_${user.id}">${rusages[0].resource_name}<a class="view_sub_usages" id="sub_${theuser.id}_${invoice or 0}_${resource.id}_${user.id}"></a></td>
+                        <td class="composite_rusage" id="${theuser.id}_${invoice or 0}_${resource.id}_${user.id}">${rusages[0].resource_name}<a class="view_sub_usages" id="sub_${theuser.id}_${invoice or 0}_${resource.id}_${user.id}"></a>
+                        </td>
                         <td py:content='format_date(min([r.start for r in rusages]))'>Start</td>
                         <td py:content='format_date(max([r.end_time for r in rusages]))'>End</td>
                         <td py:content='show_quantity_or_duration(invdata[1][resource])'>Quantity</td>
