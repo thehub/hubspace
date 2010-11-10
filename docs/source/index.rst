@@ -17,6 +17,8 @@ Topics:
 
    eu_tax
 
+   connect
+
 Indices and tables
 ==================
 
