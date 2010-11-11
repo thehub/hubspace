@@ -99,7 +99,7 @@ def public_or_private(rusage):
                               <td class="left">Cancel Booking</td>
                               <td class="right">
                               <ul>
-                              <li><a id="del_booking" class="caldel-${rusage.id}">Cancel this Booking</a></li>
+                              <li><a class="del_booking" id="caldel-${rusage.id}">Cancel this Booking</a></li>
                               <li><a py:if="rusage.repetition_id" class="del_repeatbooking" id="caldel-${rusage.repetition_id}">
                                 Cancel all occurances of this Booking</a>
                               </li>
