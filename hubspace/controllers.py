@@ -4349,9 +4349,9 @@ The Hub Team
                    invoice.sent.strftime('%d/%m/%Y'),
                    invoice.number,
                    'Invoice %s for period %s to %s' %(invoice.number, invoice.start.strftime('%d/%m/%Y'), invoice.end_time.strftime('%d/%m/%Y')),
-                   str(abs(excluding_vat)), #net amount
+                   str(abs(excluding_vat)), # For Sage this value should be positive and first column should be marked as SC (Credit Note)
                    "T1",
-                   str(abs(invoice.total_tax)), #tax amount
+                   str(abs(invoice.total_tax)), # For Sage this value should be positive and first column should be marked as SC (Credit Note)
                    1,
                    1,
                    invoice.user.display_name.encode('utf-8'))
