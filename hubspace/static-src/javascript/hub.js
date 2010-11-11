@@ -174,21 +174,6 @@ var pop_up_repeat_booking_info = function(){
     dialog.dialog('open');
 };
 
-var options = {action: function (ele) {
-    confirm_delete_rusage(ele);
-},
-               message: 'Are you sure you want to cancel this booking? '};
-jq("#del_booking").confirm_action(options);
-var repeat_options = {action: function (ele) {
-    confirm_delete_repeat_usages(ele);
-},
-               message: 'Are you sure you want to cancel all repeatebookings? '};
-jq(".del_repeatbooking").confirm_action(repeat_options);
-jq('.notify_on_available').click(function (evt) {
-    var r_id = Event.element(evt).id.split('-')[1];
-    var req = new Ajax.Request('/addToResourceQueue', {parameters: "rusage_id=" + r_id, method: 'post', onComplete: jq(this).remove()}        );
-});
-
 //////////////////////Resources////////////////////////
 var Resources = Class.create();
 Resources.prototype = {
@@ -1952,6 +1937,20 @@ var create_booking = function (date_str) {
         }, null, function (data) {
             edit_booking_listen(data.render);
         });
+        var options = {
+            action: function (ele) {
+                confirm_delete_rusage(ele, 'space'); }, 
+            message: 'Are you sure you want to cancel this booking? '};
+        jq(".del_booking").confirm_action(options);
+        var repeat_options = {action: function (ele) {
+            confirm_delete_repeat_usages(ele);
+        },
+                       message: 'Are you sure you want to cancel all repeatebookings? '};
+        jq(".del_repeatbooking").confirm_action(repeat_options);
+        jq('.notify_on_available').click(function (evt) {
+            var r_id = Event.element(evt).id.split('-')[1];
+            var req = new Ajax.Request('/addToResourceQueue', {parameters: "rusage_id=" + r_id, method: 'post', onComplete: jq(this).remove()}        );
+        });
         jq('.confirmBooking').click(function (evt) {
             var r_id = Event.element(evt).id.split('-')[1];
             var req = new Ajax.Request('/confirmBooking/' + r_id, {onComplete: jq(this).val("Confrmed.")});
@@ -2065,7 +2064,7 @@ var set_billing_listeners = function () {
     jq('#' + section_name + '-billingContent table a.add_to_invoice').unbind('click');
     jq('#' + section_name + '-billingContent table a.add_to_invoice').click(add_rusage_to_invoice);
     var options = {action: function (ele) {
-        confirm_delete_rusage(ele);
+        confirm_delete_rusage(ele, 'billing');
     },
                    message: 'Are you sure? '};
     jq('#' + section_name + '-billingContent table a.del_rusage').confirm_action(options);
@@ -2256,20 +2255,14 @@ var remove_rusage_from_invoice = function () {
 
     jq.post('/remove_rusage_from_invoice', {'invoiceid': invoice_id, 'rusageid': rusage}, reload_billing);
 };
-var confirm_delete_rusage = function (ele) {
+var confirm_delete_rusage = function (ele, page) {
     var rusage = ele.attr('id').split('-')[1];
-    page = 'billing';
-    if (!rusage) {
-        rusage = ele.attr('class');
-        page = 'space';
-    }
     var complete = complete_delete_rusage;
     if (page === 'billing') {
         complete = function (response) {
             remove_row(ele, response);
         };
     }
-
     var req = new Ajax.Request('/delete_rusage', {method: 'post', parameters: 'rusage=' + rusage, onComplete: complete});
 };
 
