@@ -1228,6 +1228,16 @@ var invoices_export = function (evt) {
     return false;
 };
 
+////////////////PRINT ACCOUNTING///////////////////////
+    var print_acc = function () {
+    alert('i m in print_acc function');
+    var form = jq('#print_accounting_form').serializeArray();
+    var xhr = jq.post('/parse_print_file', form, function (response) {
+        jq('#upload_print_status').text('done');
+    });
+    alert('just b4 retun happens');
+};
+
 ////////////////TABS & NAVIGATION///////////////////////
 var Tabs = function () {
     var current_user_id = jq('#current_user_id').attr('class');
@@ -1237,12 +1247,14 @@ var Tabs = function () {
                        'profile': ['mainProfile', 'billing'],
                        'space': ['booking'],
                        'host': ['invoicing', 'openTimes', 'admin', 'resources', 'managementdata']};
+                       //'host': ['invoicing', 'openTimes', 'admin', 'resources', 'managementdata', 'printing']};
     var subsection_defaults = {'network': 1,
                                'profile': 0,
                                'host': 0,
                                'space': 0};
     var data_expandors = {'network': {1: {}, 2: {}, 3: {}},
                           'profile': {0: {}, 1: {}},
+                          //'host': {0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}},
                           'host': {0: {}, 1: {}, 2: {}, 3: {}, 4: {}},
                           'space': {0: {}}};
     var make_section_switch = false;
@@ -1563,6 +1575,10 @@ var Tabs = function () {
             if (section_name === 'host' && subsection_name === 'openTimes') {
                var ot = openTimes();
             }
+            /* if (section_name === 'host' && subsection_name === 'printing') {
+                alert('b4 onclick');
+               jq('#print_accounting').click(print_acc);
+            } */
         }
     };
     navigation = o;

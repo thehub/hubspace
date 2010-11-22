@@ -958,6 +958,18 @@ def printer_resources(loc_id):
                       'A3': {'colour': 'A3Colour',
                              'bw': 'A3BW'}}
 
+    resource_types_new = {'A3': {'colour': 'A3Colour',
+                                 'bw': 'A3BW'},
+                          'A4': {'colour': 'A4Colour',
+                                 'bw': 'A4BW'},
+                          'A5': {'colour': 'A5Colour',
+                                 'bw': 'A5BW'},
+                          'Letter': {'colour': 'A4Colour',
+                                     'bw': 'A4BW'},
+                          'Foolscap': {'colour': 'A4Colour',
+                                       'bw': 'A4BW'},
+                          'Ledger': {'colour': 'A4Colour',
+                                     'bw': 'A4BW'}}
     for size in resource_types:
         for col in resource_types[size]:
             resource_types[size][col] = get_resource_id_by_name(resource_types[size][col], loc_id)
@@ -1021,7 +1033,7 @@ def parse_print_file(file_name="printing/jobs.csv", loc_id=1):
 
                 if date <= processed_to_date:
                     continue
-                else:            
+                else:
                     code = process_entry(job, alias, date, aliases, resource_types)
                     print "processed " + `code`
                     if code=='2':
@@ -1098,6 +1110,72 @@ def parse_print_file(file_name="printing/jobs.csv", loc_id=1):
     return 'success'
 
 
+def parse_print_log(datafile, location_id):
+    """Parse the print file and enter corresponding usages.
+    - we keep a processed to date. Usages in the master log before this are ignored
+    - if usages fail due to any reason they get put in the failure log and reprocessed
+    - hopefully that is due to their having missing aliases and once the aliases are entered they will be processed through
+    """
+    model.hub.begin()
+    print_file = open(datafile, 'r')
+    csv_file = csv.reader(print_file, csv.excel_tab)
+    try:
+        failure_log = open('failure.log', 'r')
+        csv_failure = csv.reader(failure_log, csv.excel_tab)
+    except:
+        failure_log = None
+        csv_failure = []
+    try:
+        processed_to = open('processed_to', 'r')
+        processed_to_date = print_dtc.to_python(processed_to.readline())
+    except:
+        processed_to = open('processed_to', 'w')
+        processed_to_date = None
+    processed_to.close()
+    if not processed_to_date:
+        processed_to_date = datetime(1970, 1, 1)
+    resource_types = printer_resources(location_id)
+    alias_failures = []
+    other_failures = []
+    unknown_aliases = []
+    complete = 0
+    date_string = None
+
+    process_entry_vienna()
+    print_file.close()
+    processed_to_date_string = None
+    if date_string:
+        processed_to_date_string = date_string
+        print `processed_to_date_string`
+
+    if failure_log:
+        failure_log.close()
+
+    model.hub.commit()
+
+    if processed_to_date_string:
+        processed_to = open('printing/processed_to', 'w')
+        processed_to.write(processed_to_date_string)
+        processed_to.close()
+
+    unknown_entry_log = open('unknown_entries.txt', 'w')
+    unknown_entry_csv = csv.writer(unknown_entry_log, csv.excel_tab)
+    unknown_entry_csv.writerows(unknown_entries)
+    unknown_entry_log.close()
+
+    failures_log = open('failure.log', 'w')
+    csv_failures = csv.writer(failures_log, csv.excel_tab)
+    csv_failures.writerows(failures)
+    failures_log.close()
+
+    #assumed to be duplicate entries
+    other_failures_log = open('other_failure.log', 'a')
+    csv_other_failures = csv.writer(other_failures_log, csv.excel_tab)
+    csv_other_failures.writerows(other_failures)
+    other_failures_log.close()
+
+    return 'success'
+
 def get_resource_id_by_name(name=None, location=None):
     resource = Resource.select(AND(Resource.q.active==1,
                                    Resource.q.name==name,
@@ -1143,6 +1221,91 @@ def process_entry(job, alias, start_date, aliases, resource_types):
     resource_id = resource_size[col]
     print `resource_id`
     hash_description = job_name +" - Job ID:"+ md5.new(job_name + alias + print_dtc.from_python(start_date)).hexdigest()
+    code = book_print_resource(resource_id, resource_description=hash_description, quantity=pages, start=start_date, end_time=end_date, user=user_id)
+    return code
+
+def process_entry_vienna(job, alias, start_date, aliases, resource_types):
+    try:
+        user_id = aliases[alias]
+    except:
+        return '2'
+
+    end_string = job[6].strip()
+    try:
+        end_string = print_dtc.to_python(end_date)
+    except:
+        end_date += ':00'
+        end_date, end_time = end_date.split('T')
+        end_date[2] = '20' + end_date[2]
+        end_date = '/'.join(end_date)
+        end_date = print_dtc.to_python(end_date)
+
+    job_id = job[0].strip()
+    #calculate_page()
+    if job[156] != 'N/A':
+        if job[156] > job[155]:
+            pages = job[156]
+        else:
+            pages = job[155]
+    pages = int(pages.strip())
+
+    #calculate page size
+    #only A3, A4, A5, Ledger, Letter, Foolscap will be supported.
+    if job[124] > 0:
+       page_size = 'A3'
+       if job[16] > 0 and job[16] != 'N/A':
+           col = 'colour'
+       else:
+           col = 'bw'
+
+    if job[125] > 0:
+       page_size = 'A4'
+       if job[20] > 0 and job[20] != 'N/A':
+           col = 'colour'
+       else:
+           col = 'bw'
+
+    if job[126] > 0:
+       page_size = 'A5'
+       if job[24] > 0 and job[24] != 'N/A':
+           col = 'colour'
+       else:
+           col = 'bw'
+
+    if job[129] > 0:
+       page_size = 'Ledger'
+       if job[36] > 0 and job[36] != 'N/A':
+           col = 'colour'
+       else:
+          col = 'bw'
+
+    if job[130] > 0:
+       page_size = 'Foolscap'
+       if job[40] > 0 and job[40] != 'N/A':
+           col = 'colour'
+       else:
+           col = 'bw'
+
+    if job[132] > 0:
+       page_size = 'Letter'
+       if job[48] > 0 and job[48] != 'N/A':
+           col = 'colour'
+       else:
+           col = 'bw'
+    print page_size
+    #Rearrange page_size according to db ???? nto sure though
+    if page_size != 'A3':
+        page_size = 'A4'
+    try:
+        resource_size = resource_types[page_size]
+    except:
+        resource_size = resource_types['A4']
+    print `resource_size`
+
+    resource_id = resource_size[col]
+    print `resource_id`
+
+    hash_description = job_id +" - Job ID:"+ md5.new(job_id + alias + print_dtc.from_python(start_date)).hexdigest()
     code = book_print_resource(resource_id, resource_description=hash_description, quantity=pages, start=start_date, end_time=end_date, user=user_id)
     return code
 
@@ -5665,8 +5828,87 @@ The Hub Team
         return  'Updated!<br /><br />'+ '<br />'.join(out)
     
     @expose()
+    @identity.require(not_anonymous())
+    def submit_print_log(self, datafile=None, tg_errors=None, **kwargs):
+        print "\n datafile: ", datafile
+        print "\n tg_errors: " , tg_errors
+        print "\nkwargs: ", kwargs
+        if not permission_or_owner(None, None, 'manage_users'):
+            raise IdentityFailure('what about not hacking the system')
+        # Calculate location_id
+        if datafile:
+            return_str = check_for_csv(datafile)
+            if not return_str:
+                md5_flag = check_md5sum(datafile, location_id)
+                if not md5_flag: # md5_flag = False means the file is new for our system.
+                    parse_print_file(datafile, location_id)
+                else:
+                    print "not yet decided"
+            else:
+                print "Please upload the log file only in csv/xls format."
+                return "Please upload the log file only in csv/xls format."
+        else:
+            print "Please upload the print log file."
+            return "Please upload the print log file."
+
+    def check_md5sum(datafile,location_id):
+        import hashlib
+
+        # Calculate input file md5sum
+        input = open(datafile,'rb').read()
+        md5_string_input = hashlib.md5(input).hexdigest()
+
+        # Create the filename
+        current_time = (str(datetime.now())).replace(' ','-').replace(':','-').split('.')[0]
+        latest_file = "%s.%s.datafile" % (location_id, current_time) # Should the location_id added as directory or as a part of filename?
+        path = "printer/upload_log/%s" % location_id
+        path_with_file = path + latest_file
+        logfile_path = path + "%s.printaccounting.log" % location_id
+        if os.path.exists(path):
+            if os.path.exists(logfile_path):
+                oldfile = open(logfile_path,'rb').read()
+                md5_string_oldfile = hashlib.md5(oldfile).hexdigest()
+                if md5_string_input == md5_string_oldfile:
+                    print "The same log file has already been uploaded."
+                    return ("The same log file has already been uploaded.", True)
+                else:
+                    print "You have recently uplaoded a log file. Please wait till the old file is being processed."
+                    return ("You have recently uplaoded a log file. Please wait till the old file is being processed.", True)
+            else:
+                # save the datafile here - how?
+                # call parse_print_file method here???
+                return False
+        else:
+            os.makedirs(path)
+            # save the datafile here - how?
+            # call parse_print_file method here???
+            return False
+
+    def check_for_csv(datafile):
+        csv_file = csv.reader(datafile, csv.excel_tab)
+        try:
+            for job in csv_file:
+                print job
+                csv_flag = True
+                print csv_flag, "::::::"
+        except:
+            csv_flag = False
+        if csv_flag:
+            print "Thanks for uploding the file. It is accepted. The results will be soon emailed to you."
+            return "Thanks for uploding the file. It is accepted. The results will be soon emailed to you."
+        else:
+            print "Please upload the log in .csv or .xls format."
+            return "Please upload the log in .csv or .xls format."
+
+
+    @expose(template="hubspace.templates.uploadPrintLogFile")
+    def load_print_form(self, location=None, datafile=None, tg_errors=None, **kwargs):
+        return {}
+
+    @expose()
     @strongly_expire
     @identity.require(not_anonymous())
+    #def parse_print_file(self, location, datafile=None, tg_errors=None, **kwargs):
     def parse_print_file(self):
         if not permission_or_owner(None, None, 'manage_users'):
             raise IdentityFailure('what about not hacking the system')
