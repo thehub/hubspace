@@ -1,4 +1,6 @@
 import sys
+sys.path.extend(['develop-eggs/PIL-1.1.6-py2.7-linux-i686.egg', 'develop-eggs/pycairo-1.8.10-py2.7-linux-i686.egg'])
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 del sys.setdefaultencoding
@@ -32,3 +34,4 @@ def our_decode(self, enc):
 from cherrypy.filters.decodingfilter import DecodingFilter
 
 DecodingFilter.decode = our_decode
+
