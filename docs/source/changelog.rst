@@ -3,14 +3,8 @@ Changelog
 
 Support for Repeat/Recursive bookings
 -------------------------------------
-Now it's possible to repeat any booking for different pre-defined date patterns (such as weekly, monthly). Or one can simply pick different dates to repeat to booking for. The booking would be repeated for selected dates alongwith suggested resources and cost.
+Now it's possible to repeat any booking for different pre-defined date patterns (such as weekly, monthly). Or one can simply pick different dates to repeat to booking for. The booking would be repeated for selected dates alongwith suggested resources and cost. It is available for both `time based </help/repeatbooking.html#time-based-bookings>`_ and `quantity based </help/repeatbooking.html#quantity-based-bookings>`_ bookings. For more info, please click `here </help/repeatbooking.html>`_
 
-To access
-  Click a booking in space tab, options to repeat the booking would be available on booking information popup box. 
-
-Repeat booking: Screenshot 
-  .. image:: images/repeat_bookings.png
-     :scale: 50
 
 P.O. Number
 -----------

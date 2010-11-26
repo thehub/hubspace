@@ -19,6 +19,8 @@ Topics:
 
    connect
 
+   repeatbooking
+
 Indices and tables
 ==================
 
