@@ -2052,6 +2052,7 @@ class Root(controllers.RootController):
         if not location:
             location = identity.current.user.homeplaceID
         start, end = 0, None
+        if isinstance(usercols_selection, basestring): usercols_selection = [usercols_selection]
         total, rows = self._export_users(location, sortname, sortorder, usercols_selection, start, end)
         title_row = [user_fields[str(column)]['label'] for column in usercols_selection]
         rows.insert(0, title_row)
