@@ -4990,9 +4990,9 @@ The Hub Team
             data = dict(invoice = invoice, message_dict = message_dict, sr_no = count, progress_msg = progress_msg)
             applogger.info("Auto create invoice: %s" % invoice.id)
             out = try_render(data, template='hubspace.templates.invoicingstatus', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
+            model.hub.commit()
             yield out
 
-        model.hub.commit()
         applogger.info("Auto create invoices: done")
 
     def _send_invoices(self, inv_data):
