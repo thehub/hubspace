@@ -86,6 +86,15 @@ lang = lambda invoice: hubspace_lang_code(invoice.location)
 
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" xml:lang="${lang(invoice)}" lang="${lang(invoice)}">
 
+<head>
+    <link rel="stylesheet" href="/static/css/micro/blueprint/screen.css" type="text/css" media="screen, projection, print"/>
+    <!--[if lt IE 8]> 
+    <link rel="stylesheet" href="/static/css/micro/blueprint/ie.css" type="text/css" media="screen, projection"/>
+    <![endif]-->
+    <link rel="stylesheet" href="/static/css/micro/typography.css" type="text/css" media="screen, projection, print"/>
+</head>
+
+
 <style>
 /* Normal */
 @font-face {

@@ -42,11 +42,18 @@ from turbogears import identity
       <input type="checkbox" name="include_zero_usage_cost_members" checked="checked"/> Display members with zero usage cost
       <div>
           <br />
-          <input type="submit" value="Search" id="invoices_search" />
+          <table>
+          <tr>
+          <td> <input type="button" value="Generate Invoices" id="gen_invoices" /> </td>
+          <td> <input type="button" value="Search (Old way)" id="invoices_search" /></td>
+          </tr>
+          <tr>
+          <td span="2">* Search (Old way) option is deprecated </td>
+          </tr>
+          </table>
       </div>
       </form>
       <div id="search_results">
-            
       </div>	
     </div>
     ${invoicing_search()}

@@ -1204,6 +1204,13 @@ var search_invoices = function (evt) {
     jq('#search_results').load('/uninvoiced_users', form, search_results_listeners);
     return false;
 };
+var gen_invoices = function (evt) {
+    var params = jq('#invoices_search_form').serialize();
+    var url = '/auto_create_invoices?' + params;
+    var html = '<iframe src="' + url + '" width="900" height="1900" frameborder="0"/>';
+    jq('#search_results').html(html);
+    return false;
+};
 var get_report = function (evt) {
     var form = jq('#report_conf').serializeArray();
     var params = jq.param(form);
@@ -1562,6 +1569,7 @@ var Tabs = function () {
             }
             if (section_name === 'host' && subsection_name === 'invoicing') {
                jq('#invoices_search').click(search_invoices);
+               jq('#gen_invoices').click(gen_invoices);
             }
             if (section_name === 'host' && subsection_name === 'managementdata') {
                jq('#users_grid').click(show_users_grid);

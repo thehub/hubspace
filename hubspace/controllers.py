@@ -769,32 +769,30 @@ def get_invoice_rusages(invoice):
     return collected
     
 
+
 def get_rusages(user=None, invoice=None, earliest=None, latest=None, ignore_end_time=False, locations=None):
     if user:
         user = user.id
     if invoice:
         invoice = invoice.id
-    if earliest==None or latest==None:
-        rusages = RUsage.selectBy(user=user,invoice=invoice)
+    earliest = earliest and datetime(earliest.year, earliest.month, earliest.day, 0, 0, 0, 0)
+    latest = latest and datetime(latest.year, latest.month, latest.day, 0, 0, 0, 0)+timedelta(days=1)
+    if ignore_end_time:
+        conds = [RUsage.q.userID==user,
+               RUsage.q.confirmed==1,
+               RUsage.q.invoiceID==invoice]
+        if earliest: conds.append( RUsage.q.start>=earliest )
+        if latest: conds.append( RUsage.q.start<=latest )
     else:
-        earliest = datetime(earliest.year, earliest.month, earliest.day, 0, 0, 0, 0)
-        latest = datetime(latest.year, latest.month, latest.day, 0, 0, 0, 0)+timedelta(days=1)
-        if ignore_end_time:
-            conds = [RUsage.q.userID==user,
-                   RUsage.q.confirmed==1,
-                   RUsage.q.invoiceID==invoice,
-                   RUsage.q.start>=earliest,
-                   RUsage.q.start<=latest]
-        else:
-            conds = [RUsage.q.userID==user,
-                   RUsage.q.confirmed==1,
-                   RUsage.q.invoiceID==invoice,
-                   RUsage.q.end_time>=earliest,
-                   RUsage.q.end_time<=latest]
-        if locations:
-            location_ids = [loc.id for loc in locations]
-            conds.extend([IN(Resource.q.placeID, location_ids), RUsage.q.resourceID==Resource.q.id])
-        rusages = RUsage.select(AND(*conds)).orderBy('start')
+        conds = [RUsage.q.userID==user,
+               RUsage.q.confirmed==1,
+               RUsage.q.invoiceID==invoice]
+        if earliest: conds.append( RUsage.q.end_time>=earliest )
+        if latest: conds.append(RUsage.q.end_time<=latest)
+    if locations:
+        location_ids = [loc.id for loc in locations]
+        conds.extend([IN(Resource.q.placeID, location_ids), RUsage.q.resourceID==Resource.q.id])
+    rusages = RUsage.select(AND(*conds)).orderBy('start')
     return rusages
 
 from hubspace.utilities.dicts import ODict
@@ -1056,7 +1054,7 @@ def parse_print_file(file_name="printing/jobs.csv", loc_id=1):
     if date_string:
         processed_to_date_string = date_string
         print `processed_to_date_string`
-        
+
     for job in csv_failure:
         alias = job[2].strip()+'@'+job[3].strip()
         date_string = job[8].strip()
@@ -4555,6 +4553,14 @@ The Hub Team
         return get_invoice_pdf(invoiceid) or self.gen_invoice_pdf(invoiceid)
 
     def gen_invoice_pdf(self, invoiceid):
+        return self.gen_invoice(invoiceid, format='pdf')
+
+    @identity.require(not_anonymous())
+    @expose()
+    def show_invoice(self, invoiceid):
+        return self.gen_invoice(invoiceid, format='html')
+
+    def gen_invoice(self, invoiceid, format='pdf'):
         invoice=model.Invoice.get(int(invoiceid))
         MCust = model.MessageCustomization
         try:
@@ -4576,11 +4582,14 @@ The Hub Team
                 template = 'hubspace.templates.newinvoice'
         html =  try_render(d, template=template, format='html', headers={'content-type':'text/html'})
         html = html.replace("NEXTPAGEHACK", "<div> <pdf:nextpage/> </div> ")
-        src = cStringIO.StringIO(html)
-        dst = cStringIO.StringIO()
-        pdf = pisa.CreatePDF(src, dst, encoding='utf-8')
-        dst.seek(0)
-        content = dst.read()
+        if format == 'pdf':
+            src = cStringIO.StringIO(html)
+            dst = cStringIO.StringIO()
+            pdf = pisa.CreatePDF(src, dst, encoding='utf-8')
+            dst.seek(0)
+            content = dst.read()
+        else:
+            content = html
         return content
 
     @identity.require(not_anonymous())
@@ -4742,9 +4751,8 @@ The Hub Team
     def resend_invoices(self):
         invoice_ids = [int(invoice_id.strip()) for invoice_id in file('invoices.txt')]
         out = ""
-        import hubspace.alerts.messages as messages
         message_name = "invoice_mail"
-        message = messages.bag[message_name]
+        message = hubspace.alerts.messages.bag[message_name]
         for invoice_id in invoice_ids:
             invoice = Invoice.get(invoice_id)
             data = dict(location=invoice.location, user=invoice.user)
@@ -4916,9 +4924,7 @@ The Hub Team
     @identity.require(not_anonymous())
     @validate(validators={'start':dateconverter, 'end_time':dateconverter, 'userid':real_int})
     def create_invoice(self, autocollect=True, location_id=None, **kwargs):
-        amount = 0
-        kwargs.setdefault('user', kwargs['userid'])
-        user = User.get(kwargs['user'])
+        user = User.get(kwargs['userid'])
         cuser = identity.current.user
         location = location_id and Location.get(location_id) or cuser.homeplace
         
@@ -4926,28 +4932,122 @@ The Hub Team
             applogger.warning("Denied '%s (%s)' to invoice for location '%s (%s)'" % (cuser.username, cuser.id, location.name, location.id))
             raise IdentityFailure('what about not hacking the system')
 
+        start = kwargs['start'] or datetime(1970,1,1)
+        end_time = kwargs['end_time'] or now(location)
+
+        invoice = self._create_invoice(user, autocollect, location, start, end_time)
+
+        return {'object':user}
+
+    def _create_invoice(self, user, autocollect, location, start, end_time):
         users = [u for u in user.billed_for]
         if user.billto==None and user not in users:
             users.append(user)
-        if len(users)<1:
+        if not users:
             raise 'Cant invoice this user directly - this user %s bills to user %s - %s' % (user.id,user.billto.id,user.billto.user_name)
-        kwargs.setdefault('billingaddress',user.billingaddress)
-        if not kwargs['start']:
-            kwargs['start']=datetime(1970,1,1)
-        if not kwargs['end_time']:
-            kwargs['end_time']= now(location)
+    
         ignore_end_time = location.id == 23 # #777
-        kwargs.setdefault('location', location)
-        invoice = create_object('Invoice',**kwargs)
-
+        invoice = create_object('Invoice', user=user, location=location, start=start, end_time=end_time, billingaddress=user.billingaddress)
+        applogger.info("_create_invoice: %s" % invoice.id)
+    
         if autocollect:
+            inv_usages = []
             cuser_locations = permissionslib.locations('manage_invoices')
             for u in users:
-                for rusage in get_rusages(u, None, kwargs['start'], kwargs['end_time'], ignore_end_time, cuser_locations):
+                for rusage in get_rusages(u, None, start, end_time, ignore_end_time, cuser_locations):
                     rusage.invoice = invoice.id
+                    inv_usages.append(rusage)
+            
+            if not start:
+                start = min((usage.start for usage in inv_usages))
+                invoice.start = start
         
         self.update_invoice_amount(invoice.id)
-        return {'object':user}
+        return invoice
+    
+    def _auto_create_invoices(self, location, end_time, resource_type, include_zero_usage_cost_members):
+        yield file("hubspace/templates/invoicingstatus_start.kid").read()
+        users = set(usr for usr in uninvoiced_users(location, resource_type, end_time, include_zero_usage_cost_members) if usr and usr.billing_mode != 2)
+        unsent_invoices = Invoice.selectBy(location=location, sent=None)
+        users_w_invoices = set(inv.user for inv in unsent_invoices)
+        users = users.union(users_w_invoices)
+        no_of_users = len(users)
+
+        c = itertools.count()
+        c.next()
+        progress_msg = "processing ..."
+        for user in users:
+            count = c.next()
+            applogger.info("Auto create invoice: processing user %s" % user)
+            if user in users_w_invoices:
+                invoice = [inv for inv in unsent_invoices if inv.user == user][0]
+            else:
+                invoice = self._create_invoice(user, True, location, None, end_time)
+            message = hubspace.alerts.messages.bag['invoice_mail']
+            msg_data = dict(location=location, user=user)
+            message_dict = message.make(location, msg_data, {})
+            progress_msg = "Processing invoice %d/%s for '%s'" % (count, no_of_users, user.display_name)
+            data = dict(invoice = invoice, message_dict = message_dict, sr_no = count, progress_msg = progress_msg)
+            applogger.info("Auto create invoice: %s" % invoice.id)
+            out = try_render(data, template='hubspace.templates.invoicingstatus', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
+            yield out
+
+        model.hub.commit()
+        applogger.info("Auto create invoices: done")
+
+    def _send_invoices(self, inv_data):
+        yield file("hubspace/templates/invoice_send_start.kid").read()
+
+        c = itertools.count()
+        c.next()
+        for data in inv_data:
+            data['sr_no'] = c.next()
+            invoice = data['invoice']
+            invoice.ponumbers = data['ponumbers']
+            message = data['message'] or ''
+            subject = data['subject'] or ''
+            ponumbers = data['ponumbers']
+            try:
+                send_status = self.send_invoice(invoice.id, subject, message, ponumber=ponumbers, send_it=True)
+            except Exception, err:
+                applogger.exception("send invoice | %s:" % invoice.id)
+                send_status = err
+            data['send_status'] = send_status
+            model.hub.commit()
+            out = try_render(data, template='hubspace.templates.invoice_send_status', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
+            yield out
+
+    @expose()
+    def send_invoices(self, invoice_ids, *args, **kw):
+        if isinstance(invoice_ids, basestring):
+            invoice_ids = [invoice_ids]
+        location = Invoice.get(invoice_ids[0])
+        if not permission_or_owner(location, None, 'manage_invoices'):
+            raise IdentityFailure('what about not hacking the system')
+        messages = dict((k.split('_')[1], v) for (k, v) in kw.items() if k.startswith('message_'))
+        ponumbers = dict((k.split('_')[1], v) for (k, v) in kw.items() if k.startswith('ponumbers_'))
+        subjects = dict((k.split('_')[1], v) for (k, v) in kw.items() if k.startswith('subject_'))
+        inv_data = []
+        for invoice_id in invoice_ids:
+            data = {}
+            data['invoice'] = Invoice.get(invoice_id)
+            data['message'] = messages.get(invoice_id)
+            data['subject'] = subjects.get(invoice_id)
+            data['ponumbers'] = ponumbers.get(invoice_id)
+            inv_data.append(data)
+        return self._send_invoices(inv_data)
+
+    @expose()
+    @validate(validators={'location':real_int, 'resource_type':ForEach(v.UnicodeString()), 'search_from_date':dateconverter})
+    def auto_create_invoices(self, location, search_from_date, resource_type, include_zero_usage_cost_members=False):
+        cuser = identity.current.user
+        location = Location.get(location)
+        if not permission_or_owner(location, None, 'manage_invoices'):
+            applogger.warning("Denied '%s (%s)' to invoice for location '%s (%s)'" % (cuser.username, cuser.id, location.name, location.id))
+            raise IdentityFailure('what about not hacking the system')
+
+        return self._auto_create_invoices(location, search_from_date, resource_type, include_zero_usage_cost_members)
+
 
     @expose()
     @strongly_expire
@@ -4980,8 +5080,8 @@ The Hub Team
             if v != value[k]:
                 setattr(invoice, k, v)
 
-        content = self.gen_invoice_pdf(invoiceid)
         if invoice.sent:
+            content = self.gen_invoice_pdf(invoiceid)
             store_invoice_pdf(invoiceid, content)
 
         return ''
@@ -6038,7 +6138,7 @@ The Hub Team
     
     @expose()
     @strongly_expire
-    @identity.require(not_anonymous())    
+    @identity.require(not_anonymous())
     @validate(validators={'loc_id':real_int, 'date':dateconverter, 'cal_end':timeconverterAMPM, 'cal_start':timeconverterAMPM})
     def save_openTime(self, loc_id=None, date=None, cal_end=None, cal_start=None, value="", id=0):
         if not permission_or_owner(Location.get(loc_id), None, 'manage_users'):
