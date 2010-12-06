@@ -17,6 +17,7 @@
     <script type="text/javascript">
     $(document).ready(function() {
         $('.progress').text("Invoice processing complete");
+        $('.send_approved').show();
     });
     </script>
 </head>
@@ -30,6 +31,8 @@
 <div id="status_area container">
 
 <form id="invoice_approval" action="/send_invoices" method="post">
+
+<input type="submit" class="send_approved" value="Send approved"/>
 
 <table class="statuses span-13">
 
@@ -72,14 +75,6 @@ var invoice_preview = function (invoice_id) {
 $('.invoice_preview').click( function () {
     var invoice_id = $(this).attr('id').split('-')[1];
     invoice_preview(invoice_id);
-});
-$('x.send_approved').click( function () {
-    alert('clicked');
-    var params = $("#invoice_approval").serialize();
-    var url = '/send_invoices?' + params;
-    $('.statuses').hide();
-    var html = '<iframe src="' + url + '" width="900" height="900"/>';
-    $('#status_area').html(html);
 });
 </script>
 

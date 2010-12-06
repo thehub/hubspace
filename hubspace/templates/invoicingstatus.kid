@@ -9,7 +9,6 @@ subject = message_dict['subject']
 
 <script>
 $('.statuses').show();
-$('.send_approved').show();
 $('.progress').text("${progress_msg}");
 var html = '\
 <tr id="invoicebox-${invoice.id}"> \
