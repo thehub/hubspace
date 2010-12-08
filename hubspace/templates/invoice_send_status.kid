@@ -1,5 +1,6 @@
 <div xmlns:py="http://purl.org/kid/ns#" py:strip="True">
 <?python
+from hubspace.templates.billing import genInvoiceName
 send_status_class = 'success' if 'success' in send_status else 'warning'
 ?>
 <script>
@@ -9,7 +10,9 @@ var html = ' \
     <td>${invoice.user.display_name}</td> \
     <td>${invoice.number}</td> \
     <td>${invoice.amount}</td> \
-    <td><a href="#" class="invoice_preview" id="preview-${invoice.id}">view</a></td> \
+    <td><a href="#" class="invoice_preview" id="preview-${invoice.id}">view</a> | \
+        <a href="/pdf_invoice/${invoice.id}/${genInvoiceName(invoice)}.pdf" target="_blank">pdf</a> \
+    </td> \
     <td class="success">${send_status}</td> \
 </tr> \
 ';

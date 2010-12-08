@@ -1,6 +1,7 @@
 <div xmlns:py="http://purl.org/kid/ns#" py:strip="True">
 
 <?python
+from hubspace.templates.billing import genInvoiceName
 message = "\\".join(message_dict['body'].split('\n')).replace("'", "\\'") + ' '
 message2 = "\\n".join(message_dict['body'].split('\n')).replace("'", "\\'") + ' '
 # ^ needs to be better
@@ -15,7 +16,10 @@ var html = '\
     <td>${sr_no}</td> \
     <td>${invoice.user.display_name}</td> \
     <td>${invoice.amount}</td> \
-    <td><a href="#" class="invoice_preview" id="preview-${invoice.id}">view</a></td> \
+    <td> \
+        <a href="#NONE" class="invoice_preview" id="preview-${invoice.id}">html</a> | \
+        <a href="/pdf_invoice/${invoice.id}/${genInvoiceName(invoice)}.pdf" target="_blank">pdf</a> \
+    </td> \
     <td><a href="#" id="msg-${invoice.id}">message</a></td> \
     <td id="cancel_${invoice.id}"><a href="#" class="invoice_cancel" id="cancel-${invoice.id}">X</a></td> \
     <td><input type="checkbox" checked="1" name="invoice_ids" value="${invoice.id}"/></td> \

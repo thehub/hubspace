@@ -34,7 +34,7 @@
 
 <input type="submit" class="send_approved" value="Send approved"/>
 
-<table class="statuses span-13">
+<table class="statuses span-15">
 
 <thead>
 <tr>
@@ -68,7 +68,7 @@ var invoice_preview = function (invoice_id) {
         title: 'Invoice Preview',
         //height: 700,
         width: 880,
-        position: 'top'
+        position: 'left'
         });
     dialog.dialog('open');
 };
