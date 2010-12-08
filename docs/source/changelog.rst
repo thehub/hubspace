@@ -1,10 +1,13 @@
 Changelog
 =========
 
+One click Invoicing
+-------------------
+Invoicing process is much simplified now. Details at `here </help/invoicing.html>`_
+
 Support for Repeat/Recursive bookings
 -------------------------------------
 Now it's possible to repeat any booking for different pre-defined date patterns (such as weekly, monthly). Or one can simply pick different dates to repeat to booking for. The booking would be repeated for selected dates alongwith suggested resources and cost. It is available for both `time based </help/repeatbooking.html#time-based-bookings>`_ and `quantity based </help/repeatbooking.html#quantity-based-bookings>`_ bookings. For more info, please click `here </help/repeatbooking.html>`_
-
 
 P.O. Number
 -----------

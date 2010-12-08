@@ -6,12 +6,17 @@
 Welcome to Hubspace's documentation!
 ====================================
 
-Topics:
-
 .. toctree::
    :maxdepth: 1
 
    changelog
+
+Topics
+
+.. toctree::
+   :maxdepth: 1
+
+   invoicing
 
    message_catalogue
 

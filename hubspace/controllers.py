@@ -4967,7 +4967,7 @@ The Hub Team
     
     def _auto_create_invoices(self, location, end_time, resource_type, include_zero_usage_cost_members):
         yield file("hubspace/templates/invoicingstatus_start.kid").read()
-        users = set(usr for usr in uninvoiced_users(location, resource_type, end_time, include_zero_usage_cost_members) if usr and usr.billing_mode != 2)
+        users = set(usr for usr in uninvoiced_users(location.id, resource_type, end_time, include_zero_usage_cost_members) if usr and usr.billing_mode != 2)
         unsent_invoices = Invoice.selectBy(location=location, sent=None)
         users_w_invoices = set(inv.user for inv in unsent_invoices)
         users = users.union(users_w_invoices)
