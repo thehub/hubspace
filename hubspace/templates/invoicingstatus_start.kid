@@ -40,6 +40,7 @@
 <tr>
 <th></th>
 <th class="span-5">To</th>
+<th>Number</th>
 <th>Amount</th>
 <th>Preview</th>
 <th>Message</th>
