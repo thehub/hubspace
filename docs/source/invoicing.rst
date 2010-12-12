@@ -49,10 +49,16 @@ Once the invoices are generated you can optionally modify followings for an invo
  - Message text to send with the invoice
  - P. O. Number
 
-You can uncheck the "approve checkbox" so such invoice is not included in sending invoices. Such an invoice would remain in the system.
-Or you can as well cancel a generated invoice.
-
 System will not save message text or P. O. number if you choose not to send invoices and leave the page.
+
+Approving invoices
+~~~~~~~~~~~~~~~~~~
+All invoices are approved by default. If an invoice is in approved state, it means it is ready to send. 
+
+If you uncheck the "approve checkbox" so such invoice is not included in sending invoices. Such an invoice would remain in the system and hence will be treated as unsent invoice. So next time if you regenrate invoices the same invoice will be included in the list again.
+
+You can cancel a generated invoice as well. A cancelled invoice will be removed from the system.
+
 
 Sending the invoices 
 --------------------
