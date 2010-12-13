@@ -41,7 +41,7 @@ $('#preview-' + ${invoice.id}).click( function () {
 var remove_invoice = function () {
    $('#cancel_${invoice.id}').text('deleting..');
    $.post("/remove_invoice?", 'invoiceid=' + $(this).attr('id').split('-')[1], function (data) {
-       $('#invoicebox-' + ${invoice.id}).hide();
+       $('#invoicebox-' + ${invoice.id}).remove();
    });
 };
 
