@@ -15,7 +15,6 @@ var html = '\
 <tr id="invoicebox-${invoice.id}"> \
     <td>${sr_no}</td> \
     <td>${invoice.user.display_name}</td> \
-    <td>${invoice.number}</td> \
     <td>${invoice.amount}</td> \
     <td> \
         <a href="#NONE" class="invoice_preview" id="preview-${invoice.id}">html</a> | \
