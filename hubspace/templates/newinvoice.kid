@@ -207,7 +207,7 @@ negative_total = invoice.amount < 0
         <table cellpadding="1">
         <tr>
             <td width="30%">Number </td>
-            <td width="70%"> ${invoice.number}</td>
+            <td width="70%"> ${invoice.number or 'unnumbered'}</td>
         </tr>
         <tr>
             <td>Date</td>
