@@ -4717,10 +4717,15 @@ The Hub Team
         else:
             invoice.ponumbers = []
 
-        pdf = self.gen_or_get_invoice_pdf(invoiceid)
         if not invoice.sent:
             self.update_invoice_amount(invoiceid)
-            store_invoice_pdf(invoice.id, pdf)
+            invoice.sent = now(invoice.location)
+
+        if not invoice.number:
+            model.set_invoice_number(invoice)
+
+        pdf = self.gen_or_get_invoice_pdf(invoiceid)
+        store_invoice_pdf(invoice.id, pdf)
 
         if kwargs.get('send_it'):
             to = invoice.user.bill_to_profile and invoice.user.email_address or invoice.user.bill_email
@@ -4740,8 +4745,6 @@ The Hub Team
                 applogger.exception("Invoice: Failed sending Invoice (id: %s number: %s)" % (invoice.id, invoice.number))
                 ret_msg = _('There was a problem sending the invoice')
         else:
-            if not invoice.sent:
-                invoice.sent = now(invoice.location)
             ret_msg = _("Invoice not sent by email!")
 
         return ret_msg
@@ -5021,8 +5024,10 @@ The Hub Team
     def send_invoices(self, invoice_ids, *args, **kw):
         if isinstance(invoice_ids, basestring):
             invoice_ids = [invoice_ids]
-        location = Invoice.get(invoice_ids[0])
+        location = Invoice.get(invoice_ids[0]).location
         if not permission_or_owner(location, None, 'manage_invoices'):
+            cuser = identity.current.user
+            applogger.error("failed to send invoices: %s has no manage_invoices permission for %s" % (cuser, location.name))
             raise IdentityFailure('what about not hacking the system')
         messages = dict((k.split('_')[1], v) for (k, v) in kw.items() if k.startswith('message_'))
         ponumbers = dict((k.split('_')[1], v) for (k, v) in kw.items() if k.startswith('ponumbers_'))

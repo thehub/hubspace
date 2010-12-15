@@ -17,6 +17,9 @@ from sqlobject.events import listen, RowUpdateSignal, RowCreatedSignal, RowDestr
 
 import md5crypt, smbpasswd, md5, random, time, sys
 import StringIO
+import logging
+
+applogger = logging.getLogger("hubspace")
 hub = PackageHub("hubspace")
 __connection__ = hub
 
@@ -1048,8 +1051,6 @@ class Invoice(SQLObject):
     """An Invoice. A collection of rusages, collected on a specific date for a specific
     user."""
     number = IntCol(default=None)
-    def _get_number(self):
-        return self._SO_get_number() or "H%s" % self.id
     billingaddress = UnicodeCol()
     user = ForeignKey("User")
     start = DateTimeCol()
@@ -1126,32 +1127,35 @@ def findNumberMissing(start, l):
     if missings:
         return missings[0]
 
-def setInvoiceNumber(kwargs, post_funcs):
-    instance = kwargs['class'].get(kwargs['id'])
-    location_id = instance.location.id
-    if instance.location.invoice_newscheme:
+def set_invoice_number(invoice):
+    location_id = invoice.location.id
+    if invoice.location.invoice_newscheme:
         # do we need to acquire a lock here? why?
         inv_all = list(Invoice.select(Invoice.q.locationID == location_id, orderBy='number').reversed())
         # Above query may slow down things a bit, however with difficulties of producing right query as we have
         # two different invoicing numbering with ORM on top, I prefer slower but cleaner approach. Ideally I wanted to
         # step through smaller blocks
         inv_numbers = sorted([i.number for i in inv_all if isinstance(i.number, int)])
-        start = int("%s0000001" % instance.location.id)
+        start = int("%s0000001" % invoice.location.id)
         if inv_numbers:
             next_num = findNumberMissing(start, inv_numbers)
             if not next_num:
                 next_num = max(inv_numbers) + 1
         else:
             next_num = start
-        def f(inv):
+        
+        for i in range(next_num, next_num + 9):
             try:
-                inv.number = next_num
+                invoice.number = i
+                break
             except IntegrityError:
-                inv.number = next_num + 1
-        post_funcs.append(f)
+                applogger.warn("setting invoice number %s failed" % i)
 
+        if not invoice.number: # still?
+            raise Exception("Could not number the invoice %s: Tried %s-%s" % (invoice.id, next_num, next_num+9))
+    else:
+        invoice.number = 'H' + str(invoice.id)
 
-listen(setInvoiceNumber, Invoice, RowCreatedSignal)
 
 class Note(SQLObject):
     title = UnicodeCol(length=200)
