@@ -5029,7 +5029,8 @@ The Hub Team
             cuser = identity.current.user
             applogger.error("failed to send invoices: %s has no manage_invoices permission for %s" % (cuser, location.name))
             raise IdentityFailure('what about not hacking the system')
-        messages = dict((k.split('_')[1], v) for (k, v) in kw.items() if k.startswith('message_'))
+        fix_message = lambda text: text.replace(r'\\n', '\n').replace(r"\\'", "'")
+        messages = dict((k.split('_')[1], fix_message(v)) for (k, v) in kw.items() if k.startswith('message_'))
         ponumbers = dict((k.split('_')[1], v) for (k, v) in kw.items() if k.startswith('ponumbers_'))
         subjects = dict((k.split('_')[1], v) for (k, v) in kw.items() if k.startswith('subject_'))
         inv_data = []

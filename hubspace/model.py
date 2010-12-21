@@ -1051,6 +1051,8 @@ class Invoice(SQLObject):
     """An Invoice. A collection of rusages, collected on a specific date for a specific
     user."""
     number = IntCol(default=None)
+    def _get_number(self):
+        return self._SO_get_number() or (not self.location.invoice_newscheme and "H%s" % self.id) or None
     billingaddress = UnicodeCol()
     user = ForeignKey("User")
     start = DateTimeCol()
@@ -1153,8 +1155,6 @@ def set_invoice_number(invoice):
 
         if not invoice.number: # still?
             raise Exception("Could not number the invoice %s: Tried %s-%s" % (invoice.id, next_num, next_num+9))
-    else:
-        invoice.number = 'H' + str(invoice.id)
 
 
 class Note(SQLObject):
