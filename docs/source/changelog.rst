@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Invoice numbering
+-----------------
+Invoice numbering is delayed till it is sent. This ensures consistent numbering when invoices are auto-generated.
+
 One click Invoicing
 -------------------
 Invoicing process is much simplified now. Details at `here </help/invoicing.html>`_

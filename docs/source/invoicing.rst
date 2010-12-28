@@ -11,7 +11,7 @@ It involves following stages
 
 - Preparation
 - Invoice generation
-- Approving and sending invoices
+- Sending invoices
 
 .. Note::
     It is still possible to do invoicing old way. Interface for old option is unchanged except the search button which is moved towards right.
@@ -51,19 +51,11 @@ Once the invoices are generated you can optionally modify followings for an invo
 
 System will not save message text or P. O. number if you choose not to send invoices and leave the page.
 
-Approving invoices
-~~~~~~~~~~~~~~~~~~
-All invoices are approved by default. If an invoice is in approved state, it means it is ready to send. 
-
-If you uncheck the "approve checkbox" so such invoice is not included in sending invoices. Such an invoice would remain in the system and hence will be treated as unsent invoice. So next time if you regenrate invoices the same invoice will be included in the list again.
-
-You can cancel a generated invoice as well. A cancelled invoice will be removed from the system.
-
-
 Sending the invoices 
 --------------------
+For any reason if you want to remove certain invoices, you can do it by selecting such invoices and then clicking "Remove selected".
 
-All approved invoices are sent when you click "Send approved"
+All selected invoices are sent when you click "Send selected". The invoices which you do not select are not removed, they remain in the system.
 
   .. image:: images/oci_3.png
      :scale: 50
