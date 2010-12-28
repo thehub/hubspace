@@ -5107,6 +5107,7 @@ The Hub Team
         for rusage in RUsage.select(AND(RUsage.q.invoiceID==invoiceid)):
             rusage.invoice = None
         inv.destroySelf()
+        remove_invoice_pdf(invoiceid)
         return "" 
 
     @expose()
