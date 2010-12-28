@@ -5891,7 +5891,7 @@ The Hub Team
         resource = price.resource.id
         tariff = price.tariff.id
         next_price = price.nextperiod
-        prev_price = Pricing.select(Pricing.q.nextperiodID==price.id)[0]
+        prev_price = list(Pricing.select(Pricing.q.nextperiodID==price.id))[0:1]
         if next_price:
             prev_price.nextperiod = next_price.id
         else:
