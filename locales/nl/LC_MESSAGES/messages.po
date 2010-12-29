@@ -15,35 +15,35 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: hubspace/alerts/macros.py:121
+#: hubspace/alerts/macros.py:133
 msgid "Also booked: "
 msgstr ""
 
-#: hubspace/controllers.py:1627
+#: hubspace/controllers.py:1828
 msgid "VAT"
 msgstr "BTW"
 
-#: hubspace/controllers.py:1628
+#: hubspace/controllers.py:1829
 msgid "Date"
 msgstr "Datum"
 
-#: hubspace/controllers.py:1629
+#: hubspace/controllers.py:1830
 msgid "Description"
 msgstr "Beschrijving"
 
-#: hubspace/controllers.py:1753
+#: hubspace/controllers.py:1963
 msgid "No"
 msgstr ""
 
-#: hubspace/controllers.py:1753
+#: hubspace/controllers.py:1963
 msgid "Yes"
 msgstr ""
 
-#: hubspace/controllers.py:2569 hubspace/controllers.py:2694
+#: hubspace/controllers.py:2903 hubspace/controllers.py:3027
 msgid " (Hint: You should not include currency signs)"
 msgstr ""
 
-#: hubspace/controllers.py:3523 hubspace/utilities/login.py:16
+#: hubspace/controllers.py:3885 hubspace/utilities/login.py:16
 msgid "Your username or password were incorrect. Please try again."
 msgstr "Je gebruikersnaam en of paswoord zijn niet juist. Probeer het nog een keer."
 
@@ -51,7 +51,7 @@ msgstr "Je gebruikersnaam en of paswoord zijn niet juist. Probeer het nog een ke
 msgid "Please log in."
 msgstr "Hier inloggen."
 
-#: hubspace/controllers.py:3555 hubspace/utilities/login.py:46
+#: hubspace/controllers.py:3917 hubspace/utilities/login.py:46
 msgid "Please enter the email address associated with your account"
 msgstr "Vul het e-mailadres in dat bij je account hoort. "
 
@@ -59,31 +59,43 @@ msgstr "Vul het e-mailadres in dat bij je account hoort. "
 msgid "A confirmation email was sent to you. "
 msgstr "We hebben je een bevestigingsmail gestuurd."
 
-#: hubspace/controllers.py:3577 hubspace/utilities/login.py:68
+#: hubspace/controllers.py:3939 hubspace/utilities/login.py:68
 msgid "The email was not correct"
 msgstr "Dit emailadres is niet juist."
 
-#: hubspace/controllers.py:3585 hubspace/utilities/login.py:76
+#: hubspace/controllers.py:3947 hubspace/utilities/login.py:76
 msgid "The confirmation key is wrong - maybe you need to check your email?"
 msgstr "De bevestigingscode is niet juist. Check je email nog een keer."
 
-#: hubspace/controllers.py:3606 hubspace/utilities/login.py:95
+#: hubspace/controllers.py:3968 hubspace/utilities/login.py:95
 msgid "The new password was sent to you."
 msgstr "We hebben je een nieuw wachtwoord gestuurd.."
 
-#: hubspace/controllers.py:4334
+#: hubspace/controllers.py:4734
 msgid "Problem sending the invoice: Member's billing preferences are set to not to use profile details and billing preferences has no email address specified. You may want visit member's 'Billing Details' section."
 msgstr ""
 
-#: hubspace/validators.py:552
+#: hubspace/controllers.py:4743
+msgid "Invoice was sent successfully"
+msgstr ""
+
+#: hubspace/controllers.py:4746
+msgid "There was a problem sending the invoice"
+msgstr ""
+
+#: hubspace/controllers.py:4748
+msgid "Invoice not sent by email!"
+msgstr ""
+
+#: hubspace/validators.py:553
 msgid "The booking must end later than it starts!"
 msgstr "De eindtijd van de boeking ligt voor de starttijd. Verander dat."
 
-#: hubspace/validators.py:553
+#: hubspace/validators.py:554
 msgid "The booking must start before ending!"
 msgstr "De starttijd van de boeking ligt na de eindtijd. Verander dat."
 
-#: hubspace/validators.py:584
+#: hubspace/validators.py:585
 msgid "A tentative booking should be made at least %s hours in advance!"
 msgstr ""
 
@@ -517,6 +529,10 @@ msgstr ""
 msgid "See resources in this group"
 msgstr ""
 
+#: hubspace/templates/manageResources.kid:a
+msgid "Delete"
+msgstr ""
+
 #: hubspace/templates/manageResources.kid:div
 msgid "Inactive"
 msgstr ""
@@ -693,10 +709,6 @@ msgstr ""
 msgid "Page Type"
 msgstr ""
 
-#: hubspace/templates/listEditor.kid:th
-msgid "Delete"
-msgstr ""
-
 #: hubspace/templates/listEditor.kid:td
 msgid "N/A"
 msgstr ""
@@ -842,11 +854,27 @@ msgid "Additional Information"
 msgstr ""
 
 #: hubspace/templates/meetingBooking.kid:td
+msgid "Repeat Booking"
+msgstr ""
+
+#: hubspace/templates/meetingBooking.kid:a
+msgid "Repeat this Booking"
+msgstr ""
+
+#: hubspace/templates/meetingBooking.kid:a
+msgid "Show repeated bookings"
+msgstr ""
+
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Cancel Booking"
 msgstr ""
 
 #: hubspace/templates/meetingBooking.kid:a
 msgid "Cancel this Booking"
+msgstr ""
+
+#: hubspace/templates/meetingBooking.kid:a
+msgid "Cancel all occurances of this Booking"
 msgstr ""
 
 #: hubspace/templates/meetingBooking.kid:td
@@ -1025,6 +1053,14 @@ msgstr ""
 msgid "All prices exclude VAT"
 msgstr ""
 
+#: hubspace/templates/meetingBookingEdit.kid:td
+msgid "Edit all related Repeat bookings?"
+msgstr ""
+
+#: hubspace/templates/meetingBookingEdit.kid:label
+msgid "The above changes in this booking will be applied to all repeated bookings."
+msgstr ""
+
 #: hubspace/templates/loginMaster.kid:h1
 msgid "Feed"
 msgstr ""
@@ -1067,6 +1103,66 @@ msgstr ""
 
 #: hubspace/templates/memberServicesEdit.kid:td
 msgid "Location of storage"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:h4
+msgid "Add Bookings"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "Daily"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "Weekly"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "Monthly"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "Multiple dates"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:dt
+msgid "Dates range:"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:div
+msgid "Start from:"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "(mm/dd/yyyy)"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:div
+msgid "Till:"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:div
+msgid "Repeat every"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "day(s)"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:div
+msgid "Repeat every weekday"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "By date of the month:"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:div
+msgid "Choose multiple dates"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:strong
+msgid "Summary:"
 msgstr ""
 
 #: hubspace/templates/manageTariffs.kid:a
@@ -1177,6 +1273,114 @@ msgstr ""
 msgid "for private event hire and member events."
 msgstr ""
 
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Membership No."
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Company No."
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "VAT No."
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Purchase Order No:"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:h2
+msgid "CREDIT NOTE"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:h1
+msgid "INVOICE"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Number"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Period"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Due Date"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:h3
+msgid "Summary of usage"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:strong
+msgid "Sub Total"
+msgstr "Subtotaal"
+
+#: hubspace/templates/newinvoice_euve.kid:h3
+msgid "Total"
+msgstr "Totaal"
+
+#: hubspace/templates/newinvoice_euve.kid:h3
+msgid "Invoice Total"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Excluding VAT"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:em
+msgid "(Exempt from VAT)"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:h3
+msgid "Usage details"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Sr. No."
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Quantity"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:em
+msgid "(Cancelled)"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:em
+msgid "(Refund)"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Account Number"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Sort Code"
+msgstr "Code"
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Swift Code"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "IBAN"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "VAT Number"
+msgstr "BTW nr."
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Payment Terms"
+msgstr "Betalingsvoorwaarden"
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "|"
+msgstr ""
+
 #: hubspace/templates/network.kid:a
 msgid "Add new member"
 msgstr ""
@@ -1234,7 +1438,7 @@ msgid "Add To Open Invoice"
 msgstr ""
 
 #: hubspace/templates/resourcetable.kid:td
-msgid "Delete Resource Usage"
+msgid "Manage"
 msgstr ""
 
 #: hubspace/templates/resourcetable.kid:td
@@ -1253,16 +1457,20 @@ msgstr ""
 msgid "End"
 msgstr ""
 
-#: hubspace/templates/resourcetable.kid:td
-msgid "Quantity"
-msgstr ""
-
 #: hubspace/templates/resourcetable.kid:a
 msgid "change"
 msgstr ""
 
 #: hubspace/templates/resourcetable.kid:a
 msgid "Add to Invoice"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:a
+msgid "Delete this"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:a
+msgid "Repeat"
 msgstr ""
 
 #: hubspace/templates/resourcetable.kid:a
@@ -1301,10 +1509,6 @@ msgstr ""
 msgid "Invoiced"
 msgstr ""
 
-#: hubspace/templates/managementdata.kid:input
-msgid "Total"
-msgstr "Totaal"
-
 #: hubspace/templates/managementdata.kid:h2
 msgid "Export User Data"
 msgstr ""
@@ -1319,6 +1523,26 @@ msgstr ""
 
 #: hubspace/templates/managementdata.kid:td
 msgid "Select column to sort by"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:h2
+msgid "Export Invoice Data"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Select a Date Range:"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:a
+msgid "To"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:em
+msgid "(Default: Last 7 days)"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:h2
+msgid "Export Invoiced Resource Usage Data"
 msgstr ""
 
 #: hubspace/templates/managementdata.kid:h2
@@ -1387,10 +1611,6 @@ msgstr ""
 
 #: hubspace/templates/managementdata.kid:em
 msgid "OR"
-msgstr ""
-
-#: hubspace/templates/managementdata.kid:a
-msgid "|"
 msgstr ""
 
 #: hubspace/templates/managementdata.kid:a
@@ -1629,16 +1849,20 @@ msgstr ""
 msgid "Uninvoiced"
 msgstr ""
 
-#: hubspace/templates/invoicesnippet.kid:c
-msgid "From"
-msgstr ""
-
-#: hubspace/templates/invoicesnippet.kid:a
-msgid "Create Invoice"
-msgstr ""
-
 #: hubspace/templates/invoicesnippet.kid:div
 msgid "You must send existing invoices before creating new ones"
+msgstr ""
+
+#: hubspace/templates/invoicesnippet.kid:c
+msgid "- Invoicing Location:"
+msgstr ""
+
+#: hubspace/templates/invoicesnippet.kid:br
+msgid "- Period: From"
+msgstr ""
+
+#: hubspace/templates/invoicesnippet.kid:button
+msgid "Create Invoice"
 msgstr ""
 
 #: hubspace/templates/invoicesnippet.kid:div
@@ -1707,6 +1931,14 @@ msgstr ""
 
 #: hubspace/templates/microSiteJoinus.kid:label
 msgid "Phone"
+msgstr ""
+
+#: hubspace/templates/invoicing.kid:input
+msgid "Display members with zero usage cost"
+msgstr ""
+
+#: hubspace/templates/invoicing.kid:td
+msgid "* Search (Old way) option is deprecated"
 msgstr ""
 
 #: hubspace/templates/openTimes.kid:h1
@@ -1803,6 +2035,14 @@ msgstr ""
 
 #: hubspace/templates/webSiteHome.kid:br
 msgid "Hub Lectures"
+msgstr ""
+
+#: hubspace/templates/printing_load.kid:h1
+msgid "Print Accounting"
+msgstr ""
+
+#: hubspace/templates/printing_load.kid:br
+msgid "Please specify printer log file:"
 msgstr ""
 
 #: hubspace/templates/bristolDataEdit.kid:td
@@ -2061,6 +2301,14 @@ msgstr ""
 msgid "Any additional information you would like to provide:"
 msgstr ""
 
+#: hubspace/templates/invoice_send_start.kid:th
+msgid "Preview"
+msgstr ""
+
+#: hubspace/templates/invoice_send_start.kid:th
+msgid "Status"
+msgstr ""
+
 #: hubspace/templates/host.kid:a
 msgid "Invoicing"
 msgstr ""
@@ -2071,10 +2319,6 @@ msgstr ""
 
 #: hubspace/templates/host.kid:a
 msgid "Resources and Tariffs"
-msgstr ""
-
-#: hubspace/templates/host.kid:div
-msgid "abcf"
 msgstr ""
 
 #: hubspace/templates/todoEdit.kid:td
@@ -2122,10 +2366,6 @@ msgid "Invoice dute date (days after sending invoice)"
 msgstr ""
 
 #: hubspace/templates/locationProfile.kid:td
-msgid "Payment_Terms"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kid:td
 msgid "Bcc Invoice"
 msgstr ""
 
@@ -2146,11 +2386,11 @@ msgid "Default Level of Vat Charged (0%-100%)"
 msgstr ""
 
 #: hubspace/templates/locationProfile.kid:td
-msgid "Billing Address"
+msgid "Company Name"
 msgstr ""
 
 #: hubspace/templates/locationProfile.kid:td
-msgid "Company No."
+msgid "Billing Address"
 msgstr ""
 
 #: hubspace/templates/locationProfile.kid:td
@@ -2160,10 +2400,6 @@ msgstr ""
 #: hubspace/templates/locationProfile.kid:td
 msgid "Bank Account No."
 msgstr ""
-
-#: hubspace/templates/locationProfile.kid:td
-msgid "Sort Code"
-msgstr "Code"
 
 #: hubspace/templates/locationProfile.kid:td
 msgid "IBAN No."
@@ -2221,6 +2457,30 @@ msgstr ""
 msgid "state of the art events space"
 msgstr ""
 
+#: hubspace/templates/meetingBookingRepeatInfo.kid:h4
+msgid "Bookings Details"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeatInfo.kid:th
+msgid "Meeting"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeatInfo.kid:th
+msgid "Public"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeatInfo.kid:h4
+msgid "Repeated bookings"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeatInfo.kid:th
+msgid "Start Time"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeatInfo.kid:th
+msgid "End Time"
+msgstr ""
+
 #: hubspace/templates/addTodoBar.kid:H2
 msgid "Add a new list"
 msgstr ""
@@ -2266,8 +2526,12 @@ msgid "Company Number"
 msgstr ""
 
 #: hubspace/templates/billingDetailsEdit.kid:td
-msgid "VAT Number"
-msgstr "BTW nr."
+msgid "EU VAT Exemption"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Check the Hub locations where tax exemption is applicable"
+msgstr ""
 
 #: hubspace/templates/addResources.kid:a
 msgid "Add new resource"
@@ -2355,6 +2619,14 @@ msgstr ""
 
 #: hubspace/templates/resources.kid:option
 msgid "Manage Resources"
+msgstr ""
+
+#: hubspace/templates/invoicingstatus_start.kid:div
+msgid "processing.."
+msgstr ""
+
+#: hubspace/templates/invoicingstatus_start.kid:th
+msgid "Created on"
 msgstr ""
 
 #: hubspace/templates/locationAdmin.kid:h2
@@ -2516,6 +2788,10 @@ msgid "Show profile on The Hub's public website"
 msgstr ""
 
 #: hubspace/templates/memberProfileEdit.kid:em
+msgid "Changing your username will change existing links to your Hub+ profile from external sites"
+msgstr ""
+
+#: hubspace/templates/memberProfileEdit.kid:em
 msgid "To change your password enter the new one in the two fields below"
 msgstr ""
 
@@ -2668,10 +2944,6 @@ msgid "Invoice will be Bcced to this Email id"
 msgstr ""
 
 #: hubspace/templates/locationProfileEdit.kid:td
-msgid "Payment Terms"
-msgstr "Betalingsvoorwaarden"
-
-#: hubspace/templates/locationProfileEdit.kid:td
 msgid "Microsite Active"
 msgstr ""
 
@@ -2680,31 +2952,19 @@ msgid "Default Vat Level"
 msgstr ""
 
 #: hubspace/templates/locationProfileEdit.kid:td
+msgid "EU Vat Exemption"
+msgstr ""
+
+#: hubspace/templates/locationProfileEdit.kid:em
+msgid "Check to enable EU VAT Exemption processing for invoices"
+msgstr ""
+
+#: hubspace/templates/locationProfileEdit.kid:em
+msgid "This will appear on invoice."
+msgstr ""
+
+#: hubspace/templates/locationProfileEdit.kid:td
 msgid "Sort Code (if applicable)"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:c
-msgid "Membership No."
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:strong
-msgid "Invoice details"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Number"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Period"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Due Date"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:h2
-msgid "Summary of usage"
 msgstr ""
 
 #: hubspace/templates/newinvoice.kid:em
@@ -2713,34 +2973,6 @@ msgstr ""
 
 #: hubspace/templates/newinvoice.kid:em
 msgid "Exclusive of VAT"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:strong
-msgid "Sub Total"
-msgstr "Subtotaal"
-
-#: hubspace/templates/newinvoice.kid:h3
-msgid "Invoice Total"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Excluding VAT"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:h2
-msgid "Usage details"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:td
-msgid "Sr. No."
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:em
-msgid "(Cancelled)"
-msgstr ""
-
-#: hubspace/templates/newinvoice.kid:em
-msgid "(Refund)"
 msgstr ""
 
 #: hubspace/templates/microSitePassword.kid:h3
@@ -2757,10 +2989,6 @@ msgstr ""
 
 #: hubspace/templates/fulltextsearch.kid:h1
 msgid "Search"
-msgstr ""
-
-#: hubspace/templates/fulltextsearch.kid:h2
-msgid "Search Results"
 msgstr ""
 
 #: hubspace/templates/fulltextsearch.kid:p
@@ -2783,6 +3011,14 @@ msgstr ""
 
 #: hubspace/templates/fulltextsearch.kid:span
 msgid "Business Type:"
+msgstr ""
+
+#: hubspace/templates/newinvoice2.kid:c
+msgid "Bank Details"
+msgstr ""
+
+#: hubspace/templates/newinvoice2.kid:td
+msgid "Last date of period"
 msgstr ""
 
 #: hubspace/templates/bristolData.kid:td

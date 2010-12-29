@@ -14,35 +14,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: hubspace/alerts/macros.py:121
+
+#: hubspace/alerts/macros.py:133
 msgid "Also booked: "
 msgstr ""
 
-#: hubspace/controllers.py:1646
+#: hubspace/controllers.py:1828
 msgid "VAT"
 msgstr ""
 
-#: hubspace/controllers.py:1647
+#: hubspace/controllers.py:1829
 msgid "Date"
 msgstr ""
 
-#: hubspace/controllers.py:1648
+#: hubspace/controllers.py:1830
 msgid "Description"
 msgstr ""
 
-#: hubspace/controllers.py:1772
+#: hubspace/controllers.py:1963
 msgid "No"
 msgstr ""
 
-#: hubspace/controllers.py:1772
+#: hubspace/controllers.py:1963
 msgid "Yes"
 msgstr ""
 
-#: hubspace/controllers.py:2602 hubspace/controllers.py:2727
+#: hubspace/controllers.py:2903 hubspace/controllers.py:3027
 msgid " (Hint: You should not include currency signs)"
 msgstr ""
 
-#: hubspace/controllers.py:3576 hubspace/utilities/login.py:16
+#: hubspace/controllers.py:3885 hubspace/utilities/login.py:16
 msgid "Your username or password were incorrect. Please try again."
 msgstr ""
 
@@ -50,7 +51,7 @@ msgstr ""
 msgid "Please log in."
 msgstr ""
 
-#: hubspace/controllers.py:3608 hubspace/utilities/login.py:46
+#: hubspace/controllers.py:3917 hubspace/utilities/login.py:46
 msgid "Please enter the email address associated with your account"
 msgstr ""
 
@@ -58,2852 +59,3044 @@ msgstr ""
 msgid "A confirmation email was sent to you. "
 msgstr ""
 
-#: hubspace/controllers.py:3630 hubspace/utilities/login.py:68
+#: hubspace/controllers.py:3939 hubspace/utilities/login.py:68
 msgid "The email was not correct"
 msgstr ""
 
-#: hubspace/controllers.py:3638 hubspace/utilities/login.py:76
+#: hubspace/controllers.py:3947 hubspace/utilities/login.py:76
 msgid "The confirmation key is wrong - maybe you need to check your email?"
 msgstr ""
 
-#: hubspace/controllers.py:3659 hubspace/utilities/login.py:95
+#: hubspace/controllers.py:3968 hubspace/utilities/login.py:95
 msgid "The new password was sent to you."
 msgstr ""
 
-#: hubspace/controllers.py:4394
+#: hubspace/controllers.py:4734
 msgid "Problem sending the invoice: Member's billing preferences are set to not to use profile details and billing preferences has no email address specified. You may want visit member's 'Billing Details' section."
 msgstr ""
 
-#: hubspace/validators.py:552
+#: hubspace/controllers.py:4743
+msgid "Invoice was sent successfully"
+msgstr ""
+
+#: hubspace/controllers.py:4746
+msgid "There was a problem sending the invoice"
+msgstr ""
+
+#: hubspace/controllers.py:4748
+msgid "Invoice not sent by email!"
+msgstr ""
+
+#: hubspace/validators.py:553
 msgid "The booking must end later than it starts!"
 msgstr "The booking must end later than it starts."
 
-#: hubspace/validators.py:553
+#: hubspace/validators.py:554
 msgid "The booking must start before ending!"
 msgstr "The booking must start before ending."
 
-#: hubspace/validators.py:584
+#: hubspace/validators.py:585
 msgid "A tentative booking should be made at least %s hours in advance!"
 msgstr ""
 
-#: hubspace/templates/tariffHistory.kidstrong
+#: hubspace/templates/tariffHistory.kid:strong
 msgid ""
 "Warning: While changing Tariffs below usages are detected for which invoices are already sent. You may want to note\n"
 "these and refund as per your policies."
 msgstr ""
 
-#: hubspace/templates/tariffHistory.kidtd
+#: hubspace/templates/tariffHistory.kid:td
 msgid "Member"
 msgstr ""
 
-#: hubspace/templates/tariffHistory.kidtd
+#: hubspace/templates/tariffHistory.kid:td
 msgid "Invoice Number"
 msgstr ""
 
-#: hubspace/templates/tariffHistory.kidtd
+#: hubspace/templates/tariffHistory.kid:td
 msgid "Resource"
 msgstr ""
 
-#: hubspace/templates/tariffHistory.kidtd
+#: hubspace/templates/tariffHistory.kid:td
 msgid "Booking time"
 msgstr ""
 
-#: hubspace/templates/tariffHistory.kidtd
+#: hubspace/templates/tariffHistory.kid:td
 msgid "Tariff"
 msgstr ""
 
-#: hubspace/templates/relationshipStatus.kidtd
+#: hubspace/templates/relationshipStatus.kid:td
 msgid "Introduced By"
 msgstr ""
 
-#: hubspace/templates/relationshipStatus.kidtd
+#: hubspace/templates/relationshipStatus.kid:td
 msgid "Unknown"
 msgstr ""
 
-#: hubspace/templates/relationshipStatus.kidtd
+#: hubspace/templates/relationshipStatus.kid:td
 msgid "Signed Up By"
 msgstr ""
 
-#: hubspace/templates/relationshipStatus.kidtd
+#: hubspace/templates/relationshipStatus.kid:td
 msgid "Host Contact"
 msgstr ""
 
-#: hubspace/templates/plusInvoicing.kidh1
+#: hubspace/templates/plusInvoicing.kid:h1
 msgid "Invoicing Search"
 msgstr ""
 
-#: hubspace/templates/plusInvoicing.kidspan
+#: hubspace/templates/plusInvoicing.kid:span
 msgid "Search in Location"
 msgstr ""
 
-#: hubspace/templates/plusInvoicing.kidspan
+#: hubspace/templates/plusInvoicing.kid:span
 msgid "for users with non-invoiced items"
 msgstr ""
 
-#: hubspace/templates/plusInvoicing.kidinput
+#: hubspace/templates/plusInvoicing.kid:input
 msgid "Tariffs"
 msgstr ""
 
-#: hubspace/templates/plusInvoicing.kidinput
+#: hubspace/templates/plusInvoicing.kid:input
 msgid "Other Resources Usages"
 msgstr ""
 
-#: hubspace/templates/plusInvoicing.kidspan
+#: hubspace/templates/plusInvoicing.kid:span
 msgid "which finished on or before"
 msgstr ""
 
-#: hubspace/templates/microSitePlain.kiddiv
+#: hubspace/templates/microSitePlain.kid:div
 msgid "edit content"
 msgstr ""
 
-#: hubspace/templates/microSitePlain.kidp
+#: hubspace/templates/microSitePlain.kid:p
 msgid "Your content here"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kidh2
+#: hubspace/templates/moreResDetails.kid:h2
 msgid "Containment"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kidp
+#: hubspace/templates/moreResDetails.kid:p
 msgid "Add resources which are contained by this one. In this case, if the container is booked the other will be unavailable. Also if the contained resource is booked the container will be unavailable. This also works for multiple levels of containment"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kidli
+#: hubspace/templates/moreResDetails.kid:li
 msgid "Nothing Contained"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kida
+#: hubspace/templates/moreResDetails.kid:a
 msgid "Remove"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kida
+#: hubspace/templates/moreResDetails.kid:a
 msgid "Add Contained Resource"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kidh2
+#: hubspace/templates/moreResDetails.kid:h2
 msgid "Suggestions"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kidp
+#: hubspace/templates/moreResDetails.kid:p
 msgid "Add suggestions so that when a user books a resource they are prompted to book associated extras. e.g. when booking a meeting room people might often also require a projector, tea, coffee, or lunch"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kidli
+#: hubspace/templates/moreResDetails.kid:li
 msgid "No Suggestions"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kida
+#: hubspace/templates/moreResDetails.kid:a
 msgid "Add Suggestion"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kida
+#: hubspace/templates/moreResDetails.kid:a
 msgid "X"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kidh2
+#: hubspace/templates/moreResDetails.kid:h2
 msgid "Resource Image"
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kidp
+#: hubspace/templates/moreResDetails.kid:p
 msgid "Optionally, an image will appear when a user tries to book a resource. If you want that to happen for this resource, replace the image below. Images will be scaled to 150px by 230px, please upload images of equivalent proportions."
 msgstr ""
 
-#: hubspace/templates/moreResDetails.kidspan
+#: hubspace/templates/moreResDetails.kid:span
 msgid "replace image"
 msgstr ""
 
-#: hubspace/templates/webSitePlaces.kida
+#: hubspace/templates/webSitePlaces.kid:a
 msgid "Edit Places"
 msgstr ""
 
-#: hubspace/templates/webSitePlaces.kidh4
+#: hubspace/templates/webSitePlaces.kid:h4
 msgid "Visit"
 msgstr ""
 
-#: hubspace/templates/webSitePlaces.kida
+#: hubspace/templates/webSitePlaces.kid:a
 msgid "Hub Berlin"
 msgstr ""
 
-#: hubspace/templates/webSitePlaces.kidp
+#: hubspace/templates/webSitePlaces.kid:p
 msgid "Erkelenzdamm 59-61, Portal 1, 3. OG"
 msgstr ""
 
-#: hubspace/templates/webSitePlaces.kidbr
+#: hubspace/templates/webSitePlaces.kid:br
 msgid "10999 Berlin - Kreuzberg, Germany"
 msgstr ""
 
-#: hubspace/templates/webSitePlaces.kidbr
+#: hubspace/templates/webSitePlaces.kid:br
 msgid "Telephone:+49 30 707 1950"
 msgstr ""
 
-#: hubspace/templates/webSiteMaster.kidspan
+#: hubspace/templates/webSiteMaster.kid:span
 msgid "loading..."
 msgstr ""
 
-#: hubspace/templates/webSiteMaster.kida
+#: hubspace/templates/webSiteMaster.kid:a
 msgid "Go To Hub..."
 msgstr ""
 
-#: hubspace/templates/webSiteMaster.kida
+#: hubspace/templates/webSiteMaster.kid:a
 msgid "Edit Left Navigation"
 msgstr ""
 
-#: hubspace/templates/webSiteMaster.kida
+#: hubspace/templates/webSiteMaster.kid:a
 msgid "Edit Right Navigation"
 msgstr ""
 
-#: hubspace/templates/createSuperUser.kidh1
+#: hubspace/templates/createSuperUser.kid:h1
 msgid "Create Super User"
 msgstr ""
 
-#: hubspace/templates/createSuperUser.kiddiv
+#: hubspace/templates/createSuperUser.kid:div
 msgid "Username"
 msgstr ""
 
-#: hubspace/templates/createSuperUser.kiddiv
+#: hubspace/templates/createSuperUser.kid:div
 msgid "Password"
 msgstr ""
 
-#: hubspace/templates/createSuperUser.kiddiv
+#: hubspace/templates/createSuperUser.kid:div
 msgid "First Name"
 msgstr ""
 
-#: hubspace/templates/createSuperUser.kiddiv
+#: hubspace/templates/createSuperUser.kid:div
 msgid "Last Name"
 msgstr ""
 
-#: hubspace/templates/createSuperUser.kiddiv
+#: hubspace/templates/createSuperUser.kid:div
 msgid "Email"
 msgstr ""
 
-#: hubspace/templates/createSuperUser.kiddiv
+#: hubspace/templates/createSuperUser.kid:div
 msgid "Submit"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kida
+#: hubspace/templates/memberProfile.kid:a
 msgid "replace images"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Organisation"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Role"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Active?"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Home Hub"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Type of Business"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Mobile"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Work Phone"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Home Phone"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Fax"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Default Email"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Email 2"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Email 3"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Website"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Internet Phone (SIP id)"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Skype name"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Address"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Postcode"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Membership number"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "User created"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Aliases"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Member of The Hub in"
 msgstr ""
 
-#: hubspace/templates/memberProfile.kidtd
+#: hubspace/templates/memberProfile.kid:td
 msgid "Outstanding Balance"
 msgstr ""
 
-#: hubspace/templates/billing.kidh1
+#: hubspace/templates/billing.kid:h1
 msgid "Billing and Invoicing for name"
 msgstr ""
 
-#: hubspace/templates/billing.kida
+#: hubspace/templates/billing.kid:a
 msgid "edit"
 msgstr ""
 
-#: hubspace/templates/billing.kidh2
+#: hubspace/templates/billing.kid:h2
 msgid "Billing Details"
 msgstr ""
 
-#: hubspace/templates/billing.kidh2
+#: hubspace/templates/billing.kid:h2
 msgid "Invoice History"
 msgstr ""
 
-#: hubspace/templates/billing.kidtd
+#: hubspace/templates/billing.kid:td
 msgid "Invoice Ref"
 msgstr ""
 
-#: hubspace/templates/billing.kidtd
+#: hubspace/templates/billing.kid:td
 msgid "Date sent"
 msgstr ""
 
-#: hubspace/templates/billing.kidtd
+#: hubspace/templates/billing.kid:td
 msgid "Amount"
 msgstr ""
 
-#: hubspace/templates/billing.kidem
+#: hubspace/templates/billing.kid:em
 msgid "(Including VAT)"
 msgstr ""
 
-#: hubspace/templates/billing.kidtd
+#: hubspace/templates/billing.kid:td
 msgid "View"
 msgstr ""
 
-#: hubspace/templates/billing.kida
+#: hubspace/templates/billing.kid:a
 msgid "re-send invoice"
 msgstr ""
 
-#: hubspace/templates/billing.kidc
+#: hubspace/templates/billing.kid:c
 msgid "unsent"
 msgstr ""
 
-#: hubspace/templates/billing.kida
+#: hubspace/templates/billing.kid:a
 msgid "send invoice"
 msgstr ""
 
-#: hubspace/templates/billing.kida
+#: hubspace/templates/billing.kid:a
 msgid "As HTML"
 msgstr ""
 
-#: hubspace/templates/billing.kida
+#: hubspace/templates/billing.kid:a
 msgid "Modify"
 msgstr ""
 
-#: hubspace/templates/billing.kida
+#: hubspace/templates/billing.kid:a
 msgid "As PDF"
 msgstr ""
 
-#: hubspace/templates/microSiteSpaces.kidp
+#: hubspace/templates/microSiteSpaces.kid:p
 msgid "The Hub Kings Cross is an inspiring contemporary environment to work, meet or host your event. Designed and built with sustainability principles in mind, our space is completely unique and encourages a creative working atmosphere."
 msgstr ""
 
-#: hubspace/templates/microSiteSpaces.kidp
+#: hubspace/templates/microSiteSpaces.kid:p
 msgid "Our downstairs gallery space incorporates a cafe and is a great place for members to have informal meetings over a Fairtrade coffee or do some light working. Upstairs, our combination of tables, beanbags and benches offer an inspiring space to work."
 msgstr ""
 
-#: hubspace/templates/microSiteSpaces.kidp
+#: hubspace/templates/microSiteSpaces.kid:p
 msgid "At the mezzanine levels or private meeting rooms can host meetings from 4 to 20 people. Each room is unique and has a range of conferencing tools, including plasma screens, projectors, whiteboard walls, teleconferencing and controllable lighting. Catering is available on request. All our food is Fairtrade, organic or locally sourced where possible."
 msgstr ""
 
-#: hubspace/templates/microSiteSpaces.kidp
+#: hubspace/templates/microSiteSpaces.kid:p
 msgid "The Hub Kings Cross's adaptable gallery and library space is ideal for holding larger private events such as team days, product launches and formal/informal receptions."
 msgstr ""
 
-#: hubspace/templates/microSiteSpaces.kiddiv
+#: hubspace/templates/microSiteSpaces.kid:div
 msgid "Edit List"
 msgstr ""
 
-#: hubspace/templates/microSiteSpaces.kidp
+#: hubspace/templates/microSiteSpaces.kid:p
 msgid "Please click a meeting room above to view details."
 msgstr ""
 
-#: hubspace/templates/microSiteMaster.kiddiv
+#: hubspace/templates/microSiteMaster.kid:div
 msgid "Admin Mode"
 msgstr ""
 
-#: hubspace/templates/microSiteMaster.kida
+#: hubspace/templates/microSiteMaster.kid:a
 msgid "Edit Subpages"
 msgstr ""
 
-#: hubspace/templates/microSiteMaster.kidspan
+#: hubspace/templates/microSiteMaster.kid:span
 msgid "Spread the Hub!"
 msgstr ""
 
-#: hubspace/templates/manageResources.kida
+#: hubspace/templates/manageResources.kid:a
 msgid "Add Resource"
 msgstr ""
 
-#: hubspace/templates/manageResources.kida
+#: hubspace/templates/manageResources.kid:a
 msgid "Add Resource Group"
 msgstr ""
 
-#: hubspace/templates/manageResources.kidh2
+#: hubspace/templates/manageResources.kid:h2
 msgid "Resources"
 msgstr ""
 
-#: hubspace/templates/manageResources.kidp
+#: hubspace/templates/manageResources.kid:p
 msgid "Order the \"resource groups\" listed below using the arrows.  The order determines the resource group order in the booking interface. You can also drag and drop resource between groups and reorder resources within groups"
 msgstr ""
 
-#: hubspace/templates/manageResources.kiddiv
+#: hubspace/templates/manageResources.kid:div
 msgid "Name"
 msgstr ""
 
-#: hubspace/templates/manageResources.kiddiv
+#: hubspace/templates/manageResources.kid:div
 msgid "Description"
 msgstr ""
 
-#: hubspace/templates/manageResources.kiddiv
+#: hubspace/templates/manageResources.kid:div
 msgid "Type"
 msgstr ""
 
-#: hubspace/templates/manageResources.kiddiv
+#: hubspace/templates/manageResources.kid:div
 msgid "Time Based"
 msgstr ""
 
-#: hubspace/templates/manageResources.kiddiv
+#: hubspace/templates/manageResources.kid:div
 msgid "Percentage VAT (0-100)"
 msgstr ""
 
-#: hubspace/templates/manageResources.kiddiv
+#: hubspace/templates/manageResources.kid:div
 msgid "Active"
 msgstr ""
 
-#: hubspace/templates/manageResources.kida
+#: hubspace/templates/manageResources.kid:a
 msgid "Delete resource group"
 msgstr ""
 
-#: hubspace/templates/manageResources.kiddiv
+#: hubspace/templates/manageResources.kid:div
 msgid "See resources in this group"
 msgstr ""
 
-#: hubspace/templates/manageResources.kiddiv
-msgid "Inactive"
-msgstr ""
-
-#: hubspace/templates/manageResources.kida
-msgid "activate"
-msgstr ""
-
-#: hubspace/templates/manageResources.kida
-msgid "de-activate"
-msgstr ""
-
-#: hubspace/templates/manageResources.kida
-msgid "more..."
-msgstr ""
-
-#: hubspace/templates/booking.kiddiv
-msgid "Select Hub"
-msgstr ""
-
-#: hubspace/templates/booking.kidh2
-msgid "Need Help with Booking?"
-msgstr ""
-
-#: hubspace/templates/booking.kiddiv
-msgid "To make a booking, or modify an existing one:"
-msgstr ""
-
-#: hubspace/templates/booking.kidli
-msgid "Select the date you are looking for."
-msgstr ""
-
-#: hubspace/templates/booking.kidli
-msgid "Click on the space and the time you would like."
-msgstr ""
-
-#: hubspace/templates/booking.kidli
-msgid "Provide us with the booking details required."
-msgstr ""
-
-#: hubspace/templates/booking.kidp
-msgid "In the event of a cancellation, the individual or organization booking the space will be charged 50% of the total cost, unless it is cancelled more than two weeks prior to the event."
-msgstr ""
-
-#: hubspace/templates/booking.kidp
-msgid "A confirmation will be emailed to you as soon as the booking is made. For further information or to cancel a booking (starting in the next two weeks) please email"
-msgstr ""
-
-#: hubspace/templates/booking.kida
-msgid "."
-msgstr ""
-
-#: hubspace/templates/booking.kiddiv
-msgid "What do you to want book?"
-msgstr ""
-
-#: hubspace/templates/booking.kidinput
-msgid "Day View"
-msgstr ""
-
-#: hubspace/templates/booking.kidinput
-msgid "Week View"
-msgstr ""
-
-#: hubspace/templates/booking.kidinput
-msgid "Only show my bookings"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidtd
-msgid "Billed User"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidtd
-msgid "Date:"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidtd
-msgid "Start time:"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidoption
-msgid ":"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidoption
-msgid "00"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidoption
-msgid "15"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidoption
-msgid "30"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidoption
-msgid "45"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidtd
-msgid "End time:"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidtd
-msgid "Time of Usage:"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidtd
-msgid "Quantity:"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidtd
-msgid "Custom billing name:"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidtd
-msgid "Cost (leave blank for automatic cost):"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidinput
-msgid "submit"
-msgstr ""
-
-#: hubspace/templates/addRusage.kidinput
-msgid "cancel"
-msgstr ""
-
-#: hubspace/templates/mainProfile.kidh2
-msgid "Membership history"
-msgstr ""
-
-#: hubspace/templates/mainProfile.kidh2
-msgid "About me"
-msgstr ""
-
-#: hubspace/templates/mainProfile.kida
-msgid "add card"
-msgstr ""
-
-#: hubspace/templates/mainProfile.kidh2
-msgid "Card Registration"
-msgstr ""
-
-#: hubspace/templates/mainProfile.kidh2
-msgid "Relationship Details"
-msgstr ""
-
-#: hubspace/templates/mainProfile.kida
-msgid "add new note"
-msgstr ""
-
-#: hubspace/templates/mainProfile.kidh2
-msgid "Relationship History"
-msgstr ""
-
-#: hubspace/templates/mainProfile.kidh2
-msgid "Member services"
-msgstr ""
-
-#: hubspace/templates/mainProfile.kidh2
-msgid "Additional information for SVN"
-msgstr ""
-
-#: hubspace/templates/memberCommunitiesEdit.kidp
-msgid "Knowledge clusters are communities of people who share similiar interests, practices and questions. Which of these email groups would you like to participate in?"
-msgstr ""
-
-#: hubspace/templates/listEditor.kida
-msgid "close"
-msgstr ""
-
-#: hubspace/templates/listEditor.kidth
-msgid "Page Type"
-msgstr ""
-
-#: hubspace/templates/listEditor.kidth
+#: hubspace/templates/manageResources.kid:a
 msgid "Delete"
 msgstr ""
 
-#: hubspace/templates/listEditor.kidtd
+#: hubspace/templates/manageResources.kid:div
+msgid "Inactive"
+msgstr ""
+
+#: hubspace/templates/manageResources.kid:a
+msgid "activate"
+msgstr ""
+
+#: hubspace/templates/manageResources.kid:a
+msgid "de-activate"
+msgstr ""
+
+#: hubspace/templates/manageResources.kid:a
+msgid "more..."
+msgstr ""
+
+#: hubspace/templates/booking.kid:div
+msgid "Select Hub"
+msgstr ""
+
+#: hubspace/templates/booking.kid:h2
+msgid "Need Help with Booking?"
+msgstr ""
+
+#: hubspace/templates/booking.kid:div
+msgid "To make a booking, or modify an existing one:"
+msgstr ""
+
+#: hubspace/templates/booking.kid:li
+msgid "Select the date you are looking for."
+msgstr ""
+
+#: hubspace/templates/booking.kid:li
+msgid "Click on the space and the time you would like."
+msgstr ""
+
+#: hubspace/templates/booking.kid:li
+msgid "Provide us with the booking details required."
+msgstr ""
+
+#: hubspace/templates/booking.kid:p
+msgid "In the event of a cancellation, the individual or organization booking the space will be charged 50% of the total cost, unless it is cancelled more than two weeks prior to the event."
+msgstr ""
+
+#: hubspace/templates/booking.kid:p
+msgid "A confirmation will be emailed to you as soon as the booking is made. For further information or to cancel a booking (starting in the next two weeks) please email"
+msgstr ""
+
+#: hubspace/templates/booking.kid:a
+msgid "."
+msgstr ""
+
+#: hubspace/templates/booking.kid:div
+msgid "What do you to want book?"
+msgstr ""
+
+#: hubspace/templates/booking.kid:input
+msgid "Day View"
+msgstr ""
+
+#: hubspace/templates/booking.kid:input
+msgid "Week View"
+msgstr ""
+
+#: hubspace/templates/booking.kid:input
+msgid "Only show my bookings"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Billed User"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Date:"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Start time:"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:option
+msgid ":"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:option
+msgid "00"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:option
+msgid "15"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:option
+msgid "30"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:option
+msgid "45"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:td
+msgid "End time:"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Time of Usage:"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Quantity:"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Custom billing name:"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:td
+msgid "Cost (leave blank for automatic cost):"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:input
+msgid "submit"
+msgstr ""
+
+#: hubspace/templates/addRusage.kid:input
+msgid "cancel"
+msgstr ""
+
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Membership history"
+msgstr ""
+
+#: hubspace/templates/mainProfile.kid:h2
+msgid "About me"
+msgstr ""
+
+#: hubspace/templates/mainProfile.kid:a
+msgid "add card"
+msgstr ""
+
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Card Registration"
+msgstr ""
+
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Relationship Details"
+msgstr ""
+
+#: hubspace/templates/mainProfile.kid:a
+msgid "add new note"
+msgstr ""
+
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Relationship History"
+msgstr ""
+
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Member services"
+msgstr ""
+
+#: hubspace/templates/mainProfile.kid:h2
+msgid "Additional information for SVN"
+msgstr ""
+
+#: hubspace/templates/memberCommunitiesEdit.kid:p
+msgid "Knowledge clusters are communities of people who share similiar interests, practices and questions. Which of these email groups would you like to participate in?"
+msgstr ""
+
+#: hubspace/templates/listEditor.kid:a
+msgid "close"
+msgstr ""
+
+#: hubspace/templates/listEditor.kid:th
+msgid "Page Type"
+msgstr ""
+
+#: hubspace/templates/listEditor.kid:td
 msgid "N/A"
 msgstr ""
 
-#: hubspace/templates/addMember.kidinput
+#: hubspace/templates/addMember.kid:input
 msgid "Add Member"
 msgstr ""
 
-#: hubspace/templates/webSitePeople.kidbr
+#: hubspace/templates/webSitePeople.kid:br
 msgid "{member.object.organisation}"
 msgstr ""
 
-#: hubspace/templates/webSitePeople.kida
+#: hubspace/templates/webSitePeople.kid:a
 msgid "Edit People"
 msgstr ""
 
-#: hubspace/templates/weekBooking.kidspan
+#: hubspace/templates/weekBooking.kid:span
 msgid "-"
 msgstr ""
 
-#: hubspace/templates/weekBooking.kidspan
+#: hubspace/templates/weekBooking.kid:span
 msgid "My bookings"
 msgstr ""
 
-#: hubspace/templates/weekBooking.kidspan
+#: hubspace/templates/weekBooking.kid:span
 msgid "Unavailable for booking"
 msgstr ""
 
-#: hubspace/templates/weekBooking.kidspan
+#: hubspace/templates/weekBooking.kid:span
 msgid "Watching for availability"
 msgstr ""
 
-#: hubspace/templates/microSiteContact.kidstrong
+#: hubspace/templates/microSiteContact.kid:strong
 msgid "Hub Kings Cross,"
 msgstr ""
 
-#: hubspace/templates/microSiteContact.kidbr
+#: hubspace/templates/microSiteContact.kid:br
 msgid "34b York Way,"
 msgstr ""
 
-#: hubspace/templates/microSiteContact.kidbr
+#: hubspace/templates/microSiteContact.kid:br
 msgid "London N1 9AB,"
 msgstr ""
 
-#: hubspace/templates/microSiteContact.kidbr
+#: hubspace/templates/microSiteContact.kid:br
 msgid "UK"
 msgstr ""
 
-#: hubspace/templates/microSiteContact.kida
+#: hubspace/templates/microSiteContact.kid:a
 msgid "Map"
 msgstr ""
 
-#: hubspace/templates/microSiteContact.kidp
+#: hubspace/templates/microSiteContact.kid:p
 msgid "Telephone"
 msgstr ""
 
-#: hubspace/templates/microSiteContact.kidstrong
+#: hubspace/templates/microSiteContact.kid:strong
 msgid "+44 (0)20 7841 3450"
 msgstr ""
 
-#: hubspace/templates/microSiteContact.kida
+#: hubspace/templates/microSiteContact.kid:a
 msgid "kingscross.hosts@the-hub.net"
 msgstr ""
 
-#: hubspace/templates/webSiteStandard.kidblockquote
+#: hubspace/templates/webSiteStandard.kid:blockquote
 msgid "\"Probably the most gutsy and dynamic event I have ever been to.\""
 msgstr ""
 
-#: hubspace/templates/webSiteStandard.kidem
+#: hubspace/templates/webSiteStandard.kid:em
 msgid "Dame Anita Roddick, founder of The Body Shop"
 msgstr ""
 
-#: hubspace/templates/webSiteStandard.kidblockquote
+#: hubspace/templates/webSiteStandard.kid:blockquote
 msgid "\"This place that has become known world-wide is proving what is possible.\""
 msgstr ""
 
-#: hubspace/templates/webSiteStandard.kidem
+#: hubspace/templates/webSiteStandard.kid:em
 msgid "Kofi Annan speaking on the Soweto Mountain of Hope, a Hub collaboration"
 msgstr ""
 
-#: hubspace/templates/webSiteStandard.kidp
+#: hubspace/templates/webSiteStandard.kid:p
 msgid "This is the amazing thing. We all have ideas. But where to go to make them happen? We've learnt that people and institutions working at the frontier of new innovations need access to the all the experience, resources, connections and investment they can muster. So we're dedicating ourselves to designing and hosting events and experiences that create access to the resources, connections, experience, knowledge and capital to support the journey path of ideas into action."
 msgstr ""
 
-#: hubspace/templates/webSiteStandard.kidp
+#: hubspace/templates/webSiteStandard.kid:p
 msgid "Our events range from high-profile Hub Lectures, Thought Dinners and inter-disciplinary Innovation Labs to open-source Hub Lunches that foster peer-based learning and collaboration amongst our membership."
 msgstr ""
 
-#: hubspace/templates/webSiteStandard.kidstrong
+#: hubspace/templates/webSiteStandard.kid:strong
 msgid "Featured Events: Hub Lectures"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Unavailable"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Meeting name"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Meeting Description"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Date"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Time"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Number of people"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Extras"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Cost"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidc
+#: hubspace/templates/meetingBooking.kid:c
 msgid "(including VAT)"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidc
+#: hubspace/templates/meetingBooking.kid:c
 msgid "(excluding VAT)"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Booked For"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Booked By"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Additional Information"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:td
+msgid "Repeat Booking"
+msgstr ""
+
+#: hubspace/templates/meetingBooking.kid:a
+msgid "Repeat this Booking"
+msgstr ""
+
+#: hubspace/templates/meetingBooking.kid:a
+msgid "Show repeated bookings"
+msgstr ""
+
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Cancel Booking"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kida
+#: hubspace/templates/meetingBooking.kid:a
 msgid "Cancel this Booking"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidtd
+#: hubspace/templates/meetingBooking.kid:a
+msgid "Cancel all occurances of this Booking"
+msgstr ""
+
+#: hubspace/templates/meetingBooking.kid:td
 msgid "Tentative"
 msgstr ""
 
-#: hubspace/templates/meetingBooking.kidbr
+#: hubspace/templates/meetingBooking.kid:br
 msgid "(You will be notified if this booking expires/confirmed)"
 msgstr ""
 
-#: hubspace/templates/memberRFID.kida
+#: hubspace/templates/memberRFID.kid:a
 msgid "Remove Card"
 msgstr ""
 
-#: hubspace/templates/memberRFID.kidp
+#: hubspace/templates/memberRFID.kid:p
 msgid "No Card Issued"
 msgstr ""
 
-#: hubspace/templates/todos.kidspan
+#: hubspace/templates/todos.kid:span
 msgid "/"
 msgstr ""
 
-#: hubspace/templates/todos.kida
+#: hubspace/templates/todos.kid:a
 msgid "Ignore"
 msgstr ""
 
-#: hubspace/templates/todos.kidstrong
+#: hubspace/templates/todos.kid:strong
 msgid "This todo is closed!"
 msgstr ""
 
-#: hubspace/templates/todos.kida
+#: hubspace/templates/todos.kid:a
 msgid "Add Todo"
 msgstr ""
 
-#: hubspace/templates/todos.kida
+#: hubspace/templates/todos.kid:a
 msgid "Show Closed"
 msgstr ""
 
-#: hubspace/templates/todos.kida
+#: hubspace/templates/todos.kid:a
 msgid "Delete List"
 msgstr ""
 
-#: hubspace/templates/todos.kiddiv
+#: hubspace/templates/todos.kid:div
 msgid "Select host:"
 msgstr ""
 
-#: hubspace/templates/todos.kida
+#: hubspace/templates/todos.kid:a
 msgid "Add new Todo list"
 msgstr ""
 
-#: hubspace/templates/notes.kidlabel
+#: hubspace/templates/notes.kid:label
 msgid "Details"
 msgstr ""
 
-#: hubspace/templates/notes.kidlabel
+#: hubspace/templates/notes.kid:label
 msgid "Date to Follow Up"
 msgstr ""
 
-#: hubspace/templates/notes.kidlabel
+#: hubspace/templates/notes.kid:label
 msgid "For User"
 msgstr ""
 
-#: hubspace/templates/notes.kidtd
+#: hubspace/templates/notes.kid:td
 msgid "Follow-up Date"
 msgstr ""
 
-#: hubspace/templates/notes.kidtd
+#: hubspace/templates/notes.kid:td
 msgid "Action Assigned To"
 msgstr ""
 
-#: hubspace/templates/notes.kidtd
+#: hubspace/templates/notes.kid:td
 msgid "Action Closed"
 msgstr ""
 
-#: hubspace/templates/notes.kidtd
+#: hubspace/templates/notes.kid:td
 msgid "Closed"
 msgstr ""
 
-#: hubspace/templates/notes.kiddiv
+#: hubspace/templates/notes.kid:div
 msgid "Name of note:"
 msgstr ""
 
-#: hubspace/templates/notes.kidspan
+#: hubspace/templates/notes.kid:span
 msgid "delete"
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kidstrong
+#: hubspace/templates/microSiteMembers.kid:strong
 msgid "Social Innovators from within and beyond the public, private and third sectors are establishing a new form of commerce for the 21st Century. The Hub Kings Cross is becoming the place they call home."
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kidp
+#: hubspace/templates/microSiteMembers.kid:p
 msgid "Our members are what make the Hub. So we take care to ensure that we have a diverse membership mix representing an array of sectors, industries and professions. What unites our membership is a passion to make a positive difference, with a strong motivation to deliver enterprising solutions that provide social and environmental as well as economic value."
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kidp
+#: hubspace/templates/microSiteMembers.kid:p
 msgid "If you were to drop into a Hub today, these are some of the people you might bump into:"
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kidli
+#: hubspace/templates/microSiteMembers.kid:li
 msgid "John Bird - Founder of the Big Issus"
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kidli
+#: hubspace/templates/microSiteMembers.kid:li
 msgid "Liam Black - Co-founder of Fifteen"
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kidli
+#: hubspace/templates/microSiteMembers.kid:li
 msgid "Lisa Stockton - Co-founder Happy Kitchen"
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kidli
+#: hubspace/templates/microSiteMembers.kid:li
 msgid "Dominic Campbell - Co-founder Enabled by Design"
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kidli
+#: hubspace/templates/microSiteMembers.kid:li
 msgid "Lawrence Corbett - CEO Virgin Unite"
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kidli
+#: hubspace/templates/microSiteMembers.kid:li
 msgid "Justin Dekoszmovszky - SC Johnson"
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kidli
+#: hubspace/templates/microSiteMembers.kid:li
 msgid "Grant Lang - Founder, Mozzo coffee"
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kiddiv
+#: hubspace/templates/microSiteMembers.kid:div
 msgid "Organisation:"
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kiddiv
+#: hubspace/templates/microSiteMembers.kid:div
 msgid "Type of Business:"
 msgstr ""
 
-#: hubspace/templates/microSiteMembers.kida
+#: hubspace/templates/microSiteMembers.kid:a
 msgid "back to Members Page"
 msgstr ""
 
-#: hubspace/templates/meetingBookingEdit.kidtd
+#: hubspace/templates/meetingBookingEdit.kid:td
 msgid "Select Resource"
 msgstr ""
 
-#: hubspace/templates/meetingBookingEdit.kidtd
+#: hubspace/templates/meetingBookingEdit.kid:td
 msgid "Meeting Name"
 msgstr ""
 
-#: hubspace/templates/meetingBookingEdit.kidlabel
+#: hubspace/templates/meetingBookingEdit.kid:label
 msgid "Publicise event to The Hub's website"
 msgstr ""
 
-#: hubspace/templates/meetingBookingEdit.kidoption
+#: hubspace/templates/meetingBookingEdit.kid:option
 msgid "to"
 msgstr ""
 
-#: hubspace/templates/meetingBookingEdit.kidtd
+#: hubspace/templates/meetingBookingEdit.kid:td
 msgid "Number of People"
 msgstr ""
 
-#: hubspace/templates/meetingBookingEdit.kidtd
+#: hubspace/templates/meetingBookingEdit.kid:td
 msgid "Price"
 msgstr ""
 
-#: hubspace/templates/meetingBookingEdit.kiddiv
+#: hubspace/templates/meetingBookingEdit.kid:div
 msgid "Special price for this booking"
 msgstr ""
 
-#: hubspace/templates/meetingBookingEdit.kidtd
+#: hubspace/templates/meetingBookingEdit.kid:td
 msgid "VAT"
 msgstr ""
 
-#: hubspace/templates/meetingBookingEdit.kidem
+#: hubspace/templates/meetingBookingEdit.kid:em
 msgid "All prices include VAT"
 msgstr ""
 
-#: hubspace/templates/meetingBookingEdit.kidem
+#: hubspace/templates/meetingBookingEdit.kid:em
 msgid "All prices exclude VAT"
 msgstr ""
 
-#: hubspace/templates/loginMaster.kidh1
+#: hubspace/templates/meetingBookingEdit.kid:td
+msgid "Edit all related Repeat bookings?"
+msgstr ""
+
+#: hubspace/templates/meetingBookingEdit.kid:label
+msgid "The above changes in this booking will be applied to all repeated bookings."
+msgstr ""
+
+#: hubspace/templates/loginMaster.kid:h1
 msgid "Feed"
 msgstr ""
 
-#: hubspace/templates/loginMaster.kidh1
+#: hubspace/templates/loginMaster.kid:h1
 msgid "Upcoming Events in The Hub Network"
 msgstr ""
 
-#: hubspace/templates/loginMaster.kidh1
+#: hubspace/templates/loginMaster.kid:h1
 msgid "Recently Updated Profiles in The Hub Network"
 msgstr ""
 
-#: hubspace/templates/loginMaster.kidlabel
+#: hubspace/templates/loginMaster.kid:label
 msgid "User Name"
 msgstr ""
 
-#: hubspace/templates/loginMaster.kida
+#: hubspace/templates/loginMaster.kid:a
 msgid "Forgot your password?"
 msgstr ""
 
-#: hubspace/templates/memberServicesEdit.kidtd
+#: hubspace/templates/memberServicesEdit.kid:td
 msgid "Phone handset number"
 msgstr ""
 
-#: hubspace/templates/memberServicesEdit.kidtd
+#: hubspace/templates/memberServicesEdit.kid:td
 msgid "Extension number"
 msgstr ""
 
-#: hubspace/templates/memberServicesEdit.kidtd
+#: hubspace/templates/memberServicesEdit.kid:td
 msgid "Franking machine pin"
 msgstr ""
 
-#: hubspace/templates/memberServicesEdit.kidtd
+#: hubspace/templates/memberServicesEdit.kid:td
 msgid "Storage allocation on hub server (GB)"
 msgstr ""
 
-#: hubspace/templates/memberServicesEdit.kidtd
+#: hubspace/templates/memberServicesEdit.kid:td
 msgid "Type of computer"
 msgstr ""
 
-#: hubspace/templates/memberServicesEdit.kidtd
+#: hubspace/templates/memberServicesEdit.kid:td
 msgid "Location of storage"
 msgstr ""
 
-#: hubspace/templates/manageTariffs.kida
+#: hubspace/templates/meetingBookingRepeat.kid:h4
+msgid "Add Bookings"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "Daily"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "Weekly"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "Monthly"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "Multiple dates"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:dt
+msgid "Dates range:"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:div
+msgid "Start from:"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "(mm/dd/yyyy)"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:div
+msgid "Till:"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:div
+msgid "Repeat every"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "day(s)"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:div
+msgid "Repeat every weekday"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:input
+msgid "By date of the month:"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:div
+msgid "Choose multiple dates"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeat.kid:strong
+msgid "Summary:"
+msgstr ""
+
+#: hubspace/templates/manageTariffs.kid:a
 msgid "Add Tariff"
 msgstr ""
 
-#: hubspace/templates/manageTariffs.kidtd
+#: hubspace/templates/manageTariffs.kid:td
 msgid "Default"
 msgstr ""
 
-#: hubspace/templates/manageTariffs.kidtd
+#: hubspace/templates/manageTariffs.kid:td
 msgid "True"
 msgstr ""
 
-#: hubspace/templates/manageTariffs.kidtd
+#: hubspace/templates/manageTariffs.kid:td
 msgid "False"
 msgstr ""
 
-#: hubspace/templates/manageTariffs.kida
+#: hubspace/templates/manageTariffs.kid:a
 msgid "make guest tariff"
 msgstr ""
 
-#: hubspace/templates/manageTariffs.kida
+#: hubspace/templates/manageTariffs.kid:a
 msgid "Price List"
 msgstr ""
 
-#: hubspace/templates/memberDescriptionEdit.kidp
+#: hubspace/templates/memberDescriptionEdit.kid:p
 msgid "Please tell other Hub members about yourself and the projects you work on."
 msgstr ""
 
-#: hubspace/templates/memberDescriptionEdit.kidbr
+#: hubspace/templates/memberDescriptionEdit.kid:br
 msgid "What interests you?"
 msgstr ""
 
-#: hubspace/templates/memberDescriptionEdit.kidbr
+#: hubspace/templates/memberDescriptionEdit.kid:br
 msgid "What skills and services would you like to offer other members?"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidp
+#: hubspace/templates/microSiteHome.kid:p
 msgid "Another world is not just possible, it's happening. All around us individuals ranging from corporate executives to community leaders, from policy-makers to freelance professionals are pursuing ideas and initiatives for a better world. Hub Kings Cross is a unique ecosystem designed to enable these people to thrive. It's a place to access innovation, knowledge, market opportunities, inspiration and experience."
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidp
+#: hubspace/templates/microSiteHome.kid:p
 msgid "This beautiful listed building, one minute from Kings Cross station, offers an inspired place for meeting, working, innovating, learning and connecting. Members of Hub Kings Cross enjoy access to touchdown meeting and work spaces, a state of the art exhibition and events space, a bar with a cafe, and an evening programme of lectures, film, debates and music. You're invited."
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidp
+#: hubspace/templates/microSiteHome.kid:p
 msgid "Hub Kings Cross is based in the heart one of central London's most exciting areas. We are easily accessible by 5 different tube lines at"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidstrong
+#: hubspace/templates/microSiteHome.kid:strong
 msgid "Kings Cross St Pancras station"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidstrong
+#: hubspace/templates/microSiteHome.kid:strong
 msgid "and are located less than a 5 minute walk from the Eurostar terminal at the"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidstrong
+#: hubspace/templates/microSiteHome.kid:strong
 msgid "St Pancras International"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidstrong
+#: hubspace/templates/microSiteHome.kid:strong
 msgid "station."
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidstrong
+#: hubspace/templates/microSiteHome.kid:strong
 msgid "Address:"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidstrong
+#: hubspace/templates/microSiteHome.kid:strong
 msgid "Hub Kings Cross, 34b York Way, London N1 9AB, UK"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidp
+#: hubspace/templates/microSiteHome.kid:p
 msgid "There are bike racks available for parking bicycles on Railway Street around the corner from the Hub Kings Cross."
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidp
+#: hubspace/templates/microSiteHome.kid:p
 msgid "For information on car parking, please download"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kida
+#: hubspace/templates/microSiteHome.kid:a
 msgid "this pdf"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidp
+#: hubspace/templates/microSiteHome.kid:p
 msgid "The Hub Kings Cross is open to members from"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidstrong
+#: hubspace/templates/microSiteHome.kid:strong
 msgid "8am - 6pm, Monday-Friday"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidstrong
+#: hubspace/templates/microSiteHome.kid:strong
 msgid ", as a work and meeting space."
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidp
+#: hubspace/templates/microSiteHome.kid:p
 msgid "The Hub Kings Cross is open in the evening time from"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidstrong
+#: hubspace/templates/microSiteHome.kid:strong
 msgid "6.30pm up until midnight"
 msgstr ""
 
-#: hubspace/templates/microSiteHome.kidstrong
+#: hubspace/templates/microSiteHome.kid:strong
 msgid "for private event hire and member events."
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidc
+#: hubspace/templates/newinvoice_euve.kid:c
 msgid "Membership No."
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidc
+#: hubspace/templates/newinvoice_euve.kid:c
 msgid "Company No."
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidstrong
-msgid "Invoice details"
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "VAT No."
+msgstr "UID"
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Purchase Order No:"
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidtd
+#: hubspace/templates/newinvoice_euve.kid:h2
+msgid "CREDIT NOTE"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:h1
+msgid "INVOICE"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
 msgid "Number"
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidtd
+#: hubspace/templates/newinvoice_euve.kid:td
 msgid "Period"
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidtd
+#: hubspace/templates/newinvoice_euve.kid:td
 msgid "Due Date"
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidh2
+#: hubspace/templates/newinvoice_euve.kid:h3
 msgid "Summary of usage"
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidstrong
+#: hubspace/templates/newinvoice_euve.kid:strong
 msgid "Sub Total"
 msgstr "Total"
 
-#: hubspace/templates/newinvoice_euve.kidh3
-msgid "Invoice Total"
-msgstr ""
-
-#: hubspace/templates/newinvoice_euve.kidtd
-msgid "Excluding VAT"
-msgstr "Net"
-
-#: hubspace/templates/newinvoice_euve.kidem
-msgid "(Exempt from VAT)"
-msgstr ""
-
-#: hubspace/templates/newinvoice_euve.kidstrong
+#: hubspace/templates/newinvoice_euve.kid:h3
 msgid "Total"
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidh2
+#: hubspace/templates/newinvoice_euve.kid:h3
+msgid "Invoice Total"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:td
+msgid "Excluding VAT"
+msgstr "Net"
+
+#: hubspace/templates/newinvoice_euve.kid:em
+msgid "(Exempt from VAT)"
+msgstr ""
+
+#: hubspace/templates/newinvoice_euve.kid:h3
 msgid "Usage details"
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidtd
+#: hubspace/templates/newinvoice_euve.kid:td
 msgid "Sr. No."
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidtd
+#: hubspace/templates/newinvoice_euve.kid:td
 msgid "Quantity"
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidem
+#: hubspace/templates/newinvoice_euve.kid:em
 msgid "(Cancelled)"
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidem
+#: hubspace/templates/newinvoice_euve.kid:em
 msgid "(Refund)"
 msgstr ""
 
-#: hubspace/templates/newinvoice_euve.kidbr
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Account Number"
+msgstr "Account:"
+
+#: hubspace/templates/newinvoice_euve.kid:c
 msgid "Sort Code"
 msgstr "BLZ:"
 
-#: hubspace/templates/newinvoice_euve.kidc
+#: hubspace/templates/newinvoice_euve.kid:c
 msgid "Swift Code"
 msgstr "BIC:"
 
-#: hubspace/templates/newinvoice_euve.kidc
-msgid "Payment Terms"
-msgstr "Terms"
-
-#: hubspace/templates/newinvoice_euve.kidc
-msgid "|"
-msgstr ""
-
-#: hubspace/templates/network.kida
-msgid "Add new member"
-msgstr ""
-
-#: hubspace/templates/network.kida
-msgid "Profile"
-msgstr ""
-
-#: hubspace/templates/network.kida
-msgid "Billing"
-msgstr ""
-
-#: hubspace/templates/network.kida
-msgid "Search results"
-msgstr ""
-
-#: hubspace/templates/password.kidlabel
-msgid "email:"
-msgstr ""
-
-#: hubspace/templates/oldLoginMaster.kidlabel
-msgid "User Name:"
-msgstr ""
-
-#: hubspace/templates/oldLoginMaster.kidlabel
-msgid "Password:"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidtd
-msgid "Start date"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidtd
-msgid "End date"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidtd
-msgid "Quantity / Duration"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidtd
-msgid "Place"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidem
-msgid "(Including VAT unless stated otherwise)"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidem
-msgid "(Excluding VAT unless stated otherwise)"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidtd
-msgid "Add To Open Invoice"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidtd
-msgid "Delete Resource Usage"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidtd
-msgid "Remove from Open Invoice"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidtd
-msgid "No Resource Usages"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidtd
-msgid "Start"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidtd
-msgid "End"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kida
-msgid "change"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kida
-msgid "Add to Invoice"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kida
-msgid "Remove from Invoice"
-msgstr ""
-
-#: hubspace/templates/resourcetable.kidtd
-msgid "a"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidh1
-msgid "Management Data"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidh2
-msgid "Download Usage summary"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidspan
-msgid "Select Location"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidtd
-msgid "Select columns to include"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidinput
-msgid "Resource Type"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidinput
-msgid "Resource ID"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidinput
-msgid "Invoiced"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidh2
-msgid "Export User Data"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidoption
-msgid "All"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidi
-msgid "* Selecting \"All\" location may result in slower report generation"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidtd
-msgid "Select column to sort by"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidh2
-msgid "Reports"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidspan
-msgid "1. Select Location"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidspan
-msgid "2. Select options to be included in the report"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidtd
-msgid "Summary"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidtd
-msgid "Revenue Performance"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidtd
-msgid "Churn Rate"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidtd
-msgid "% Revenue by Resource type"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidtd
-msgid "% Revenue by Resource"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidtd
-msgid "Resource usage by Tariff"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidtd
-msgid "% Revenue by Tariff"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidtd
-msgid "% Members on Tariff"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidtd
-msgid "3. Select date range"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidinput
-msgid "This Month"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidinput
-msgid "Last Month"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidinput
-msgid "This and Last Months"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidinput
-msgid "Last 12 Months"
-msgstr ""
-
-#: hubspace/templates/managementdata.kidem
-msgid "OR"
-msgstr ""
-
-#: hubspace/templates/managementdata.kida
-msgid "View >>"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidh1
-msgid "Invoice Image"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidp
-msgid "Image of 690px by 130px or equivalent proportions"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidh1
-msgid "Top Bar Image"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidp
-msgid "Image of 850px by 87px or equivalent proportions"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidh1
-msgid "Home Page Image"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidp
-msgid "Image of 850px by 113px or equivalent proportions"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidh2
-msgid "Import / Export"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidtd
-msgid "Upload outstanding invoice data"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidtd
-msgid "Download member list for Sage"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidtd
-msgid "Download invoice list for Sage"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kiddiv
-msgid "Start date:"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kida
-msgid "| End date:"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidh2
-msgid "Messages"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidh1
-msgid "Translation"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidtd
-msgid "Message catalogue file (.po)"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kida
-msgid "Download"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kida
-msgid "Send updated translation file"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kida
-msgid "Help"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidh1
-msgid "Customization"
-msgstr ""
-
-#: hubspace/templates/plusLocationAdmin.kidp
-msgid "Your browser does not support iframes."
-msgstr ""
-
-#: hubspace/templates/addBooking.kidinput
-msgid "Add Booking"
-msgstr ""
-
-#: hubspace/templates/addBooking.kidtd
-msgid "Message"
-msgstr ""
-
-#: hubspace/templates/plotGraph.kida
-msgid "Save parameters for future regeneration of this graph"
-msgstr ""
-
-#: hubspace/templates/mini_details.kida
-msgid "x"
-msgstr ""
-
-#: hubspace/templates/send_invoice.kidtd
-msgid "Attachment:"
-msgstr ""
-
-#: hubspace/templates/send_invoice.kidinput
-msgid "Send invoice by email"
-msgstr ""
-
-#: hubspace/templates/send_invoice.kidtd
-msgid "Subject:"
-msgstr ""
-
-#: hubspace/templates/send_invoice.kidtd
-msgid "Message:"
-msgstr ""
-
-#: hubspace/templates/microSiteLogin.kidh3
-msgid "Member Login"
-msgstr ""
-
-#: hubspace/templates/microSiteLogin.kidh3
-msgid "Login"
-msgstr ""
-
-#: hubspace/templates/space2.kida
-msgid "Make Booking"
-msgstr ""
-
-#: hubspace/templates/space2.kida
-msgid "My Bookings"
-msgstr ""
-
-#: hubspace/templates/space2.kidh1
-msgid "Space and Resource Booking"
-msgstr ""
-
-#: hubspace/templates/addTariff.kidh1
-msgid "Add a Tariff"
-msgstr ""
-
-#: hubspace/templates/addTariff.kidh2
-msgid "Tariff details"
-msgstr ""
-
-#: hubspace/templates/addTariff.kidtd
-msgid "Tariff Price"
-msgstr ""
-
-#: hubspace/templates/addTariff.kidh2
-msgid "Resource costs"
-msgstr ""
-
-#: hubspace/templates/addTariff.kidinput
-msgid "save"
-msgstr ""
-
-#: hubspace/templates/master.kida
-msgid "Logout"
-msgstr ""
-
-#: hubspace/templates/master.kida
-msgid "Network"
-msgstr ""
-
-#: hubspace/templates/master.kida
-msgid "My Profile"
-msgstr ""
-
-#: hubspace/templates/master.kida
-msgid "Space"
-msgstr ""
-
-#: hubspace/templates/master.kida
-msgid "Hosting"
-msgstr ""
-
-#: hubspace/templates/master.kida
-msgid "Manage Website"
-msgstr ""
-
-#: hubspace/templates/master.kidlabel
-msgid "Search member names"
-msgstr ""
-
-#: hubspace/templates/master.kidlabel
-msgid "Search everything"
-msgstr ""
-
-#: hubspace/templates/master.kidlabel
-msgid "Search by membership card"
-msgstr ""
-
-#: hubspace/templates/master.kidoption
-msgid "All Hubs"
-msgstr ""
-
-#: hubspace/templates/admin.kidh1
-msgid "Administration"
-msgstr ""
-
-#: hubspace/templates/admin.kidh1
-msgid "Location:"
-msgstr ""
-
-#: hubspace/templates/pricingSchedule.kidtd
-msgid "Period Starting"
-msgstr ""
-
-#: hubspace/templates/pricingSchedule.kidtd
-msgid "Delete Pricing"
-msgstr ""
-
-#: hubspace/templates/pricingSchedule.kida
-msgid "add pricing"
-msgstr ""
-
-#: hubspace/templates/pricingSchedule.kidstrong
-msgid "Starting Period:"
-msgstr ""
-
-#: hubspace/templates/pricingSchedule.kidspan
-msgid "month"
-msgstr ""
-
-#: hubspace/templates/pricingSchedule.kidoption
-msgid "year"
-msgstr ""
-
-#: hubspace/templates/pricingSchedule.kidstrong
-msgid "Price:"
-msgstr ""
-
-#: hubspace/templates/invoicesnippet.kidh2
-msgid "Uninvoiced"
-msgstr ""
-
-#: hubspace/templates/invoicesnippet.kidc
-msgid "From"
-msgstr ""
-
-#: hubspace/templates/invoicesnippet.kida
-msgid "Create Invoice"
-msgstr ""
-
-#: hubspace/templates/invoicesnippet.kiddiv
-msgid "You must send existing invoices before creating new ones"
-msgstr ""
-
-#: hubspace/templates/invoicesnippet.kiddiv
-msgid "Add Resource Usage:"
-msgstr ""
-
-#: hubspace/templates/invoicesnippet.kidoption
-msgid "choose a resource..."
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidh3
-msgid "Tariffs*"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidstrong
-msgid "Standard"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidstrong
-msgid "- 20 hours use of the space per month - £40 p/m (£30)"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidstrong
-msgid "Worklite"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidstrong
-msgid "- 45 hours use of the space per month, registered post box, complimentary tea and coffee - £120 p/m (£100)"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidstrong
-msgid "Work +"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidstrong
-msgid "- 60 hours use of the space, registered post box, complimentary tea and coffee - £170 p/m (£150)"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidstrong
-msgid "Unlimited"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidstrong
-msgid "-  Unlimited hours, registered post box, personal storage, optional phone-line, complimentary tea and coffee - £480 p/m (£400)"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidp
-msgid "* Prices include VAT, there is no joining fee, prices in grey are available for individuals working for 'start-up' organisations (non-VAT registered)"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidp
-msgid "Thank you for your interest in membership of the Hub Kings Cross. Please download our"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kida
-msgid "brochure"
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kida
-msgid "for more information on the prices and benefits of membership. One of our hosting team will be in touch shortly to help you answer any queries you may have and to talk you through some of the membership options in more detail. We look forward to you  visiting our space and hope to welcome you as a member of the Hub Kings Cross in the not too distant future."
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidp
-msgid "If you are interested in joining, please fill in this form. You will automatically be emailed a brochure and we will contact you to discuss your needs in more detail."
-msgstr ""
-
-#: hubspace/templates/microSiteJoinus.kidlabel
-msgid "Phone"
-msgstr ""
-
-#: hubspace/templates/openTimes.kidh1
-msgid "Under Construction"
-msgstr ""
-
-#: hubspace/templates/addResource.kidh1
-msgid "Add a resource"
-msgstr ""
-
-#: hubspace/templates/addResource.kidh2
-msgid "Resource details"
-msgstr ""
-
-#: hubspace/templates/addResource.kidtd
-msgid "Time-Based"
-msgstr ""
-
-#: hubspace/templates/addResource.kidoption
-msgid "Quantity-Based"
-msgstr ""
-
-#: hubspace/templates/addResource.kidh2
-msgid "Tariff costs"
-msgstr ""
-
-#: hubspace/templates/managePricing.kidtd
-msgid "Price per hour/"
-msgstr ""
-
-#: hubspace/templates/managePricing.kidbr
-msgid "Price per unit (Current)"
-msgstr ""
-
-#: hubspace/templates/managePricing.kidtd
-msgid "Pricing Schedule"
-msgstr ""
-
-#: hubspace/templates/managePricing.kida
-msgid "Schedule"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidem
-msgid "People"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidem
-msgid "who see and do things differently"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidem
-msgid "Places"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidem
-msgid "for working, meeting, innovating, learning and relaxing"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidem
-msgid "Ideas"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidem
-msgid "that might just change the world a little"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kida
-msgid "About"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kida
-msgid "Invitation"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidspan
-msgid "Featured Member:"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidbr
-msgid "Tamsin Lejeune"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidspan
-msgid "Featured Hub:"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidbr
-msgid "Kings Cross"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidspan
-msgid "Featured Event:"
-msgstr ""
-
-#: hubspace/templates/webSiteHome.kidbr
-msgid "Hub Lectures"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "Your organisation"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "Organisation type"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Private Sector"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Public Sector"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Non-profit distributing"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "Number of employees"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "Areas of interest"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Academia"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Architecture"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Banking"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Body and health care"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Campaigning"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Charity"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Coaching"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Coffee"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Communication"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Conservation"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Construction"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Consulting"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Cultural diversity"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Culture"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Development"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Dialogue"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Dissemination"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Economics"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Education"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Energy"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Environment"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Events"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Export"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Film production"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Finance"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Food & beverage"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Foundation"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Furniture"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Hospitality"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Information Technology"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Investment"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Law"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Marketing"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Media"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Music"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Product development"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Project management"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Property"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Publishing"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Real Estate"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Recycling"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Research"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Retail"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Spirituality"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Technology"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Tourism"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Training"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Travel"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidoption
-msgid "Welfare"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "Please briefly describe your responsibilities in your organisation"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "Social and environmental responsibility"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "Please outline any of your organisations practices that could be described as progressive"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "Your Membership"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "How did you hear about SVN?"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "What benefits would membership of SVN bring you?"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "What contribution do you think you can make to SVN?"
-msgstr ""
-
-#: hubspace/templates/bristolDataEdit.kidtd
-msgid "Any additional information you would like to provide:"
-msgstr ""
-
-#: hubspace/templates/host.kida
-msgid "Invoicing"
-msgstr ""
-
-#: hubspace/templates/host.kida
-msgid "Times"
-msgstr ""
-
-#: hubspace/templates/host.kida
-msgid "Resources and Tariffs"
-msgstr ""
-
-#: hubspace/templates/host.kiddiv
-msgid "abcf"
-msgstr ""
-
-#: hubspace/templates/todoEdit.kidtd
-msgid "Due Date:"
-msgstr ""
-
-#: hubspace/templates/todoEdit.kidtd
-msgid "Body:"
-msgstr ""
-
-#: hubspace/templates/todoEdit.kidtd
-msgid "Close:"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Location Name"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Local Currency"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Local Time Zone"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Language"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Tentative booking available"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "RFID Enabled"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "MicroSite Active"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Invoice dute date (days after sending invoice)"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Bcc Invoice"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "New Invoice numbering scheme"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Vat Included"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Vat Number"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Default Level of Vat Charged (0%-100%)"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Company Name"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Billing Address"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Bank"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Bank Account No."
-msgstr "Account:"
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "IBAN No."
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "IBAN"
 msgstr "IBAN:"
 
-#: hubspace/templates/locationProfile.kidtd
-msgid "Swift No."
-msgstr "BIC:"
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Domain Name"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Homepage Title"
-msgstr ""
-
-#: hubspace/templates/locationProfile.kidtd
-msgid "Homepage Description"
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kidp
-msgid "The Hub Kings Cross is situated in a strikingly elegant listed building on York Way in the heart of Kings Cross. The restoration has seen the fusion of old and new, marrying the original features of the remarkable building with contemporary, striking design to deliver an exciting and stylish finish."
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kidp
-msgid "But the building is only the beginning of the story, it's what's happening inside it that's really exciting."
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kidp
-msgid "During the day, The Hub Kings Cross is a dynamic members space which offers a new way of working and connecting. The traditional sterile office space is replaced with a vibrant flexible hot-desking work space which incorporates a cafe and state of the art meeting rooms. It's a place where social innovators at the forefront of the ethical economy can some to develop their ideas and connect with like-minded souls who share a passion for delivering positive social change."
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kidp
-msgid "During the evening, The Hub Kings Cross transform into London's most innovative event spaces for lectures, debates, dinners and cultural fare, playing host to some of the most imaginative and compelling speakers and facilitators from around the UK and beyond, aligned by their reputation as amazing thinkers and doers and their desire to make the world a radically better place."
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kidli
-msgid "inspired spaces for working, meeting and connecting with others"
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kidli
-msgid "an evening programme of lectures, dinners, cultural events and exhibitions"
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kidli
-msgid "a bar with a light restaurant"
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kidli
-msgid "a global network of people working at the forefront of the sustainable economy"
-msgstr ""
-
-#: hubspace/templates/microSiteExperience.kidli
-msgid "state of the art events space"
-msgstr ""
-
-#: hubspace/templates/addTodoBar.kidH2
-msgid "Add a new list"
-msgstr ""
-
-#: hubspace/templates/addTodoBar.kidtd
-msgid "Name of list:"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kidinput
-msgid "Use main profile details"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kidinput
-msgid "Bill to:"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kidinput
-msgid "Use billing details below"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kidtd
-msgid "Company name"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kidtd
-msgid "Billing address"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kidtd
-msgid "Phone number"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kidtd
-msgid "Fax number"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kidtd
-msgid "Email contact"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kidtd
-msgid "Company Number"
-msgstr ""
-
-#: hubspace/templates/billingDetailsEdit.kidtd
+#: hubspace/templates/newinvoice_euve.kid:c
 msgid "VAT Number"
 msgstr "UID"
 
-#: hubspace/templates/billingDetailsEdit.kidtd
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "Payment Terms"
+msgstr "Terms"
+
+#: hubspace/templates/newinvoice_euve.kid:c
+msgid "|"
+msgstr ""
+
+#: hubspace/templates/network.kid:a
+msgid "Add new member"
+msgstr ""
+
+#: hubspace/templates/network.kid:a
+msgid "Profile"
+msgstr ""
+
+#: hubspace/templates/network.kid:a
+msgid "Billing"
+msgstr ""
+
+#: hubspace/templates/network.kid:a
+msgid "Search results"
+msgstr ""
+
+#: hubspace/templates/password.kid:label
+msgid "email:"
+msgstr ""
+
+#: hubspace/templates/oldLoginMaster.kid:label
+msgid "User Name:"
+msgstr ""
+
+#: hubspace/templates/oldLoginMaster.kid:label
+msgid "Password:"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "Start date"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "End date"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "Quantity / Duration"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "Place"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:em
+msgid "(Including VAT unless stated otherwise)"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:em
+msgid "(Excluding VAT unless stated otherwise)"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "Add To Open Invoice"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "Manage"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "Remove from Open Invoice"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "No Resource Usages"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "Start"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "End"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:a
+msgid "change"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:a
+msgid "Add to Invoice"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:a
+msgid "Delete this"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:a
+msgid "Repeat"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:a
+msgid "Remove from Invoice"
+msgstr ""
+
+#: hubspace/templates/resourcetable.kid:td
+msgid "a"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:h1
+msgid "Management Data"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:h2
+msgid "Download Usage summary"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:span
+msgid "Select Location"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Select columns to include"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "Resource Type"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "Resource ID"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "Invoiced"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:h2
+msgid "Export User Data"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:option
+msgid "All"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:i
+msgid "* Selecting \"All\" location may result in slower report generation"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Select column to sort by"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:h2
+msgid "Export Invoice Data"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Select a Date Range:"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:a
+msgid "To"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:em
+msgid "(Default: Last 7 days)"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:h2
+msgid "Export Invoiced Resource Usage Data"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:h2
+msgid "Reports"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:span
+msgid "1. Select Location"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:span
+msgid "2. Select options to be included in the report"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Summary"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Revenue Performance"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Churn Rate"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "% Revenue by Resource type"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "% Revenue by Resource"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "Resource usage by Tariff"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "% Revenue by Tariff"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "% Members on Tariff"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:td
+msgid "3. Select date range"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "This Month"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "Last Month"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "This and Last Months"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:input
+msgid "Last 12 Months"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:em
+msgid "OR"
+msgstr ""
+
+#: hubspace/templates/managementdata.kid:a
+msgid "View >>"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:h1
+msgid "Invoice Image"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:p
+msgid "Image of 690px by 130px or equivalent proportions"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:h1
+msgid "Top Bar Image"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:p
+msgid "Image of 850px by 87px or equivalent proportions"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:h1
+msgid "Home Page Image"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:p
+msgid "Image of 850px by 113px or equivalent proportions"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:h2
+msgid "Import / Export"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:td
+msgid "Upload outstanding invoice data"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:td
+msgid "Download member list for Sage"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:td
+msgid "Download invoice list for Sage"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:div
+msgid "Start date:"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:a
+msgid "| End date:"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:h2
+msgid "Messages"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:h1
+msgid "Translation"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:td
+msgid "Message catalogue file (.po)"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:a
+msgid "Download"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:a
+msgid "Send updated translation file"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:a
+msgid "Help"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:h1
+msgid "Customization"
+msgstr ""
+
+#: hubspace/templates/plusLocationAdmin.kid:p
+msgid "Your browser does not support iframes."
+msgstr ""
+
+#: hubspace/templates/addBooking.kid:input
+msgid "Add Booking"
+msgstr ""
+
+#: hubspace/templates/addBooking.kid:td
+msgid "Message"
+msgstr ""
+
+#: hubspace/templates/plotGraph.kid:a
+msgid "Save parameters for future regeneration of this graph"
+msgstr ""
+
+#: hubspace/templates/mini_details.kid:a
+msgid "x"
+msgstr ""
+
+#: hubspace/templates/send_invoice.kid:td
+msgid "Attachment:"
+msgstr ""
+
+#: hubspace/templates/send_invoice.kid:input
+msgid "Send invoice by email"
+msgstr ""
+
+#: hubspace/templates/send_invoice.kid:td
+msgid "Subject:"
+msgstr ""
+
+#: hubspace/templates/send_invoice.kid:td
+msgid "Message:"
+msgstr ""
+
+#: hubspace/templates/microSiteLogin.kid:h3
+msgid "Member Login"
+msgstr ""
+
+#: hubspace/templates/microSiteLogin.kid:h3
+msgid "Login"
+msgstr ""
+
+#: hubspace/templates/space2.kid:a
+msgid "Make Booking"
+msgstr ""
+
+#: hubspace/templates/space2.kid:a
+msgid "My Bookings"
+msgstr ""
+
+#: hubspace/templates/space2.kid:h1
+msgid "Space and Resource Booking"
+msgstr ""
+
+#: hubspace/templates/addTariff.kid:h1
+msgid "Add a Tariff"
+msgstr ""
+
+#: hubspace/templates/addTariff.kid:h2
+msgid "Tariff details"
+msgstr ""
+
+#: hubspace/templates/addTariff.kid:td
+msgid "Tariff Price"
+msgstr ""
+
+#: hubspace/templates/addTariff.kid:h2
+msgid "Resource costs"
+msgstr ""
+
+#: hubspace/templates/addTariff.kid:input
+msgid "save"
+msgstr ""
+
+#: hubspace/templates/master.kid:a
+msgid "Logout"
+msgstr ""
+
+#: hubspace/templates/master.kid:a
+msgid "Network"
+msgstr ""
+
+#: hubspace/templates/master.kid:a
+msgid "My Profile"
+msgstr ""
+
+#: hubspace/templates/master.kid:a
+msgid "Space"
+msgstr ""
+
+#: hubspace/templates/master.kid:a
+msgid "Hosting"
+msgstr ""
+
+#: hubspace/templates/master.kid:a
+msgid "Manage Website"
+msgstr ""
+
+#: hubspace/templates/master.kid:label
+msgid "Search member names"
+msgstr ""
+
+#: hubspace/templates/master.kid:label
+msgid "Search everything"
+msgstr ""
+
+#: hubspace/templates/master.kid:label
+msgid "Search by membership card"
+msgstr ""
+
+#: hubspace/templates/master.kid:option
+msgid "All Hubs"
+msgstr ""
+
+#: hubspace/templates/admin.kid:h1
+msgid "Administration"
+msgstr ""
+
+#: hubspace/templates/admin.kid:h1
+msgid "Location:"
+msgstr ""
+
+#: hubspace/templates/pricingSchedule.kid:td
+msgid "Period Starting"
+msgstr ""
+
+#: hubspace/templates/pricingSchedule.kid:td
+msgid "Delete Pricing"
+msgstr ""
+
+#: hubspace/templates/pricingSchedule.kid:a
+msgid "add pricing"
+msgstr ""
+
+#: hubspace/templates/pricingSchedule.kid:strong
+msgid "Starting Period:"
+msgstr ""
+
+#: hubspace/templates/pricingSchedule.kid:span
+msgid "month"
+msgstr ""
+
+#: hubspace/templates/pricingSchedule.kid:option
+msgid "year"
+msgstr ""
+
+#: hubspace/templates/pricingSchedule.kid:strong
+msgid "Price:"
+msgstr ""
+
+#: hubspace/templates/invoicesnippet.kid:h2
+msgid "Uninvoiced"
+msgstr ""
+
+#: hubspace/templates/invoicesnippet.kid:div
+msgid "You must send existing invoices before creating new ones"
+msgstr ""
+
+#: hubspace/templates/invoicesnippet.kid:c
+msgid "- Invoicing Location:"
+msgstr ""
+
+#: hubspace/templates/invoicesnippet.kid:br
+msgid "- Period: From"
+msgstr ""
+
+#: hubspace/templates/invoicesnippet.kid:button
+msgid "Create Invoice"
+msgstr ""
+
+#: hubspace/templates/invoicesnippet.kid:div
+msgid "Add Resource Usage:"
+msgstr ""
+
+#: hubspace/templates/invoicesnippet.kid:option
+msgid "choose a resource..."
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:h3
+msgid "Tariffs*"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "Standard"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "- 20 hours use of the space per month - £40 p/m (£30)"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "Worklite"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "- 45 hours use of the space per month, registered post box, complimentary tea and coffee - £120 p/m (£100)"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "Work +"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "- 60 hours use of the space, registered post box, complimentary tea and coffee - £170 p/m (£150)"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "Unlimited"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:strong
+msgid "-  Unlimited hours, registered post box, personal storage, optional phone-line, complimentary tea and coffee - £480 p/m (£400)"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:p
+msgid "* Prices include VAT, there is no joining fee, prices in grey are available for individuals working for 'start-up' organisations (non-VAT registered)"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:p
+msgid "Thank you for your interest in membership of the Hub Kings Cross. Please download our"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:a
+msgid "brochure"
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:a
+msgid "for more information on the prices and benefits of membership. One of our hosting team will be in touch shortly to help you answer any queries you may have and to talk you through some of the membership options in more detail. We look forward to you  visiting our space and hope to welcome you as a member of the Hub Kings Cross in the not too distant future."
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:p
+msgid "If you are interested in joining, please fill in this form. You will automatically be emailed a brochure and we will contact you to discuss your needs in more detail."
+msgstr ""
+
+#: hubspace/templates/microSiteJoinus.kid:label
+msgid "Phone"
+msgstr ""
+
+#: hubspace/templates/invoicing.kid:input
+msgid "Display members with zero usage cost"
+msgstr ""
+
+#: hubspace/templates/invoicing.kid:td
+msgid "* Search (Old way) option is deprecated"
+msgstr ""
+
+#: hubspace/templates/openTimes.kid:h1
+msgid "Under Construction"
+msgstr ""
+
+#: hubspace/templates/addResource.kid:h1
+msgid "Add a resource"
+msgstr ""
+
+#: hubspace/templates/addResource.kid:h2
+msgid "Resource details"
+msgstr ""
+
+#: hubspace/templates/addResource.kid:td
+msgid "Time-Based"
+msgstr ""
+
+#: hubspace/templates/addResource.kid:option
+msgid "Quantity-Based"
+msgstr ""
+
+#: hubspace/templates/addResource.kid:h2
+msgid "Tariff costs"
+msgstr ""
+
+#: hubspace/templates/managePricing.kid:td
+msgid "Price per hour/"
+msgstr ""
+
+#: hubspace/templates/managePricing.kid:br
+msgid "Price per unit (Current)"
+msgstr ""
+
+#: hubspace/templates/managePricing.kid:td
+msgid "Pricing Schedule"
+msgstr ""
+
+#: hubspace/templates/managePricing.kid:a
+msgid "Schedule"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "People"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "who see and do things differently"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "Places"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "for working, meeting, innovating, learning and relaxing"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "Ideas"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:em
+msgid "that might just change the world a little"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:a
+msgid "About"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:a
+msgid "Invitation"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:span
+msgid "Featured Member:"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:br
+msgid "Tamsin Lejeune"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:span
+msgid "Featured Hub:"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:br
+msgid "Kings Cross"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:span
+msgid "Featured Event:"
+msgstr ""
+
+#: hubspace/templates/webSiteHome.kid:br
+msgid "Hub Lectures"
+msgstr ""
+
+#: hubspace/templates/printing_load.kid:h1
+msgid "Print Accounting"
+msgstr ""
+
+#: hubspace/templates/printing_load.kid:br
+msgid "Please specify printer log file:"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Your organisation"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Organisation type"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Private Sector"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Public Sector"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Non-profit distributing"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Number of employees"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Areas of interest"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Academia"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Architecture"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Banking"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Body and health care"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Campaigning"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Charity"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Coaching"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Coffee"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Communication"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Conservation"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Construction"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Consulting"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Cultural diversity"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Culture"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Development"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Dialogue"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Dissemination"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Economics"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Education"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Energy"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Environment"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Events"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Export"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Film production"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Finance"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Food & beverage"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Foundation"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Furniture"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Hospitality"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Information Technology"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Investment"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Law"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Marketing"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Media"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Music"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Product development"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Project management"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Property"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Publishing"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Real Estate"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Recycling"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Research"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Retail"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Spirituality"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Technology"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Tourism"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Training"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Travel"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:option
+msgid "Welfare"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Please briefly describe your responsibilities in your organisation"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Social and environmental responsibility"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Please outline any of your organisations practices that could be described as progressive"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Your Membership"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "How did you hear about SVN?"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "What benefits would membership of SVN bring you?"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "What contribution do you think you can make to SVN?"
+msgstr ""
+
+#: hubspace/templates/bristolDataEdit.kid:td
+msgid "Any additional information you would like to provide:"
+msgstr ""
+
+#: hubspace/templates/invoice_send_start.kid:th
+msgid "Preview"
+msgstr ""
+
+#: hubspace/templates/invoice_send_start.kid:th
+msgid "Status"
+msgstr ""
+
+#: hubspace/templates/host.kid:a
+msgid "Invoicing"
+msgstr ""
+
+#: hubspace/templates/host.kid:a
+msgid "Times"
+msgstr ""
+
+#: hubspace/templates/host.kid:a
+msgid "Resources and Tariffs"
+msgstr ""
+
+#: hubspace/templates/todoEdit.kid:td
+msgid "Due Date:"
+msgstr ""
+
+#: hubspace/templates/todoEdit.kid:td
+msgid "Body:"
+msgstr ""
+
+#: hubspace/templates/todoEdit.kid:td
+msgid "Close:"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Location Name"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Local Currency"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Local Time Zone"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Language"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Tentative booking available"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "RFID Enabled"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "MicroSite Active"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Invoice dute date (days after sending invoice)"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Bcc Invoice"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "New Invoice numbering scheme"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Vat Included"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Vat Number"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Default Level of Vat Charged (0%-100%)"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Company Name"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Billing Address"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Bank"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Bank Account No."
+msgstr "Account:"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "IBAN No."
+msgstr "IBAN:"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Swift No."
+msgstr "BIC:"
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Domain Name"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Homepage Title"
+msgstr ""
+
+#: hubspace/templates/locationProfile.kid:td
+msgid "Homepage Description"
+msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:p
+msgid "The Hub Kings Cross is situated in a strikingly elegant listed building on York Way in the heart of Kings Cross. The restoration has seen the fusion of old and new, marrying the original features of the remarkable building with contemporary, striking design to deliver an exciting and stylish finish."
+msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:p
+msgid "But the building is only the beginning of the story, it's what's happening inside it that's really exciting."
+msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:p
+msgid "During the day, The Hub Kings Cross is a dynamic members space which offers a new way of working and connecting. The traditional sterile office space is replaced with a vibrant flexible hot-desking work space which incorporates a cafe and state of the art meeting rooms. It's a place where social innovators at the forefront of the ethical economy can some to develop their ideas and connect with like-minded souls who share a passion for delivering positive social change."
+msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:p
+msgid "During the evening, The Hub Kings Cross transform into London's most innovative event spaces for lectures, debates, dinners and cultural fare, playing host to some of the most imaginative and compelling speakers and facilitators from around the UK and beyond, aligned by their reputation as amazing thinkers and doers and their desire to make the world a radically better place."
+msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:li
+msgid "inspired spaces for working, meeting and connecting with others"
+msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:li
+msgid "an evening programme of lectures, dinners, cultural events and exhibitions"
+msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:li
+msgid "a bar with a light restaurant"
+msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:li
+msgid "a global network of people working at the forefront of the sustainable economy"
+msgstr ""
+
+#: hubspace/templates/microSiteExperience.kid:li
+msgid "state of the art events space"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeatInfo.kid:h4
+msgid "Bookings Details"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeatInfo.kid:th
+msgid "Meeting"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeatInfo.kid:th
+msgid "Public"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeatInfo.kid:h4
+msgid "Repeated bookings"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeatInfo.kid:th
+msgid "Start Time"
+msgstr ""
+
+#: hubspace/templates/meetingBookingRepeatInfo.kid:th
+msgid "End Time"
+msgstr ""
+
+#: hubspace/templates/addTodoBar.kid:H2
+msgid "Add a new list"
+msgstr ""
+
+#: hubspace/templates/addTodoBar.kid:td
+msgid "Name of list:"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:input
+msgid "Use main profile details"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:input
+msgid "Bill to:"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:input
+msgid "Use billing details below"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Company name"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Billing address"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Phone number"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Fax number"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Email contact"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:td
+msgid "Company Number"
+msgstr ""
+
+#: hubspace/templates/billingDetailsEdit.kid:td
 msgid "EU VAT Exemption"
 msgstr ""
 
-#: hubspace/templates/billingDetailsEdit.kidtd
+#: hubspace/templates/billingDetailsEdit.kid:td
 msgid "Check the Hub locations where tax exemption is applicable"
 msgstr ""
 
-#: hubspace/templates/addResources.kida
+#: hubspace/templates/addResources.kid:a
 msgid "Add new resource"
 msgstr ""
 
-#: hubspace/templates/addResources.kidtd
+#: hubspace/templates/addResources.kid:td
 msgid "Resource 1"
 msgstr ""
 
-#: hubspace/templates/addResources.kidtd
+#: hubspace/templates/addResources.kid:td
 msgid "Description goes here"
 msgstr ""
 
-#: hubspace/templates/addResources.kidtd
+#: hubspace/templates/addResources.kid:td
 msgid "Resource 2"
 msgstr ""
 
-#: hubspace/templates/addResources.kidtd
+#: hubspace/templates/addResources.kid:td
 msgid "Resource 3"
 msgstr ""
 
-#: hubspace/templates/addResources.kidtd
+#: hubspace/templates/addResources.kid:td
 msgid "Resource 4"
 msgstr ""
 
-#: hubspace/templates/addResources.kida
+#: hubspace/templates/addResources.kid:a
 msgid "Add new tariff"
 msgstr ""
 
-#: hubspace/templates/addResources.kidtd
+#: hubspace/templates/addResources.kid:td
 msgid "Tariff 1"
 msgstr ""
 
-#: hubspace/templates/addResources.kidtd
+#: hubspace/templates/addResources.kid:td
 msgid "Tariff 2"
 msgstr ""
 
-#: hubspace/templates/addResources.kidtd
+#: hubspace/templates/addResources.kid:td
 msgid "Tariff 3"
 msgstr ""
 
-#: hubspace/templates/addResources.kidtd
+#: hubspace/templates/addResources.kid:td
 msgid "Tariff 4"
 msgstr ""
 
-#: hubspace/templates/addResources.kidtd
+#: hubspace/templates/addResources.kid:td
 msgid "Location"
 msgstr ""
 
-#: hubspace/templates/addResources.kidoption
+#: hubspace/templates/addResources.kid:option
 msgid "London"
 msgstr ""
 
-#: hubspace/templates/addResources.kidoption
+#: hubspace/templates/addResources.kid:option
 msgid "Bristol"
 msgstr ""
 
-#: hubspace/templates/addResources.kidoption
+#: hubspace/templates/addResources.kid:option
 msgid "hotdesk"
 msgstr ""
 
-#: hubspace/templates/addResources.kidoption
+#: hubspace/templates/addResources.kid:option
 msgid "room"
 msgstr ""
 
-#: hubspace/templates/addResources.kidoption
+#: hubspace/templates/addResources.kid:option
 msgid "phone"
 msgstr ""
 
-#: hubspace/templates/addResources.kidoption
+#: hubspace/templates/addResources.kid:option
 msgid "printer"
 msgstr ""
 
-#: hubspace/templates/addResources.kidoption
+#: hubspace/templates/addResources.kid:option
 msgid "tariff"
 msgstr ""
 
-#: hubspace/templates/addResources.kidoption
+#: hubspace/templates/addResources.kid:option
 msgid "other"
 msgstr ""
 
-#: hubspace/templates/resources.kidoption
+#: hubspace/templates/resources.kid:option
 msgid "Manage Tariffs"
 msgstr ""
 
-#: hubspace/templates/resources.kidoption
+#: hubspace/templates/resources.kid:option
 msgid "Manage Resources"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidh2
+#: hubspace/templates/invoicingstatus_start.kid:div
+msgid "processing.."
+msgstr ""
+
+#: hubspace/templates/invoicingstatus_start.kid:th
+msgid "Created on"
+msgstr ""
+
+#: hubspace/templates/locationAdmin.kid:h2
 msgid "Usage Reports"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidh1
+#: hubspace/templates/locationAdmin.kid:h1
 msgid "Quick reports"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Download resource usage summary"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Tariffs (Time-series)"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kida
+#: hubspace/templates/locationAdmin.kid:a
 msgid "Download (csv)"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kida
+#: hubspace/templates/locationAdmin.kid:a
 msgid "Graph"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kida
+#: hubspace/templates/locationAdmin.kid:a
 msgid "Larger Graph (New window)"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Last Week room usage pattern by hour"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Current month room usage pattern by days"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidh1
+#: hubspace/templates/locationAdmin.kid:h1
 msgid "Custom report generation"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Apply usage selection filters"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Date range"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kida
+#: hubspace/templates/locationAdmin.kid:a
 msgid "| End"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid ""
 "Select Resource Type / \n"
 "                                                    OR"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidbr
+#: hubspace/templates/locationAdmin.kid:br
 msgid "Resource Name"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Groupby (X-Axis in graphs)"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Time:"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidinput
+#: hubspace/templates/locationAdmin.kid:input
 msgid "Hours"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidinput
+#: hubspace/templates/locationAdmin.kid:input
 msgid "Weekdays"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidinput
+#: hubspace/templates/locationAdmin.kid:input
 msgid "Days"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidinput
+#: hubspace/templates/locationAdmin.kid:input
 msgid "Months"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Graph Type"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidinput
+#: hubspace/templates/locationAdmin.kid:input
 msgid "Pattern"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidinput
+#: hubspace/templates/locationAdmin.kid:input
 msgid "Time-series"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Report access option"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kida
+#: hubspace/templates/locationAdmin.kid:a
 msgid "Download usage report (csv)"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kida
+#: hubspace/templates/locationAdmin.kid:a
 msgid "Plot Usage report graph"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kida
+#: hubspace/templates/locationAdmin.kid:a
 msgid "Plot Larger size graph (New window)"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidh1
+#: hubspace/templates/locationAdmin.kid:h1
 msgid "Saved reports"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Title"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kidtd
+#: hubspace/templates/locationAdmin.kid:td
 msgid "Generated on"
 msgstr ""
 
-#: hubspace/templates/locationAdmin.kida
+#: hubspace/templates/locationAdmin.kid:a
 msgid "Download CSV"
 msgstr ""
 
-#: hubspace/templates/microSiteBlog2.kida
+#: hubspace/templates/microSiteBlog2.kid:a
 msgid "Edit blog"
 msgstr ""
 
-#: hubspace/templates/microSiteBlog2.kidbr
+#: hubspace/templates/microSiteBlog2.kid:br
 msgid "Blog URL:"
 msgstr ""
 
-#: hubspace/templates/microSiteSearch.kidform
+#: hubspace/templates/microSiteSearch.kid:form
 msgid "Search for"
 msgstr ""
 
-#: hubspace/templates/relationshipStatusEdit.kidtd
+#: hubspace/templates/relationshipStatusEdit.kid:td
 msgid "Signed By"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidtd
+#: hubspace/templates/memberProfileEdit.kid:td
 msgid "Active Profile?"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidspan
+#: hubspace/templates/memberProfileEdit.kid:span
 msgid "(When a user is first activated, a welcome message will be sent out with the username and password. If the password field is left empty when activating the user, the password will be reset to a random string.)"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidtd
+#: hubspace/templates/memberProfileEdit.kid:td
 msgid "Show profile on The Hub's public website"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidem
+#: hubspace/templates/memberProfileEdit.kid:em
 msgid "Changing your username will change existing links to your Hub+ profile from external sites"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidem
+#: hubspace/templates/memberProfileEdit.kid:em
 msgid "To change your password enter the new one in the two fields below"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidtd
+#: hubspace/templates/memberProfileEdit.kid:td
 msgid "Confirm Password"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidtd
+#: hubspace/templates/memberProfileEdit.kid:td
 msgid "First name"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidtd
+#: hubspace/templates/memberProfileEdit.kid:td
 msgid "Last name(s)"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidtd
+#: hubspace/templates/memberProfileEdit.kid:td
 msgid "Type of business"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidem
+#: hubspace/templates/memberProfileEdit.kid:em
 msgid "(please include international dialing code)"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidtd
+#: hubspace/templates/memberProfileEdit.kid:td
 msgid "Email 1"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidbig
+#: hubspace/templates/memberProfileEdit.kid:big
 msgid "+"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidth
+#: hubspace/templates/memberProfileEdit.kid:th
 msgid "location"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidth
+#: hubspace/templates/memberProfileEdit.kid:th
 msgid "home hub"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidth
+#: hubspace/templates/memberProfileEdit.kid:th
 msgid "member"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidth
+#: hubspace/templates/memberProfileEdit.kid:th
 msgid "host"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidth
+#: hubspace/templates/memberProfileEdit.kid:th
 msgid "director"
 msgstr ""
 
-#: hubspace/templates/memberProfileEdit.kidc
+#: hubspace/templates/memberProfileEdit.kid:c
 msgid "Yes"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidcaption
+#: hubspace/templates/managementReport2.kid:caption
 msgid "Member Summary"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidtd
+#: hubspace/templates/managementReport2.kid:td
 msgid "Active members:"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidtd
+#: hubspace/templates/managementReport2.kid:td
 msgid "Not Active members:"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidtd
+#: hubspace/templates/managementReport2.kid:td
 msgid "New members:"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidcaption
+#: hubspace/templates/managementReport2.kid:caption
 msgid "Revenue Summary ("
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidem
+#: hubspace/templates/managementReport2.kid:em
 msgid ")"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidtd
+#: hubspace/templates/managementReport2.kid:td
 msgid "Invoiced:"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidtd
+#: hubspace/templates/managementReport2.kid:td
 msgid "Not Invoiced:"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidtd
+#: hubspace/templates/managementReport2.kid:td
 msgid "Total:"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidh3
+#: hubspace/templates/managementReport2.kid:h3
 msgid "Revenue Report"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidh3
+#: hubspace/templates/managementReport2.kid:h3
 msgid "Revenue by Resource types"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidh3
+#: hubspace/templates/managementReport2.kid:h3
 msgid "Revenue by Resource"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidlabel
+#: hubspace/templates/managementReport2.kid:label
 msgid "Visualize"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidth
+#: hubspace/templates/managementReport2.kid:th
 msgid "Members left"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidth
+#: hubspace/templates/managementReport2.kid:th
 msgid "Members came back"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidh3
+#: hubspace/templates/managementReport2.kid:h3
 msgid "Members on Tariffs"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidh3
+#: hubspace/templates/managementReport2.kid:h3
 msgid "Revenue by Tariffs"
 msgstr ""
 
-#: hubspace/templates/managementReport2.kidh3
+#: hubspace/templates/managementReport2.kid:h3
 msgid "Usage by Tariffs"
 msgstr ""
 
-#: hubspace/templates/addResourceGroup.kidh1
+#: hubspace/templates/addResourceGroup.kid:h1
 msgid "Add a resource group"
 msgstr ""
 
-#: hubspace/templates/addResourceGroup.kidh2
+#: hubspace/templates/addResourceGroup.kid:h2
 msgid "Resource Group"
 msgstr ""
 
-#: hubspace/templates/addResourceGroup.kidtd
+#: hubspace/templates/addResourceGroup.kid:td
 msgid "Group Type"
 msgstr ""
 
-#: hubspace/templates/locationProfileEdit.kidtd
+#: hubspace/templates/locationProfileEdit.kid:td
 msgid "Local Language"
 msgstr ""
 
-#: hubspace/templates/locationProfileEdit.kidem
+#: hubspace/templates/locationProfileEdit.kid:em
 msgid "0 to disable due date calculation"
 msgstr ""
 
-#: hubspace/templates/locationProfileEdit.kidem
+#: hubspace/templates/locationProfileEdit.kid:em
 msgid "Invoice will be Bcced to this Email id"
 msgstr ""
 
-#: hubspace/templates/locationProfileEdit.kidtd
+#: hubspace/templates/locationProfileEdit.kid:td
 msgid "Microsite Active"
 msgstr ""
 
-#: hubspace/templates/locationProfileEdit.kidtd
+#: hubspace/templates/locationProfileEdit.kid:td
 msgid "Default Vat Level"
 msgstr ""
 
-#: hubspace/templates/locationProfileEdit.kidtd
+#: hubspace/templates/locationProfileEdit.kid:td
 msgid "EU Vat Exemption"
 msgstr ""
 
-#: hubspace/templates/locationProfileEdit.kidem
+#: hubspace/templates/locationProfileEdit.kid:em
 msgid "Check to enable EU VAT Exemption processing for invoices"
 msgstr ""
 
-#: hubspace/templates/locationProfileEdit.kidem
+#: hubspace/templates/locationProfileEdit.kid:em
 msgid "This will appear on invoice."
 msgstr ""
 
-#: hubspace/templates/locationProfileEdit.kidtd
+#: hubspace/templates/locationProfileEdit.kid:td
 msgid "Sort Code (if applicable)"
 msgstr ""
 
-#: hubspace/templates/newinvoice.kidem
+#: hubspace/templates/newinvoice.kid:em
 msgid "Inclusive of VAT"
 msgstr ""
 
-#: hubspace/templates/newinvoice.kidem
+#: hubspace/templates/newinvoice.kid:em
 msgid "Exclusive of VAT"
 msgstr ""
 
-#: hubspace/templates/newinvoice.kidc
-msgid "Account Number"
-msgstr "Account:"
-
-#: hubspace/templates/newinvoice.kidc
-msgid "IBAN"
-msgstr "IBAN:"
-
-#: hubspace/templates/microSitePassword.kidh3
+#: hubspace/templates/microSitePassword.kid:h3
 msgid "Request Username/Password"
 msgstr ""
 
-#: hubspace/templates/uploadImage.kiddiv
+#: hubspace/templates/uploadImage.kid:div
 msgid "Images will be cropped to"
 msgstr ""
 
-#: hubspace/templates/uploadImage.kidc
+#: hubspace/templates/uploadImage.kid:c
 msgid "and"
 msgstr ""
 
-#: hubspace/templates/fulltextsearch.kidh1
+#: hubspace/templates/fulltextsearch.kid:h1
 msgid "Search"
 msgstr ""
 
-#: hubspace/templates/fulltextsearch.kidh2
-msgid "Search Results"
-msgstr ""
-
-#: hubspace/templates/fulltextsearch.kidp
+#: hubspace/templates/fulltextsearch.kid:p
 msgid ""
 "Sorry, no users matched \n"
 "        \""
 msgstr ""
 
-#: hubspace/templates/fulltextsearch.kidspan
+#: hubspace/templates/fulltextsearch.kid:span
 msgid "Query goes here"
 msgstr ""
 
-#: hubspace/templates/fulltextsearch.kidspan
+#: hubspace/templates/fulltextsearch.kid:span
 msgid "\"."
 msgstr ""
 
-#: hubspace/templates/fulltextsearch.kida
+#: hubspace/templates/fulltextsearch.kid:a
 msgid "display name"
 msgstr ""
 
-#: hubspace/templates/fulltextsearch.kidspan
+#: hubspace/templates/fulltextsearch.kid:span
 msgid "Business Type:"
 msgstr ""
 
-#: hubspace/templates/newinvoice2.kidc
+#: hubspace/templates/newinvoice2.kid:c
 msgid "Bank Details"
 msgstr ""
 
-#: hubspace/templates/bristolData.kidtd
+#: hubspace/templates/newinvoice2.kid:td
+msgid "Last date of period"
+msgstr ""
+
+#: hubspace/templates/bristolData.kid:td
 msgid "Organisational Responsibilities"
 msgstr ""
 
-#: hubspace/templates/bristolData.kidtd
+#: hubspace/templates/bristolData.kid:td
 msgid "Progressive organisational practices"
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kidh2
+#: hubspace/templates/microSiteEvents.kid:h2
 msgid "Events subtitle"
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kidp
+#: hubspace/templates/microSiteEvents.kid:p
 msgid "From debates and Q & A's to lectures and thought seminars, the Hub's inspirational events will aim to bring together unlikely allies, cut across societal and industry boundaries and challenge our members to create and lead new initiatives that address some of the world's most intractable problems."
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kidp
+#: hubspace/templates/microSiteEvents.kid:p
 msgid "The power of art and culture to drive imaginative and interesting ideas is something close to the ethos of Hub and is reflected in our programming mix. Working with local creative artists, architects, developing film makers, and interesting musical groups, Hub Kings Cross will deliver an eclectic assortment of cultural events including exhibitions, recitals, film and documentary screenings."
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kidh3
+#: hubspace/templates/microSiteEvents.kid:h3
 msgid "WANT TO HAVE YOUR EVENT AT THE HUB KINGS CROSS?"
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kidp
+#: hubspace/templates/microSiteEvents.kid:p
 msgid "The Hub Kings Cross can also be rented for private events during the evening from 6.00pm. The Hub has a capacity of 130 and is fully licensed to serve alcohol and play music. Private events at the Hub Kings Cross are delivered in partnership with Eat Green, renown for their ability to combine ethics with high quality food and service."
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kidp
+#: hubspace/templates/microSiteEvents.kid:p
 msgid "For more information please email the team at:"
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kida
+#: hubspace/templates/microSiteEvents.kid:a
 msgid "kingcross.events@the-hub.net"
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kida
+#: hubspace/templates/microSiteEvents.kid:a
 msgid "or call us on"
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kidstrong
+#: hubspace/templates/microSiteEvents.kid:strong
 msgid "0207 841 3450"
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kiddiv
+#: hubspace/templates/microSiteEvents.kid:div
 msgid "Description:"
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kida
+#: hubspace/templates/microSiteEvents.kid:a
 msgid "iCal"
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kida
+#: hubspace/templates/microSiteEvents.kid:a
 msgid "back to Events Page"
 msgstr ""
 
-#: hubspace/templates/microSiteEvents.kida
+#: hubspace/templates/microSiteEvents.kid:a
 msgid "all events in iCal format"
 msgstr ""
 
-#: hubspace/templates/billingDetails.kidtd
+#: hubspace/templates/billingDetails.kid:td
 msgid "Member to bill"
 msgstr ""
 
-#: hubspace/templates/billingDetails.kidtd
+#: hubspace/templates/billingDetails.kid:td
 msgid "Use my normal profile address"
 msgstr ""
 
-#: hubspace/templates/managementReport.kidSTYLE
+#: hubspace/templates/managementReport.kid:STYLE
 msgid ""
 ".dontprint {\n"
 "            display: none;\n"
 "        }"
 msgstr ""
 
-#: hubspace/templates/managementReport.kidSTYLE
+#: hubspace/templates/managementReport.kid:STYLE
 msgid ""
 ".clicker {\n"
 "\t    font-size:95%;\n"
@@ -2916,73 +3109,71 @@ msgid ""
 "        }"
 msgstr ""
 
-#: hubspace/templates/managementReport.kidcaption
+#: hubspace/templates/managementReport.kid:caption
 msgid "Dashboard"
 msgstr ""
 
-#: hubspace/templates/managementReport.kidtd
+#: hubspace/templates/managementReport.kid:td
 msgid "Revenue:"
 msgstr ""
 
-#: hubspace/templates/managementReport.kidtd
+#: hubspace/templates/managementReport.kid:td
 msgid "Currency:"
 msgstr ""
 
-#: hubspace/templates/managementReport.kiddiv
+#: hubspace/templates/managementReport.kid:div
 msgid "No Data"
 msgstr ""
 
-#: hubspace/templates/managementReport.kidth
+#: hubspace/templates/managementReport.kid:th
 msgid "Month"
 msgstr ""
 
-#: hubspace/templates/managementReport.kidth
+#: hubspace/templates/managementReport.kid:th
 msgid "Revenue"
 msgstr ""
 
-#: hubspace/templates/old/sortable2.kidli
+#: hubspace/templates/old/sortable2.kid:li
 msgid "tiger"
 msgstr ""
 
-#: hubspace/templates/old/sortable2.kidli
+#: hubspace/templates/old/sortable2.kid:li
 msgid "lion"
 msgstr ""
 
-#: hubspace/templates/old/sortable2.kidli
+#: hubspace/templates/old/sortable2.kid:li
 msgid "pussycat"
 msgstr ""
 
-#: hubspace/templates/old/sortable2.kidli
+#: hubspace/templates/old/sortable2.kid:li
 msgid "wolf"
 msgstr ""
 
-#: hubspace/templates/old/sortable2.kidli
+#: hubspace/templates/old/sortable2.kid:li
 msgid "hound"
 msgstr ""
 
-#: hubspace/templates/old/sortable2.kidli
+#: hubspace/templates/old/sortable2.kid:li
 msgid "scum"
 msgstr ""
 
-#: hubspace/templates/old/sortable2.kidli
+#: hubspace/templates/old/sortable2.kid:li
 msgid "plaice"
 msgstr ""
 
-#: hubspace/templates/old/sortable2.kidli
+#: hubspace/templates/old/sortable2.kid:li
 msgid "cod"
 msgstr ""
 
-#: hubspace/templates/old/sortable3.kidli
+#: hubspace/templates/old/sortable3.kid:li
 msgid "Cats"
 msgstr ""
 
-#: hubspace/templates/old/sortable3.kidli
+#: hubspace/templates/old/sortable3.kid:li
 msgid "Fishes"
 msgstr ""
 
-#: hubspace/templates/old/sortable3.kidli
+#: hubspace/templates/old/sortable3.kid:li
 msgid "Dogs"
 msgstr ""
 
-msgid "VAT No."
-msgstr "UID"
