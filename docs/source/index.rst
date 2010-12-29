@@ -18,6 +18,8 @@ Topics
 
    invoicing
 
+   invoice_numbering
+
    message_catalogue
 
    eu_tax
