@@ -72,12 +72,11 @@
 <th>Amount</th>
 <th>Preview</th>
 <th>Message</th>
-<th class="span-2 last"><input type="checkbox" id="select_all" checked/></th>
+<th class="span-2 last"><input type="checkbox" id="select_all" checked="checked"/></th>
 </tr>
 </thead>
 
 </table>
-</div>
 
 <div class="actions container">
     <div class="span-5">
@@ -113,6 +112,7 @@ $('.invoice_preview').click( function () {
     invoice_preview(invoice_id);
 });
 </script>
+</div>
 
 
 </body>  
