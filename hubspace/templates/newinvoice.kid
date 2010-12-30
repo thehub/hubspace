@@ -322,7 +322,7 @@ c = itertools.count(1)
 <thead style="background: #C0C0C0;">
 <tr>
     <td valign="middle" width="5%">Sr. No.</td>
-    <td py:replace="multiuser_invoice and 'Member'"/>
+    <td py:if="multiuser_invoice">Member</td>
     <td>Description</td>
     <td width="10%">Quantity</td>
     <td>Time</td>
@@ -340,7 +340,7 @@ rusages = sorted(invoice.rusages, key=sorter)
     usage_cost = getRUsageCost(invoice, rusage)
     ?>
     <td>${c.next()}</td>
-    <td py:replace="multiuser_invoice and rusage.user.display_name or None"/>
+    <td py:if="multiuser_invoice">${rusage.user.display_name}</td>
     <td>${rusage.resource_name} <div py:if="rusage.cancelled and not rusage.refund"><em>(Cancelled)</em></div>
                                 <div py:if="rusage.refund"><em>(Refund)</em></div>
         <div py:if="rusage.meeting_name"><em>${rusage.meeting_name}</em></div></td>
