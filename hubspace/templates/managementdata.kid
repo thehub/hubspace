@@ -97,7 +97,7 @@ user_columns = user_fields.values()
      <form id="invoices_export_form" action="/invoices_summary.csv" method="post">
      <div>
          <span>Select Location</span>
-         <select name="location">
+         <select name="location" id="invoice_location">
             <option py:if="identity.has_permission('superuser')" value="all">All</option>
             <option py:for="location in locations()" value="${location.id}" py:attrs="select_home_hub(location)">${location.name}</option>
          </select>
@@ -112,25 +112,6 @@ user_columns = user_fields.values()
             <a class="date_select" id="display_from_date">Start </a> To <a class="date_select" id="display_end_date">End  </a><em> (Default: Last 7 days) </em>
             <input id="from_date" name="from_date" type="text" class="invisible_input"/>
             <input id="to_date" name="to_date" type="text" class="invisible_input"/>
-            <script type="text/javascript">
-              var export_invoice_list_dates = function() {
-                  var to_date_input = jq('#to_date');
-                  var to_date_trigger = jq('#display_end_date');
-                  to_date_input.datepicker({onSelect:function(datetext){jq('#display_end_date').html(datetext);}});
-                  to_date_trigger.click(function() {  
-                      to_date_input.datepicker('show');
-                      to_date_input.blur();
-                  });
-                  var from_date_input = jq('#from_date');
-                  var from_date_trigger = jq('#display_from_date');
-                  from_date_input.datepicker({onSelect:function(datetext){jq('#display_from_date').html(datetext);}});
-                  from_date_trigger.click(function() {  
-                      from_date_input.datepicker('show');
-                      from_date_input.blur();
-                  });
-              };
-              export_invoice_list_dates();
-	    </script>
             </p>
             </td>
           </tr>
@@ -139,8 +120,56 @@ user_columns = user_fields.values()
       <div>
             <input type="button" id="view_invoices_summary" class="small yellow nicebutton" value="View Summary"/>
             <input type="submit" id="invoices_summary" class="small yellow nicebutton" value="Download Summary"/>
-          <!-- <input type="submit" id="download_bulk_invoices" class="small yellow nicebutton" value="Download Bulk Invoices"/> -->
+            <a id="download_invoices" target="_blank" href="/bulk_pdf_invoices/" class="small yellow nicebutton">Bulk Download (Single PDF)"</a>
       </div>
+             <script type="text/javascript">
+              var export_invoice_list_dates = function() {
+                  var to_date_input = jq('#to_date');
+                  var to_date_trigger = jq('#display_end_date');
+                  var download_btn = jq('#download_invoices');
+                  var start_text = 'STARTDATE';
+                  var end_text = 'ENDDATE';
+                  var location_val = jq('#invoice_location option:selected').val();
+                  download_btn.attr('href', '/bulk_pdf_invoices/' + location_val + '/STARTDATE-ENDDATE.pdf');
+                  jq('#invoice_location').change( function () {
+                      var new_location_val = jq('#invoice_location option:selected').val();
+                      var download_url = download_btn.attr('href');
+                      download_url = download_url.replace(location_val, new_location_val);
+                      download_btn.attr('href', download_url);
+                      location_val = new_location_val;
+                  });
+                  function set_url_for_date(REPLACE_TEXT, datetext) {
+                      var download_url = download_btn.attr('href');
+                      var a_date = jq.datepicker.parseDate('D, dd MM yy', datetext);
+                      var a_date_str = a_date.getFullYear() + '.' + (a_date.getMonth() + 1) + '.' + a_date.getDate();
+                      download_url = download_url.replace(REPLACE_TEXT, a_date_str);
+                      download_btn.attr('href', download_url);
+                      return a_date_str;
+                  };
+                  to_date_input.datepicker({onSelect:function(datetext, inst){
+                      jq('#display_end_date').html(datetext);
+                      end_text = set_url_for_date(end_text, datetext);
+                      }
+                  });
+                  to_date_trigger.click(function() {  
+                      to_date_input.datepicker('show');
+                      to_date_input.blur();
+                  });
+                  var from_date_input = jq('#from_date');
+                  var from_date_trigger = jq('#display_from_date');
+                  from_date_input.datepicker({onSelect:function(datetext){
+                      jq('#display_from_date').html(datetext);
+                      start_text = set_url_for_date(start_text, datetext);
+                      }
+                  });
+                  from_date_trigger.click(function() {  
+                      from_date_input.datepicker('show');
+                      from_date_input.blur();
+                  });
+              };
+              export_invoice_list_dates();
+	    </script>
+     
       </form>
     </div>
     </div>
@@ -296,7 +325,7 @@ user_columns = user_fields.values()
                   });
                   var date_input = jq('#hidden_start');
                   var date_trigger = jq('#display_start');
-                  date_input.datepicker({onSelect:function(datetext){jq('#display_start').html(datetext);}});
+                  date_input.datepicker({onSelect:function(datetext) {jq('#display_start').html(datetext);}});
                   date_trigger.click(function() {  
                       date_input.datepicker('show');
                       date_input.blur();

@@ -6,6 +6,7 @@ import itertools
 import string
 import cStringIO
 import ho.pisa as pisa
+import pyPdf
 
 import cherrypy
 import httpagentparser
@@ -757,7 +758,7 @@ def get_invoice_rusages(invoice):
     
 
 
-def get_rusages(user=None, invoice=None, earliest=None, latest=None, ignore_end_time=False, locations=None):
+def get_rusages(user=None, invoice=None, earliest=None, latest=None, ignore_end_time=False, locations=None, resource_type=['tariff', 'resources']):
     if user:
         user = user.id
     if invoice:
@@ -779,6 +780,12 @@ def get_rusages(user=None, invoice=None, earliest=None, latest=None, ignore_end_
     if locations:
         location_ids = [loc.id for loc in locations]
         conds.extend([IN(Resource.q.placeID, location_ids), RUsage.q.resourceID==Resource.q.id])
+    if not len(resource_type)==2:
+        if resource_type[0]=='tariff':
+            conds.append(Resource.q.type=='tariff')
+        elif resource_type[0]=='resources':
+            conds.append(Resource.q.type!='tariff')
+
     rusages = RUsage.select(AND(*conds)).orderBy('start')
     return rusages
 
@@ -2017,6 +2024,31 @@ class Root(controllers.RootController):
         out = [row[1:] for row in rows]
         out.insert(0, title_row)
         return out
+
+    @expose()
+    @identity.require(not_anonymous())
+    @validate(validators={'location':real_int})
+    def bulk_pdf_invoices(self, location_id, filename, tg_errors=None):
+	if not permission_or_owner(Location.get(location_id), identity.current.user, 'manage_invoices'):
+            raise IdentityFailure('what about not hacking the system')
+        start, end = filename[:-4].split('-')
+        start_date = date(*(int(t) for t in start.split('.')))
+        end_date = date(*(int(t) for t in start.split('.')))
+        invoices = Invoice.select(AND(Invoice.q.location==location_id, Invoice.q.sent>=start_date, Invoice.q.end_time<=end_date)).orderBy('number')
+        out_stream = cStringIO.StringIO()
+        writer = pyPdf.PdfFileWriter()
+        for invoice in invoices:
+            inv_file = "invoices/" + str(invoice.id)
+            if not os.path.exists(inv_file):
+                content = self.gen_invoice_pdf(invoice.id)
+                store_invoice_pdf(invoice.id, content)
+            pages = pyPdf.PdfFileReader(file(inv_file)).pages
+            for page in pages:
+               writer.addPage(page)
+        writer.write(out_stream)
+        out_stream.seek(0)
+        cherrypy.response.headers['Content-type'] = 'application/pdf'
+        return out_stream.read()
 
     @expose_as_csv
     @strongly_expire
@@ -4925,11 +4957,11 @@ The Hub Team
         start = kwargs['start'] or datetime(1970,1,1)
         end_time = kwargs['end_time'] or now(location)
 
-        invoice = self._create_invoice(user, autocollect, location, start, end_time)
+        invoice = self._create_invoice(user, autocollect, location, start, end_time, ['tariff', 'resources'])
 
         return {'object':user}
 
-    def _create_invoice(self, user, autocollect, location, start, end_time):
+    def _create_invoice(self, user, autocollect, location, start, end_time, resource_type):
         users = [u for u in user.billed_for]
         if user.billto==None and user not in users:
             users.append(user)
@@ -4944,7 +4976,7 @@ The Hub Team
             inv_usages = []
             cuser_locations = permissionslib.locations('manage_invoices')
             for u in users:
-                for rusage in get_rusages(u, None, start, end_time, ignore_end_time, cuser_locations):
+                for rusage in get_rusages(u, None, start, end_time, ignore_end_time, cuser_locations, resource_type):
                     rusage.invoice = invoice.id
                     inv_usages.append(rusage)
             
@@ -4972,7 +5004,7 @@ The Hub Team
             if user in users_w_invoices:
                 invoice = [inv for inv in unsent_invoices if inv.user == user][0]
             else:
-                invoice = self._create_invoice(user, True, location, None, end_time)
+                invoice = self._create_invoice(user, True, location, None, end_time, resource_type)
             message = hubspace.alerts.messages.bag['invoice_mail']
             msg_data = dict(location=location, user=user)
             message_dict = message.make(location, msg_data, {})
