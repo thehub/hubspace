@@ -77,8 +77,10 @@ from decimal import Decimal
 from turbofeeds import FeedController
 import mechanize
 
+
 from turbogears.database import PackageHub, commit_all, end_all
-hub = PackageHub("turbogears.visit")
+from hubspace.utilities.db import schedSafe, hub
+
 __connection__ = hub
 
 dtc = v.DateTimeConverter("%Y-%m-%d %H:%M:%S")
@@ -186,26 +188,6 @@ def startup():
     start_scheduler()
     for location in Location.select():
         get_updates_data(location)
-
-class schedSafe(object):
-    """
-    a. may not be safe, make sure you test the transactions are executed correctly.
-    b. strictly for non long running tasks
-    """
-    def __init__(self, f):
-        self.f = f
-    def __call__(self, *args, **kw):
-        applogger.debug("schedSafe: begin")
-        from sqlobject.util.threadinglocal import local as threading_local
-        hub.threadingLocal = threading_local()
-        hub.begin()
-        try:
-            ret = self.f(*args, **kw)
-            applogger.debug("schedSafe: %s returned %s" % (self.f.__name__, ret))
-        finally:
-            commit_all()
-            end_all()
-        applogger.debug("schedSafe: done")
 
 def start_scheduler():
     """start the scheduler and add the timed jobs. These jobs must be sure to do model.hub.commit() in all cases EVEN IF THEY ONLY READ - otherwise they will hold onto database transaction in postgres forever! Its often wise to break them down into smaller transactions, by committing and then beginning new transactions using model.hub.begin().

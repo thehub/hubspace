@@ -1,12 +1,13 @@
 from sqlobject import *
 from sqlobject.inheritance import InheritableSQLObject
-from sqlobject.dberrors import IntegrityError
+from psycopg2 import IntegrityError
 
 from datetime import datetime
 import os
 from turbogears.database import PackageHub
 from turbogears import config
 
+from hubspace.utilities.db import schedSafe
 from hubspace.utilities.image_preview import create_image_preview
 from hubspace.configuration import new_or_old
 import hubspace.errors
@@ -1129,6 +1130,10 @@ def findNumberMissing(start, l):
     if missings:
         return missings[0]
 
+def _set_invoice_number(invoice, i):
+    invoice.number = i
+_set_invoice_number = schedSafe(_set_invoice_number)
+
 def set_invoice_number(invoice):
     location_id = invoice.location.id
     if invoice.location.invoice_newscheme:
@@ -1148,7 +1153,7 @@ def set_invoice_number(invoice):
         
         for i in range(next_num, next_num + 9):
             try:
-                invoice.number = i
+                _set_invoice_number(invoice, i)
                 break
             except IntegrityError:
                 applogger.warn("setting invoice number %s failed" % i)
