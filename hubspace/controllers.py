@@ -35,7 +35,7 @@ from hubspace.invoice import *
 from hubspace.utilities.users import fields as user_fields
 
 from datetime import datetime, timedelta, time, date
-from time import ctime, mktime
+from time import ctime, mktime, sleep
 import calendar
 import compat
 from sqlobject import AND, OR, DESC
@@ -444,11 +444,16 @@ def roles_grantable(location):
 
 
 def uninvoiced_users(location, resource_type, search_from_date, include_zero_usage_cost_members):
+    consider_start_time = location == 23 # #777
     conds = [RUsage.q.invoiceID==None,
              Resource.q.placeID==location,
-             RUsage.q.end_time<=search_from_date,
              RUsage.q.resourceID==Resource.q.id,
              RUsage.q.cancelled==0]
+
+    if consider_start_time:
+        conds.append(RUsage.q.start<=(search_from_date+timedelta(1)))
+    else:
+        conds.append(RUsage.q.end_time<=search_from_date)
 
     if not len(resource_type)==2:
         if resource_type[0]=='tariff':
@@ -1964,7 +1969,7 @@ class Root(controllers.RootController):
 
         sortname = 'sent'
         select = select.orderBy(sortname)
-        format_inv_row = lambda inv: (inv.id, inv.number, inv.user.display_name, inv.created.strftime('%b %d, %Y'), inv.location.currency +' '+ c2s(inv.amount))
+        format_inv_row = lambda inv: (inv.id, inv.number, inv.user.display_name, inv.sent.strftime('%b %d, %Y'), inv.location.currency +' '+ c2s(inv.amount))
         title_row = ('Number','User Name','Sent Date','Amount') # i18n
         rows = ( (format_inv_row(invoice)) for invoice in select )
         return title_row, rows
@@ -4976,6 +4981,7 @@ The Hub Team
             applogger.info("Auto create invoice: %s" % invoice.id)
             out = try_render(data, template='hubspace.templates.invoicingstatus', format='xhtml', headers={'content-type':'text/html'}, fragment=True)
             model.hub.commit()
+            sleep(0.5) # #977
             yield out
 
         applogger.info("Auto create invoices: done")
