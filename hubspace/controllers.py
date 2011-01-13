@@ -5913,10 +5913,10 @@ The Hub Team
         next_price = price.nextperiod
         prev_price = list(Pricing.select(Pricing.q.nextperiodID==price.id))[0:1]
         if next_price:
-            prev_price.nextperiod = next_price.id
+            prev_price[0].nextperiod = next_price.id
         else:
-            prev_price.nextperiod = None
-        prev_price.periodends
+            prev_price[0].nextperiod = None
+        prev_price[0].periodends
         price.destroySelf()
         return {'object':Resource.get(resource), 'tariff':tariff}
         
