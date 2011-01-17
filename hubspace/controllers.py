@@ -2033,7 +2033,7 @@ class Root(controllers.RootController):
             raise IdentityFailure('what about not hacking the system')
         start, end = filename[:-4].split('-')
         start_date = date(*(int(t) for t in start.split('.')))
-        end_date = date(*(int(t) for t in start.split('.')))
+        end_date = date(*(int(t) for t in end.split('.')))
         invoices = Invoice.select(AND(Invoice.q.location==location_id, Invoice.q.sent>=start_date, Invoice.q.end_time<=end_date)).orderBy('number')
         out_stream = cStringIO.StringIO()
         writer = pyPdf.PdfFileWriter()
