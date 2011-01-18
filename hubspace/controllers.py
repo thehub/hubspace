@@ -2033,8 +2033,8 @@ class Root(controllers.RootController):
             raise IdentityFailure('what about not hacking the system')
         start, end = filename[:-4].split('-')
         start_date = date(*(int(t) for t in start.split('.')))
-        end_date = date(*(int(t) for t in end.split('.'))) + timedelta(days=1)
-        invoices = Invoice.select(AND(Invoice.q.location==location_id, Invoice.q.sent>=start_date, Invoice.q.sent<end_date)).orderBy('number')
+        end_date = date(*(int(t) for t in start.split('.'))) + timedelta(days=1)
+        invoices = Invoice.select(AND(Invoice.q.location==location_id, Invoice.q.sent>=start_date, Invoice.q.end_time<end_date)).orderBy('number')
         out_stream = cStringIO.StringIO()
         writer = pyPdf.PdfFileWriter()
         for invoice in invoices:
@@ -3019,8 +3019,14 @@ Exception:
     def repeat_meetingBooking(self, booking_id):
         return dict(booking_id = booking_id)
 
-    def _save_meetingBookingEdit(self, tg_errors=None, **kwargs):
-        print "in _save_meetingBookingEdit", tg_errors
+    @expose()
+    @identity.require(not_anonymous())
+    @validate(validators=EditBookingSchema())
+    def save_meetingBookingEdit(self, tg_errors=None, **kwargs):
+        """validators could look ahead and check if the tariff can actually be changed here
+        If rusage is already invoiced, it has to be cancelled as we should not change an rusage which is invoiced.
+        If it is not invoiced, better modify the same rusage instance and recaculate cost.
+        """
         date = kwargs['date']
         start = kwargs['start']
         end = kwargs['end']
@@ -3030,12 +3036,12 @@ Exception:
         if not permission_or_owner(resource.place,rusage,'manage_rusages') and can_delete_rusage(rusage):
             raise IdentityFailure('what about not hacking the system')
 
+
         kwargs['start'] = datetime.combine(dateconverter.to_python(date), time(int(start['hour']), int(start['minute'])))
         kwargs['end_time'] = datetime.combine(dateconverter.to_python(date), time(int(end['hour']), int(end['minute'])))
         kwargs['rusage'] = rusage
         kwargs['resource'] = resource
         kwargs['user'] = kwargs.get('user', None) and model.User.get(int(kwargs['user'])) or identity.current.user
-        print "b4 tg_errors if loop", tg_errors
         if tg_errors and tg_errors.get('customcost'):
             tg_errors['customcost'] = tg_errors['customcost'] + _(" (Hint: You should not include currency signs)")
         else:
@@ -3049,11 +3055,9 @@ Exception:
         if 'tentative' in kwargs:
             del kwargs['tentative']
 
-        print "b4 tg_errors FINAL if loop", tg_errors, " and ", type(tg_errors)
         if tg_errors:
-            applogger.info("I m in ret_flag = error of all editing: %s" % str(tg_errors))
-            ret_flag = 'error'
-            return (ret_flag, rusage)
+            cherrypy.response.headers['X-JSON'] = 'error'
+            return self.error_template('meetingBookingEdit', {'object':hubspace.utilities.dicts.AttrDict(kwargs), 'resource':resource, 'tg_errors':tg_errors})
 
         old_values = hubspace.utilities.dicts.ObjDict(rusage)
         keys_just_cant_change = ('id',)
@@ -3096,6 +3100,7 @@ Exception:
 
         cancellation_needed = rusage.invoiced and set(change.keys()).intersection(keys_cant_change_if_invoiced)
         cost_recalculation_needed = set(change.keys()).intersection(keys_affect_cost)
+
         if not cancellation_needed:
             for (k, v) in change.items():
                 setattr(rusage, k, v)
@@ -3111,50 +3116,12 @@ Exception:
             rusage_id = self.cancel_rusage(rusage.id)
             kwargs['resource'] = kwargs['resource_id']
             rusage = create_rusage(**kwargs)
-        ret_flag = 'success'
-        return (ret_flag, rusage)
 
-    @expose()
-    @identity.require(not_anonymous())
-    @validate(validators=EditBookingSchema())
-    def save_meetingBookingEdit(self, tg_errors=None, **kwargs):
-        """validators could look ahead and check if the tariff can actually be changed here
-        If rusage is already invoiced, it has to be cancelled as we should not change an rusage which is invoiced.
-        If it is not invoiced, better modify the same rusage instance and recaculate cost.
-        """
-        if 'edit_all_repeat_bookings' in kwargs: # edit_all_repeat_bookings=1 if the edit is applicable to all recursive bookings
-            repetition_id = RUsage.get(kwargs['id']).repetition_id # select repetition_id from RUsage where id=160995;
-            repeat_usages = RUsage.select(AND(RUsage.q.repetition_id==repetition_id))
-            rusage_list = [rusage for rusage in repeat_usages]
-            rusages = list()
-            statuses = list()
-            for usage in rusage_list:
-                kwargs['id'] = usage.id
-                if 'date' in kwargs:
-                    kwargs['date'] = usage.start # need date conversion to string and vice-versa
-                print "b4 calling _save_meetingBookingEdit tg_errors = ", tg_errors
-                ret_flag, rusage = self._save_meetingBookingEdit(tg_errors, **kwargs)
-                print "i m in save_meetingBookingEdit and ret_flag:", ret_flag, tg_errors
-                rusages.append(rusage)
-                statuses.append(ret_flag)
-                cherrypy.response.headers['X-JSON'] = 'info'
-            print "After for rusages = " , rusages
-            print "After for statuses = " , statuses
 
-            applogger.info("I m in error of all editing: %s" % str(tg_errors))
-            return try_render({'booking_id': repetition_id, 'statuses' : statuses}, template="hubspace.templates.meetingBookingRepeatInfo", format='xhtml', headers={'content-type':'text/html'}, fragment=True)
-        else:
-            ret_flag, rusage = self._save_meetingBookingEdit(tg_errors, **kwargs)
+        cherrypy.response.headers['X-JSON'] = 'success'
+        return {'render':try_render({'rusage':rusage}, template="hubspace.templates.viewBooking", format='xhtml', headers={'content-type':'text/html'}, fragment=True), 'rusage_id':rusage.id}
 
-            if ret_flag == 'success':
-                cherrypy.response.headers['X-JSON'] = 'success'
-                return try_render({'rusage':rusage}, template="hubspace.templates.viewBooking", format='xhtml', headers={'content-type':'text/html'}, fragment=True)
-            if ret_flag == 'error':
-                applogger.info("I m in ret_flag = error of single editing: (%s)") % tg_errors
-                cherrypy.response.headers['X-JSON'] = 'error'
-
-                return self.error_template('meetingBookingEdit', {'object':hubspace.utilities.dicts.AttrDict(kwargs), 'resource':resource, 'tg_errors':tg_errors})
-
+   
     @expose(template="hubspace.templates.addBooking")
     @strongly_expire
     @identity.require(not_anonymous())
@@ -3227,8 +3194,6 @@ Exception:
         rusage.notes = kwargs['notes']
 
         if tg_errors:
-            print "really?"
-            applogger.info("I m in tg_errors of edit_booking: (%s)") % tg_errors
             cherrypy.response.headers['X-JSON'] = 'error'
             return self.error_template('meetingBookingEdit', {'object':rusage, 'resource':resource, 'tg_errors':tg_errors})
 
