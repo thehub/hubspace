@@ -435,18 +435,29 @@ var inplace_editor = function (element_id, url, special_options) {
     };
     var onComplete = function (data, xhr) {
 	// editField = null; #645
-        if (xhr.status === 200 && xhr.getResponseHeader('X-Json') !== 'error') {
-            if (options.ui_type === 'gmap') {
-                element.html(data);
-                leaveEditMode();
-                create_map(element, plot_point);
-            } else {
-                element.show().html(data);
+        var json_resp = xhr.getResponseHeader('X-Json');
+        if (xhr.status === 200) {
+            if (json_resp === 'info') {
+                newdata = JSON.parse(data).render;
+                element.html(newdata);
                 oldInnerHTML = "";
                 leaveEditMode();
-                options.onComplete(data, element);
+            }
+            else if (json_resp !== 'error') {
+                    //alert('json_resp == success');
+                    if (options.ui_type === 'gmap') {
+                        element.html(data);
+                        leaveEditMode();
+                        create_map(element, plot_point);
+                    } else {
+                        element.show().html(data);
+                        oldInnerHTML = "";
+                        leaveEditMode();
+                        options.onComplete(data, element);
+                    }
             }
         } else {
+            //alert('json_resp == error');
             leaveEditMode();
             createForm(data);
             enterEditMode(null, true);
@@ -454,7 +465,6 @@ var inplace_editor = function (element_id, url, special_options) {
         if (options.dispose === true) {
             dispose();
         }
-
     };
     var onSubmit = function () {
         // onLoading resets these so we need to save them away for the Ajax call

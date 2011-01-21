@@ -22,6 +22,9 @@
 from hubspace.model import RUsage
 repeat_usages = list(RUsage.selectBy(repetition_id=booking_id).orderBy('start'))
 booking = repeat_usages[0]
+statuses_flag = 0
+if 'statuses' in locals():
+    statuses_flag = 1
 ?>
 
 <script>
@@ -45,6 +48,7 @@ $('#del_usages').click( function () {
             });
         }
     });
+    $('#del_usages').remove();
 });
 $('#del_usages').confirm({
     msg:'Do you really want to delete selected usages?'
@@ -76,7 +80,7 @@ $('#del_usages').confirm({
 <div class="prepend-2">
 <form action="/repeat_meetingBooking">
 <input name="booking_id" type="hidden" value="${booking.id}"/>
-<input type="submit" value="Add more repeat bookings.."/>
+<input type="submit" py:if="not statuses_flag" value="Add more repeat bookings.."/>
 </form>
 </div>
 <br/>
@@ -85,18 +89,21 @@ $('#del_usages').confirm({
 <form id="del_bookings">
 <table class="prepend-1 append-1 span-15  colborder">
 <tr>
-    <th class="span-2">Sr. No.</th>
+    <th py:if="statuses_flag" class="span-2"></th>
+    <th py:if="not statuses_flag" class="span-2">Sr. No.</th>
     <th class="span-5">Date</th>
     <th class="span-3">Start Time</th>
     <th class="span-3">End Time</th>
-    <th class="span-3">Delete</th>
+    <th class="span-3" py:if="not statuses_flag">Delete</th>
+    <th class="span-3" py:if="statuses_flag">Status</th>
 </tr>
 <tr py:for="i, usage in enumerate(repeat_usages)" class="del_usage-${usage.id}">
     <td>${i+1}</td>
     <td>${usage.start.date().strftime("%a, %b %d %Y")}</td>
     <td>${usage.start.strftime("%l:%M %P")}</td>
     <td>${usage.end_time.strftime("%l:%M %P")}</td>
-    <td><input type="checkbox" name="rusage_ids" id="del-${usage.id}" class="del_usage" value="${usage.id}"/></td>
+    <td py:if="statuses_flag">${statuses[i]}</td>
+    <td py:if="not statuses_flag"><input type="checkbox" name="rusage_ids" id="del-${usage.id}" class="del_usage" value="${usage.id}"/></td>
 </tr>
 </table>
 </form>
@@ -105,7 +112,7 @@ $('#del_usages').confirm({
 <div class="prepend-2" id="result_area"/>
 
 <div class="prepend-2">
-<input type="button" id="del_usages" value="Delete selected"/>
+<input type="button" id="del_usages" py:if="not statuses_flag" value="Delete selected"/>
 </div>
 
 

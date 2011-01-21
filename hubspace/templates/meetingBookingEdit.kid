@@ -211,10 +211,10 @@ def selected_object(selected, current):
                 <div><span class="errorMessage" py:if="tg_errors">${print_error('tentative', tg_errors)}</span>&nbsp;&nbsp;<span class="errorMessage" py:if="tg_errors">${print_error('end', tg_errors)}</span></div>
               </td>
         </tr>
-        <tr>
+	<tr py:if="rusage.repetition_id">
             <td class="left">Edit all related Repeat bookings?</td>
             <td class="right" id="edit_repeat_booking">
-                <input id="edit_all_repeat_bookings" name="edit_all_repeat_bookings" value="1" type="checkbox" py:attrs="{'checked':'checked'} or {}" />
+                <input id="edit_all_repeat_bookings" name="edit_all_repeat_bookings" value="edit_repeat" type="checkbox" />
                 <label> The above changes in this booking will be applied to all repeated bookings.</label>               
                 <div class="errorMessage" py:if="tg_errors">${print_error('meeting_name', tg_errors)}</div>
                 </td>

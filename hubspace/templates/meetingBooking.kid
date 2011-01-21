@@ -20,6 +20,8 @@ def public_or_private(rusage):
     if rusage.public_field:
        return "(Publicised on the Hub Website)"
     return ""
+
+nl2br = lambda s: s.replace("\n","<br/>")
 ?>
 
 <div xmlns:py="http://purl.org/kid/ns#" py:strip="True">
@@ -45,7 +47,7 @@ def public_or_private(rusage):
 			</tr>
 			<tr py:if="rusage.resource.type=='room'">
 				<td class="left">Meeting Description</td>
-				<td class="right">${rusage.meeting_description}</td>
+                                <td class="right">${XML(nl2br(rusage.meeting_description))}</td>
 			</tr>
                         <tr>
 				<td class="left">Date</td>
