@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Edit Repeat Booking
+-----------------
+A booking change now can be applied to all repeated bookings. More info: `here </help/repeatbooking.html#edit-repeat-bookings>`_
+
 Invoice numbering
 -----------------
 Invoice numbering is delayed till it is sent. This ensures consistent numbering when invoices are auto-generated.
