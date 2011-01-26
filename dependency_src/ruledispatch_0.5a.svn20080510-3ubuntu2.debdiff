@@ -1,0 +1,40 @@
+--- dispatch/__init__.py	2008-05-10 16:50:36.000000000 +0200
++++ dispatch/__init__.py	2009-04-20 21:58:59.700373122 +0200
+@@ -95,7 +95,7 @@
+     return decorate_assignment(callback)
+ 
+ 
+-def as(*decorators):
++def dispatch_as(*decorators):
+     """Use Python 2.4 decorators w/Python 2.2+
+ 
+     Example:
+--- dispatch/predicates.py	2008-05-10 16:50:36.000000000 +0200
++++ dispatch/predicates.py	2009-04-20 21:59:45.741933419 +0200
+@@ -236,7 +236,7 @@
+ 
+         return or_, (EXPR_GETTER_ID,)
+ 
+-    [as(classmethod)]
++    [dispatch_as(classmethod)]
+     def immediate(klass,seq):
+         for item in seq:
+             if item:
+@@ -260,7 +260,7 @@
+ 
+         return and_, (EXPR_GETTER_ID,)
+ 
+-    [as(classmethod)]
++    [dispatch_as(classmethod)]
+     def immediate(klass,seq):
+         for item in seq:
+             if not item:
+@@ -278,7 +278,7 @@
+             return get(argIds[2])
+         return ifelse, (EXPR_GETTER_ID,)
+ 
+-    [as(classmethod)]
++    [dispatch_as(classmethod)]
+     def immediate(klass,seq):
+         if seq[1]: return seq[0]
+         return seq[2]
