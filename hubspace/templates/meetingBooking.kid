@@ -1,4 +1,5 @@
 <?python
+from cgi import escape
 from hubspace.bookinglib import isAvailabilityInfoReqValid, canConfirm
 from hubspace.utilities.uiutils import oddOrEven, c2s
 from hubspace.controllers import can_delete_rusage, permission_or_owner
@@ -47,7 +48,7 @@ nl2br = lambda s: s.replace("\n","<br/>")
 			</tr>
 			<tr py:if="rusage.resource.type=='room'">
 				<td class="left">Meeting Description</td>
-                                <td class="right">${XML(nl2br(rusage.meeting_description))}</td>
+                                <td class="right"><c style="white-space:pre">${(escape(rusage.meeting_description))}</c></td>
 			</tr>
                         <tr>
 				<td class="left">Date</td>
