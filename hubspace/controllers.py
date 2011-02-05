@@ -445,7 +445,7 @@ def roles_grantable(location):
 
 
 def uninvoiced_users(location, resource_type, search_from_date, include_zero_usage_cost_members):
-    consider_start_time = location == 23 # #777
+    consider_start_time = location in (23, 14) # #777
     conds = [RUsage.q.invoiceID==None,
              Resource.q.placeID==location,
              RUsage.q.resourceID==Resource.q.id,
@@ -4988,7 +4988,7 @@ The Hub Team
         if not users:
             raise 'Cant invoice this user directly - this user %s bills to user %s - %s' % (user.id,user.billto.id,user.billto.user_name)
     
-        ignore_end_time = location.id == 23 # #777
+        ignore_end_time = location.id in (23, 14) # #777
         invoice = create_object('Invoice', user=user, location=location, start=start, end_time=end_time, billingaddress=user.billingaddress)
         applogger.info("_create_invoice: %s" % invoice.id)
     

@@ -9,6 +9,9 @@ user = None
 <head>
 </head>
 <body id="members">
+    <?python
+    members_dir = page.path_name.replace('.html', '')
+    ?>
     <div py:if="not user" class="span-12" id="content-intro">
        <h1 id="title" class="text_small">${page.title and page.title or "Our Members"}</h1>
        <div py:if="page.content" class="text_wysiwyg" id="content">${XML(page.content)}</div> 
@@ -49,7 +52,7 @@ user = None
                                     content = publish_parts(description, writer_name="html")["html_body"]
                             ?>
                             ${XML(content)}
-				<a class="backLink" href="../members.html">back to Members Page</a><br clear="all" />
+				<a class="backLink" href="../${page.path_name}">back to Members Page</a><br clear="all" />
                      </div>
 		</div>
 	</div>
@@ -59,7 +62,7 @@ user = None
             <h3 id="profiles_header" class="text_small">${page.profiles_header and page.profiles_header or "Recently Updated Profiles"}</h3>
 				<ul id="members-profiles">
 				  <li class="member" py:for="member in profiles">
-                                      <a href="${relative_path}members/${member.user_name}" title="Click for full bio">
+                                      <a href="${relative_path}${members_dir}/${member.user_name}" title="Click for full bio">
 				      <span><img class="profileimg" src="${image_src(member, 'image', '/static/images/shadow.png')}"/></span>
 				      <span class="member-name">${member.display_name}</span>
 				      <span class="member-company">${member.organisation}</span>
