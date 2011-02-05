@@ -2,3 +2,6 @@
 *.mo
 *.js.hash
 *.js.version
+*.pyo
+*.log.*
+*.svn

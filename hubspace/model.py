@@ -61,6 +61,7 @@ def delete_object_reference(instance, post_funcs):
     obj_ref.destroySelf()
 
 
+
 resource_types = ['hotdesk', 'room', 'phone', 'printer', 'tariff', 'custom', 'other', 'calendar']
 graph_types = ('pattern', 'timeseries')
 
@@ -459,15 +460,6 @@ class ObjectReference(SQLObject):
             print "object_tuple" + ` obj_tuple`
             self.object_type, self.object_id  = obj_tuple
 
-def create_object_reference(kwargs, post_funcs):
-    print "object ref created" + kwargs['class'].__name__ +  `kwargs['id']`
-    obj_ref = ObjectReference(**{'object': (kwargs['class'].__name__, kwargs['id'])})
-
-def delete_object_reference(instance, post_funcs):
-    print "object ref deleted" + `instance`
-    obj_ref = ObjectReference.select(AND(ObjectReference.q.object_id == instance.id,
-                                         ObjectReference.q.object_type == instance.__class__.__name__))[0]
-    obj_ref.destroySelf()
 
 class Page(SQLObject):
     """Page objects which appear in the microsite and render content objects as a whole page or a fragment of html.

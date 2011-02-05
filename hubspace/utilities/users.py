@@ -42,33 +42,6 @@ def order_members(members):
     return x
 
 
-def filter_by_text(users, text_filter, type):
-    if type=='fulltext_member_search':
-        results = turbolucene.search(text_filter, 'en')
-        try:
-            #sqlobject 0.9 doesn't implement NOT on 'SelectResults', and so throws a not implemented error
-            #so normally we should use .count()==0
-            #however if there are no results turbolucene returns None 
-            if not results:
-                return []
-        except:
-            pass #we have results
-        return order_members([user for user in results if user in users])
-
-    if type=='member_search':
-
-        filtered_users = []
-        for user in users:
-             matches = user.display_name.lower().split(' ')
-             matches.append(user.display_name.lower())
-             for word in matches:
-                 if word.startswith(text_filter.lower()):
-                     filtered_users.append(user)
-                     break
-        return order_members(filtered_users)
-
-    if type=='rfid_member_search':
-        return User.select(AND(User.q.rfid == text_filter))
 
 
 def filter_members(location, text_filter, type, active_only, start, end, override_user=None):
