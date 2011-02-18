@@ -17,7 +17,7 @@ def find_week_no(aday):
     month_cal = enumerate(calendar.monthcalendar(aday.year, aday.month))
     for week_no, week in month_cal:
         if aday.day in week:
-            return week_no
+            return week_no+1
 
 def get_month_end(aday):
     return datetime.date(aday.year, aday.month, calendar.monthrange(aday.year, aday.month)[1])
