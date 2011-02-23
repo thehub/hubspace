@@ -1112,6 +1112,7 @@ class MicroSite(controllers.Controller):
         self.initialized = False
         self.site_types = site_types
         self.add_edit_controllers()
+        self.regenerate_lck = False
                        
     def _cpOnError(self):
         try:
@@ -1175,13 +1176,20 @@ class MicroSite(controllers.Controller):
         setattr(self, 'lists', SiteList(self))
     
     def regenerate_all(self):
-        for page in Page.select(AND(Page.q.location==self.location)):
-            if self.site_types[page.page_type].static == True:
-                try:
-                    self.render_page(page.path_name, relative_path='./')
-                    applogger.debug("regenerate_all: calling render_page with (%s, %s) location [%s]" % (page.path_name, './',self.location))
-                except:
-                    applogger.exception("failed to render page with name " + page.name + ", location " + `self.location` + " and id " + `page.id`  )
+        if self.regenerate_lck:
+            applogger.warn("[%s] regenerate_all: request ignored as lock is detected" % str(self.location))
+            return
+        self.regenerate_lck = True
+        try:
+            for page in Page.select(AND(Page.q.location==self.location)):
+                if self.site_types[page.page_type].static == True:
+                    try:
+                        self.render_page(page.path_name, relative_path='./')
+                        applogger.debug("regenerate_all: calling render_page with (%s, %s) location [%s]" % (page.path_name, './',self.location))
+                    except:
+                        applogger.exception("failed to render page with name " + page.name + ", location " + `self.location` + " and id " + `page.id`  )
+        finally:
+            self.regenerate_lck = False
 
     def construct_args(self, page_name, *args, **kwargs):
         template_args = dict(site_template_args)

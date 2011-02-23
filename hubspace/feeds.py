@@ -8,6 +8,7 @@ import datetime
 
 PAST_EVENTS_MAX = 30
 FUTURE_EVENTS_MAX = 30
+MAX_PROFILES = 30
 
 applogger = logging.getLogger("hubspace")
 
@@ -45,9 +46,13 @@ class ObjectCacheContainer(list):
     def populate(self):
         raise NotImplemented
     def add(self, instance):
+        #import ipdb
+        #ipdb.set_trace()
         cache_obj = self.objectcache_factory(instance)
-        self.insert(0, cache_obj)
-        self.cleanup()
+        if self and (self[-1] > cache_obj):
+            self.insert(0, cache_obj)
+            self.sort()
+            self.cleanup()
     def has_object(self, instance_id):
         for instance in self:
             if instance.id == instance_id: return True
@@ -115,7 +120,10 @@ class EventCacheContainer(ObjectCacheContainer):
 class ProfileCache(ObjectCache):
     attrs_to_remember = ('id', 'user_name', 'display_name', 'has_avatar', 'description', 'modified', 'homeplaceID', 'active', 'public_field', 'created', 'organisation', 'url')
     def __cmp__(self, other):
-        return cmp(self.modified, other.modified)
+        if other.modified and self.modified: # sometimes modified is None
+            return cmp(other.modified, self.modified)
+        else:
+            return 0
     def __repr__(self):
         return "<Profile: %s @ location %s>" % (self.user_name, self.homeplaceID)
 
@@ -147,7 +155,8 @@ class ProfileCacheContainer(ObjectCacheContainer):
             self.append(cache_obj)
     @on_exception()
     def cleanup(self):
-        self.pop()
+        while len(self) > MAX_PROFILES:
+            self.pop()
 
 class LocationCache(dict):
     def __init__(self, location, *args, **kw):
@@ -188,21 +197,35 @@ def on_add_user(kwargs, post_funcs):
 def on_updt_rusage(instance, kwargs):
     applogger.info("feeds.on_updt_rusage: updating %s" % instance.id)
     location = instance.resource.placeID
-    instance_cache = cached_updates[location]['events'].get(instance.id)
+    cache_container = cached_updates[location]['events']
+    instance_cache = cache_container.get(instance.id)
+    public_field = kwargs.get('public_field', False)
     if instance_cache:
-        instance_cache.update(kwargs)
+        if public_field:
+            instance_cache.update(kwargs)
+            cache_container.sort()
+        else:
+            cached_updates[location]['events'].remove(instance.id)
     else:
-        if kwargs.get('public_field', False):
+        if public_field:
             cached_updates[location]['events'].add(instance)
             applogger.info("feeds.on_add_rusage: added %s" % instance.id)
 
-def on_updt_user(instance, kwargs):
-    applogger.info("feeds.on_updt_user: updating %s" % instance.id)
-    location = instance.homeplaceID
-    instance_cache = cached_updates[location]['profiles'].get(instance.id)
+def on_updt_user(user, kwargs):
+    applogger.info("feeds.on_updt_user: updating %s" % user.id)
+    location = user.homeplaceID
+    cache_container = cached_updates[location]['profiles']
+    instance_cache = cached_updates[location]['profiles'].get(user.id)
+    public_field = kwargs.get('public_field', user.public_field)
     if instance_cache:
-        instance_cache.update(kwargs)
-    cached_updates[location]['profiles'].sort()
+        if public_field:
+            instance_cache.update(kwargs)
+            cache_container.sort()
+        else:
+            cached_updates[location]['profiles'].remove(user.id)
+    else:
+        if public_field:
+            cached_updates[location]['profiles'].add(user)
 
 cache_factories = dict (events=EventCacheContainer, profiles=ProfileCacheContainer)
 cached_updates = Cache()

@@ -21,6 +21,7 @@ def user2dict(user):
     return d
 
 def populate():
+    writer = build_writer()
     print "Populating whoosh..."
     for user in model.User.select():
         writer.add_document(**user2dict(user))
@@ -35,24 +36,30 @@ def do_search(qry_text):
     return [AttrDict(item) for item in searcher.search(qry, sortedby="display_name")]
 
 def add(user):
+    writer = build_writer()
     try:
         writer.add_document(**user2dict(user))
-        writer.commit()
     except Exception, err:
         applogger.exception("indexing user '%s' failed: " % user.user_name)
+        writer.commit()
         return False
+    writer.commit()
     return True
 
 def update(user):
+    writer = build_writer()
     try:
         writer.update_document(**user2dict(user))
         writer.commit()
     except Exception, err:
         applogger.exception("search: updating user '%s' failed: " % user.user_name)
+        writer.commit()
         return False
+    #writer.commit()
     return True
 
 def remove(user_name):
+    writer = build_writer()
     writer.delete_by_term("user_name", user_name)
     writer.commit()
     return True
@@ -63,16 +70,15 @@ def sync():
     return True
 
 def build_writer():
-    return ix.writer(postlimit = 256 * 1024 * 1024)
+    #ix.refresh()
+    return ix.writer()
 
 if not os.path.exists(indexdir):
     os.mkdir(indexdir)
     ix = create_in(indexdir, schema)
-    writer = build_writer()
     populate()
 else:
     ix = open_dir(indexdir)
-    writer = build_writer()
 
 def stop():
     ix.close()
