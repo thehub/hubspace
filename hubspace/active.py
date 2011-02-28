@@ -31,7 +31,7 @@ def name_sort(a, b):
     return -1
 
 def location_links():
-    locations = Location.select(AND(Location.q.in_region == None, Location.q.microsite_active == 1), orderBy='name')
+    locations = Location.select(AND(Location.q.in_region == None, Location.q.hidden == False), orderBy='name')
     loc_tuples = []
     for location in locations:
         link = write_link_tuple(location)
