@@ -108,6 +108,10 @@ def lang_selected(location, lang):
 		     <td><input name="bank" type="text" value="${location.bank or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('bank', tg_errors)}</div></td>
 		</tr>
                 <tr>
+                     <td class="line">Bank Account Name</td>
+		     <td><input name="bank_account_name" type="text" value="${location.bank_account_name or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('bank_account_name', tg_errors)}</div></td>
+		</tr>
+                <tr>
                      <td class="line">Bank Account No.</td>
 		     <td><input name="account_no" type="text" value="${location.account_no or ''}" /><div class="errorMessage" py:if="tg_errors">${print_error('account_no', tg_errors)}</div></td>
 		</tr>

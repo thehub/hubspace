@@ -755,6 +755,7 @@ class Location(SQLObject):
     telephone = UnicodeCol(default=None)
     vat_no = UnicodeCol(default=None)
     bank = UnicodeCol(default=None)
+    bank_account_name = UnicodeCol(default=None)
     account_no = UnicodeCol(default=None)
     sort_code = UnicodeCol(default=None)
     iban_no = UnicodeCol(default=None)
@@ -1136,7 +1137,8 @@ def set_invoice_number(invoice):
         # step through smaller blocks
         inv_numbers = sorted([i.number for i in inv_all if isinstance(i.number, int)])
         start = int("%s0000001" % invoice.location.id)
-        if inv_numbers:
+        current_max_number = max(inv_numbers)
+        if inv_numbers and current_max_number > start:
             next_num = findNumberMissing(start, inv_numbers)
             if not next_num:
                 next_num = max(inv_numbers) + 1

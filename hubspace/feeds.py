@@ -49,10 +49,9 @@ class ObjectCacheContainer(list):
         #import ipdb
         #ipdb.set_trace()
         cache_obj = self.objectcache_factory(instance)
-        if self and (self[-1] > cache_obj):
-            self.insert(0, cache_obj)
-            self.sort()
-            self.cleanup()
+        self.insert(0, cache_obj)
+        self.sort()
+        self.cleanup()
     def has_object(self, instance_id):
         for instance in self:
             if instance.id == instance_id: return True
@@ -79,16 +78,12 @@ class EventCache (ObjectCache):
     def is_future(self):
         return self.start > datetime.datetime.now()
     def __cmp__(self, other):
-        return cmp(self.start, other.start)
+        return cmp(other.start, self.start)
     def __repr__(self):
         return "<Event: %s on %s at %s>" % (self.id, self.start, self.location_name)
 
 class EventCacheContainer(ObjectCacheContainer):
     objectcache_factory = EventCache
-    def _post_make_cache_obj(self, cache_obj, instance):
-        cache_obj.resourceID = instance.resource.id
-        cache_obj.locationID = instance.resource.place.id
-        cache_obj.location_name = instance.resource.place.name
     def populate(self):
         now = datetime.datetime.now()
         till_dt = datetime.datetime(now.year, now.month, now.day) - datetime.timedelta(90)
@@ -199,17 +194,18 @@ def on_updt_rusage(instance, kwargs):
     location = instance.resource.placeID
     cache_container = cached_updates[location]['events']
     instance_cache = cache_container.get(instance.id)
-    public_field = kwargs.get('public_field', False)
+    public_field = kwargs.get('public_field', instance.public_field)
     if instance_cache:
         if public_field:
             instance_cache.update(kwargs)
             cache_container.sort()
         else:
             cached_updates[location]['events'].remove(instance.id)
+            applogger.info("feeds.on_updt_rusage: removed %s" % instance.id)
     else:
         if public_field:
             cached_updates[location]['events'].add(instance)
-            applogger.info("feeds.on_add_rusage: added %s" % instance.id)
+            applogger.info("feeds.on_updt_rusage: added %s" % instance.id)
 
 def on_updt_user(user, kwargs):
     applogger.info("feeds.on_updt_user: updating %s" % user.id)
@@ -247,10 +243,10 @@ def get_updates_data(location):
     return updates
 
 def get_local_future_events(location, no_of_events=None, *args, **kw):
-    return dict(future_events = cached_updates[location]['events'].get_future_events(no_of_events))
+    return dict(future_events = cached_updates[location]['events'].get_future_events()[::-1][:no_of_events])
 
 def get_local_past_events(location, no_of_events=None, *args, **kw):
-    return dict(past_events = cached_updates[location]['events'].get_past_events(no_of_events))
+    return dict(past_events = cached_updates[location]['events'].get_past_events()[::-1][:no_of_events])
 
 def get_local_profiles(location, only_with_images=False, no_of_images=None, *args, **kw):
     profiles = cached_updates[location]['profiles']

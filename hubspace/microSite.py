@@ -90,7 +90,7 @@ def get_public_place(*args, **kwargs):
     
 
 def get_events(*args, **kwargs):
-    no_of_events = 5
+    no_of_events = 10
     location = kwargs.get('location')
     events = get_local_future_events(location, no_of_events)
     events.update(get_local_past_events(location, no_of_events))

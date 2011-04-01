@@ -33,7 +33,10 @@ def height_and_width(start, end, no_rooms):
        <?python
            times = opening_times(location.calendar, date)
            start_time, end_time = times[0][0], times[-1][1]
-           resources = [Resource.get(res) for res in resgroup.resources_order]
+           resources = list()
+           for res in resgroup.resources_order:
+               if Resource.get(res).active == 1:
+                   resources.append(Resource.get(res))
            no_rooms = len(resources)
        ?>
        <div id="room_header">

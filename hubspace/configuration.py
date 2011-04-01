@@ -35,6 +35,7 @@ new_or_old = URLMappings({'http://amsterdam.the-hub.net':'new',
                           'http://members.the-hub.net':'old',
                           'http://test.the-hub.net':'new',
                           'http://test2.the-hub.net':'new',
+                          'http://melbourne.the-hub.net': 'new',
                           'http://testregion.the-hub.net':'new'}
 )
 

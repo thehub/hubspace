@@ -1,6 +1,14 @@
 Changelog
 =========
 
+Repeat booking notification option
+----------------------------------
+Notification of repeat booking is send to member only if "Notify member" checkbox is checked. This option in available on repeat booking page.
+
+Bulk Invoice download
+---------------------
+It is now possible to download invoices as one PDF file (mostly required for printing purpose). `More here. </help/bulk_invoices.html>`_
+
 Edit Repeat Booking
 -----------------
 A booking change now can be applied to all repeated bookings. More info: `here </help/repeatbooking.html#edit-repeat-bookings>`_

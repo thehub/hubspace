@@ -251,7 +251,7 @@ class UniqueAttribute(v.FormValidator):
     show_match = False
     field_names = None
     objecttype = "User"
-    attr = "user_name"
+    #attr = "user_name"
     
     validate_partial_form = True
     __unpackargs__ = ('*', 'field_names')
@@ -281,8 +281,7 @@ class UniqueAttribute(v.FormValidator):
         if attr_value in [getattr(obj, self.attr) for obj in theclass.select()]: #this is extemely inefficient - rewrite with a specific sql request
             if attr_value != this_value:
                 errors[self.attr] = "The " + self.attr + " "+ str(attr_value) + " already exists"
-                raise Invalid(
-                    'That username already exists', field_dict, state, error_dict=errors)
+                raise Invalid('That ' + str(self.attr) + ' = ' + str(attr_value) + ' already exists', field_dict, state, error_dict=errors)
 
 
 class ManagedLocation(v.FancyValidator):
@@ -360,7 +359,7 @@ class ProfileSchema(v.Schema):
     postcode= v.UnicodeString() #PostCode(if_empty="")
     biz_type = v.UnicodeString()
     public_field = v.Int(if_empty=0)
-    chained_validators = [v.FieldsMatch('password', 'password2'), UniqueAttribute('id', 'user_name'), UniqueAttribute('id', 'email_address', attr='email_address'), DontDeactivateSelf('id', 'active')]
+    chained_validators = [v.FieldsMatch('password', 'password2'), UniqueAttribute('id', 'user_name', attr='user_name'), UniqueAttribute('id', 'email_address', attr='email_address'), DontDeactivateSelf('id', 'active')]
 
 
 
@@ -432,7 +431,7 @@ class AddMemberSchema(v.Schema):
     postcode = v.UnicodeString() #needs to work interationally # PostCode()
     biz_type = v.UnicodeString()
     public_field = v.Int(if_empty=0)
-    chained_validators = [v.FieldsMatch('password', 'password2'), UniqueAttribute('user_name'), UniqueAttribute('email_address', attr='email_address')]
+    chained_validators = [v.FieldsMatch('password', 'password2'), UniqueAttribute('id', 'user_name', attr='user_name'), UniqueAttribute('id', 'email_address', attr='email_address')]
 
 class MonthDate(v.Schema):
     month = IntInRange(min=1, max=12)
@@ -756,6 +755,7 @@ class EditLocationSchema(v.Schema):
     company_no = All(no_ws, v.MaxLength(40))
     bank = All(no_ws, v.MaxLength(40))
     sort_code = All(Numbers(), v.MaxLength(8))
+    bank_account_name = no_ws
     account_no = All(Numbers(), v.MaxLength(40))
     iban_no = All(no_ws, v.MaxLength(32))
     swift_no = All(no_ws, v.MaxLength(40))

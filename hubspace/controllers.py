@@ -1815,6 +1815,14 @@ class Root(controllers.RootController):
     rpc = RPC()
 
     @expose()
+    def streamtest(self, N):
+        def streamer(N):
+            for i in range(int(N)):
+                sleep(1)
+                yield str(i)
+        return streamer(N)
+        
+    @expose()
     def langtest(self):
         hub_locale = get_hubspace_locale()
         locale = get_hubspace_user_locale()
@@ -5212,6 +5220,9 @@ The Hub Team
                 suggestion.destroySelf()
             if not rusage.confirmed:
                 bookinglib.notifyTentativeBookingRelease(rusage)
+            if rusage.refund_for:
+                refund_for = RUsage.get(rusage.refund_for)
+                refund_for.cancelled = 0
             applogger.info("Deleting RUsage %s" % rusage)
             rusage.destroySelf()
 
@@ -5332,7 +5343,7 @@ The Hub Team
     @expose(allow_json=True)
     @identity.require(not_anonymous())
     @validate(validators={'booking_id':real_int})
-    def addRecurringEvent(self, booking_id, pattern, **kwargs):
+    def addRecurringEvent(self, booking_id, pattern, notify_member=False, **kwargs):
         # clones given booking for dates matching specified pattern
         booking = RUsage.get(booking_id)
         repeat_dates = self.calculate_dates_from_pattern(booking, pattern, **kwargs)
@@ -5364,7 +5375,10 @@ The Hub Team
         location = booking.resource.place
         data = dict ( rusage = booking, user = booking.user, location = location, repeat_dates = repeat_dates )
         msg_name = "repetitive_booking_made"
-        hubspace.alerts.sendTextEmail(msg_name, location, data)
+        if notify_member:
+            hubspace.alerts.sendTextEmail(msg_name, location, data)
+        else:
+            hubspace.alerts.sendTextEmail(msg_name, location, data, to=location.hosts_email)
         return 'Repeat booking status:<br/> <ol>' + ''.join('<li>%s</li>' % msg for msg in msgs) + '</ol>'
        
     @expose()

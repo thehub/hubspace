@@ -169,6 +169,7 @@ negative_total = invoice.amount < 0
     <a href="invoice.location.url">${invoice.location.url}</a> <br /><br />
     <strong><c>Bank Details </c> <br /></strong>
     <c py:strip="True" py:if="invoice.location.bank">${invoice.location.bank}</c><br />
+    <c py:if="invoice.location.bank_account_name" py:strip="True"><c>Account Name</c>: ${invoice.location.bank_account_name} <br /> </c>
     <c py:if="invoice.location.account_no" py:strip="True"><c>Account Number</c>: ${invoice.location.account_no} </c><br />
     <c py:strip="True" py:if="invoice.location.sort_code"><c>Sort Code</c>: <c py:strip="True">${invoice.location.sort_code} <br/></c></c>
     <c py:if="invoice.location.swift_no" py:strip="True"><c>Swift Code</c>: ${invoice.location.swift_no} <br/></c>

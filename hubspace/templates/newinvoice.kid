@@ -384,6 +384,7 @@ ${XML(nl2br(freetext2))}
 <td align="left">
   ${invoice.location.bank}
   <br />
+  <c py:if="invoice.location.bank_account_name" py:strip="True"><c>Account Name</c> ${invoice.location.bank_account_name} <br/></c>
   <c py:if="invoice.location.account_no" py:strip="True"><c>Account Number</c> ${invoice.location.account_no} <br/></c>
   <c py:strip="True" py:if="invoice.location.sort_code"><br /><c>Sort Code</c> <c py:strip="True">${invoice.location.sort_code} <br/></c></c>
   <c py:if="invoice.location.swift_no" py:strip="True"><c>Swift Code</c> ${invoice.location.swift_no} <br/></c>

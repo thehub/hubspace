@@ -387,6 +387,8 @@ def lang():
         <font face="arial" size="2">
          ${invoice.location.bank}
          <br />
+         <c py:if="invoice.location.bank_account_name" py:strip="True">Account Name ${invoice.location.bank_account_name}</c>         
+         <br />
          <c py:if="invoice.location.account_no" py:strip="True">Account Number ${invoice.location.account_no}</c>         
          <br />
          <c py:strip="True" py:if="invoice.location.sort_code"><br />Sort Code <c py:strip="True">${invoice.location.sort_code}</c></c>

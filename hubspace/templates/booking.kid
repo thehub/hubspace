@@ -99,8 +99,10 @@ if group:
        <div py:attrs="{'style':view==1 and 'display:block' or 'display:none'}" id="room_selector_group">
              <input id="room_selected" name="room_selected" type="hidden" value="${room_selected}" />
              <div py:for="res in resgroup.resources_order" class="room_selector room${resgroup.resources_order.index(res)+1}" id="room_selector-${Resource.get(res).id}">
+                <c py:if="Resource.get(res).active==1">
                   <a class="label${selected_room(res, room_selected)}" id="resource_label-${res}">${Resource.get(res).name}</a>
                   <span class="close"><input name="rooms_displayed" type="checkbox" value="${res}" py:attrs="display_room(res, rooms_displayed)" /></span>
+                </c>
              </div>
        </div>
      </c>

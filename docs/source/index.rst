@@ -16,6 +16,8 @@ Topics
 .. toctree::
    :maxdepth: 1
 
+   bulk_invoice
+
    invoicing
 
    invoice_numbering

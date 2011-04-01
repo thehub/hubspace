@@ -267,6 +267,7 @@ $(document).ready(function() {
         <hr/>
         <p><strong>Summary: </strong><br/><span id="preview"/></p>
         <hr/>
+        <input type="checkbox" name="notify_member" value="1"/> Notify member<br/>
         <input type="button" id="save" value="Submit"/>
     </div>
 </div>

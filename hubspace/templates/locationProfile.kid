@@ -84,6 +84,10 @@ nl2br = lambda s: s.replace("\n","<br/>")
 							<td class="line">Bank</td>
 							<td>${location.bank}</td>
 						</tr>
+						<tr py:if="attr_not_none(location, 'bank_account_name')" >
+							<td class="line">Bank Account Name</td>
+							<td>${location.bank_account_name}</td>
+						</tr>
 						<tr py:if="attr_not_none(location, 'account_no')" >
 							<td class="line">Bank Account No.</td>
 							<td>${location.account_no}</td>
