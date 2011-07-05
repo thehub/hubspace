@@ -25,7 +25,6 @@ def locations_string(object):
 ?>
 
 <div xmlns:py="http://purl.org/kid/ns#" py:strip="True">
-   <div id="dialog" title="Title"></div>
    <table py:def="load_memberProfile(object)" cellpadding="0" cellspacing="0" class="memberProfile">
 	 <tr>
             	<td class="photo" id="photo${object.id}">
@@ -35,8 +34,7 @@ def locations_string(object):
                               <img id="profile_image${object.id}" src="${image_src(object, 'image', '/static/images/shadow.png')}" width="100" height="100"/> 
                           </div>
                       </div>
-                      <div py:if='not AVATAR_INTEGRATION_ENABLED and permission_or_owner(object.homeplace,object,"manage_users")' id="upload_image${object.id}" class="replace_image">replace image</div>
-                      <a href="#" py:if='AVATAR_INTEGRATION_ENABLED and permission_or_owner(object.homeplace,object,"manage_users")' id="avatar-${object.username}" class="change_avatar">replace images</a>
+                      <div py:if='permission_or_owner(object.homeplace,object,"manage_users")' id="upload_image${object.id}" class="replace_image">replace image</div>
                       <div id="iframe_area${object.id}"></div>
                 </td>
 	        <td>
