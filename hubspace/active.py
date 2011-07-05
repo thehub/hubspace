@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from hubspace.model import Location, PublicPlace
 from sqlobject import AND
 
@@ -21,6 +23,8 @@ def write_link_tuple(loc, sub=False):
     if loc.microsite_active:
         return (loc.url + '/public/', link_content)
     else:
+        if loc.id == 22: # #236
+            return ('http://www.the-hub.co.il/home-en', loc.name)
         map_entry = PublicPlace.select(AND(PublicPlace.q.name == loc.name.lower()))
         if map_entry.count():
             return ('http://the-hub.net/places/' + loc.name.lower(), link_content)
@@ -31,9 +35,11 @@ def name_sort(a, b):
     return -1
 
 def location_links():
+    ext_links = [('http://www.hubzurich.org/', 'Zürich')]
     locations = Location.select(AND(Location.q.in_region == None, Location.q.hidden == False), orderBy='name')
     loc_tuples = []
     for location in locations:
+        if location.id in (2, 18): continue # Website 226
         link = write_link_tuple(location)
         if link:
             loc_tuples.append(link)
@@ -44,4 +50,5 @@ def location_links():
                 link = write_link_tuple(hub, sub=True)
                 if link:
                     loc_tuples.append(link)
+    loc_tuples.extend(ext_links)
     return loc_tuples

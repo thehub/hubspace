@@ -93,6 +93,7 @@ title = URLMappings({'http://amsterdam.the-hub.net': 'Hub Amsterdam',
                      'http://washintondc.the-hub.net':'Hub Washington DC',
                      'http://dc.the-hub.net':'Hub Washington DC',
                      'http://zurich.the-hub.net':'Hub Zurich',
+                     'http://westminster.the-hub.net':'Hub Westminster',
                      'http://toronto.the-hub.net':'Centre for Social Innovation',
                      'http://members.socialinnovation.ca':'Centre for Social Innovation',
                      'http://members.themonksyard.co.uk':'Monks Yard',
@@ -105,7 +106,6 @@ title = URLMappings({'http://amsterdam.the-hub.net': 'Hub Amsterdam',
 )
 site_index_page = URLMappings({'http://localhost:8080':'index.html',
                                'http://prague.the-hub.net':'blog',
-                               'http://capetown.the-hub.net':'blog',
                                'http://rovereto.the-hub.net':'Rovereto.html'})
 
 site_folders = URLMappings({'http://localhost:8080':'site_templates.hubspace.',
