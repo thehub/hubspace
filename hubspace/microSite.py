@@ -1,6 +1,7 @@
 import os
 import os.path
 import glob
+import re
 from turbogears import controllers, expose, redirect, identity, validators as v, validate, config
 from turbogears.identity.exceptions import IdentityFailure
 from hubspace.validators import *
@@ -37,6 +38,8 @@ import vobject
 import patches
 import logging
 applogger = logging.getLogger("hubspace")
+
+gr_cache = {}
 
 def place(obj):
     if isinstance(obj, Location):
@@ -227,9 +230,6 @@ def get_blog(*args, **kwargs):
     
 
     return {'blog': blog_body, 'blog_head': blog_head}
-
-
-
 
 
 def get_blog2(*args, **kwargs):
@@ -1279,6 +1279,24 @@ class MicroSite(controllers.Controller):
         if kwargs.get('tg_errors', None):
              return str(kwargs['tg_errors'])
 
+        gr_prefix = 'getready'
+        gr_dir = os.path.abspath('getready')
+        gr_pat = '/sites/.*_hub_net/getready(.*)'
+        if re.match(gr_pat, cherrypy.request.path):
+            gr_req_path = re.match('/sites/.*_hub_net/getready(.*)', cherrypy.request.path).groups()[0]
+            if gr_req_path in gr_cache:
+                return gr_cache[gr_req_path]
+            if gr_req_path in ('', '/'):
+                gr_req_path = '/index.html'
+            gr_path = os.path.abspath(gr_prefix + gr_req_path)
+            if gr_path.startswith(gr_dir) and os.path.exists(gr_path):
+                out = file(gr_path).read()
+            else:
+                applogger.warn('requested path: %s' % gr_path)
+                out = '404'
+            gr_cache[gr_req_path] = out
+            return out
+        
         if cherrypy.request.path.split('/')[-1] == self.site_dir.split('/')[-1]:
              redirect(cherrypy.request.path + '/')
 
@@ -1458,9 +1476,9 @@ def regenerate_page(location_id, page_type, check_mtime=False):
     for site in sites:
         if site.location == location_id: break
     else:
-        applogger.warning("could not find microsite instance for location [%d] page_type [%s]" % (location_id, page_type))
+        applogger.warning("could not find microsite instance for location [%s] page_type [%s]" % (location_id, page_type))
         return
-    if site.site_types[page_type].static:
+    if page_type in site.site_types and site.site_types[page_type].static:
         pages = Page.select(AND(Page.q.location==location_id, Page.q.page_type==page_type))
         for page in pages:
             if page.path_name.endswith('.html'):
