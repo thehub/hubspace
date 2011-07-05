@@ -2393,11 +2393,11 @@ var insert_sub_usages = function (link, json) {
             listen_custom_costs(ele);
         });
         var options = {action: function (ele) {
-            confirm_delete_rusage(ele);
+            confirm_delete_rusage(ele, 'billing');
         },
-                       message: 'Are you sure you want to delete this usage? '};
+                       message: 'Are you sure? '};
         jq('table#' + table.attr('id') + ' a.del_rusage').confirm_action(options);
-        jq('.sub_repeat_booking').click(pop_up_repeat_booking);
+        jq('.sub_repeat_booking').click(pop_up_repeat_booking_info);
         if (jq('#send_invoice_' + ids[3])) {
             jq('#' + table.attr('id') + ' a.add_to_invoice').click(add_rusage_to_invoice);
         }
