@@ -2,7 +2,7 @@ import datetime, itertools, time, calendar, os, time, thread, logging
 from glob import glob
 import compat
 from collections import defaultdict
-from hubspace.model import Resource, RUsage, Location, User, resource_types
+from hubspace.model import Resource, RUsageStripped, Location, User, resource_types
 from sqlobject.sqlbuilder import IN, Select, AND
 from turbogears import identity
 import tariff as tarifflib
@@ -31,9 +31,6 @@ def do_report_maintainance():
             os.remove(f)
         except Exception, err:
             applogger.warn("reportutils: Error removing file: %s" % f)
-    global get_all_usages
-    get_all_usages = AllUsages()
-    get_all_usages.update()
 
 class Report(object):
     """
@@ -104,89 +101,37 @@ class Report(object):
     def save(self):
         pass
 
-ru_attrs2store = ('id', 'effectivecost', 'start', 'duration_or_quantity', 'resourceID', 'invoiceID', 'userID', 'tariffID')
-
-class RUsageCache(object):
-    __slots__ = ru_attrs2store
-    def __init__(self, ru):
-        for attr in ru_attrs2store:
-            setattr(self, attr, getattr(ru, attr))
-    def _get_resource(self):
-        return Resource.get(self.resourceID)
-    def _get_user(self):
-        return User.get(self.userID)
-    def _get_invoice(self):
-        return User.get(self.userID)
-    def _get_tariff(self):
-        return Resource.get(self.tariffID)
-    invoice = property(_get_invoice)
-    user = property(_get_user)
-    resource = property(_get_resource)
-    tariff = property(_get_tariff)
-
-class AllUsages(object):
-    def __init__(self):
-        self.storage = None
-        self.last_updated = datetime.datetime.now() - datetime.timedelta(2)
-        self.updating = False
-    def is_updated(self):
-        return self.storage and self.last_updated > (datetime.datetime.now() - datetime.timedelta(1))
-    def is_updating(self):
-        return self.updating
-    def __call__(self):
-        if not self.is_updated():
-            if self.is_updating():
-                while self.is_updating():
-                    time.sleep(1)
-                    print "waiting.. ", self.is_updating()
-            else:
-                self.update()
-        return self.storage
-    def update(self, wait_secs=0):
-        if self.is_updating():
-            print "quitting: update already in progress"
-            return
-        self.updating = True
-        time.sleep(wait_secs)
-        print "updating"
-        try:
-            self.storage = dict ( \
-             (loc, list(usages)) for loc, usages in sortAndGrpby((ru for ru in (RUsageCache(ru) for ru in RUsage.select())), lambda ru: ru.resource.place.id) )
-            self.last_updated = datetime.datetime.now()
-        except Exception, err:
-            applogger.error("reportutils: error updating cache %s" % err)
-        finally:
-            self.updating = False
-        print "updated"
-    def update_in_thread(self, wait_secs):
-        thread.start_new(self.update, (wait_secs,))
-
-get_all_usages = AllUsages()
-get_all_usages.update_in_thread(5*60)
-
 def get_usages_for_period(location, start, end):
-    return (ru for ru in get_all_usages()[location] if end >= ru.start >= start)
+    RUsage = RUsageStripped
+    return RUsage.select(AND(
+        Resource.q.placeID==location,
+        RUsage.q.resourceID==Resource.q.id,
+        RUsage.q.start >= start,
+        RUsage.q.end_time <= end))
         
 def get_this_months_limits(someday=None):
     today = someday or datetime.date.today()
-    end = datetime.datetime(today.year, today.month, calendar.monthrange(today.year, today.month)[1])
-    start = datetime.datetime(end.year, end.month, 1)
+    end = datetime.datetime(today.year, today.month, calendar.monthrange(today.year, today.month)[1]) + datetime.timedelta(1)
+    start = datetime.datetime(today.year, today.month, 1)
     return start, end
 
 def get_next_months_limits(someday=None):
+    raise NotImplemented
     today = someday or datetime.date.today()
     start = datetime.datetime(today.year, today.month, calendar.monthrange(today.year, today.month)[1]) + datetime.timedelta(1)
     end = datetime.datetime(start.year, start.month, calendar.monthrange(start.year, start.month)[1])
+    return start, end
 
 def get_last_months_limits(someday=None):
     today = someday or datetime.date.today()
-    end = datetime.datetime(today.year, today.month, 1) - datetime.timedelta(1)
-    start = datetime.datetime(end.year, end.month, 1)
+    end = datetime.datetime(today.year, today.month, 1)
+    last_day_last_month = end - datetime.timedelta(1)
+    start = datetime.datetime(last_day_last_month.year, last_day_last_month.month, 1)
     return start, end
 
 def get_this_and_last_months_limits(someday=None):
     today = someday or datetime.date.today()
-    end = datetime.datetime(today.year, today.month, calendar.monthrange(today.year, today.month)[1])
+    end = datetime.datetime(today.year, today.month, calendar.monthrange(today.year, today.month)[1]) + datetime.timedelta(1)
     lm_end = datetime.datetime(today.year, today.month, 1) - datetime.timedelta(1)
     start = datetime.datetime(lm_end.year, lm_end.month, 1)
     return start, end
@@ -194,7 +139,7 @@ def get_this_and_last_months_limits(someday=None):
 def get_last_12months_limits(someday=None):
     today = someday or datetime.date.today()
     start = datetime.datetime(today.year - 1, today.month, 1)
-    end = datetime.datetime(today.year, today.month, calendar.monthrange(today.year, today.month)[1])
+    end = datetime.datetime(today.year, today.month, 1)
     return start, end
 
 def save_result(f):
@@ -300,7 +245,7 @@ class LocationStats(object):
             )
 
     def get_members_by_tariff(self):
-        tariff_usages = (ru for ru in self.get_usages_for_period(*get_this_months_limits()) if ru.resource.type == 'tariff')
+        tariff_usages = (ru for ru in self.usages if ru.resource.type == 'tariff')
         stats = tuple((name, len(tuple(usages))) for name, usages in sortAndGrpby(tariff_usages, lambda ru: ru.resource.name))
         applogger.info("reportutils:get_members_by_tariff -> %s" % str(stats))
         return stats
@@ -331,8 +276,7 @@ class LocationStats(object):
         raise NotImplemented
 
     def get_usages_for_period(self, start, end):
-        rusages = get_all_usages()[self.location.id]
-        return list(ru for ru in rusages if end >= ru.start >= start)
+        return get_usages_for_period(self.location, start, end)
 
     def __getattr__(self, attrname):
         if attrname == "usages":
