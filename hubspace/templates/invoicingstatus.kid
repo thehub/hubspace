@@ -59,7 +59,7 @@ $('#msg-' + ${invoice.id}).click( function () {
         position: 'left top'
         });
     dialog.dialog('open');
-    $('#edit-message-${invoice.id}').html("${message}");
+    $('#edit-message-${invoice.id}').html('${message}');
     $('#msg_save-${invoice.id}').click( function () {
         $('#message_${invoice.id}').val($('#edit-message-${invoice.id}').val());
         $('#ponumbers_${invoice.id}').val($('#edit-ponumbers-${invoice.id}').val());
