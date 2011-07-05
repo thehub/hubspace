@@ -6,8 +6,8 @@ from datetime import datetime, date, time, timedelta
 import logging
 import datetime
 
-PAST_EVENTS_MAX = 30
-FUTURE_EVENTS_MAX = 30
+PAST_EVENTS_MAX = 300
+FUTURE_EVENTS_MAX = 60
 MAX_PROFILES = 30
 
 applogger = logging.getLogger("hubspace")
