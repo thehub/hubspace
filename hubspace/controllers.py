@@ -445,7 +445,7 @@ def roles_grantable(location):
 
 
 def uninvoiced_users(location, resource_type, search_from_date, include_zero_usage_cost_members):
-    consider_start_time = location in (23, 14) # #777
+    consider_start_time = location in (23, 14, 9) # #777
     conds = [RUsage.q.invoiceID==None,
              Resource.q.placeID==location,
              RUsage.q.resourceID==Resource.q.id,
@@ -4996,7 +4996,7 @@ The Hub Team
         if not users:
             raise 'Cant invoice this user directly - this user %s bills to user %s - %s' % (user.id,user.billto.id,user.billto.user_name)
     
-        ignore_end_time = location.id in (23, 14) # #777
+        ignore_end_time = location.id in (23, 14, 9) # #777
         invoice = create_object('Invoice', user=user, location=location, start=start, end_time=end_time, billingaddress=user.billingaddress)
         applogger.info("_create_invoice: %s" % invoice.id)
     
@@ -5307,12 +5307,12 @@ The Hub Team
         elif pattern == "monthly":
             by_weekday = kw['monthly_opt_day'] == 'weekday'
             by_day = kw['monthly_opt_day'] == 'day'
-            if by_day:
-                repeat_day = int(kw['monthly_opt_day_day'])
-                if date_next.day > repeat_day:
-                    date_next = dateutils.advance_one_month(date_next)
-                date_next = date(date_next.year, date_next.month, repeat_day)
-            if by_weekday:
+            by_month_end = kw['monthly_opt_day'] == 'end'
+            if by_day or by_month_end:
+                repeat_day = 31 if by_month_end else int(kw['monthly_opt_day_day'])
+                precise = not by_month_end
+                repeat_dates = dateutils.get_matching_day_per_month(from_date, to_date, repeat_day, precise)
+            elif by_weekday:
                 repeat_weekday = int(kw['monthly_opt_weekday_day'])
                 repeat_week_no = int(kw['monthly_opt_weekday_week_no'])
                 date_month_start = dateutils.get_month_start(date_next)
@@ -5320,13 +5320,13 @@ The Hub Team
                 if date_next > this_month_match:
                     date_next = dateutils.get_next_month_start(date_next)
                     date_next = dateutils.find_by_weekday_for_week_no(date_next, repeat_weekday, repeat_week_no)
-            while date_next <= to_date:
-                repeat_dates.append(date_next)
-                if by_day:
-                    date_next = dateutils.advance_one_month(date_next)
-                elif by_weekday:
-                    date_next = dateutils.get_next_month_start(date_next)
-                    date_next = dateutils.find_by_weekday_for_week_no(date_next, repeat_weekday, repeat_week_no)
+                while date_next <= to_date:
+                    repeat_dates.append(date_next)
+                    if by_day:
+                        date_next = dateutils.advance_one_month(date_next)
+                    elif by_weekday:
+                        date_next = dateutils.get_next_month_start(date_next)
+                        date_next = dateutils.find_by_weekday_for_week_no(date_next, repeat_weekday, repeat_week_no)
         elif pattern == "multidate":
             repeat_dates = kw['repeat_dates'].split(',')
             repeat_dates = [dateconverter2.to_python(adate) for adate in repeat_dates]

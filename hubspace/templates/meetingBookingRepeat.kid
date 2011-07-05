@@ -101,6 +101,8 @@ $(document).ready(function() {
             $('#preview').text("Every " + "${today_weekday_week_no_str}" + " ${today_weekday_str}" + " of month" + get_repeat_dates_str());
         } else if (monthly_opt_val == 'day') {
             $('#preview').text("Every " + "${today_day_str}" + " day of the month" + get_repeat_dates_str());
+        } else if (monthly_opt_val == 'end') {
+            $('#preview').text("Last day of the month" + get_repeat_dates_str());
         };
     };
     var select_weekly_opt_repeat_days = function () {
@@ -182,6 +184,7 @@ $(document).ready(function() {
                     $('#preview').text('processing...');
                     $('#repeat_conf').hide();
                     $('#save').hide();
+                    $('#notify_member').hide();
                 },
                 success: function (data) {
                     $('#preview').html('<span>' + data + '</span>');
@@ -241,6 +244,7 @@ $(document).ready(function() {
         <input type="checkbox" name="weekly_opt_repeat_days" py:for="day_tuple in day_tuples" py:attrs="day_tuple[1] == today_weekday and {'checked':'checked'} or {}" value="${day_tuple[0]}"> ${day_tuple[0]} </input>
     </div>
     <div id="monthly_opts">
+        <input type="radio" name="monthly_opt_day" value="end"/>Last day of every month<br/>
         <input type="radio" name="monthly_opt_day" class="monthly_opt_day" py:attrs="{'checked':'checked'}" value="day"/>By date of the month: <input type="text" value="${rightnow.day}" name="monthly_opt_day_day" id="monthly_opt_day_day" size="2" maxlength="2"/>
         <br/>
         <input type="radio" name="monthly_opt_day" class="monthly_opt_day" value="weekday"/>By day of the week:
@@ -267,7 +271,7 @@ $(document).ready(function() {
         <hr/>
         <p><strong>Summary: </strong><br/><span id="preview"/></p>
         <hr/>
-        <input type="checkbox" name="notify_member" value="1"/> Notify member<br/>
+        <c id="notify_member"><input type="checkbox" name="notify_member" value="1"/> Notify member<br/></c>
         <input type="button" id="save" value="Submit"/>
     </div>
 </div>

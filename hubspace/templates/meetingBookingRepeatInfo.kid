@@ -20,8 +20,8 @@
 
 <?python
 from hubspace.model import RUsage
-repeat_usages = list(RUsage.selectBy(repetition_id=booking_id).orderBy('start'))
-booking = repeat_usages[0]
+booking = RUsage.get(booking_id)
+repeat_usages = list(RUsage.selectBy(repetition_id=booking.repetition_id).orderBy('start'))
 statuses_flag = 0
 if 'statuses' in locals():
     statuses_flag = 1

@@ -236,8 +236,8 @@ class User(SQLObject):
     
     description = UnicodeCol(default="")
     def _get_url(self):
-        domain = self.homeplace.url and self.homeplace.url or 'http://members.the-hub.net'    
-        if new_or_old.get(self.homeplace.url, 'old') == 'new':
+        domain = self.homeplace and self.homeplace.url or 'http://members.the-hub.net'    
+        if new_or_old.get(domain, 'old') == 'new':
             domain += '/public'
         return domain + "/members/" + self.user_name
 
@@ -1266,6 +1266,37 @@ class TaxExemptionRule(Rule):
 #    key = StringCol(unique=True)
 #    user = ForeignKey("User", cascade=True)
 #    apis = PickleCol(default=[])
+
+
+class RUsageStripped(SQLObject):
+    class sqlmeta:
+        table = "rusage"
+    user = ForeignKey("User")
+    resource = ForeignKey("Resource")
+    tariff = ForeignKey("Resource", default=None)
+    start = DateTimeCol()
+    end_time = DateTimeCol(default=None)
+    quantity = IntCol(default=1)
+    def _isInvoiced(self):
+        return bool(self.invoice and self.invoice.sent)
+    invoiced = property(_isInvoiced)
+    def _get_duration_or_quantity(self):
+        return self.resource.time_based and self.end_time - self.start or self.quantity
+    duration_or_quantity = property(_get_duration_or_quantity)
+    cost=CurrencyCol(default=0)
+    customcost = CurrencyCol(default=None)
+    def _get_effective_cost(self): # to avoid mistakes like 1. usage.customcost or usage.cost (problem if former is 0) and 2. to serve as a shortcut
+        return self.customcost if self.customcost is not None else self.cost
+    effectivecost = property(_get_effective_cost)
+    invoice = ForeignKey("Invoice",default=None)
+    confirmed = IntCol(default=1)
+    cancelled = IntCol(default=0)
+    refund = IntCol(default=0)
+    refund_for = IntCol(default=None)
+    def __str__(self):
+        return "RUsage: %s, user: %s Resource:%s (%s-%s)" % (self.id, self.user.user_name, self.resource.name, self.start, self.end_time)
+
+
 
 # Create missing tables
 for sobj in [MessageCustomization, Rule, TaxExemptionRule]:
