@@ -8,7 +8,7 @@ Dear ${MEMBER_FIRST_NAME},
 Thank you for your booking at The Hub ${LOCATION}.
 
 Your booking from ${BOOKING_START} to ${BOOKING_END} on ${BOOKING_DATE} for ${RESOURCE} is repeated for below 
-${REPEAT_DATES}s
+${REPEAT_DATES}
 
 The expected cost per usage is ${CURRENCY} ${COST}.
 ${ALSO_BOOKED}
