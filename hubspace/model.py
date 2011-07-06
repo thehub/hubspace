@@ -316,7 +316,9 @@ class User(SQLObject):
     #password reminder
     reminderkey = UnicodeCol(length=50,default=None)
 
-    has_avatar = BoolCol(default=False)
+    #has_avatar = BoolCol(default=False)
+    def _get_has_avatar(self):
+        return os.path.exists(self.imageFilename())
 
     def imageFilename(self):
         #server_path = config.get('server.path')
