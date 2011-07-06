@@ -4,7 +4,7 @@ oddness = oddOrEven()
 from hubspace.controllers import gip, is_owner, permission_or_owner, get_place
 from hubspace.validators import dateconverter
 
-from hubspace.utilities.image_helpers import image_src, AVATAR_INTEGRATION_ENABLED
+from hubspace.utilities.image_helpers import image_src
 
 def locations(object):
     locations = []
