@@ -6,8 +6,8 @@ from datetime import datetime, date, time, timedelta
 import logging
 import datetime
 
-PAST_EVENTS_MAX = 300
-FUTURE_EVENTS_MAX = 60
+PAST_EVENTS_MAX = 1000
+FUTURE_EVENTS_MAX = 200
 MAX_PROFILES = 30
 
 applogger = logging.getLogger("hubspace")
@@ -86,7 +86,7 @@ class EventCacheContainer(ObjectCacheContainer):
     objectcache_factory = EventCache
     def populate(self):
         now = datetime.datetime.now()
-        till_dt = datetime.datetime(now.year, now.month, now.day) - datetime.timedelta(90)
+        till_dt = datetime.datetime(now.year, now.month, now.day) - datetime.timedelta(730)
         if self.location == 'global':
             events_select = RUsage.select \
                 (AND(RUsage.q.resourceID==Resource.q.id, RUsage.q.public_field == 1, RUsage.q.start >= till_dt)).orderBy('start').reversed()

@@ -235,26 +235,27 @@ jq(document).ready(function () {
             if (default_val.length > 2000) {
                 default_val = "";
             }
-            inplace_editor(element_id, relative_url + 'edit/attribute_edit', {
-                           callback: function (form, val) {
-                            return [{name: 'object_id', value: object_id},
-                                    {name: 'object_type', value: object_type},
-                                    {name: 'value', value: val},
-                                    {name: 'page_name', value: page_name},
-                                    {name: 'property', value: element_id}];
-                            },
-                            object_type: object_type,
-                            object_id: object_id,
-                            ui_type: widget_type,
-                            edit_event: edit_event,
-                            clickToEditText: clickToEdit,
-                            widget_id: element_id + '_widget',
-                            widget_name: element_id,
-                            property: element_id,
-                            value: jq('#' + element_id).html(),
-                            loadTextURL: relative_url + 'edit/attribute_load?object_type=' + object_type + '&object_id=' + object_id + '&property=' + element_id + '&default=' + encodeURIComponent(default_val)
-
+            if (element_id) {
+                inplace_editor(element_id, relative_url + 'edit/attribute_edit', {
+                               callback: function (form, val) {
+                                return [{name: 'object_id', value: object_id},
+                                        {name: 'object_type', value: object_type},
+                                        {name: 'value', value: val},
+                                        {name: 'page_name', value: page_name},
+                                        {name: 'property', value: element_id}];
+                                },
+                                object_type: object_type,
+                                object_id: object_id,
+                                ui_type: widget_type,
+                                edit_event: edit_event,
+                                clickToEditText: clickToEdit,
+                                widget_id: element_id + '_widget',
+                                widget_name: element_id,
+                                property: element_id,
+                                value: jq('#' + element_id).html(),
+                                loadTextURL: relative_url + 'edit/attribute_load?object_type=' + object_type + '&object_id=' + object_id + '&property=' + element_id + '&default=' + encodeURIComponent(default_val)
             });
+            };    
         });
     }
 

@@ -221,6 +221,9 @@ def get_blog(*args, **kwargs):
 	     header.extract()
         for css in blog.head.findAll('link', attrs={'href':re.compile('.*standalone\.css')}):
              css.extract()
+        for link in blog.head.findAll('link', attrs={'rel':'canonical'}):
+             link.extract()
+             #link['href'] = link['src'].replace(our_url, blog_url)
         blog_head = blog.head.renderContents()
         blog_body = blog.body.renderContents()
 
@@ -1251,7 +1254,8 @@ class MicroSite(controllers.Controller):
         if eventid:
             events = [RUsage.get(eventid)]
         else:
-            events = get_local_future_events(location=self.location, no_of_events=1000)['future_events']
+            events = get_local_past_events(location=self.location)['past_events']
+            events += get_local_future_events(location=self.location)['future_events']
         cal = vobject.iCalendar()
         cal.add('X-WR-CALNAME').value = "%s (%s) events" % (location.name,location.city)
         cal.add('X-WR-TIMEZONE').value = location.timezone
@@ -1276,25 +1280,38 @@ class MicroSite(controllers.Controller):
     def default(self, *args, **kwargs):
         """This needs securing a little bit
         """
+        global gr_cache
+        if Location.get(self.location).hidden:
+             raise redirect('http://www.the-hub.net')
+
         if kwargs.get('tg_errors', None):
              return str(kwargs['tg_errors'])
 
         gr_prefix = 'getready'
         gr_dir = os.path.abspath('getready')
         gr_pat = '/sites/.*_hub_net/getready(.*)'
-        if re.match(gr_pat, cherrypy.request.path):
-            gr_req_path = re.match('/sites/.*_hub_net/getready(.*)', cherrypy.request.path).groups()[0]
+        gr_refresh = 'getready/refresh'
+        if cherrypy.request.path.endswith(gr_prefix):
+            raise redirect('http://www.the-hub.net/getready/')
+        elif cherrypy.request.path.endswith(gr_refresh):
+            applogger.info("gr_cache refresh: %s" % str(gr_cache.keys()))
+            gr_cache = {}
+            applogger.info("gr_cache refresh: %s" % str(gr_cache.keys()))
+            return "done"
+        gr_match = re.match(gr_pat, cherrypy.request.path)
+        if gr_match:
+            gr_req_path = gr_match.groups()[0]
             if gr_req_path in gr_cache:
                 return gr_cache[gr_req_path]
-            if gr_req_path in ('', '/'):
+            if gr_req_path == '/':
                 gr_req_path = '/index.html'
             gr_path = os.path.abspath(gr_prefix + gr_req_path)
             if gr_path.startswith(gr_dir) and os.path.exists(gr_path):
                 out = file(gr_path).read()
+                gr_cache[gr_req_path] = out
             else:
-                applogger.warn('requested path: %s' % gr_path)
+                applogger.error('requested path: %s' % gr_path)
                 out = '404'
-            gr_cache[gr_req_path] = out
             return out
         
         if cherrypy.request.path.split('/')[-1] == self.site_dir.split('/')[-1]:

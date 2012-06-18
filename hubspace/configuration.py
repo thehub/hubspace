@@ -35,6 +35,7 @@ new_or_old = URLMappings({'http://amsterdam.the-hub.net':'new',
                           'http://members.the-hub.net':'old',
                           'http://test.the-hub.net':'new',
                           'http://test2.the-hub.net':'new',
+                          'http://tech.the-hub.net':'new',
                           'http://melbourne.the-hub.net': 'new',
                           'http://testregion.the-hub.net':'new'}
 )
@@ -102,10 +103,12 @@ title = URLMappings({'http://amsterdam.the-hub.net': 'Hub Amsterdam',
                      'http://members.the-hub.net':'The Hub',
                      'http://test.the-hub.net':'The Hub',
                      'http://test2.the-hub.net':'The Hub',
+                    'http://tech.the-hub.net':'The Hub | Tech',
                      'http://testregion.the-hub.net':'The Hub',}
 )
 site_index_page = URLMappings({'http://localhost:8080':'index.html',
                                'http://prague.the-hub.net':'blog',
+                               'http://tech.the-hub.net':'blog',
                                'http://rovereto.the-hub.net':'Rovereto.html'})
 
 site_folders = URLMappings({'http://localhost:8080':'site_templates.hubspace.',
@@ -137,6 +140,7 @@ site_default_lang = URLMappings({'http://localhost:8080':'en',
                                  'http://stockholm.the-hub.net':'sv',
                                  'http://tampere.the-hub.net':'fi',
                                  'http://vienna.the-hub.net':'en',
+                                 'http://tech.the-hub.net':'en',
                                  'http://zurich.the-hub.net':'de',})
                                  #'http://bergen.the-hub.net':'no',
                                  #'http://kyiv.the-hub.net':'uk',

@@ -23,7 +23,10 @@ applogger = logging.getLogger("hubspace")
 
 def get_location_from_base_url():
     try:
-        return Location.select(Location.q.url==cherrypy.request.base)[0]
+        req_url = cherrypy.request.base.lower()
+        if 'https:' in req_url: # website#252
+            req_url = req_url.replace('https:', 'http:')
+        return Location.select(Location.q.url==req_url)[0]
     except IndexError:
         try:
             # try w/o www. Ref: website #89

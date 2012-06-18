@@ -21,10 +21,14 @@ def write_link_tuple(loc, sub=False):
     else:
         link_content = '<span class="sub_link">%s</span>' %(loc.name)
     if loc.microsite_active:
+        if loc.id == 88:
+            return ('http://www.hubwestminster.net/', link_content)
         return (loc.url + '/public/', link_content)
     else:
         if loc.id == 22: # #236
             return ('http://www.the-hub.co.il/home-en', loc.name)
+        elif loc.id == 60:
+            return ('http://www.hubzurich.org/', 'Zürich')
         map_entry = PublicPlace.select(AND(PublicPlace.q.name == loc.name.lower()))
         if map_entry.count():
             return ('http://the-hub.net/places/' + loc.name.lower(), link_content)
@@ -35,11 +39,10 @@ def name_sort(a, b):
     return -1
 
 def location_links():
-    ext_links = [('http://www.hubzurich.org/', 'Zürich')]
     locations = Location.select(AND(Location.q.in_region == None, Location.q.hidden == False), orderBy='name')
     loc_tuples = []
     for location in locations:
-        if location.id in (2, 18): continue # Website 226
+        if location.id in (2, 18, 32, 7, 90): continue # Website 226, 263, 271
         link = write_link_tuple(location)
         if link:
             loc_tuples.append(link)
@@ -50,5 +53,4 @@ def location_links():
                 link = write_link_tuple(hub, sub=True)
                 if link:
                     loc_tuples.append(link)
-    loc_tuples.extend(ext_links)
     return loc_tuples

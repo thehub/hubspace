@@ -167,6 +167,9 @@ negative_total = invoice.amount < 0
     <c py:if="invoice.location.vat_no" py:strip="True"><c>VAT Number</c>: ${invoice.location.vat_no} <br/></c>
     <c py:strip="True" py:if="invoice.location.billing_address">${nl2br(invoice.location.billing_address)} <br /></c>
     <a href="invoice.location.url">${invoice.location.url}</a> <br /><br />
+    <p>
+    Společnost je vedena u rejstříkového soudu v Praze, oddíl C, vložka 160511
+    </p>
     <strong><c>Bank Details </c> <br /></strong>
     <c py:strip="True" py:if="invoice.location.bank">${invoice.location.bank}</c><br />
     <c py:if="invoice.location.bank_account_name" py:strip="True"><c>Account Name</c>: ${invoice.location.bank_account_name} <br /> </c>
@@ -207,7 +210,7 @@ negative_total = invoice.amount < 0
         <tr>
             <td colspan="2">
             <h2 py:if="negative_total">CREDIT NOTE</h2>
-            <h1 py:if="not negative_total">INVOICE</h1>
+            <h1 py:if="not negative_total">Faktura</h1>
             </td>
         </tr>
         <tr>

@@ -10,8 +10,20 @@ from docutils.core import publish_parts
 <body>
     <div id="hubHomeContent" class="clearfix">
         <div id="main">
-            <h1 py:if="location">${location.homepage_title}</h1>
-            <div py:if="location">${location.homepage_description and XML(publish_parts(location.homepage_description, writer_name="html")["html_body"])}</div>
+            <h1>HUB Space Room Booking</h1>
+            <div>
+            Welcome to the HUB Space room booking platform.<br/>
+<br/>
+            Dear HUB Member<br/>
+<br/>
+            While we are building a new booking system you can access HUB Space here.<br/>
+<br/>
+            Please use your username and password to log in to HUB Space and book rooms<br/>
+            in your HUB.<br/>
+<br/>
+            Kind regards,<br/>
+            Your HUB Tech Team<br/>
+            </div>
         </div>
     </div>
 </body>

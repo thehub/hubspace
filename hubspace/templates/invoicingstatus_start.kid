@@ -52,6 +52,7 @@
 
 <form id="invoice_approval" action="/send_invoices" method="post">
 
+
 <div class="actions container">
     <div class="span-5">
     <input type="submit" class="send_approved" value="Send selected"/>

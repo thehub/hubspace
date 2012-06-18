@@ -20,7 +20,8 @@ def pn(thepage):
     else:
         return thepage.path_name
 ?>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
+<html xmlns="http://www.w3.org/1999/xhtml"  xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml" lang="en" xml:lang="en" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
+
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">
     
     <!-- sidebar headers -->
@@ -30,7 +31,7 @@ def pn(thepage):
     ?>
     <div py:replace="item[:]"/>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
-    <meta content="Places for meeting, working, learning, innovating and connecting dedicated to inspiring and supporting enterprising and imaginative initiatives for a radically better world. " name="description" />
+    <meta py:if="not page.page_type=='blog'" content="Places for meeting, working, learning, innovating and connecting dedicated to inspiring and supporting enterprising and imaginative initiatives for a radically better world. " name="description" />
     <meta py:if="location and location.name=='Brussels'" content="social entrepreneur, enterprise, entreprise sociale, entrepreneurs sociaux, maatschappelijke ondernemer, hub brussels, bruxelle, brussel, innovatie, innovation, imagination, verbeelding, maatschappelijke verandering, social change, changement sociale" name="keywords"  />
     <c py:if="not page.page_type=='blog'" py:strip="True" >
         <title>${title and title or "The Hub King's Cross"} ${page.title and page.title != title and '| ' + page.title.title() or ""}</title>
@@ -188,7 +189,7 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 </script>
 <script type="text/javascript">
 try {
-var pageTracker = _gat._getTracker("UA-9039567-1");
+var pageTracker = _gat._getTracker(${location and location.id == 46 and '"UA-27530831-1"' or '"UA-9039567-1"'});
 pageTracker._setDomainName(".the-hub.net");
 pageTracker._trackPageview();
 } catch(err) {}</script>

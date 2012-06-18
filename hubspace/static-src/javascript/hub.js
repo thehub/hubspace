@@ -1266,7 +1266,11 @@ var Tabs = function () {
                           'space': {0: {}}};
     var make_section_switch = false;
     var edited_subsection = 0;
-    if (jq("#profileContent").attr("class") === 'pane_selected') {
+    if (window.location.pathname.match(/booking$/)) {
+        var section_name = "space";
+        var section_no = 2;
+        alert(section_no);
+    } else if (jq("#profileContent").attr("class") === 'pane_selected') {
         var section_name = "profile";
         var section_no = 1;
     } else if (jq("#networkContent").attr("class") === 'pane_selected') {

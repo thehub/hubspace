@@ -36,14 +36,18 @@ def namespace():
         <a href="/" title="Home" ><div id="header" class="clearfix">
         </div></a>
             <div class="updatesBar eventsFeed">
+                <!--
                 <div py:replace="events_feed(updates, location)">
                 </div>
+                -->
             </div> 
             <div  class="updatesBar profilesFeed" id="extras">
                 <div py:replace="loginBox()" py:if="identity.current.anonymous">
                 </div>
+                <!--
                 <div py:replace="profiles_feed(updates, location)">
                 </div>
+                -->
             </div> 
         <div py:replace="item[:]" />
         <div py:replace="footer()">

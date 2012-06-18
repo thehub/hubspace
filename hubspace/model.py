@@ -392,7 +392,8 @@ class User(SQLObject):
 
     def _get_tariff_name(self):
         import hubspace.tariff
-        return hubspace.tariff.get_tariff(self.homeplace.id, self.id, datetime.now(), True).name
+        tariff = hubspace.tariff.get_tariff(self.homeplace.id, self.id, datetime.now(), True)
+        return tariff and tariff.name or ''
 
     def _get_tariff(self):
         import hubspace.tariff

@@ -1295,7 +1295,7 @@ msgstr ""
 
 #: hubspace/templates/newinvoice_euve.kid:h1
 msgid "INVOICE"
-msgstr ""
+msgstr "Faktura"
 
 #: hubspace/templates/newinvoice_euve.kid:td
 msgid "Number"
