@@ -22,7 +22,7 @@ Python::
     url = "https://members.the-hub.net/verify_credentials"
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     data = dict (username = "shon", password = "secret" )
-    req = urllib2.Request(url, headers=headers,  urllib.urlencode(data))
+    req = urllib2.Request(url, headers=headers,  data=urllib.urlencode(data))
     response = urllib2.urlopen(req)
     print response.read()
 

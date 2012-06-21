@@ -1845,6 +1845,32 @@ class Root(controllers.RootController):
             retcode = False
         return {'authenticated':retcode}
 
+    @expose(allow_json=True, format="json")
+    def import_usages(self, usages_data):
+        place_ids = [place.id for place in user_locations(identity.current.user, levels=['host'])]
+        if not places: raise IdentityFailure('what about not hacking the system')
+
+        resource_ids = [resource.id for resource in Resource.select(IN(Resource.q.placeID, place_ids),
+                            Resource.q.type!='tariff', Resource.q.type!='calendar'))]
+        usage_ids = []
+
+        for item in usages_data:
+            if item['resource'] not in resource_ids:
+                usage_ids.append(None)
+                continue
+            data = dict(suppress_notification=True)
+            data['resource'] = item['resource']
+            data['start'] = item['start']
+            data['end'] = item['end']
+            data['quantity'] = item['quantity']
+            customcost = data.get('cost', None)
+            if not 'cost' == None:
+                data['customcost'] = item['cost']
+            usage_id = create_rusage(data)
+            usage_ids.append(usage_id)
+
+        return usage_ids
+
     @expose()
     def fastlogin(self, username=1, password=1):
         import turbogears.visit as visit
