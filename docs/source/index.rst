@@ -26,9 +26,12 @@ Topics
 
    eu_tax
 
+   repeatbooking
+
    connect
 
-   repeatbooking
+   import_usages
+
 
 Indices and tables
 ==================
