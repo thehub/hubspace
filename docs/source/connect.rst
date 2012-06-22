@@ -1,5 +1,5 @@
-Hub Connect
-===========
+API: Hub Connect
+================
 
 Hub connect exposes basic hubspace credential check to verify against hubspace user database. And thus allows possible integration for third party utilities.
 
