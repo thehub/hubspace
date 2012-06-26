@@ -1850,7 +1850,7 @@ class Root(controllers.RootController):
         place_ids = [place.id for place in user_locations(identity.current.user, levels=['host'])]
         if not places: raise IdentityFailure('what about not hacking the system')
 
-        resource_ids = [resource.id for resource in Resource.select(IN(Resource.q.placeID, place_ids),
+        resource_ids = [resource.id for resource in Resource.select(AND(IN(Resource.q.placeID, place_ids),
                             Resource.q.type!='tariff', Resource.q.type!='calendar'))]
         usage_ids = []
 
