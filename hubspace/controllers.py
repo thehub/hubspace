@@ -1824,7 +1824,7 @@ class Root(controllers.RootController):
                 sleep(1)
                 yield str(i)
         return streamer(N)
-        
+
     @expose()
     def langtest(self):
         hub_locale = get_hubspace_locale()
@@ -1870,6 +1870,14 @@ class Root(controllers.RootController):
             usage_ids.append(usage_id)
 
         return usage_ids
+
+    @expose(allow_json=True, format="json")
+    def list_resources(self, place_id):
+        if place_id not in [place.id for place in user_locations(identity.current.user, levels=['host'])]:
+            raise IdentityFailure('what about not hacking the system')
+
+        to_dict = lambda resource: dict(id=resource.id, name=resource.name)
+        return [to_dict(resource) for resource in Resource.select(AND(Resource.q.placeID==place_id)]
 
     @expose()
     def fastlogin(self, username=1, password=1):
