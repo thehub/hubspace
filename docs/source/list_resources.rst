@@ -8,7 +8,16 @@ API: list_resources
 
 Parameters:
 
-    - place_id: ID for Hub <interger>
+    - place_id: ID for Hub <int>
+
+Return:
+    
+    Return value is an object containing key `result`.
+    Value of result is an array of resource objects.
+    Resource object contains following keys
+    - id <int>
+    - active <int 1|0>
+    - name <string>
 
 Python Example::
     

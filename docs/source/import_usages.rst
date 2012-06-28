@@ -19,12 +19,18 @@ Patameters:
     - member: Member id
     - quantity: Optional. Data type integer.
 
-Data Example::
+    Data Example::
 
-    [
-        {'member': 1209, 'resource': 103, 'start': '2012-04-01 09:30:00', quantity: 10},
-        {'member': 1589, 'resource': 107, 'start': '2012-04-07 11:00:00', 'end': '2012-04-01 12:30:00'}
-    ]
+        [
+            {'member': 1209, 'resource': 103, 'start': '2012-04-01 09:30:00', quantity: 10},
+            {'member': 1589, 'resource': 107, 'start': '2012-04-07 11:00:00', 'end': '2012-04-01 12:30:00'}
+        ]
+
+Return:
+
+    Return value is an object containing key `result`.
+
+    Value of result is an array. Array element could be an integer or null. Integer represents id of usage created in the system. null indicates failure to import usage at same position in `usages` value.
 
 Full Python example
 -------------------
