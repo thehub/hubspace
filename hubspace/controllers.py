@@ -1862,7 +1862,7 @@ class Root(controllers.RootController):
             data['resource'] = item['resource']
             data['start'] = item['start']
             data['end'] = item['end']
-            data['quantity'] = item['quantity']
+            data['quantity'] = item.get('quantity', 1)
             customcost = data.get('cost', None)
             if not 'cost' == None:
                 data['customcost'] = item['cost']
