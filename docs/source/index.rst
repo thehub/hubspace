@@ -30,6 +30,8 @@ Topics
 
    connect
 
+   list_resources
+
    import_usages
 
 
