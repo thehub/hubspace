@@ -1869,25 +1869,25 @@ class Root(controllers.RootController):
             usage_id = create_rusage(data)
             usage_ids.append(usage_id)
 
-        return usage_ids
+        return dict(result=usage_ids)
 
     @expose(allow_json=True, format="json")
     def list_resources(self, place_id):
-        if place_id not in [place.id for place in user_locations(identity.current.user, levels=['host'])]:
+        if not permission_or_owner(Location.get(place_id), None, 'manage_resources'):
             raise IdentityFailure('what about not hacking the system')
 
-        to_dict = lambda resource: dict(id=resource.id, name=resource.name)
-        return [to_dict(resource) for resource in Resource.select(AND(Resource.q.placeID==place_id)]
+        to_dict = lambda resource: dict(id=resource.id, name=resource.name, active=resource.active)
+        return dict(result=[to_dict(resource) for resource in Resource.select(AND(Resource.q.placeID==place_id))])
 
-    @expose()
-    def fastlogin(self, username=1, password=1):
+    @expose(format="json")
+    def authenticate(self, username, password):
         import turbogears.visit as visit
         iden = identity.current_provider.validate_identity(username, password, visit.current().key)
+        retcode = False
         if iden:
             identity.set_current_identity(iden)
-            return "success"
-        else:
-            return "failure"
+            retcode = True
+        return {'authenticated':retcode}
 
     @expose("hubspace.templates.managementReport")
     def generate_report(self, locations, report_types, period=None, start=None, end=None,format="web"):

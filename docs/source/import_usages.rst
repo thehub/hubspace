@@ -1,21 +1,8 @@
 ===========================
-API: Bulk usages import API
+API: Bulk usages import
 ===========================
 
 Importing bulk usages in Hubspace using APIs is two stage process.
-
-Authenticate and create a session
----------------------------------
-
-API: verify_credentials
-
-Patameters: username, password
-
-Usage: :doc:`Find documentation here </connect>`
-
-Importing usages in hubspace
-----------------------------
-
 
 API: import_usages
 
@@ -44,28 +31,23 @@ Full Python example
 
 ::
 
-    import sys
     import requests
     
     domain = 'https://members.the-hub.net/'
-    auth_url = domain + 'verify_credentials'
+    auth_url = domain + 'authenticate'
     import_url = domain + 'import_usages'
     
+    # 1. Authenticate and create a session
     creds = dict(username='clarkkent', password='secret')
     s = requests.session()
-    r = s.post(auth_url, creds)
+    r = s.post(auth_url, creds) # HTTP POST
     authenticated = r.json['authenticated']
     
-    if not authenticated:
-        print ('Login failed')
-        sys.exit(1)
-    else:
-        print ('Login successful')
-    
+    # 2. Importing usages in hubspace
     usages_data = [
         dict(member=1209, resource=103, start='2012-04-01 09:30:00', quantity=10),
         dict(member=1589, resource=107, start='2012-04-07 11:00:00', end='2012-04-01 12:30:00')
     ]
     
-    s.post(import_url, usages_data)
-
+    r = s.post(import_url, usages_data) # HTTP POST
+    print r.json
