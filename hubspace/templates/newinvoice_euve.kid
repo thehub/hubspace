@@ -190,7 +190,7 @@ negative_total = invoice.amount < 0
             <td>Date</td>
             <td>${formatDate(invoice.sent or datetime.datetime.now())}</td>  
         </tr>
-        <tr>
+        <tr py:if="invoice.location.id != 23">
             <td>Period</td>
             <td>${formatDate(invoice.start)} to ${formatDate(invoice.end_time)}</td>
         </tr>
