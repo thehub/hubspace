@@ -5031,7 +5031,7 @@ The Hub Team
         if not users:
             raise 'Cant invoice this user directly - this user %s bills to user %s - %s' % (user.id,user.billto.id,user.billto.user_name)
     
-        ignore_end_time = location.id in (23, 14, 9) # #777
+        ignore_end_time = location.id in (23, 14, 9, 36) # #777
         invoice = create_object('Invoice', user=user, location=location, start=start, end_time=end_time, billingaddress=user.billingaddress)
         applogger.info("_create_invoice: %s" % invoice.id)
     
