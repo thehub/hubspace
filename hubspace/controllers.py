@@ -4562,7 +4562,6 @@ The Hub Team
     @identity.require(not_anonymous())
     @validate(validators={'place':real_int, 'start':dateconverter, 'end':dateconverter})
     def invoice_list(self, place=None, start=None, end=None, file_name=None):
-      
         '''This is for sage
         "SI","2","4000","1","07/01/2007","H1","no details","210.00","T1","26.75","1", "1", "Jonathan Robinson"
         "SI", "userid", "4000", "1", "date", "invoice_id", "some details", "net amount", "T1", "vat", "exchange_rate", "extra info", "user name"
@@ -4574,33 +4573,52 @@ The Hub Team
 
         out = StringIO.StringIO()
         writer = csv.writer(out,quoting=csv.QUOTE_ALL)
-        invoices = Invoice.select(AND(Invoice.q.sent>=start,
-                                      Invoice.q.sent<(end + timedelta(days=1)),
-                                      Invoice.q.locationID==place))
+        invoices = list(model.Invoice.select(AND(model.Invoice.q.sent>=start,
+                                      model.Invoice.q.sent<(end + timedelta(days=1)),
+                                      model.Invoice.q.locationID==place)))
+
+
+        split_tax_columns = place in (14,)
+
+        if split_tax_columns:
+            tax_levels = set()
+            for invoice in invoices:
+                for (tax, level, included) in invoice.resource_tax_dict.values():
+                    tax_levels.add(level)
+            tax_levels = sorted(tax_levels)
+
+        date_fmt = '%d/%m/%Y'
+
         for invoice in invoices:
             excluding_vat = Decimal(str(invoice.amount)) - invoice.total_tax
-            
+
             if invoice.amount>0:
                 code = 'SI'
             elif invoice.amount<0:
                 code = 'SC'
             else:
                 continue
-                
-            row = (code,
-                   invoice.user.id,
-                   4000,
-                   1,
-                   invoice.sent.strftime('%d/%m/%Y'),
-                   invoice.number,
-                   'Invoice %s for period %s to %s' %(invoice.number, invoice.start.strftime('%d/%m/%Y'), invoice.end_time.strftime('%d/%m/%Y')),
-                   str(abs(excluding_vat)), # For Sage this value should be positive and first column should be marked as SC (Credit Note)
+
+            if split_tax_columns:
+                taxes_d = collections.defaultdict(Decimal)
+                for (tax, level, included) in invoice.resource_tax_dict.values():
+                    taxes_d[level] += tax
+                tax_cols = [str(abs(taxes_d[level])) for level in tax_levels] # using abd SAGE needs positive values
+                row = [code, invoice.user.id, 4000, 1, invoice.sent.strftime(date_fmt), invoice.number,
+                   'Invoice %s for period %s to %s' %(invoice.number, invoice.start.strftime(date_fmt), invoice.end_time.strftime(date_fmt)),
+                   str(abs(excluding_vat)), #For Sage this value should be positive and first column should be marked as SC (Credit Note)
+                   "T1"]
+                row.extend(tax_cols)
+                row.extend([1, 1, invoice.user.display_name.encode('utf-8')])
+            else:
+                row = (code, invoice.user.id, 4000, 1, invoice.sent.strftime(date_fmt), invoice.number,
+                   'Invoice %s for period %s to %s' %(invoice.number, invoice.start.strftime(date_fmt), invoice.end_time.strftime(date_fmt)),
+                   str(abs(excluding_vat)), #For Sage this value should be positive and first column should be marked as SC (Credit Note)
                    "T1",
-                   str(abs(invoice.total_tax)), # For Sage this value should be positive and first column should be marked as SC (Credit Note)
-                   1,
-                   1,
-                   invoice.user.display_name.encode('utf-8'))
+                   str(abs(invoice.total_tax)), #For Sage this value should be positive and first column should be marked as SC (Credit Note)
+                   1, 1, invoice.user.display_name.encode('utf-8'))
             writer.writerow(row)
+
         cherrypy.response.headerMap["Content-Type"] = "text/csv"
         cherrypy.response.headerMap["Content-Length"] = out.len
         return out.getvalue()
