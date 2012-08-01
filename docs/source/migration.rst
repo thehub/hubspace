@@ -50,7 +50,7 @@ Each structure is available as persistent class in above mentioned module. In tu
 
 Location
 --------
-Coworking place also referred as hub.
+Coworking place also referred as hub and place.
 
     - vat: Default tax level
     - vat_included: Specifies if taxes are included are excluded
@@ -89,8 +89,10 @@ Group and UserGroup holds member data of roles of a member at Hubs. Member has d
 
 Usage
 -----
-Billable usage of resource by member. If usage is a room booking done for a meeting, usage structure may further contains other information related to that meeting. This information is used in publishing the event.
+Billable usage of resource by member. If usage is a room booking done for a meeting, usage structure may further contains other information related to that meeting. This information is used in publishing the event. Also referred as booking.
     - invoice_id: invoice id if usage is invoiced else null
+    - repetition_id: Id of recursive bookings series. It points to one of the existing booking from which other bookings are created.
+    - confirmed: Indicates if a booking is confirmed. If set to 0 booking is considerred tentative.
 
 Message Customization
 ---------------------
