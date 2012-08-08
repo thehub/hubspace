@@ -5276,9 +5276,9 @@ The Hub Team
                 suggestion.destroySelf()
             if not rusage.confirmed:
                 bookinglib.notifyTentativeBookingRelease(rusage)
-            if rusage.refund_for:
-                refund_for = RUsage.get(rusage.refund_for)
-                refund_for.cancelled = 0
+            #if rusage.refund_for: # ZenDesk #196
+            #    refund_for = RUsage.get(rusage.refund_for)
+            #    refund_for.cancelled = 0
             applogger.info("Deleting RUsage %s" % rusage)
             rusage.destroySelf()
 
