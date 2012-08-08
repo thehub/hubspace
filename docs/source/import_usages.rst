@@ -11,8 +11,8 @@ Patameters:
 
     Usage object fields
     
-    - start: Usage start time
-    - end: Usage end time. Optional in case of quantity based resources.
+    - start: Usage start time in ISO 8601 format. eg. 2012-04-01T09:30:00
+    - end: Usage end time in ISO 8601 format. Optional in case of quantity based resources.
     - resource: Resource ID
     - cost: Optional field. Data type: float.
     -     Specify custom cost if any. Omit this field if you want serve to calculate the cost
@@ -22,9 +22,12 @@ Patameters:
     Data Example::
 
         [
-            {'member': 1209, 'resource': 103, 'start': '2012-04-01 09:30:00', quantity: 10},
-            {'member': 1589, 'resource': 107, 'start': '2012-04-07 11:00:00', 'end': '2012-04-01 12:30:00'}
+            {'member': 1209, 'resource': 103, 'start': '2012-04-01T09:30:00', 'quantity': 10},
+            {'member': 1589, 'resource': 107, 'start': '2012-04-07T11:00:00', 'end': '2012-04-01T12:30:00'}
         ]
+
+.. Note::
+   HTTP header "Content-Type" should be set to 'application/json' while making the request.
 
 Return:
 
@@ -54,6 +57,9 @@ Full Python example
         dict(member=1209, resource=103, start='2012-04-01 09:30:00', quantity=10),
         dict(member=1589, resource=107, start='2012-04-07 11:00:00', end='2012-04-01 12:30:00')
     ]
+
+    # Jsonify data
+    data = simplejson.dumps(usages_data)
     
-    r = s.post(import_url, usages_data) # HTTP POST
+    r = s.post(import_url, data, headers={'Content-Type':'application/json'}) # HTTP POST
     print r.json
