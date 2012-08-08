@@ -7,6 +7,7 @@ import string
 import cStringIO
 import ho.pisa as pisa
 import pyPdf
+import isodate
 
 import cherrypy
 import httpagentparser
@@ -1845,10 +1846,11 @@ class Root(controllers.RootController):
             retcode = False
         return {'authenticated':retcode}
 
-    @expose(allow_json=True, format="json")
-    def import_usages(self, usages_data):
+    @expose(format="json")
+    def import_usages(self, *args, **kw):
+        usages_data = simplejson.loads(cherrypy.request.body.read())
         place_ids = [place.id for place in user_locations(identity.current.user, levels=['host'])]
-        if not places: raise IdentityFailure('what about not hacking the system')
+        if not place_ids: raise IdentityFailure('what about not hacking the system')
 
         resource_ids = [resource.id for resource in Resource.select(AND(IN(Resource.q.placeID, place_ids),
                             Resource.q.type!='tariff', Resource.q.type!='calendar'))]
@@ -1859,14 +1861,15 @@ class Root(controllers.RootController):
                 usage_ids.append(None)
                 continue
             data = dict(suppress_notification=True)
+            data['user'] = item['member']
             data['resource'] = item['resource']
-            data['start'] = item['start']
-            data['end'] = item['end']
+            data['start'] = isodate.parse_datetime(item['start'])
+            data['end_time'] = isodate.parse_datetime(item.get('end')) or data['start']
             data['quantity'] = item.get('quantity', 1)
             customcost = data.get('cost', None)
             if not 'cost' == None:
                 data['customcost'] = item['cost']
-            usage_id = create_rusage(data)
+            usage_id = create_rusage(**data)
             usage_ids.append(usage_id)
 
         return dict(result=usage_ids)
