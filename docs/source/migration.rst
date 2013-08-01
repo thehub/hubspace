@@ -1,3 +1,6 @@
+.. contents:: Table of Contents
+.. sectnum::
+
 ===============
 Migration Notes
 ===============
