@@ -105,6 +105,14 @@ Billable usage of resource by member. If usage is a room booking done for a meet
     - invoice_id: invoice id if usage is invoiced else null
     - repetition_id: Id of recursive bookings series. It points to one of the existing booking from which other bookings are created.
     - confirmed: Indicates if a booking is confirmed. If set to 0 booking is considerred tentative.
+    - resource_name: Booking/Event name
+    - resource_description: Booking/Event description
+    - user: Member
+    - booked_date: Booking datetime
+    - start: Start datetime
+    - end_time: End datetime
+    - public_field: Indicates whether to publish event on microsite
+    - cancelled: Boolean set to 1 in case of booking cancellation
 
 Message Customization
 ---------------------
